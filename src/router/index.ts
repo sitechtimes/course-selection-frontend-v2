@@ -14,16 +14,16 @@ const router = createRouter({
     //   name: 'course',
     //   component: () => import('../views/CourseCatalog.vue')
     // },
-    // {
-    //   path: '/login',
-    //   name: 'login',
-    //   component: () => import('../views/LoginPage.vue')
-    // },
-    // {
-    //   path: '/login',
-    //   name: 'login',
-    //   component: () => import('../views/LoginBaseView.vue')
-    // },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/LoginPage.vue')
+    },
+    {
+      path: '/survey',
+      name: 'survey',
+      component: () => import('../views/SurveyPage.vue')
+    },
   ]
 })
 
