@@ -31,8 +31,8 @@
 <script setup lang="ts">
 import { useUserStore } from '../../stores/user';
 import { RouterLink } from "vue-router";
-import MenuIcon from '../../assets/icons/MenuIcon.vue';
-import CloseMenu from "../../assets/icons/CloseMenu.vue";
+import MenuIcon from '../icons/MenuIcon.vue';
+import CloseMenu from "../icons/CloseMenu.vue";
 import MobileNav from "./MobileNav.vue";
 import { ref } from "vue";
 
