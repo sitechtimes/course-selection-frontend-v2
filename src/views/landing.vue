@@ -27,15 +27,15 @@
     </div>
     <div
       id="circles"
-      class="-z-10 absolute h-96 w-112 sm:h-128 sm:w-128 lg:h-96 lg:w-112 flex justify-center items-center lg:relative lg:mx-8"
+      class="-z-10 absolute h-96 w-112 sm:h-128 sm:w-128 lg:h-96 lg:w-112 xl:h-128 xl:w-128 flex justify-center items-center lg:relative lg:mx-8"
     >
       <div
         id="big"
-        class="h-80 w-80 sm:h-96 sm:w-96 lg:h-80 lg:w-80 bg-tertiary-s rounded-full right-32"
+        class="h-80 w-80 sm:h-96 sm:w-96 lg:h-80 lg:w-80 xl:h-96 xl:w-96 bg-tertiary-s rounded-full right-32"
       ></div>
       <div
         id="small"
-        class="h-32 w-32 sm:h-40 sm:w-40 lg:h-32 lg:w-32 absolute bottom-4 left-12 bg-other-s rounded-full"
+        class="h-32 w-32 sm:h-40 sm:w-40 lg:h-32 lg:w-32 xl:h-40 xl:w-40 absolute bottom-4 left-12 bg-other-s rounded-full"
       ></div>
     </div>
   </div>
