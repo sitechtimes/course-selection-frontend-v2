@@ -4,7 +4,7 @@ export const useUserStore = defineStore('user', {
     state: () => ({
         name: '',
         data: null,
-        isLoggedIn: false,
+        isLoggedIn: true,
     }),
     actions: {
 
