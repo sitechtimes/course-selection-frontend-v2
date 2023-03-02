@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import StudentLogin from '@/components/LoginComponents/StudentLogin.vue'
+import StudentLogin from '../../components/LoginComponents/StudentLogin.vue';
+import StudentSignup from '../../components/LoginComponents/StudentSignup.vue'
 import { ref } from 'vue';
 
-let login = ref(true)
+let login = ref(false)
 let signup = ref(false)
-let main = ref(false)
+let main = ref(true)
 
 const loginClick = () => {
   login = ref(true)
@@ -15,11 +16,6 @@ const signupClick = () => {
   signup = ref(true)
   login = ref(false)
   main = ref(false)
-}
-const backClick = () => {
-  main = ref(true)
-  signup = ref(false)
-  login = ref(false)
 }
 </script>
 
@@ -35,7 +31,7 @@ const backClick = () => {
                 <button v-if="main" @click="signupClick" class="bg-primary-s w-40 h-14 rounded text-xl font-semibold hover:bg-other-s">
                   Sign Up
                 </button>
-                <button v-if="!main" @click="backClick" class="bg-primary-s w-40 h-14 rounded text-xl font-semibold hover:bg-other-s">
+                <button v-if="!main" @click="$router.go(-1)" class="bg-primary-s w-40 h-14 rounded text-xl font-semibold hover:bg-other-s">
                   Back
                 </button>
             </div>
@@ -46,7 +42,8 @@ const backClick = () => {
                 alt="fillerpic"
                 />
                 <div>
-                  
+                <StudentLogin v-if="login"/>
+                <StudentSignup v-if="signup" />
                 </div>
             </div>
         </div>
