@@ -18,12 +18,10 @@ interface userData {
 }
 interface studentData {
     name: string,
-    osis: number,
-    email: string,
-    survey: object,
-    homeroom: string,
+    osis: number,  //may not be needed
+    email: string, 
+    survey: object, 
     counselor: string,
-    cumulativeAverage: number,
 }
 
 type account_type = 'student' | 'guidance';
