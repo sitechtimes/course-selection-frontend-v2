@@ -61,7 +61,7 @@ onMounted(() => {
                 </div>
             </div>
         </div>
-        <div v-else id="links" class="h-full absolute top-60 left-16 flex flex-col justify-start items-start space-y-8 z-10">
+        <div v-else class="h-full absolute top-60 left-16 flex flex-col justify-start items-start space-y-8 z-10">
             <RouterLink @click="$emit('e')" id="link" to="/courses"><p class="text-4xl">Courses</p></RouterLink>
             <RouterLink @click="$emit('e')" id="link" to="/login"><p class="text-4xl">Login</p></RouterLink>
         </div>
