@@ -1,5 +1,5 @@
 <template>
-  <button class="bg-[#6A9FD1] text-white w-[10rem] h-[3.5rem] text-[2rem] absolute">
+  <button class="bg-[#6A9FD1] text-white w-[10rem] h-[3.5rem] text-[2rem] absolute mt-16 right-32">
     Next
   </button>
 </template>
