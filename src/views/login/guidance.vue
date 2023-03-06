@@ -1,15 +1,13 @@
+<script setup lang="ts">
+import backbutton from '../../components/backbutton.vue';
+</script>
+
 <template>
     <body>
       <div id="logincontainer">
         <div id="logindisplay">
           <h1 class="mt-40 text-4xl font-bold text-center">Guidance</h1>
-          <button
-            @click="$emit('on-click')"
-            id="backButton"
-            class="button text-2xl m-auto w-60 p-5 font-bold text-center bg-[#edfbe2]"
-          >
-            Back
-          </button>
+          <backbutton class="text-2xl m-auto w-60 p-5 font-bold text-center mt-20 transition duration-300 bg-[#edfbe2] hover:bg-[#a8d480]"/>
         </div>
         <div id="login">
           <h3 class="mt-16 text-4xl font-semibold text-center">Login</h3>
@@ -50,9 +48,6 @@
       </div>
     </body>
   </template>
-  
-<script lang="ts">
-</script>
 
   <style scoped>
   .inner {
@@ -104,11 +99,11 @@
     background-color: #99b76f;
     text-align: center;
   }
-  #backButton {
+  .BackButton {
     margin-top: 5rem;
     transition: 0.3s;
   }
-  #backButton:hover {
+  .BackButton:hover {
     background-color: #a8d480;
   }
   #googlesignin {

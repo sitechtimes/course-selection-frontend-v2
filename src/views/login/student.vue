@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import StudentLogin from '../../components/LoginComponents/StudentLogin.vue';
-import StudentSignup from '../../components/LoginComponents/StudentSignup.vue'
+import StudentSignup from '../../components/LoginComponents/StudentSignup.vue';
+import backbutton from '../../components/backbutton.vue';
 import { ref } from 'vue';
 
 let login = ref(false)
@@ -31,9 +32,7 @@ const signupClick = () => {
                 <button v-if="main" @click="signupClick" class="bg-primary-s w-40 h-14 rounded text-xl font-semibold hover:bg-other-s">
                   Sign Up
                 </button>
-                <button v-if="!main" @click="$router.go(-1)" class="bg-primary-s w-40 h-14 rounded text-xl font-semibold hover:bg-other-s">
-                  Back
-                </button>
+                <backbutton class="bg-primary-s w-40 h-14 rounded text-xl font-semibold hover:bg-other-s"/>
             </div>
             <div id="right" class="w-[50%] h-full flex justify-center items-center">
                 <img v-if="main"
