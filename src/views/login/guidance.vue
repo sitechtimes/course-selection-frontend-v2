@@ -7,7 +7,7 @@ import backbutton from '../../components/backbutton.vue';
       <div id="logincontainer">
         <div id="logindisplay">
           <h1 class="mt-40 text-4xl font-bold text-center">Guidance</h1>
-          <backbutton class="text-2xl m-auto w-60 p-5 font-bold text-center mt-20 transition duration-300 bg-[#edfbe2] hover:bg-[#a8d480]"/>
+          <backbutton class="text-2xl m-auto w-60 p-5 font-bold text-center mt-20 bg-[#edfbe2] hover:bg-[#a8d480]"/>
         </div>
         <div id="login">
           <h3 class="mt-16 text-4xl font-semibold text-center">Login</h3>
