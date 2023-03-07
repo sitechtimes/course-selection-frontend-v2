@@ -1,45 +1,50 @@
+<script setup lang="ts">
+import GoogleIcon from '../icons/GoogleIcon.vue';
+import BackArrow from '../icons/BackArrow.vue';
+</script>
+
 <template>
-    <section id="login-container"
-        class="w-[80%] m-auto mt-[8%] h-[40rem] rounded-2xl flex border-solid border-4 border-blue-200 ">
-        <div id="login-display" class="text-center border-r-4 border-solid border-black flex-[50%]">
-            <h1 class="mt-40 text-4xl font-semibold text-center">Student</h1>
-            <button id="back-button" class="mt-[5%] transition duration-300 text-2xl m-auto w-60 p-5 font-bold text-center bg-[#E9F0FA] hover:bg-[#c1d6eb]"
-                @click="goBack">Back</button>
+    <div id="studentSignup" class="w-full h-full flex flex-col justify-center items-center space-y-6 relative">
+      <slot></slot>
+        <h1 class="text-4xl font-bold">Sign Up</h1>
+        <button class="flex justify-center items-center space-x-3 bg-zinc-300 w-60 h-14 rounded text-xl font-semibold">
+            <GoogleIcon />
+            <p class="font-bold text-lg">Sign up with Google</p>
+        </button>
+        <div class="flex flex-col">
+            <label class="text-lg font-semibold" for="email" id="email"
+            >Email</label
+          >
+          <input class="w-[22rem] p-2 border rounded-md border-zinc-400" type="email" name="email" />
         </div>
-        <div id="login" class="flex-[50%]">
-            <h3 class="mt-16 text-4xl font-semibold text-center">Log In</h3>
-            <button id="googleSignIn"
-                class="transition duration-300 text-gray-700 bg-blue-50 px-4 py-2 m-auto block flex-row mt-5 mb-4 hover:bg-[#c1d6eb]">
-                <div class="inner flex flex-row">
-                    
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
-                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                        <path d="M1 1h22v22H1z" fill="none"/>
-                    </svg>
-                    <!-- <svg class="1-7 h-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
-                        <path
-                            d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
-                    </svg> -->
-                    <span class="font-bold text-xl ml-2">Sign in with Google</span>
-                </div>
-            </button>
-            <h2 class="text-xl mb-4 text-center">or</h2>
-            <div class="ml-28">
-                <label class="text-2xl mt-4 block font-bold" for="email" id="email">Email</label>
-                <input class="w-[80%] border-black border-solid mb-4 mt-4 rounded-lg p-2" type="email" name="email">
-                <label class="text-2xl mt-4 block font-bold" for="password">Password</label>
-                <input class="w-[80%] border-black border-solid mb-4 mt-4 rounded-lg input p-2" type="password" name="password" id="password" />
-                <h3 class="text-right mr-10 mt-1 font-bold">Forgot Password?</h3>
-                <button id="loginButton"
-                    @click="signIn"
-                    class="transition duration-300 text-xl text-white font-bold w-32 mx-8 my-8 mb-4 mt-8 py-2 ml-[65%] bg-blue-500 rounded-md text-center hover:bg-[#c1d6eb]">Login</button>
-            </div>
+        <div class="flex flex-col">
+            <label class="text-lg font-semibold" for="password"
+            >Password</label
+          >
+          <input
+            class="w-[22rem] p-2 border rounded-md border-zinc-400"
+            type="password"
+            name="password"
+            id="password"
+          />
         </div>
-    </section>
+        <div class="flex flex-col mb-4">
+            <label class="text-lg font-semibold" for="retype"
+            >Retype Password</label
+          >
+          <input
+            class="w-[22rem] p-2 border rounded-md border-zinc-400"
+            type="password"
+            name="retype"
+            id="retype"
+          />
+        </div>
+        <button class="bg-zinc-300 w-32 h-12 rounded text-lg font-semibold hover:bg-other-s">
+            Sign Up
+        </button>
+    </div>
 </template>
+
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
@@ -52,3 +57,4 @@ async function signIn() {
     alert('User clicked login button.')
 }
 </script>
+

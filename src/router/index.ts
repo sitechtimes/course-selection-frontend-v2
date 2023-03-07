@@ -14,11 +14,23 @@ const router = createRouter({
     //   name: 'course',
     //   component: () => import('../views/CourseCatalog.vue')
     // },
+
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/LoginPage.vue')
+      component: () => import('../views/login/index.vue')
     },
+    {
+      path: '/login/student',
+      name: 'studentLogin',
+      component: () => import('../views/login/student.vue')
+    },
+    {
+      path: '/login/guidance',
+      name: 'guidanceLogin',
+      component: () => import('../views/login/guidance.vue')
+    },
+
     // {
     //   path: '/survey',
     //   name: 'survey',
