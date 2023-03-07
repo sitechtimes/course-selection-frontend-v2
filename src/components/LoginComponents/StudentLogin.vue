@@ -1,6 +1,15 @@
 <script setup lang="ts">
 import GoogleIcon from '../icons/GoogleIcon.vue';
 import BackArrow from '../icons/BackArrow.vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
+function goBack() {
+    router.go(-1);
+}
+async function signIn() {
+    alert('User clicked login button.')
+}
 </script>
 
 <template>
@@ -46,15 +55,4 @@ import BackArrow from '../icons/BackArrow.vue';
 </template>
 
 
-<script setup lang="ts">
-import { useRouter } from 'vue-router';
-const router = useRouter();
-
-function goBack() {
-    router.go(-1);
-}
-async function signIn() {
-    alert('User clicked login button.')
-}
-</script>
 
