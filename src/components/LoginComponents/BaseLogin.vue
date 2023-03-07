@@ -5,27 +5,24 @@ import BackArrow from '../icons/BackArrow.vue';
 
 <template>
     <div id="studentLogin" class="w-full h-full flex flex-col justify-center items-center space-y-6 relative">
-        <button @click="$router.go(-1)" class="absolute top-5 right-8 flex justify-center items-center space-x-1">
-          <BackArrow />
-          <p class="text-base font-semibold">Back</p>
-        </button>
+        <slot></slot>
         <h1 class="text-4xl font-bold">Login</h1>
         <button class="flex justify-center items-center space-x-3 bg-zinc-300 w-60 h-14 rounded text-xl font-semibold">
             <GoogleIcon />
             <p class="font-bold text-lg">Sign in with Google</p>
         </button>
-        <div class="flex flex-col">
+        <div class="flex flex-col w-11/12 max-w-[21rem]">
             <label class="text-lg font-semibold" for="email" id="email"
             >Email</label
           >
-          <input class="w-[22rem] p-2 border rounded-md border-zinc-400" type="email" name="email" />
+          <input class="w-full p-2 border rounded-md border-zinc-400" type="email" name="email" />
         </div>
-        <div class="flex flex-col mb-4">
+        <div class="flex flex-col w-11/12 mb-4 max-w-[21rem]">
             <label class="text-lg font-semibold" for="password"
             >Password</label
           >
           <input
-            class="w-[22rem] p-2 border rounded-md border-zinc-400"
+            class="w-full p-2 border rounded-md border-zinc-400"
             type="password"
             name="password"
             id="password"

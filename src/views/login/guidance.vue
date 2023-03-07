@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import BaseLogin from '../../components/LoginComponents/BaseLogin.vue';
-import { ref } from 'vue';
+import BackBtnSmall from '../../components/Buttons/BackBtnSmall.vue';
 
 </script>
 
@@ -15,7 +15,9 @@ import { ref } from 'vue';
               </button>
           </div>
             <div id="right" class="w-full h-full flex flex-col justify-center items-center space-y-6 lg:w-1/2">
-              <BaseLogin/>
+              <BaseLogin> 
+                <BackBtnSmall @click="$router.go(-1)" />
+              </BaseLogin>
             </div>
         </div>
     </div>

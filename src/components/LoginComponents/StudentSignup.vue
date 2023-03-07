@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import GoogleIcon from '../icons/GoogleIcon.vue';
+import BackArrow from '../icons/BackArrow.vue';
 </script>
 
 <template>
-    <div id="studentSignup" class="flex flex-col justify-center items-center space-y-6">
+    <div id="studentSignup" class="w-full h-full flex flex-col justify-center items-center space-y-6 relative">
+      <slot></slot>
         <h1 class="text-4xl font-bold">Sign Up</h1>
         <button class="flex justify-center items-center space-x-3 bg-zinc-300 w-60 h-14 rounded text-xl font-semibold">
             <GoogleIcon />
@@ -37,7 +39,7 @@ import GoogleIcon from '../icons/GoogleIcon.vue';
             id="retype"
           />
         </div>
-        <button class="bg-primary-s w-32 h-12 rounded text-lg font-semibold hover:bg-other-s">
+        <button class="bg-zinc-300 w-32 h-12 rounded text-lg font-semibold hover:bg-other-s">
             Sign Up
         </button>
     </div>
