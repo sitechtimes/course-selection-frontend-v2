@@ -1,7 +1,8 @@
+
 <template>
-    <h1>This is login page</h1>
+    <StudentLogin/>
 </template>
 
 <script setup lang="ts">
-
+import StudentLogin from '../components/LoginComponents/StudentLogin.vue';
 </script>

@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomePage from '../views/HomePage.vue';
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,23 +7,35 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomePage
+      component: () => import('../views/Landing.vue')
     },
     // {
     //   path: '/courses',
     //   name: 'course',
     //   component: () => import('../views/CourseCatalog.vue')
     // },
+
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/LoginPage.vue')
+      component: () => import('../views/login/index.vue')
     },
     {
-      path: '/survey',
-      name: 'survey',
-      component: () => import('../views/SurveyPage.vue')
+      path: '/login/student',
+      name: 'studentLogin',
+      component: () => import('../views/login/student.vue')
     },
+    {
+      path: '/login/guidance',
+      name: 'guidanceLogin',
+      component: () => import('../views/login/guidance.vue')
+    },
+
+    // {
+    //   path: '/survey',
+    //   name: 'survey',
+    //   component: () => import('../views/SurveyPage.vue')
+    // },
   ]
 })
 
