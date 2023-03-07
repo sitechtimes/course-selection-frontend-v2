@@ -1,13 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'landing',
-      component: () => import('../views/landing.vue')
+      name: 'home',
+      component: () => import('../views/Landing.vue')
     },
+    // {
+    //   path: '/courses',
+    //   name: 'course',
+    //   component: () => import('../views/CourseCatalog.vue')
+    // },
+
     {
       path: '/login',
       name: 'login',
@@ -23,6 +30,12 @@ const router = createRouter({
       name: 'guidanceLogin',
       component: () => import('../views/login/guidance.vue')
     },
+
+    // {
+    //   path: '/survey',
+    //   name: 'survey',
+    //   component: () => import('../views/SurveyPage.vue')
+    // },
   ]
 })
 

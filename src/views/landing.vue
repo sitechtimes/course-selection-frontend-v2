@@ -13,11 +13,6 @@
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus deleniti doloremque nisi at.
       </h2>
       <div class="flex justify-start items-center space-x-4">
-        <RouterLink to="/login">
-          <button class="bg-primary-s w-32 h-12 rounded text-lg font-semibold hover:bg-other-s">
-          Sign Up
-        </button>
-      </RouterLink>
       <RouterLink to="/login">
         <button class="bg-primary-s w-32 h-12 rounded text-lg font-semibold hover:bg-other-s">
           Login

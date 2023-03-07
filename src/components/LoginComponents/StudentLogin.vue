@@ -44,3 +44,17 @@ import BackArrow from '../icons/BackArrow.vue';
         </button>
     </div>
 </template>
+
+
+<script setup lang="ts">
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
+function goBack() {
+    router.go(-1);
+}
+async function signIn() {
+    alert('User clicked login button.')
+}
+</script>
+
