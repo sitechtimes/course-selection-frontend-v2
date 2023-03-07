@@ -1,18 +1,16 @@
 <template>
-    <section class="mt-[7rem] text-center"> <!-- This one is the same for every year -->
-    <h1 class="text-[#37394F] text-4xl md:text-6xl font-bold">______ Year Survey</h1>     <!-- Fill in ______ with the year -->
-    <div class="mt-[3rem] text-2xl md:text-4xl"><label for="major">What college majors are you considering upon graduation from high school?</label>
-    <input type="text" id="major" class="mt-[2rem] h-[4rem] w-[90%] lg:w-[80%] rounded-xl border-4 border-[#7D7D7D]"/></div>
-    <div class="mt-[3rem] text-2xl md:text-4xl"><label for="career">What careers are you considering upon graduation?</label>
-    <input type="text" id="career" class="mt-[2rem] h-[4rem] w-[90%] lg:w-[80%] rounded-xl border-4 border-[#7D7D7D]"/></div>
-    <div class="mt-[3rem] text-2xl md:text-4xl"><label for="afterSchool">List after-school activities such as clubs, teams, volunteer, or paid employment.</label>
-    <input type="text" id="afterSchool" class="mt-[2rem] h-[4rem] w-[90%] lg:w-[80%] rounded-xl border-4 border-[#7D7D7D]"/></div>
-    <nextButton></nextButton>
+    <section class="mt-[7rem] text-center border-[#D9E9F9] border-solid border-2" > <!-- This one is the same for every year -->
+    <h1 class="text-[#37394F] text-4xl md:text-6xl font-bold">Thank you for submitting!</h1>
+    <h2 class="text-3xl">Your guidance counselor will be reaching out to you.</h2>
+    <button class="bg-[#6A9FD1] text-white w-[30%] h-[3.5rem] text-[1.5rem] md:w-[10rem] md:text-[2rem]">
+        Return to Home
+    </button>
     </section>
 </template>
 
 <script setup lang="ts">
-import nextButton from '../components/SurveyPageComponents/nextButton.vue';
+import pageOne from '../components/SurveyPageComponents/pages/pageOne.vue';
+import backButton from '../components/SurveyPageComponents/backButton.vue'
 </script>
 
 <style scoped> 
