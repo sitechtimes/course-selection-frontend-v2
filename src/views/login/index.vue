@@ -14,7 +14,7 @@
             </div>
             <div id="right" class="w-full h-full flex flex-col justify-center items-center space-y-6 lg:w-1/2">
                 <h1 class="text-4xl font-bold
-              ">I am...</h1>
+              ">I am a...</h1>
                 <RouterLink to="/login/student">
                 <button class="bg-primary-s w-40 h-14 rounded text-xl font-semibold hover:bg-other-s">
                   Student
@@ -22,7 +22,7 @@
               </RouterLink>
               <RouterLink to="/login/guidance">
                 <button class="bg-primary-s w-40 h-14 rounded text-xl font-semibold hover:bg-other-s">
-                  Guidance
+                  Counselor
                 </button>
               </RouterLink>
             </div>
