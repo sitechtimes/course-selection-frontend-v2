@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import StudentLogin from '../../components/LoginComponents/BaseLogin.vue';
-import StudentSignup from '../../components/LoginComponents/StudentSignup.vue'
+import StudentSignup from '../../components/LoginComponents/StudentLogin.vue'
 import BackBtnSmall from '../../components/Buttons/BackBtnSmall.vue';
 import { ref } from 'vue';
 
