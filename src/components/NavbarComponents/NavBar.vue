@@ -20,7 +20,7 @@ const toggleMenu = () => {
 </script>
 
 <template>
-    <nav id="navbar" class="absolute w-full top-0 h-24 flex justify-between items-center px-8 md:px-10 lg:px-12 overflow-visible">
+    <nav id="navbar" class="absolute w-full top-0 h-24 flex justify-between items-center px-8 md:px-12 lg:px-16 overflow-visible">
         <RouterLink to="/">
             <h1 class="text-3xl font-semibold">Course Selection</h1>
         </RouterLink>
@@ -33,12 +33,12 @@ const toggleMenu = () => {
             </RouterLink>
             <UserMenu />
         </div>
-        <div v-else class="hidden justify-center items-center space-x-10 md:flex">
+        <div v-else class="hidden justify-center items-center space-x-12 md:flex">
             <RouterLink to="/courses">
                 <p class="text-base">Courses</p>
             </RouterLink>
             <RouterLink to="/login">
-                <button class="text-base bg-primary-s w-24 h-10 rounded">Login</button>
+                <p class="text-base">Login</p>
             </RouterLink>
         </div>
         <div id="menu-icon" class="flex justify-center items-center cursor-pointer z-40 md:hidden">
