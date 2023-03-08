@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import GoogleIcon from '../icons/GoogleIcon.vue';
 import BackArrow from '../icons/BackArrow.vue';
+
 </script>
 
 <template>
