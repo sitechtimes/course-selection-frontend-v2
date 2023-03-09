@@ -30,15 +30,24 @@
     </fieldset>
   </div> -->
   <div class="mt-96 height-48">
-    <input type="radio" class="w-6 h-6 m-2 shadow-2xl outline-1 checked:border-1 checked:border-black hover:checked:border-1 outline-black checked:outline-black checked:outline-1 checked:outline-offset-0 bg-[#EAEAEA] focus:ring-transparent checked:bg-none checked:bg-[#6A9FD1] checked:hover:bg-[#6A9FD1] checked:focus:bg-[#6A9FD1]" id="eighth-ns" name="eighth" />
-  <label for="eighth-ns">Not sure</label>
-    <input type="radio" class="ml-3 bg-[#EAEAEA] shadow-2xl form-radio focus:ring-transparent checked:bg-none checked:bg-[#6A9FD1] checked:focus:bg-[#6A9FD1]" id="eighth-sure" name="eighth" />
-  <label for="eighth-sure">Sure</label>
+    <SurveyButton :form="form" :name="name" />
   </div>
-  
 </template>
 
-<style>
-</style>
+<style></style>
 
-<script></script>
+<script setup lang="ts">
+import SurveyButton from "../components/SurveyPageComponents/SurveyButton.vue";
+
+const form = [
+  {
+    id: "first-question",
+    answer: "Not Sure",
+  },
+  {
+    id: "second-question",
+    answer: "Yes",
+  },
+];
+const name = "eighth";
+</script>
