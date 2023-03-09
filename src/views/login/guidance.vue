@@ -9,7 +9,7 @@ import BaseLogin from '../../components/LoginComponents/BaseLogin.vue';
           <div id="left" class="hidden w-1/2 h-full border-zinc-400 lg:border-r justify-center items-center flex-col space-y-6 lg:flex">
             <h1 class="text-4xl font-bold
               ">Guidance</h1>
-              <button @click="$router.go(-1)" class="bg-primary-g w-32 h-12 rounded text-lg font-semibold">
+              <button @click="$router.go(-1)" class="bg-primary-g w-32 h-12 rounded-md text-lg font-semibold">
                 Back
               </button>
           </div>

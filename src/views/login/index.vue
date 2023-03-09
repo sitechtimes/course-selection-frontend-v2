@@ -16,12 +16,12 @@
                 <h1 class="text-4xl font-bold
               ">I am a...</h1>
                 <RouterLink to="/login/student">
-                <button class="bg-primary-s w-40 h-14 rounded text-xl font-semibold hover:bg-other-s">
+                <button class="bg-primary-s w-40 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
                   Student
                 </button>
               </RouterLink>
               <RouterLink to="/login/guidance">
-                <button class="bg-primary-s w-40 h-14 rounded text-xl font-semibold hover:bg-other-s">
+                <button class="bg-primary-s w-40 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
                   Counselor
                 </button>
               </RouterLink>

@@ -15,7 +15,7 @@ import BaseLogin from '../../components/LoginComponents/BaseLogin.vue';
                   src="https://images.squarespace-cdn.com/content/v1/58334b19579fb3628a7146d2/1479920558610-HKJIOE92XN0I2KH6RDFU/Seagull_04.gif?format=1500w"
                   alt="fillerpic"
                 />
-              <button @click="$router.go(-1)" class="bg-primary-s w-32 h-12 rounded text-lg font-semibold">
+              <button @click="$router.go(-1)" class="bg-primary-s w-32 h-12 rounded-md text-lg font-semibold">
                 Back
               </button>
           </div>
