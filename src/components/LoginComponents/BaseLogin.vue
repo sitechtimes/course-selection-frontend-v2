@@ -16,8 +16,8 @@ import BackArrow from '../icons/BackArrow.vue';
             <p class="font-bold text-lg">Sign in with Google</p>
         </button>
         <div class="flex flex-col w-11/12 max-w-[21rem] space-y-5">
-          <LoginInput name="email" type="email" required>Email</LoginInput>
-          <LoginInput name="password" type="password" required>Password</LoginInput>
+          <LoginInput id="email" label="email" name="email" type="email" required>Email</LoginInput>
+          <LoginInput id="password" label="password" name="password" type="password" required>Password</LoginInput>
         </div>
         <button class="bg-zinc-300 w-32 h-12 rounded-md text-lg font-semibold hover:bg-zinc-200">
             Login
