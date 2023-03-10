@@ -47,9 +47,10 @@ onMounted(() => {
 </script>
 
 <template>
-    <div id="menu" class="fixed inset-0 h-screen w-full  ease-in duration-200 md:hidden">
+    <div id="menu" class="fixed inset-0 h-screen w-full  ease-in duration-200 md:hidden z-30">
         <div id="overlay" class="absolute inset-0 w-full h-full bg-white opacity-100 -z-10"></div>
-        <div v-if="userStore.isLoggedIn" class="h-full absolute top-48 left-16 flex flex-col justify-start items-start space-y-8 z-10">
+        <div v-if="userStore.isLoggedIn" class="h-full absolute top-40 left-16 flex flex-col justify-start items-start space-y-8 z-10">
+            <RouterLink @click="$emit('e')" id="link" to="/"><p class="text-4xl">Home</p></RouterLink>
             <RouterLink @click="$emit('e')" id="link" to="/survey"><p class="text-4xl">Survey</p></RouterLink>
             <RouterLink @click="$emit('e')" id="link" to="/courses"><p class="text-4xl">Courses</p></RouterLink>
             <div class="space-y-5" id="link">
@@ -61,7 +62,8 @@ onMounted(() => {
                 </div>
             </div>
         </div>
-        <div v-else id="links" class="h-full absolute top-60 left-16 flex flex-col justify-start items-start space-y-8 z-10">
+        <div v-else class="h-full absolute top-56 left-16 flex flex-col justify-start items-start space-y-8 z-10">
+            <RouterLink @click="$emit('e')" id="link" to="/"><p class="text-4xl">Home</p></RouterLink>
             <RouterLink @click="$emit('e')" id="link" to="/courses"><p class="text-4xl">Courses</p></RouterLink>
             <RouterLink @click="$emit('e')" id="link" to="/login"><p class="text-4xl">Login</p></RouterLink>
         </div>

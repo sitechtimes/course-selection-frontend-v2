@@ -2,6 +2,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import "index.css";
 
 :root {
   /* fonts */
@@ -10,7 +11,7 @@
 
   /* colors */
   --bg-color: #fff;
-  --text-color: #000;
+  --text-color: #37394f;
 
   font-synthesis: none;
   scroll-behavior: smooth;
