@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <div id="student" class="w-full h-screen flex justify-center items-center bg-[#fefefe]">
+    <div id="student" class="w-full h-screen flex justify-center items-center bg-[#fdfdfd]">
         <div id="book" class="mt-12 w-11/12 max-w-[32rem] max-h-[45rem] h-4/5 border-primary-s border-[10px] rounded-xl flex justify-between items-center lg:max-w-[60rem]">
             <div id="left" class="hidden w-1/2 h-full border-zinc-400 lg:border-r justify-center items-center lg:flex">
                 <img
