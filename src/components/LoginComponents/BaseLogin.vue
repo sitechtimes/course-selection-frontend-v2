@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import GoogleIcon from '../icons/GoogleIcon.vue';
 import BackArrow from '../icons/BackArrow.vue';
-
-interface Props {
-  route?: string
-}
 </script>
 
 <template>
@@ -35,10 +31,8 @@ interface Props {
             id="password"
           />
         </div>
-        <RouterLink to="{{route}}">
         <button class="bg-zinc-300 w-32 h-12 rounded text-lg font-semibold hover:bg-zinc-200">
             Login
         </button>
-        </RouterLink>
     </div>
 </template>
