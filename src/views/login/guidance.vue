@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import BaseLogin from '../../components/LoginComponents/BaseLogin.vue';
-
 </script>
 
 <template>
@@ -14,7 +13,7 @@ import BaseLogin from '../../components/LoginComponents/BaseLogin.vue';
               </button>
           </div>
             <div id="right" class="w-full h-full flex flex-col justify-center items-center space-y-6 lg:w-1/2">
-              <BaseLogin /> 
+              <BaseLogin/> 
             </div>
         </div>
     </div>
