@@ -15,9 +15,6 @@ import BaseLogin from '../../components/LoginComponents/BaseLogin.vue';
             <div id="right" class="w-full h-full flex flex-col justify-center items-center space-y-6 lg:w-1/2">
               <BaseLogin/> 
               <RouterLink to="/guidance-home">
-        <button id="temporarybtn" class="bg-zinc-300 w-36 h-12 rounded text-lg font-semibold hover:bg-zinc-200">
-          Guidance Home
-        </button>
       </RouterLink>
             </div>
         </div>
