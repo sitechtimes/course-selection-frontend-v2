@@ -13,10 +13,9 @@
 </template>
 
 <script>
-export default {
-  props: {
+import { defineProps } from 'vue';
+defineProps({
     form: Array,
     name: String,
-  },
-};
+})
 </script>
