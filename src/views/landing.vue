@@ -12,9 +12,9 @@
       <h2 class="text-lg lg:text-xl">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus deleniti doloremque nisi at.
       </h2>
-      <div class="flex justify-start items-center space-x-4">
+      <div class="flex justify-start items-center">
       <RouterLink to="/login">
-        <button class="bg-primary-s w-32 h-12 rounded text-lg font-semibold hover:bg-other-s">
+        <button class="bg-primary-s w-40 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
           Login
         </button>
       </RouterLink>
