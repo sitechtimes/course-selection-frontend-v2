@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-
+import axios from 'axios'
 interface userStore {
     name: string,
     email: string,
@@ -57,6 +57,13 @@ export const useUserStore = defineStore('user', {
                 const res = await fetch('api.siths.dev');
                 this.data.survey = await res.json();
             }
+        },
+        async GoogleLogin(res:any){
+            console.log(res.access_token)
+            await axios.post('http://127.0.0.1:8000/social-login/google/',{"access_token":res.access_token}
+                ).then((response)=>{
+                console.log(response)
+            })
         }
     },
 })
