@@ -59,19 +59,11 @@ export const useUserStore = defineStore('user', {
             }
         },
         async GoogleLogin(res:any){
-            console.log(res)
-            // await axios.post('http://127.0.0.1:8000/social-login/google/',{"code":res.code}
-            //     ).then((response)=>{
-            //     console.log(response)
-            // })
-            // const response = await fetch('https://api.siths.dev/social-login/google/',{
-            //     method:"POST",
-            //     headers: {
-            //         "Content-Type": "application/json",
-            //       },
-            //     body: JSON.stringify(data)
-            // })
-            // console.log(response)
+            console.log(res.access_token)
+            await axios.post('https://api.siths.dev/social-login/google/',{"access_token":res.access_token}
+                ).then((response)=>{
+                console.log(response)
+            })
         }
     },
 })
