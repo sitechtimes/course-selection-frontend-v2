@@ -12,7 +12,8 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+
 import { defineProps } from "vue";
 defineProps({
   form: Array,
