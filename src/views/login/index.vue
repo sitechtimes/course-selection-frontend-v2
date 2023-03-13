@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <div id="student" class="w-full h-screen flex justify-center items-center bg-[#fefefe]">
+    <div id="student" class="w-full h-screen flex justify-center items-center bg-[#fdfdfd]">
         <div id="book" class="mt-12 w-11/12 max-w-[32rem] max-h-[45rem] h-4/5 border-primary-s border-[10px] rounded-xl flex justify-between items-center lg:max-w-[60rem]">
             <div id="left" class="hidden w-1/2 h-full border-zinc-400 lg:border-r justify-center items-center lg:flex">
                 <img
@@ -14,15 +14,15 @@
             </div>
             <div id="right" class="w-full h-full flex flex-col justify-center items-center space-y-6 lg:w-1/2">
                 <h1 class="text-4xl font-bold
-              ">I am...</h1>
+              ">I am a...</h1>
                 <RouterLink to="/login/student">
-                <button class="bg-primary-s w-40 h-14 rounded text-xl font-semibold hover:bg-other-s">
+                <button class="bg-primary-s w-40 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
                   Student
                 </button>
               </RouterLink>
               <RouterLink to="/login/guidance">
-                <button class="bg-primary-s w-40 h-14 rounded text-xl font-semibold hover:bg-other-s">
-                  Guidance
+                <button class="bg-primary-s w-40 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
+                  Counselor
                 </button>
               </RouterLink>
             </div>
