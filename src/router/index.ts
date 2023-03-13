@@ -36,11 +36,11 @@ const router = createRouter({
       component: () => import('../views/login/guidance.vue')
     },
 
-    // {
-    //   path: '/survey',
-    //   name: 'survey',
-    //   component: () => import('../views/SurveyPage.vue')
-    // },
+    {
+      path: '/survey',
+      name: 'survey',
+      component: () => import('../views/SurveyPage.vue')
+    },
   ]
 })
 
