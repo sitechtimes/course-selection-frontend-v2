@@ -60,7 +60,7 @@ export const useUserStore = defineStore('user', {
         },
         async GoogleLogin(res:any){
             console.log(res.access_token)
-            await axios.post('https://api.siths.dev/social-login/google/',{"access_token":res.access_token}
+            await axios.post('http://127.0.0.1:8000/social-login/google/',{"access_token":res.access_token}
                 ).then((response)=>{
                 console.log(response)
             })
