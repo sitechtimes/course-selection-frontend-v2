@@ -13,10 +13,14 @@ const userStore = useUserStore()
           <p class="text-base  text-zinc-600 font-semibold">Back</p>
         </button>
         <h1 class="text-4xl font-bold">Login</h1>
+        <GoogleLogin :callback="userStore.GoogleLogin"> 
+
+        
         <button class="flex justify-center items-center space-x-3 bg-zinc-300 w-60 h-14 rounded-md text-xl font-semibold hover:bg-zinc-200">
             <GoogleIcon />
             <p class="font-bold text-lg">Sign in with Google</p>
         </button>
+      </GoogleLogin>
         <div class="flex flex-col w-11/12 max-w-[21rem] space-y-5">
           <LoginInput id="email" label="email" name="email" type="email" required>Email</LoginInput>
           <LoginInput id="password" label="password" name="password" type="password" required>Password</LoginInput>
