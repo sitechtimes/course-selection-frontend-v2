@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import GoogleIcon from '../icons/GoogleIcon.vue';
 import BackArrow from '../icons/BackArrow.vue';
-
+import {useUserStore} from '../../stores/user'
+const userStore = useUserStore()
 </script>
 
 <template>
@@ -11,10 +12,12 @@ import BackArrow from '../icons/BackArrow.vue';
           <p class="text-base font-semibold">Back</p>
         </button>
         <h1 class="text-4xl font-bold">Login</h1>
-        <button class="flex justify-center items-center space-x-3 bg-zinc-300 w-60 h-14 rounded text-xl font-semibold">
-            <GoogleIcon />
-            <p class="font-bold text-lg">Sign in with Google</p>
-        </button>
+        <GoogleLogin :callback="userStore.GoogleLogin">
+          <button class="flex justify-center items-center space-x-3 bg-zinc-300 w-60 h-14 rounded text-xl font-semibold">
+              <GoogleIcon />
+              <p class="font-bold text-lg">Sign in with Google</p>
+          </button>
+        </GoogleLogin>
         <div class="flex flex-col w-11/12 max-w-[21rem]">
             <label class="text-lg font-semibold" for="email" id="email"
             >Email</label
