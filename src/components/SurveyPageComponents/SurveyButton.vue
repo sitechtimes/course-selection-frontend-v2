@@ -13,7 +13,6 @@
 </template>
 
 <script setup lang="ts">
-
 defineProps({
   form: Array,
   name: String,
