@@ -1,5 +1,5 @@
 <template>
-    <div id="search" class="border-white w-full flex justify-center items-center">
+    <div id="search" class="border-white w-full flex">
       <div id="search-bar" class="flex justify-center items-center relative">
         <input
           :value="modelValue"
