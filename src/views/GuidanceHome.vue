@@ -13,7 +13,7 @@
       </h2>
       <div class="flex justify-start items-center space-x-4">
       <RouterLink to="/guidance-studentlist">
-        <button class="bg-primary-g w-36 h-12 rounded text-lg font-semibold hover:bg-tertiary-g">
+        <button class="bg-other-g w-36 h-12 rounded text-lg font-semibold hover:bg-tertiary-g">
           View Students
         </button>
       </RouterLink>
