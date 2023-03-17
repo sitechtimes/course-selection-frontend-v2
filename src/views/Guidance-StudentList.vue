@@ -4,8 +4,8 @@ import DownArrow from '../components/icons/DownArrow.vue';
 </script>
 
 <template>
-    <div class="h-screen w-full flex flex-col justify-center items-center">
-        <div class="h-screen w-full ml-20 flex flex-row items-center">
+    <div class="h-screen w-full flex justify-center items-center">
+        <div class="ml-20 flex flex-row items-center">
         <button class="w-44 h-10 mr-4 bg-primary-g text-black rounded cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]">
             <div class="font-semibold ml-4 flex justify-evenly">
                 Sort By
@@ -14,7 +14,7 @@ import DownArrow from '../components/icons/DownArrow.vue';
         </button>
         </div>
         <SearchBar type="text" placeholder="Search Students..." />
-    <div class="w-full justify-center items-center" id="table">
+    <div class="w-full flex flex-col justify-center items-center" id="table">
         <table>
             <thead>
                 <tr>
