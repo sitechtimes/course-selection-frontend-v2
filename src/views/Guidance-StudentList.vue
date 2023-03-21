@@ -14,8 +14,8 @@ import DownArrow from '../components/icons/DownArrow.vue';
         </button>
         <SearchBar class="" type="text" placeholder="Search Students..." />
         </div>
-    <div class="w-full flex flex-col mt-10 justify-center items-center" id="table">
-        <table>
+    <div class="flex flex-col mt-10 justify-center items-center" id="table">
+        <table class="table-auto text-left">
             <thead>
                 <tr>
                     <th>Name</th>
