@@ -1,6 +1,5 @@
 <template>
     <section class="mt-[7rem] text-center"> <!-- This one is the same for every year -->
-    <img src="../../icons/Bookmark.png" alt="bookmark" class="visible"/>
     <h1 class="text-[#37394F] text-4xl md:text-6xl font-bold">______ Year Survey</h1>     <!-- Fill in ______ with the year -->
     <div class="mt-[3rem] text-2xl md:text-4xl text-black"><label for="major">What college majors are you considering upon graduation from high school?</label>
     <input type="text" id="major" class="mt-[2rem] h-[4rem] w-[90%] lg:w-[80%] rounded-xl border-4 border-[#7D7D7D]"/></div>
