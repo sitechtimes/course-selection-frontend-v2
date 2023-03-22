@@ -35,11 +35,15 @@ const router = createRouter({
       name: 'guidanceLogin',
       component: () => import('../views/login/guidance.vue')
     },
-
     {
       path: '/survey',
       name: 'survey',
       component: () => import('../views/SurveyPage.vue')
+    },
+    {
+      path: '/calendar',
+      name: 'calendar',
+      component: () => import('../views/GuidanceCalendar.vue')
     },
   ]
 })
