@@ -15,25 +15,49 @@ import DownArrow from '../components/icons/DownArrow.vue';
         <SearchBar class="" type="text" placeholder="Search Students..." />
         </div>
     <div class="flex flex-col mt-10 justify-center items-center" id="table">
-        <table class="table-auto text-left">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Grade</th>
-                    <th>OSIS</th>
-                    <th>Email</th>
-                    <th>Progress</th>
-                    <th>Details</th>
+        <table class="w-[100rem] border-2 border-black table-auto text-left">
+            <thead class="fill-primary-g border-2 border-black">
+                <tr class="bg-primary-g">
+                    <th class="p-4">Name</th>
+                    <th class="p-4">Grade</th>
+                    <th class="p-4">OSIS</th>
+                    <th class="p-4">Email</th>
+                    <th class="p-4">Progress</th>
+                    <th class="p-4">Details</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="border-2 border-black">
                 <tr>
-                    <td>Lin, Wendy</td>
-                    <td>10</td>
-                    <td>93453927859</td>
-                    <td>wendyl26@nycstudents.net</td>
-                    <td>Not Started</td>
-                    <td>View</td>
+                    <td class="p-4">Lin, Wendy</td>
+                    <td class="p-4">10</td>
+                    <td class="p-4">93453927859</td>
+                    <td class="p-4">wendyl26@nycstudents.net</td>
+                    <td class="p-4">Not Started</td>
+                    <td class="p-4">View</td>
+                </tr>
+                <tr class="border-2 border-black">
+                    <td class="p-4">Chen, Jason</td>
+                    <td class="p-4">12</td>
+                    <td class="p-4">828471831</td>
+                    <td class="p-4">jasonc2801@nycstudents.net</td>
+                    <td class="p-4">In Progress</td>
+                    <td class="p-4">View</td>
+                </tr>
+                <tr class="border-2 border-black">
+                    <td class="p-4">Yang, Jessie</td>
+                    <td class="p-4">11</td>
+                    <td class="p-4">93453927859</td>
+                    <td class="p-4">Jessiey2@nycstudents.net</td>
+                    <td class="p-4">Complete</td>
+                    <td class="p-4">View</td>
+                </tr>
+                <tr class="border-2 border-black">
+                    <td class="p-4">Whalen, Michael</td>
+                    <td class="p-4">9</td>
+                    <td class="p-4">828471831</td>
+                    <td class="p-4">mwhalen21@nycdoe.gov</td>
+                    <td class="p-4">Not Started</td>
+                    <td class="p-4">View</td>
                 </tr>
             </tbody>
         </table>
