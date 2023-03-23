@@ -32,7 +32,9 @@ import DownArrow from '../components/icons/DownArrow.vue';
                     <td class="p-4">10</td>
                     <td class="p-4">93453927859</td>
                     <td class="p-4">wendyl26@nycstudents.net</td>
-                    <td class="p-4">Not Started</td>
+                    <td class="p-4">
+                        <p class="text-[#461616] bg-[#EA9F9F] w-[8rem] font-semibold text-center p-1 rounded-2xl">Not Started</p>
+                    </td>
                     <td class="p-4">View</td>
                 </tr>
                 <tr class="border-2 border-black">
@@ -40,15 +42,18 @@ import DownArrow from '../components/icons/DownArrow.vue';
                     <td class="p-4">12</td>
                     <td class="p-4">828471831</td>
                     <td class="p-4">jasonc2801@nycstudents.net</td>
-                    <td class="p-4">In Progress</td>
+                    <td class="p-4">
+                        <p class="text-[#461616] bg-[#F9D477] w-[8rem] font-semibold text-center p-1 rounded-2xl">In Progress</p>
+                    </td>
                     <td class="p-4">View</td>
                 </tr>
                 <tr class="border-2 border-black">
                     <td class="p-4">Yang, Jessie</td>
                     <td class="p-4">11</td>
                     <td class="p-4">93453927859</td>
-                    <td class="p-4">Jessiey2@nycstudents.net</td>
-                    <td class="p-4">Complete</td>
+                    <td class="p-4">jessiey2@nycstudents.net</td>
+                    <td class="p-4">
+                        <p class="text-[#174616] bg-[#A8D480] w-[8rem] font-semibold text-center p-1 rounded-2xl">Complete</p></td>
                     <td class="p-4">View</td>
                 </tr>
                 <tr class="border-2 border-black">
@@ -56,7 +61,9 @@ import DownArrow from '../components/icons/DownArrow.vue';
                     <td class="p-4">9</td>
                     <td class="p-4">828471831</td>
                     <td class="p-4">mwhalen21@nycdoe.gov</td>
-                    <td class="p-4">Not Started</td>
+                    <td class="p-4">
+                        <p class="text-[#461616] bg-[#EA9F9F] w-[8rem] font-semibold text-center p-1 rounded-2xl">Not Started</p>
+                    </td>
                     <td class="p-4">View</td>
                 </tr>
             </tbody>
