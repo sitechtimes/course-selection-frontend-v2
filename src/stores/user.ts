@@ -81,19 +81,38 @@ export const useUserStore = defineStore('user', {
                 })
             }
         },
+        async getUserType(){
+            await axios.post('http://127.0.0.1:8000/graphql/', {
+                        query: `query{
+                            user{
+                                isGuidance
+                                isStudent
+                            }
+                        }`
+                    },{
+                        headers:{
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${this.access_token}`
+                        }
+                    }).then((res3:any)=>{
+                        if (res3.data.data.user.isGuidance){
+                            this.userType == 'guidance'
+                        } else {
+                            this.userType == 'student'
+                        }
+                        this.init(this.userType)
+                    })
+        },
         async GoogleLogin(res:any){
             await axios.post('http://127.0.0.1:8000/social-login/google/',{"access_token":res.access_token}
                 ).then((response)=>{
-                    //clean this up :) 
-                    console.log(response.data.access_token)
                     this.access_token = response.data.access_token
                     this.refresh_token = response.data.refresh_token
                     this.email = response.data.user.email
                     this.first_name = response.data.user.first_name
                     this.last_name = response.data.user.last_name
-
                     console.log(this.first_name)
-                    this.init('student') //make dj rest auth return user type (backend)
+                    this.getUserType() //make dj rest auth return user type (backend) to remove this function
 
             })
         },
