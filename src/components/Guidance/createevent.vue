@@ -72,8 +72,10 @@
   flex-direction: row;
 }
 .x {
+  margin-left: 45rem;
   fill: #37394f;
   transition: 0.3s;
+  margin-top: 1rem;
 }
 .x:hover {
   opacity: 0.8;
@@ -89,7 +91,7 @@ svg {
   cursor: pointer;
 }
 .item {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
 }
 .submit {
   margin-left: 2rem;
