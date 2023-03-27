@@ -1,6 +1,41 @@
 <script setup lang="ts">
 import SearchBar from '../components/GeneralComponents/SearchBar.vue';
 import DownArrow from '../components/icons/DownArrow.vue';
+
+const students = [
+    {
+        lastname: "Lin",
+        firstname: "Wendy",
+        grade: 10,
+        osis: 93453927859,
+        email: "wendyl26@nycstudents.net",
+        progress: "Not Started",
+    },
+    {
+        lastname: "Chen",
+        firstname: "Jason",
+        grade: 12,
+        osis: 828471831,
+        email: "jasonc2801@nycstudents.net",
+        progress: "In Progress",
+    },
+    {
+        lastname: "Yang",
+        firstname: "Jessie",
+        grade: 11,
+        osis: 93453927859,
+        email: "jessiey2@nycstudents.net",
+        progress: "Completed",
+    },
+    {
+        lastname: "Whalen",
+        firstname: "Michael",
+        grade: 9,
+        osis: 828471831,
+        email: "mwhalen21@nycdoe.gov",
+        progress: "Not Started",
+    },
+]
 </script>
 
 <template>
@@ -15,7 +50,24 @@ import DownArrow from '../components/icons/DownArrow.vue';
         <SearchBar class="" type="text" placeholder="Search Students..." />
         </div>
     <div class="flex flex-col mt-10 justify-center items-center" id="table">
-        <table class="w-[100rem] border-2 border-black table-auto text-left">
+<!--         <table class="w-[100rem] border-2 border-black table-auto text-left">
+            <thead class="fill-primary-g border-2 border-black">
+                <tr class="bg-primary-g">
+                    <th class="p-4">Name</th>
+                    <th class="p-4">Grade</th>
+                    <th class="p-4">OSIS</th>
+                    <th class="p-4">Email</th>
+                    <th class="p-4">Progress</th>
+                    <th class="p-4">Details</th>
+                </tr>
+            </thead>
+            <tbody class="border-2 border-black" v-for="student for students">
+                <tr>
+                    <td>{{ osis }}</td>
+                </tr>
+            </tbody>
+        </table> -->
+         <table class="w-[100rem] border-2 border-black table-auto text-left">
             <thead class="fill-primary-g border-2 border-black">
                 <tr class="bg-primary-g">
                     <th class="p-4">Name</th>
