@@ -33,7 +33,7 @@
           <input class="space" type="date" v-model="date" placeholder="Date" />
         </div>
         <div class="item">
-          <label class="formt" for="email">
+          <label class="formt" for="emails">
             Notify People
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
               <!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
@@ -44,16 +44,16 @@
           </label>
           <input
             class="space"
-            type="password"
+            type="email"
             v-model="people"
             placeholder="Notify People"
           />
         </div>
         <div class="item">
-          <label class="formt" for="password"> Description </label>
+          <label class="formt" for="description"> Description </label>
           <input
             class="space"
-            type="password"
+            type="email"
             v-model="description"
             placeholder="Description"
           />
@@ -72,7 +72,7 @@
   flex-direction: row;
 }
 .x {
-  margin-left: 45rem;
+  margin-left: 46rem;
   fill: #37394f;
   transition: 0.3s;
   margin-top: 1rem;
