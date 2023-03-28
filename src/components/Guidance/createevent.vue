@@ -16,7 +16,7 @@
           <label class="formt" for="title">Title </label>
           <input
             class="space"
-            type="email"
+            type="text"
             v-model="title"
             placeholder="Title"
           />
@@ -53,7 +53,7 @@
           <label class="formt" for="description"> Description </label>
           <input
             class="space"
-            type="email"
+            type="text"
             v-model="description"
             placeholder="Description"
           />
