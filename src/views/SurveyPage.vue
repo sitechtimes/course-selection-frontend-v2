@@ -1,23 +1,18 @@
 <template>
-  <div class="mt-32 height-48 text-2xl flex flex-wrap flex-row ">
-    <fieldset class="field">
-    <legend >{{ question }}</legend>
-    <div v-for="choice in form" :key="choice" class="circle-button flex flex-wrap w-[30%] flex-row">
-      <input
-        type="radio"
-        class="w-6 h-6 m-2 outline-1 flex flex-wrap flex-row checked:border-1 checked:border-black outline-black checked:outline-black checked:outline-1 checked:outline-offset-0 bg-[#EAEAEA] focus:ring-transparent checked:bg-none checked:bg-[#6A9FD1] checked:hover:bg-[#6A9FD1] checked:focus:bg-[#6A9FD1] shadow-[inset_0px_4px_4px_rgba(0,0,0,0.25)]"
-        :id="choice.id"
-        :name="question"
-      />
-      <label :for="choice.id" class="flex flex-wrap flex-row">{{ choice.answer }}</label>
+  <section class="mt-[7rem]"> <!-- This one is the same for every year -->
+    <h1 class="text-[#37394F] text-4xl md:text-6xl font-bold text-center">______ Year Survey</h1>     <!-- Fill in ______ with the year -->
+    <div class="mt-[3rem] text-2xl md:text-4xl text-black ml-32"><label for="major">How many AP or college-level courses are you interested in taking?</label>
+      <input type="text" id="major" class="mt-[2rem] h-[4rem] w-[90%] rounded-xl border-4 border-[#7D7D7D]"/>
     </div>
-    </fieldset>
-  </div>
+    <surveyButton :form="form" :question="question" />
+    <nextButton class="mt-8 mb-8 md:absolute md:mt-16 md:right-32 "></nextButton>
+  </section>
 </template>
 
 <script setup lang="ts">
 import pageOne from "../components/SurveyPageComponents/pages/returnToHome.vue";
-import SurveyButton from "../components/SurveyPageComponents/reusables/surveyButton.vue";
+import nextButton from "../components/SurveyPageComponents/reusables/nextButton.vue";
+import surveyButton from "../components/SurveyPageComponents/reusables/surveyButton.vue";
 
 const form = [
   {
