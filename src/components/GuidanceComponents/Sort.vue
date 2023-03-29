@@ -1,22 +1,76 @@
+<script setup lang="ts">
+import { ref } from "vue";
+import DownArrow from '../icons/DownArrow.vue';
+
+const name = ref("courseSort");
+const input = ref("");
+const props = ["title"];
+const selected = ref("Sort By");
+const isOpen = ref(false);
+const subject = ref("Subject");
+const atoz = ref("Course Name (A-Z)");
+const ztoa = ref("Course Name (Z-A)");
+
+/* const SubjectSort = computed(() => {
+  function compare(a, b) {
+    if (a.subject < b.subject) return -1;
+    if (a.subject > b.subject) return 1;
+    return 0;
+  }
+  let sortshow = document.getElementById("sortshow");
+  sortshow.innerHTML = "Subject";
+  return courses.value.sort(compare);
+});
+const IncNameSort = computed(() => {
+  function compare(a, b) {
+    if (a.name < b.name) return -1;
+    if (a.name > b.name) return 1;
+    return 0;
+  }
+  let sortshow = document.getElementById("sortshow");
+  sortshow.innerHTML = "Course Name (A-Z)";
+  return courses.value.sort(compare);
+});
+const DecNameSort = computed(() => {
+  function compare(a, b) {
+    if (a.name > b.name) return -1;
+    if (a.name < b.name) return 1;
+    return 0;
+  }
+  let sortshow = document.getElementById("sortshow");
+  sortshow.innerHTML = "Course Name (Z-A)";
+  return courses.value.sort(compare);
+});
+function show() {
+  onMounted(() => {
+    return {
+      name,
+      input,
+      props,
+      isOpen,
+    };
+  });
+} */
+</script>
+
 <template>
-    <div></div>
-<!--     <div
-      class="w-64 h-10 mb-4 relative border border-zinc-300 bg-white text-zinc-400 rounded cursor-pointer"
+  <div class="w-[16.4rem]">
+     <div
+      class="h-10 mr-4 flex flex-row bg-primary-g text-black justify-evenly cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
       id="sort"
       @click="isOpen = !isOpen"
     >
-      <DownArrow
-        class="absolute fill-zinc-400 right-2 top-[0.6rem] text-zinc-400 z-0 cursor-pointer"
-      />
-      <div class="w-40">
-        <a class="flex justify-left mt-2 ml-3">
-          <p class="font-bold" id="sortshow">{{ selected }}</p>
+      <div>
+        <a class="mt-2.5 ml-4 flex">
+          <p class="font-semibold" id="sortshow">{{ selected }}</p>
         </a>
       </div>
-      <div class="sub-menu" v-if="isOpen">
+      <DownArrow class="mt-2.5"/>
+      </div>
+      <div class="sub-menu absolute shadow-[4px_3px_3px_rgba(0,0,0,0.25)]" v-if="isOpen">
         <div
           @click="SubjectSort()"
-          class="flex justify-left h-10 p-1 border border-zinc-300 bg-white text-zinc-400"
+          class="flex justify-left h-10 w-44 p-1 border border-primary-g bg-tertiary-g"
         >
           <button class="ml-2">
             {{ subject }}
@@ -24,16 +78,16 @@
         </div>
         <div
           @click="IncNameSort()"
-          class="flex justify-left h-10 p-1 border border-t-transparent border-zinc-300 bg-white text-zinc-400"
+          class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g"
         >
           <button class="ml-2">{{ atoz }}</button>
         </div>
         <div
           @click="DecNameSort()"
-          class="flex justify-left h-10 p-1 border border-t-transparent border-zinc-300 bg-white text-zinc-400"
+          class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g"
         >
           <button class="ml-2">{{ ztoa }}</button>
         </div>
       </div>
-    </div> -->
+    </div>
 </template>
