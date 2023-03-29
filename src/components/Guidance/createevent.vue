@@ -1,11 +1,12 @@
 <template>
   <div class="event h-screen w-full flex flex-column mt-20">
-    <button  @click="showe = !showe" style="cursor: pointer">Add Event +</button>
-    <div v-if"showe" class="createevent h-screen flex flex-row m-auto mt-5">
+    <button @click="showe = !showe" style="cursor: pointer">Add Event</button>
+    <div v-if="showe" class="createevent h-screen flex flex-row m-auto mt-5">
       <div class="event">
         <div class="top">
           <h2 class="m-8 font-bold">Create Event</h2>
-          <svg @click="hidee = !hidee"  
+          <svg
+            @click="hidee = !hidee"
             class="x"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 320 512"
@@ -70,16 +71,16 @@
             />
           </div>
           <div class="item submit">
-            <button @click="submit" type="submit" class="btn font-bold">Save</button>
+            <button @click="submit" type="submit" class="btn font-bold">
+              Save
+            </button>
           </div>
         </form>
       </div>
     </div>
   </div>
 </template>
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>
 <style scoped>
 .event {
   display: flex;
