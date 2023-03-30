@@ -4,7 +4,7 @@
       <div class="mt-[3rem] text-2xl md:text-4xl text-black md:ml-32"><label for="major">How many AP or college-level courses are you interested in taking?</label>
         <input type="text" id="major" class="mt-[2rem] h-[4rem] w-[90%] rounded-xl border-4 border-[#7D7D7D]"/>
       </div>
-      <surveyButton :form="form" :question="question" />
+      <surveySingleChoice :form="form" :question="question" />
       <nextButton class="mt-8 mb-8 absolute md:mt-16 right-10 md:right-32 md:bottom-32"></nextButton>
       <backButton class="mt-8 mb-8 absolute md:mt-16 left-10 md:left-32 md:bottom-32"></backButton>
     </section>
@@ -13,19 +13,19 @@
   <script setup lang="ts">
   import nextButton from "../reusables/nextButton.vue";
   import backButton from "../reusables/backButton.vue";
-  import surveyButton from "../reusables/surveyButton.vue";
+  import surveySingleChoice from "../Reusables/surveySingleChoice.vue";
   
   const form = [
     {
-      id: "first-question",
+      id: "first-choice",
       answer: "Yes",
     },
     {
-      id: "second-question",
+      id: "second-choice",
       answer: "No",
     },
     {
-      id: "third-question",
+      id: "third-choice",
       answer: "Not Sure",
     },
   ];
