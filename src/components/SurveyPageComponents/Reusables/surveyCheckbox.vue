@@ -1,6 +1,6 @@
 <template>
     <div class="md:mt-32 mt-16 md:text-4xl text-2xl flex flex-wrap flex-row md:ml-32 ">
-      <fieldset class="field flex w-[100%]" :class="height">
+      <fieldset class="field flex" :class="height"> <!-- I did this because I have no idea how to make it fill the rest of the page, so this will let the page decide how long it should be.  -->
       <legend class="flex flex-wrap overflow-visible">{{ question }}</legend>
       <div class="field flex flex-col flex-wrap">
         <div v-for="choice in classes" :key="choice" class="square-button flex flex-wrap flex-column m-4 md:ml-8">
