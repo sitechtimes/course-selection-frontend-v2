@@ -42,7 +42,7 @@ const students = [
 <template>
     <div class="h-screen w-full flex flex-col justify-center items-center">
         <div class="ml-20 flex flex-row items-center">
-        <Sort/>
+        <Sort :students="students"/>
         <SearchBar class="" type="text" placeholder="Search Students..." />
         </div>
     <div class="flex flex-col mt-10 justify-center items-center" id="table">
