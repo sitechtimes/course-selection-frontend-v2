@@ -1,12 +1,11 @@
 <template>
   <div class="event h-screen w-full flex flex-column mt-20">
-    <button @click="showe = !showe" style="cursor: pointer">Add Event</button>
-    <div v-if="showe" class="createevent h-screen flex flex-row m-auto mt-5">
+    <button style="cursor: pointer">Add Event</button>
+    <div class="createevent h-screen flex flex-row m-auto mt-5">
       <div class="event">
         <div class="top">
           <h2 class="m-8 font-bold">Create Event</h2>
           <svg
-            @click="hidee = !hidee"
             class="x"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 320 512"
@@ -99,7 +98,7 @@ button:hover {
   flex-direction: row;
 }
 .x {
-  margin-left: 46rem;
+  margin-left: 44rem;
   fill: #37394f;
   transition: 0.3s;
   margin-top: 1rem;
@@ -151,7 +150,7 @@ svg {
   font-weight: bold;
 }
 .createevent {
-  width: 60%;
+  width: 65%;
   height: 35rem;
   border-radius: 1rem;
   border: 1px black solid;
