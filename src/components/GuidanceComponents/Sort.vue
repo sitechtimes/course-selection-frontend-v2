@@ -1,11 +1,45 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import DownArrow from '../icons/DownArrow.vue';
 
 defineProps({
   students: Array,
 })
 
+const students = [
+    {
+        lastname: "Lin",
+        firstname: "Wendy",
+        grade: 10,
+        osis: 93453927859,
+        email: "wendyl26@nycstudents.net",
+        progress: "Not Started",
+    },
+    {
+        lastname: "Chen",
+        firstname: "Jason",
+        grade: 12,
+        osis: 828471831,
+        email: "jasonc2801@nycstudents.net",
+        progress: "In Progress",
+    },
+    {
+        lastname: "Yang",
+        firstname: "Jessie",
+        grade: 11,
+        osis: 93453927859,
+        email: "jessiey2@nycstudents.net",
+        progress: "Complete",
+    },
+    {
+        lastname: "Whalen",
+        firstname: "Michael",
+        grade: 9,
+        osis: 828471831,
+        email: "mwhalen21@nycdoe.gov",
+        progress: "Not Started",
+    },
+]
 const name = ref("courseSort");
 const input = ref("");
 const props = ["title"];
@@ -20,6 +54,25 @@ const grade9 = ref("Grade 9")
 const grade10 = ref("Grade 10")
 const grade11 = ref("Grade 11")
 
+const IncNameSort = computed(() => {
+  function compare(a, b) {
+    if (a.name < b.name) return -1;
+    if (a.name > b.name) return 1;
+    return 0;
+  }
+  return students.value.sort(compare);
+});
+
+function show() {
+  onMounted(() => {
+    return {
+      name,
+      input,
+      props,
+      isOpen,
+    };
+  });
+}
 
 /* const IncNameSort = computed(() => {
   function compare(a, b) {
