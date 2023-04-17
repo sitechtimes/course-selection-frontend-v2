@@ -55,12 +55,13 @@ const grade10 = ref("Grade 10")
 const grade11 = ref("Grade 11")
 
 const IncNameSort = computed(() => {
-  function compare(a, b) {
+  function compare() {
     if (a.name < b.name) return -1;
     if (a.name > b.name) return 1;
     return 0;
   }
-  return students.value.sort(compare);
+  students.sort();
+  console.log(students)
 });
 
 function show() {
