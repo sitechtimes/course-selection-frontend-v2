@@ -2,6 +2,7 @@
 import { RouterLink } from 'vue-router'
 import gsap from 'gsap'
 import { ref, onMounted } from 'vue'
+import { useUserStore } from '../../stores/user';
 
 let userOpen = ref(false)
 
@@ -42,7 +43,7 @@ onMounted(() => {
         <div v-if="userOpen" id="overlay" class="absolute min-w-[5rem] w-[120%] bg-zinc-100 flex flex-col justify-center items-center mt-[6rem] px-2 pt-10 pb-2 space-y-2 rounded-md">
             <RouterLink id="name-link" to="/profile"><p class="text-base">Profile</p></RouterLink>
             <RouterLink id="name-link" to="/settings"><p class="text-base">Settings</p></RouterLink>
-            <p id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>
+            <p @click="useUserStore().isLoggedIn = false" id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>
         </div>
     </div>
 </template>

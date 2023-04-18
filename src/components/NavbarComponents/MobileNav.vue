@@ -58,7 +58,7 @@ onMounted(() => {
                 <div v-if="userOpen" class="flex flex-col justify-center items-start space-y-4 px-2">
                     <RouterLink @click="$emit('e')" id="user-link" to="/profile"><p class="text-3xl">Profile</p></RouterLink>
                     <RouterLink @click="$emit('e')" id="user-link" to="/settings"><p class="text-3xl">Settings</p></RouterLink>
-                    <p id="user-link" @click="$emit('e')" class="text-3xl text-red-500 cursor-pointer">Logout</p>
+                    <p id="user-link" @click="$emit('e'), userStore.isLoggedIn = false" class="text-3xl text-red-500 cursor-pointer">Logout</p>
                 </div>
             </div>
         </div>
