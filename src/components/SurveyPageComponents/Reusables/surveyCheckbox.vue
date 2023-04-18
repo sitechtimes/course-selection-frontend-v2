@@ -1,5 +1,5 @@
 <template>
-    <div class="md:text-4xl text-2xl flex flex-wrap flex-row md:ml-32">
+    <div class="md:text-4xl text-2xl flex flex-wrap flex-row md:ml-32 text-black">
       <fieldset class="field flex overflow-visible" :class="height"> <!-- I did this because I have no idea how to make it fill the rest of the page, so this will let the page decide how long it should be.  -->
       <legend class="flex flex-wrap overflow-visible">{{ question }}</legend>
       <div class="field flex flex-col flex-wrap w-fit ">
@@ -10,7 +10,7 @@
             :id="choice.id"
             :name="question"
           />
-          <label :for="choice.id" class="flex flex-wrap self-center md:ml-6 flex-row ">{{ choice.answer }}</label>
+          <label :for="choice.id" class="flex flex-wrap self-center ml-2 md:ml-6 flex-row ">{{ choice.answer }}</label>
         </div>
       </div>
       </fieldset>
