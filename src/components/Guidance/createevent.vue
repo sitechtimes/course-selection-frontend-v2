@@ -162,4 +162,13 @@ h2 {
   font-size: 2rem;
   margin-bottom: 1rem;
 }
+
+@media only screen and (max-width: 1180px) {
+}
+@media only screen and (max-width: 800px) {
+}
+@media only screen and (max-width: 670px) {
+}
+@media only screen and (max-width: 604px) {
+}
 </style>
