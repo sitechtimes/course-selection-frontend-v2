@@ -30,7 +30,12 @@
     </fieldset>
   </div> -->
   <div class="mt-96 height-48">
-    <SurveyButton :form="form" :name="name" />
+    <h1>ok</h1>
+    <VueDraggableNext :list="courses">
+      <ul v-for="course in courses" :key="course" class="text-xl">
+        {{ course }}
+      </ul>
+    </VueDraggableNext>
   </div>
 </template>
 
@@ -38,6 +43,7 @@
 
 <script setup lang="ts">
 import SurveyButton from "../components/SurveyPageComponents/SurveyButton.vue";
+import {VueDraggableNext} from "vue-draggable-next";
 
 // test stuff
 const form = [
@@ -50,5 +56,14 @@ const form = [
     answer: "Yes",
   },
 ];
+const courses = [
+  "A",
+  "B",
+  "C",
+  "D",
+  "E",  
+  "F",
+  "G",
+]
 const name = "eighth";
 </script>
