@@ -1,16 +1,41 @@
-<script setup lang="ts">
+<script lang="ts">
 import SearchBar from '../components/GuidanceComponents/SearchBar.vue';
 import DownArrow from '../components/icons/DownArrow.vue';
 import Sort from '../components/GuidanceComponents/Sort.vue';
 import { students } from '../mockdata';
 import { ref } from 'vue';
+
+export default {
+  components: {
+    SearchBar,
+    Sort,
+  },
+  data() {
+    return {
+        students: students,
+      input: ref(""),
+    };
+  },
+  computed: {
+    filteredList() {
+      return this.students.filter((student) => {
+        return (
+          student.lastname.toLowerCase().indexOf(this.input.toLowerCase()) != -1
+        );
+      });
+    },
+  },
+  mounted() {
+    this.filteredList;
+  },
+};
 </script>
 
 <template>
     <div class="h-screen w-full flex flex-col justify-center items-center">
         <div class="ml-20 flex flex-row items-center">
         <Sort :students="students"/>
-        <SearchBar class="" type="text" placeholder="Search Students..." />
+        <SearchBar class="" type="text" v-model="input" placeholder="Search Students..." />
         </div>
     <div class="flex flex-col mt-10 justify-center items-center" id="table">
         <table class="w-[100rem] border-2 border-black table-auto text-left">
@@ -24,7 +49,7 @@ import { ref } from 'vue';
                     <th class="p-4">Details</th>
                 </tr>
             </thead>
-            <tbody v-for="student in students" class="border-2 border-black">
+            <tbody v-for="student in filteredList" class="border-2 border-black">
                 <tr>
                     <td class="p-4">{{ student.lastname }}, {{ student.firstname }}</td>
                     <td class="p-4">{{ student.grade }}</td>
