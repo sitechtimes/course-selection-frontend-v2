@@ -1,3 +1,5 @@
+This entire page is not needed (questions are in the backend)
+
 <template>
     <section class="mt-[7rem] md:text-left text-center"> <!-- This one is the same for every year -->
       <h1 class="text-[#37394F] text-4xl md:text-6xl font-bold text-center">______ Year Survey</h1>     <!-- Fill in ______ with the year -->

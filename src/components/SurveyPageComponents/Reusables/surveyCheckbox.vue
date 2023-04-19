@@ -1,7 +1,7 @@
 <template>
-    <div class="md:text-4xl text-2xl flex flex-wrap flex-row md:ml-32 text-black">
+    <div class="lg:text-4xl md:text-3xl text-2xl flex flex-wrap flex-row lg:ml-32 text-black ">
       <fieldset class="field flex overflow-visible" :class="height"> <!-- I did this because I have no idea how to make it fill the rest of the page, so this will let the page decide how long it should be.  -->
-      <legend class="flex flex-wrap overflow-visible">{{ question }}</legend>
+      <legend class="flex flex-wrap overflow-visible md:self-center">{{ question }}</legend>
       <div class="field flex flex-col flex-wrap w-fit ">
         <div v-for="choice in classes" :key="choice" class="square-button flex flex-wrap flex-column m-4 md:ml-8 ">
           <input
