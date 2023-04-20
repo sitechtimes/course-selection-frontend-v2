@@ -131,6 +131,7 @@ export const useUserStore = defineStore('user', {
                     this.email = response.data.user.email
                     this.first_name = response.data.user.first_name
                     this.last_name = response.data.user.last_name
+                    this.isLoggedIn = true
                     console.log(this.first_name)
                     this.getUserType() //make dj rest auth return user type (backend) to remove this function
 
