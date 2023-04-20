@@ -1,69 +1,141 @@
 import { defineStore } from "pinia";
 import axios from 'axios'
-interface userStore {
-    name: string,
-    email: string,
-    data: userData,
-    grade?: grade,
-    homeroom?: string,
-    accountType: string,
-    isLoggedIn: boolean
-}
-interface userData {
-    survey?: object,
-    //each object will include the student and their survey data?
-    students?: studentData[],
-    homeroom?: string,
-    counselor?: string,
-}
-interface studentData {
-    name: string,
-    osis: number,  //may not be needed
-    email: string, 
-    survey: object, 
-    counselor: string,
-}
+import {user, account_type, userData} from "../types/interface";
 
-type account_type = 'student' | 'guidance';
-type grade = 'freshman' | 'sophomore' | 'junior' | 'senior';
+
+
+
+
 
 export const useUserStore = defineStore('user', {
-    state: (): userStore => ({
-        name: '',
-        email: '',
+    state: (): user => ({
+        first_name: '',
         data: {},
-        accountType: '',
-        isLoggedIn: false
+        last_name: '',
+        email: '',
+        userType: null,
+        isLoggedIn: false,
+        access_token: '',
+        refresh_token: '',
     }),
     getters: {
-        getStudents(name?: string): object[] | object | undefined {
-            if (name) {
-                const students = this.data.students?.filter((e) => e.name === name);
-                return students
-            }
-            return this.data.students
-        },
+        // getStudents(name?: string): object[] | object | undefined {
+        //     if (name) {
+        //         const students = this.data.students?.filter((e) => e.first_name === name);
+        //         return students
+        //     }
+        //     return this.data.students
+        // },
     },
     actions: {
         async init(type: account_type) {
-            this.accountType = type;
+            this.userType = type;
             if (type === 'guidance') {
-                // get all data for counselor and set it here
-                const res = await fetch('api.siths.dev');
-                this.data.students = await res.json();
+                console.log('guidance logged')
+                await axios.post('https://api.siths.dev/graphql/',{
+                    query:`query{
+                            user{
+                                firstName
+                            }
+                            guidance{
+                                students{
+                                    user{
+                                        firstName
+                                    }
+                                }
+                            }
+
+                    }`
+                },{
+                    headers:{
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.access_token}`
+                    }
+                }).then((res)=>{
+                    console.log(res.data)
+                })
             }
             else {
-                //get all student data from the api and set it here
-                const res = await fetch('api.siths.dev');
-                this.data.survey = await res.json();
+                await axios.post('https://api.siths.dev/graphql/', {
+                    query:`query{
+                        user{
+                            firstName
+                            lastName
+                            email
+                            isActive
+                            isStudent
+                            isGuidance
+                        }
+                        student{
+                            homeroom
+                            coursesTaken{
+                                courseCode
+                            }
+                            coursesRequired{
+                                courseCode
+                            }
+                            coursesAvailable{
+                                courseCode
+                            }
+                        }
+                        survey{
+                            questions{
+                                question
+                                questionType
+                            }
+                        }
+                        answeredSurvey{
+                            answers
+                        }
+                        }`,
+                    },{
+                    headers:{
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.access_token}`
+                    }
+    
+                }).then((res:any)=>{
+                    this.data = res.data.data // data needs to be filtered properly
+                    console.log(this.data)
+                    
+                })
             }
         },
+        async getUserType(){
+            await axios.post('https://api.siths.dev/graphql/', {
+                        query: `query{
+                            user{
+                                isGuidance
+                                isStudent
+                            }
+                        }`
+                    },{
+                        headers:{
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${this.access_token}`
+                        }
+                    }).then((res3:any)=>{
+                        if (res3.data.data.user.isGuidance){
+                            this.userType = 'guidance'
+                        } else {
+                            this.userType = 'student'
+                        }
+                        this.init(this.userType)
+                    })
+        },
         async GoogleLogin(res:any){
-            console.log(res.access_token)
-            await axios.post('http://127.0.0.1:8000/social-login/google/',{"access_token":res.access_token}
+            await axios.post('https://api.siths.dev/social-login/google/',{"access_token":res.access_token}
                 ).then((response)=>{
-                console.log(response)
+                    this.access_token = response.data.access_token
+                    this.refresh_token = response.data.refresh_token
+                    this.email = response.data.user.email
+                    this.first_name = response.data.user.first_name
+                    this.last_name = response.data.user.last_name
+                    console.log(this.first_name)
+                    this.getUserType() //make dj rest auth return user type (backend) to remove this function
+
             })
-        }
+        },
     },
+    persist: true,
 })
