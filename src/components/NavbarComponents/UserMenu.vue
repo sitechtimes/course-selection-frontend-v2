@@ -2,8 +2,11 @@
 import { RouterLink } from 'vue-router'
 import gsap from 'gsap'
 import { ref, onMounted } from 'vue'
+import { useUserStore } from '../../stores/user';
 
 let userOpen = ref(false)
+
+const userStore = useUserStore()
 
 const toggleUser = () => {
     if (!userOpen.value) {
@@ -38,11 +41,11 @@ onMounted(() => {
 
 <template>
     <div class="relative flex justify-center items-center w-auto">
-        <p @click="toggleUser" id="name" class="text-base cursor-pointer z-10">Jessie Yang</p>
+        <p @click="toggleUser" id="name" class="text-base cursor-pointer z-10">{{ userStore.first_name }} {{ userStore.last_name }}</p>
         <div v-if="userOpen" id="overlay" class="absolute min-w-[5rem] w-[120%] bg-zinc-100 flex flex-col justify-center items-center mt-[6rem] px-2 pt-10 pb-2 space-y-2 rounded-md">
             <RouterLink id="name-link" to="/profile"><p class="text-base">Profile</p></RouterLink>
             <RouterLink id="name-link" to="/settings"><p class="text-base">Settings</p></RouterLink>
-            <p id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>
+            <p @click="userStore.isLoggedIn = false" id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>
         </div>
     </div>
 </template>
