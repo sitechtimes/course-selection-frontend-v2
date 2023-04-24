@@ -31,7 +31,7 @@
   </div> -->
   <div class="mt-96 height-48">
     <h1>ok</h1>
-    <VueDraggableNext :list="courses">
+    <VueDraggableNext v-model="courses" @change="log">
       <ul v-for="course in courses" :key="course" class="text-xl">
         {{ course }}
       </ul>
@@ -66,4 +66,8 @@ const courses = [
   "G",
 ]
 const name = "eighth";
+
+function log(){
+  console.log(courses)
+}
 </script>
