@@ -100,7 +100,7 @@ button:hover {
   flex-direction: row;
 }
 .x {
-  margin-left: 44rem;
+  margin-left: 34rem;
   fill: #37394f;
   transition: 0.3s;
   margin-top: 1rem;
@@ -152,7 +152,7 @@ svg {
   font-weight: bold;
 }
 .createevent {
-  width: 65%;
+  width: 70%;
   height: 35rem;
   border-radius: 1rem;
   margin-top: 8rem;
@@ -164,6 +164,43 @@ h2 {
 }
 
 @media only screen and (max-width: 1180px) {
+  .createevent {
+    width: 70%;
+    height: 30rem;
+    border-radius: 0.8rem;
+    margin-top: 3rem;
+    border: 1px black solid;
+  }
+  .space {
+    justify-content: center;
+    padding: 1rem;
+    margin-left: 2rem;
+    display: block;
+    width: 20rem;
+
+    border-radius: 0.4rem;
+    font-size: 1.2rem;
+    padding-left: 0.7rem;
+    height: 0rem;
+  }
+  .x {
+    margin-left: 30rem;
+  }
+  svg {
+    width: 1rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+  }
+  .formt {
+    font-size: 1.3rem;
+  }
+  button {
+    font-size: 1.3rem;
+  }
+  .item {
+    margin-top: 0.8rem;
+  }
 }
 @media only screen and (max-width: 800px) {
 }
