@@ -1,6 +1,26 @@
 <script setup lang="ts">
 import BaseLogin from '../../components/LoginComponents/BaseLogin.vue';
+import axios from 'axios'
+import { useUserStore } from '../../stores/user';
 
+const userStore = useUserStore()
+
+const testChange = async () => {
+            await axios.post('https://api.siths.dev/graphql/', {
+                        query: `mutation {
+                            updateMeeting(osis: "123", meeting:"2007-12-03T10:15:30Z") {
+                                student{id}
+                            }
+                        }`
+                    },{
+                        headers:{
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${userStore.access_token}`
+                        }
+                    }).then((response)=>{
+                        console.log("yep")
+                    })
+}
 </script>
 
 <template>
@@ -9,6 +29,7 @@ import BaseLogin from '../../components/LoginComponents/BaseLogin.vue';
           <div id="left" class="hidden w-1/2 h-full border-zinc-400 lg:border-r justify-center items-center flex-col space-y-6 lg:flex">
             <h1 class="text-4xl font-bold
               ">Student</h1>
+              <button @click="testChange()">yep</button>
               <img
                   id="loginpic"
                   class="h-60"
