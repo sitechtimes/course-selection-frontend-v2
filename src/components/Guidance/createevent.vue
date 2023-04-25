@@ -70,7 +70,7 @@
             />
           </div>
           <div class="item submit">
-            <button @click="submit" type="submit" class="btn font-bold">
+            <button @click="submit" type="submit" class="font-bold">
               Save
             </button>
           </div>
@@ -100,7 +100,7 @@ button:hover {
   flex-direction: row;
 }
 .x {
-  margin-left: 34rem;
+  margin-left: 40rem;
   fill: #37394f;
   transition: 0.3s;
   margin-top: 1rem;
@@ -184,7 +184,7 @@ h2 {
     height: 0rem;
   }
   .x {
-    margin-left: 30rem;
+    margin-left: 18rem;
   }
   svg {
     width: 1rem;
@@ -203,8 +203,114 @@ h2 {
   }
 }
 @media only screen and (max-width: 800px) {
+  .createevent {
+    width: 65%;
+    height: 22rem;
+    border-radius: 0.8rem;
+    margin-top: 2rem;
+    border: 1px black solid;
+  }
+  .space {
+    justify-content: center;
+    padding: 0.7rem;
+    margin-left: 1rem;
+    display: block;
+    width: 20rem;
+    border-radius: 0.4rem;
+    font-size: 0.8rem;
+    padding-left: 0.5rem;
+    height: 0rem;
+  }
+  .x {
+    margin-left: 20rem;
+    width: 0.8rem;
+  }
+  svg {
+    width: 1rem;
+  }
+  h2 {
+    font-size: 1.2rem;
+    padding: 0;
+    margin: 1rem;
+    margin-bottom: 0rem;
+  }
+  .formt {
+    font-size: 1rem;
+    margin-left: 1rem;
+  }
+  .space {
+    margin-left: 1rem;
+  }
+  button {
+    font-size: 1rem;
+    margin: 0;
+    margin-left: 1rem;
+  }
+  .item {
+    margin-top: 0.5rem;
+    margin-left: 0rem;
+  }
+  form {
+    margin-top: 0.5rem;
+    margin-left: 0rem;
+  }
 }
 @media only screen and (max-width: 670px) {
+  .createevent {
+    width: 65%;
+    height: 18rem;
+    border-radius: 0.5rem;
+    margin-top: 2rem;
+    padding-bottom: 0;
+    border: 1px black solid;
+  }
+  .space {
+    justify-content: center;
+    padding: 0.5rem;
+    margin-left: 1rem;
+    display: block;
+    width: 10rem;
+    border-radius: 0.2rem;
+    font-size: 0.8rem;
+    padding-left: 0.5rem;
+    height: 0rem;
+  }
+  .x {
+    margin-left: 5rem;
+    width: 0.8rem;
+  }
+  svg {
+    width: 0.6rem;
+  }
+  h2 {
+    width: 80%;
+    font-size: 1rem;
+    padding: 0;
+    margin: 1rem;
+    margin-bottom: 0rem;
+  }
+  .formt {
+    font-size: 0.8rem;
+    margin-left: 1rem;
+  }
+  .item {
+    margin-top: 0.6rem;
+    margin-left: 0rem;
+  }
+  button {
+    font-size: 0.8rem;
+    padding: 0rem;
+    margin: 0rem;
+    height: 0.5rem;
+    margin-left: 1rem;
+  }
+  form {
+    margin-top: 0.5rem;
+    margin-left: 0rem;
+  }
+  .submit {
+    margin-top: 0rem;
+  }
 }
 @media only screen and (max-width: 604px) {
 }
