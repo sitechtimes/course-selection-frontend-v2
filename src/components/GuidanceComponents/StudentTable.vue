@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { students } from '../../mockdata';
+import { useUserStore } from '../../stores/user';
+
+const userStore = useUserStore()
+console.log(userStore)
 </script>
 
 <template>
@@ -17,7 +21,7 @@ import { students } from '../../mockdata';
             </thead>
             <tbody v-for="student in students" class="border-2 border-black">
                 <tr>
-                    <td class="p-4">{{ student.lastname }}, {{ student.firstname }}</td>
+                    <td class="p-4">{{ student.lastname }}, {{ student.first_name }}</td>
                     <td class="p-4">{{ student.grade }}</td>
                     <td class="p-4">{{ student.osis }}</td>
                     <td class="p-4">{{ student.email }}</td>
