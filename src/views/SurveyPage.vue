@@ -1,8 +1,8 @@
 <template>
-  <section class="mt-[7rem] lg:text-left text-center">
+  <section class="mt-[7%] lg:text-left text-center"> <!-- Each 1% is 15.328 pixels. 1 rem is 16 pixels. Values based off of the computer in Whalen's room-->
     <h1 class="text-[#37394F] text-[225%] md:text-[375%] font-bold text-center">______ Year Survey</h1>     <!-- Fill in ______ with the year -->
     <div class="flex flex-col lg:flex-row">
-      <surveyCheckbox :classes="classes" :question="question" :height="height" class="md:mt-8 mt-16"></surveyCheckbox>
+      <surveyCheckbox :classes="classes" :question="question" :height="height" class="md:mt[2%] mt-[4%]"></surveyCheckbox>
       <div class="border-black border-[0.5px] border-solid rounded-xl lg:w-[35%] w-[90%] lg:ml-28 h-[vh] md:mt-8 relative self-center lg:self-auto">
         <div class="flex justify-center mt-8">
           <p class="text-[1.5rem] text-black w-80">Drag course(s) into order of preference:</p>
