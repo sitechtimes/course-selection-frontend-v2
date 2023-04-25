@@ -14,6 +14,7 @@ import BaseLogin from '../../components/LoginComponents/BaseLogin.vue';
           </div>
             <div id="right" class="w-full h-full flex flex-col justify-center items-center space-y-6 lg:w-1/2">
               <BaseLogin/> 
+              
             </div>
         </div>
     </div>

@@ -12,8 +12,8 @@
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus deleniti doloremque nisi at.
       </h2>
       <div class="flex justify-start items-center space-x-4">
-      <RouterLink to="/guidance-home">
-        <button class="bg-primary-g w-36 h-12 rounded text-lg font-semibold hover:bg-tertiary-g">
+      <RouterLink to="/guidance-studentlist">
+        <button class="bg-other-g w-36 h-12 rounded text-lg font-semibold hover:bg-primary-g">
           View Students
         </button>
       </RouterLink>
