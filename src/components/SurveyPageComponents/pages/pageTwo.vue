@@ -2,8 +2,8 @@ This entire page is not needed (questions are in the backend)
 
 <template>
     <section class="mt-[7rem] md:text-left text-center"> <!-- This one is the same for every year -->
-      <h1 class="text-[#37394F] text-4xl md:text-6xl font-bold text-center">______ Year Survey</h1>     <!-- Fill in ______ with the year -->
-      <div class="mt-[3rem] text-2xl md:text-4xl text-black md:ml-32"><label for="major">How many AP or college-level courses are you interested in taking?</label>
+      <h1 class="text-[#37394F] text-[225%] md:text-[375%] font-bold text-center">______ Year Survey</h1>     <!-- Fill in ______ with the year -->
+      <div class="mt-[4%] text-2xl md:text-4xl lg:text-[200%] text-black md:ml-32"><label for="major">How many AP or college-level courses are you interested in taking?</label>
         <input type="text" id="major" class="mt-[2rem] h-[4rem] w-[90%] rounded-xl border-4 border-[#7D7D7D]"/>
       </div>
       <surveySingleChoice :form="form" :question="question" />
