@@ -152,7 +152,7 @@ svg {
   font-weight: bold;
 }
 .createevent {
-  width: 70%;
+  width: 65%;
   height: 35rem;
   border-radius: 1rem;
   margin-top: 8rem;
@@ -258,7 +258,7 @@ h2 {
 @media only screen and (max-width: 670px) {
   .createevent {
     width: 65%;
-    height: 18rem;
+    height: 17rem;
     border-radius: 0.5rem;
     margin-top: 2rem;
     padding-bottom: 0;
@@ -273,6 +273,7 @@ h2 {
     border-radius: 0.2rem;
     font-size: 0.8rem;
     padding-left: 0.5rem;
+    margin-top: 2.5px;
     height: 0rem;
   }
   .x {
@@ -292,6 +293,7 @@ h2 {
   .formt {
     font-size: 0.8rem;
     margin-left: 1rem;
+    margin-top: 0.5rem;
   }
   .item {
     margin-top: 0.6rem;
@@ -301,6 +303,7 @@ h2 {
     font-size: 0.8rem;
     padding: 0rem;
     margin: 0rem;
+    margin-top: 0.5rem;
     height: 0.5rem;
     margin-left: 1rem;
   }
@@ -313,5 +316,9 @@ h2 {
   }
 }
 @media only screen and (max-width: 604px) {
+  .x {
+    margin-left: 4rem;
+    width: 0.8rem;
+  }
 }
 </style>
