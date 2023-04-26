@@ -44,6 +44,19 @@ export const useUserStore = defineStore('user', {
                                     }
                                 }
                             }
+                            allSurveys {
+                                edges {
+                                    node {
+                                        survey {
+                                            questions{
+                                                question
+                                                questionType
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        
 
                     }`
                 },{
