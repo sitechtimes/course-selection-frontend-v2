@@ -12,8 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import nextButton from '../reusables/nextButton.vue';
-import backButton from '../reusables/backButton.vue'
+import backButton from '../Reusables/backButton.vue'
 </script>
 
 <style scoped> 

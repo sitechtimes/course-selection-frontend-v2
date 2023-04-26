@@ -13,8 +13,8 @@ This entire page is not needed (questions are in the backend)
   </template>
   
   <script setup lang="ts">
-  import nextButton from "../reusables/nextButton.vue";
-  import backButton from "../reusables/backButton.vue";
+  import nextButton from "../Reusables/nextButton.vue";
+  import backButton from "../Reusables/backButton.vue";
   import surveySingleChoice from "../Reusables/surveySingleChoice.vue";
   
   const form = [

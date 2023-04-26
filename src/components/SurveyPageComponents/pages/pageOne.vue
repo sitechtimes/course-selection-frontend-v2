@@ -14,7 +14,7 @@ This entire page is not needed (questions are in the backend)
 </template>
  
 <script setup lang="ts">
-import nextButton from '../reusables/nextButton.vue';
+import nextButton from '../Reusables/nextButton.vue';
 </script>
 
 <style scoped> 
