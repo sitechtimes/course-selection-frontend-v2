@@ -2,18 +2,18 @@
   <section class="md:mt-[4%] mt-[20%] lg:text-left text-center"> <!-- Each 1% is 15.328 pixels. 1 rem is 16 pixels. Values based off of the computer in Whalen's room-->
     <h1 class="text-[#37394F] text-[225%] md:text-[375%] font-bold text-center">______ Year Survey</h1>     <!-- Fill in ______ with the year -->
     <div class="flex flex-col lg:flex-row">
-      <surveyCheckbox :classes="classes" :question="question" :height="height" class="md:mt[2%] mt-[4%]"></surveyCheckbox>
-      <div class="border-black border-[0.5px] border-solid rounded-xl lg:w-[35%] w-[90%] lg:ml-28 h-[vh] md:mt-8 relative self-center lg:self-auto">
-        <div class="flex justify-center mt-8">
-          <p class="text-[1.5rem] text-black w-80">Drag course(s) into order of preference:</p>
+      <surveyCheckbox :classes="classes" :question="question" :height="height" class="md:mt-[1%] mt-[4%]"></surveyCheckbox>
+      <div class="border-black border-[0.5px] border-solid rounded-xl lg:w-[35%] w-[90%] lg:ml-28 h-[vh] md:mt-[1%] relative self-center lg:self-auto">
+        <div class="flex justify-center mt-[1%]">
+          <p class="text-[150%] text-black">Drag course(s) into order of preference:</p>
         </div>
-        <div class="flex justify-center mt-4"> <!-- This is the v-if part -->
-          <div class="bg-[#D6EEFF] w-[18rem] h-[3rem] flex justify-center items-center shadow-[4px_3px_3px_rgba(0,0,0,0.3)] rounded-2xl ">                
-            <p class="text-[#37394F] text-[1.5rem] font-bold">AP Psychology</p>
+        <div class="flex justify-center mt-[2%]"> <!-- This is the v-if part -->
+          <div class="bg-[#D6EEFF] w-[50%] h-[5vh] flex justify-center items-center shadow-[4px_3px_3px_rgba(0,0,0,0.3)] rounded-2xl ">                
+            <p class="text-[#37394F] text-[150%] font-bold">AP Psychology</p>
           </div>
         </div>
         <div class="flex flex-row-reverse md:absolute mt-6 md:mt-0 md:inset-x-0 md:bottom-0">
-          <button class="bg-[#6A9FD1] text-white w-[30%] h-[2.5rem] md:h-[3.5rem] text-[1.5rem] md:w-[10rem] md:text-[2rem] mr-5 mb-5">
+          <button class="bg-[#6A9FD1] text-white w-[30%] h-[2.5rem] md:h-[3.5rem] text-[15rem] md:w-[30%] md:text-[200%] mr-5 mb-5">
             Confirm
           </button>
         </div>
@@ -22,7 +22,6 @@
     <backButton class="mt-8 absolute left-10 md:left-32"></backButton>
     <nextButton class="mt-8 absolute right-10 md:right-32"></nextButton> <!-- Use a v-if here later to make it grayed out -->
   </section>
-  <h1 class="mt-[2rem] text-[200%]">2rem</h1>
 </template>
 
 <script setup lang="ts">
