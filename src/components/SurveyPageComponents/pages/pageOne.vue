@@ -1,4 +1,4 @@
-This entire page is not needed (questions are in the backend)
+This entire page is not needed (questions are in the backend), so i will do the fixes later!
 
 <template>
     <section class="mt-[7rem] md:text-left text-center"> <!-- This one is the same for every year -->
