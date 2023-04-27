@@ -137,27 +137,6 @@ export const useUserStore = defineStore('user', {
 
             })
         },
-        //2007-12-03T10:15:30Z
-        async changeMeeting(osis: string, newTime: string) {
-            await axios.post('https://api.siths.dev/graphql/', {
-                        query: `mutation {
-                            updateMeeting(osis: "${osis}", meeting:"${newTime}") {
-                                student{
-                                    osis
-                                    meeting
-                                }
-                            }
-                        }`
-                    },{
-                        headers:{
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${this.access_token}`
-                        }
-                    }).then((res)=>{
-                        // this.data = res.data.data 
-                        console.log("meeting changed")
-                    })  
-        },
     },
     persist: true,
 })
