@@ -5,16 +5,19 @@ import { ref, onMounted } from 'vue'
 import { useUserStore } from '../../stores/user';
 
 const userStore = useUserStore()
-let userOpen = ref(false)
 
-const toggleUser = () => {
-    if (!userOpen.value) {
-        userOpen.value = true
+const redirect = () => {
+    if (userStore.isLoggedIn === true) {
+        if (userStore.userType === 'student') {
+            return '/student/dashboard'
+        } 
+        if (userStore.userType === 'guidance') {
+            return '/guidance/dashboard'
+        }
     } else {
-        userOpen.value = false
+        return '/'
     }
 }
-
 onMounted(() => {
     const tl = gsap.timeline({
         defaults: {
@@ -28,21 +31,6 @@ onMounted(() => {
             opacity: 0,
             stagger: 0.2,
         }, '-=0.2')
-
-    document.querySelector('#user')?.addEventListener('click', () => {
-        const tl2 = gsap.timeline({
-            defaults: {
-                duration: 0.5,
-                ease: 'power1.out'
-            }
-        })
-
-        tl2.from('#user-link', {
-            y: -50, 
-            opacity: 0,
-            stagger: 0.15,
-        }, '-=0.2')
-    })
 })
 </script>
 
@@ -50,17 +38,10 @@ onMounted(() => {
     <div id="menu" class="fixed inset-0 h-screen w-full  ease-in duration-200 md:hidden z-30">
         <div id="overlay" class="absolute inset-0 w-full h-full bg-white opacity-100 -z-10"></div>
         <div v-if="userStore.isLoggedIn" class="h-full absolute top-40 left-16 flex flex-col justify-start items-start space-y-8 z-10">
-            <RouterLink @click="$emit('e')" id="link" to="/"><p class="text-4xl">Home</p></RouterLink>
+            <RouterLink @click="$emit('e')" id="link" :to="redirect()"><p class="text-4xl">Home</p></RouterLink>
             <RouterLink @click="$emit('e')" id="link" to="/survey"><p class="text-4xl">Survey</p></RouterLink>
             <RouterLink @click="$emit('e')" id="link" to="/courses"><p class="text-4xl">Courses</p></RouterLink>
-            <div class="space-y-5" id="link">
-                <p @click="toggleUser" id="user" class="text-4xl cursor-pointer">Jessie Yang</p>
-                <div v-if="userOpen" class="flex flex-col justify-center items-start space-y-4 px-2">
-                    <RouterLink @click="$emit('e')" id="user-link" to="/profile"><p class="text-3xl">Profile</p></RouterLink>
-                    <RouterLink @click="$emit('e')" id="user-link" to="/settings"><p class="text-3xl">Settings</p></RouterLink>
-                    <p id="user-link" @click="$emit('e'), userStore.isLoggedIn = false" class="text-3xl text-red-500 cursor-pointer">Logout</p>
-                </div>
-            </div>
+            <p id="link" @click="$emit('e'), userStore.isLoggedIn = false" class="text-4xl text-red-500 cursor-pointer">Logout</p>
         </div>
         <div v-else class="h-full absolute top-56 left-16 flex flex-col justify-start items-start space-y-8 z-10">
             <RouterLink @click="$emit('e')" id="link" to="/"><p class="text-4xl">Home</p></RouterLink>
