@@ -9,7 +9,11 @@ let userOpen = ref(false)
 const userStore = useUserStore()
 
 const toggleUser = () => {
-    userOpen.value = !userOpen.value
+    if (!userOpen.value) {
+        userOpen.value = true
+    } else {
+        userOpen.value = false
+    }
 }
 
 onMounted(() => {
