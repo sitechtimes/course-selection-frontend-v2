@@ -2,7 +2,7 @@
     <section class="md:mt-[4%] mt-[20%] lg:text-left text-center"> <!-- Each 1% is 15.328 pixels. 1 rem is 16 pixels. Values based off of the computer in Whalen's room-->
       <h1 class="text-[#37394F] text-[225%] md:text-[375%] font-bold text-center">______ Year Survey</h1>     <!-- Fill in ______ with the year -->
       <div class="flex flex-col lg:flex-row">
-        <surveyCheckbox :classes="classes" :question="question" class="md:mt-[1%] mt-[4%]"></surveyCheckbox>
+        <surveyCheckbox :classes="classes" class="md:mt-[1%] mt-[4%]"></surveyCheckbox>
         <div class="border-black border-[0.5px] border-solid rounded-xl lg:w-[35%] w-[90%] lg:ml-28 lg:h-[70vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll">
           <div class="flex justify-center mt-[1%]">
             <p class="text-[150%] text-black">Drag course(s) into order of preference:</p>
@@ -13,7 +13,7 @@
             </div>
           </div>
           <div class="flex flex-row-reverse mt-6 ">
-            <button class="bg-[#6A9FD1] text-white w-[30%] h-[2.5rem] lg:h-[3.5rem] text-[1.5rem] md:text-[200%] mr-5 mb-5">
+            <button class="bg-[#6A9FD1] text-white w-[30%] h-[2.5rem] lg:h-[3.5rem] text-[1.5rem] md:text-[200%] mr-5 mb-5" >
               Confirm
             </button>
           </div>
@@ -25,7 +25,8 @@
   </template>
   
 <script setup lang="ts">
-  import backButton from '../Reusables/backButton.vue'
+  import { propsToAttrMap } from '@vue/shared';
+import backButton from '../Reusables/backButton.vue'
   import nextButton from '../Reusables/nextButton.vue';
   import surveyCheckbox from "../Reusables/surveyCheckbox.vue";
 
@@ -68,10 +69,11 @@
     },
   ];
 
-  defineProps({
+  const props = defineProps({
     userData: Object
   });
-  console.log(userData.survey.questions[2]) //how to get question and type
+  
+  console.log(props.userData)
 
   </script>
   
