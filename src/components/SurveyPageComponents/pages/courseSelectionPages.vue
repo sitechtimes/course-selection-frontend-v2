@@ -2,8 +2,8 @@
     <section class="md:mt-[4%] mt-[20%] lg:text-left text-center"> <!-- Each 1% is 15.328 pixels. 1 rem is 16 pixels. Values based off of the computer in Whalen's room-->
       <h1 class="text-[#37394F] text-[225%] md:text-[375%] font-bold text-center">______ Year Survey</h1>     <!-- Fill in ______ with the year -->
       <div class="flex flex-col lg:flex-row">
-        <surveyCheckbox :classes="classes" :question="question" :height="height" class="md:mt-[1%] mt-[4%]"></surveyCheckbox>
-        <div class="border-black border-[0.5px] border-solid rounded-xl lg:w-[35%] w-[90%] lg:ml-28 h-[vh] md:mt-[1%] relative self-center lg:self-auto">
+        <surveyCheckbox :classes="classes" :question="question" class="md:mt-[1%] mt-[4%]"></surveyCheckbox>
+        <div class="border-black border-[0.5px] border-solid rounded-xl lg:w-[35%] w-[90%] lg:ml-28 lg:h-[70vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll">
           <div class="flex justify-center mt-[1%]">
             <p class="text-[150%] text-black">Drag course(s) into order of preference:</p>
           </div>
@@ -12,8 +12,8 @@
               <p class="text-[#37394F] text-[150%] font-bold">AP Psychology</p>
             </div>
           </div>
-          <div class="flex flex-row-reverse md:absolute mt-6 md:mt-0 md:inset-x-0 md:bottom-0">
-            <button class="bg-[#6A9FD1] text-white w-[30%] h-[2.5rem] md:h-[3.5rem] text-[1.5rem] md:w-[30%] md:text-[200%] mr-5 mb-5">
+          <div class="flex flex-row-reverse mt-6 ">
+            <button class="bg-[#6A9FD1] text-white w-[30%] h-[2.5rem] lg:h-[3.5rem] text-[1.5rem] md:text-[200%] mr-5 mb-5">
               Confirm
             </button>
           </div>
@@ -25,13 +25,10 @@
   </template>
   
 <script setup lang="ts">
-    import backButton from '../Reusables/backButton.vue'
-    import nextButton from '../Reusables/nextButton.vue';
-    import surveyCheckbox from "../Reusables/surveyCheckbox.vue";
-  
-  
-  const height = "h-[40rem]" // to fit the survey how you want
-  
+  import backButton from '../Reusables/backButton.vue'
+  import nextButton from '../Reusables/nextButton.vue';
+  import surveyCheckbox from "../Reusables/surveyCheckbox.vue";
+
   const classes = [
     {
       id: "first-class",
@@ -70,7 +67,12 @@
       answer: "Anatomy and Physiology",
     },
   ];
-  const question = "Select the Science course(s) you are interested in:";
+
+  defineProps({
+    userData: Object
+  });
+  console.log(userData.survey.questions[2]) //how to get question and type
+
   </script>
   
   <style scoped></style>

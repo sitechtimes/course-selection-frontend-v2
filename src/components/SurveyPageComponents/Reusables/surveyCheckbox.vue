@@ -1,6 +1,6 @@
 <template>
     <div class="lg:text-[225%] md:text-[187.5%] text-[150%] flex flex-wrap flex-row lg:ml-[3.5%] text-black ">
-      <fieldset class="field flex overflow-visible" :class="height"> <!-- I did this because I have no idea how to make it fill the rest of the page, so this will let the page decide how long it should be.  -->
+      <fieldset class="field flex overflow-visible h-[40rem]"> <!-- I did this because I have no idea how to make it fill the rest of the page, so this will let the page decide how long it should be.  -->
       <legend class="flex flex-wrap overflow-visible md:self-center">{{ question }}</legend>
       <div class="field flex flex-col flex-wrap w-fit ">
         <div v-for="choice in classes" :key="choice" class="square-button flex flex-wrap flex-column m-[3.43%] w-max">
@@ -21,6 +21,5 @@
   defineProps({
     classes: Array,
     question: String,
-    height: String,
   });
 </script>  
