@@ -3,7 +3,7 @@ import { students } from '../../mockdata';
 import { useUserStore } from '../../stores/user';
 
 const userStore = useUserStore()
-console.log(userStore)
+const newstudents = userStore.data.guidance.students;
 </script>
 
 <template>
@@ -19,9 +19,9 @@ console.log(userStore)
                     <th class="p-4">Details</th>
                 </tr>
             </thead>
-            <tbody v-for="student in students" class="border-2 border-black">
+            <tbody v-for="student in newstudents" class="border-2 border-black">
                 <tr>
-                    <td class="p-4">{{ student.lastname }}, {{ student.firstname }}</td>
+                    <td class="p-4">{{ student.lastname }}, {{ student.user.firstName }}</td>
                     <td class="p-4">{{ student.grade }}</td>
                     <td class="p-4">{{ student.osis }}</td>
                     <td class="p-4">{{ student.email }}</td>
