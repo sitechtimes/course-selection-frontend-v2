@@ -2,7 +2,7 @@
     <section class="md:mt-[4%] mt-[20%] lg:text-left text-center"> <!-- Each 1% is 15.328 pixels. 1 rem is 16 pixels. Values based off of the computer in Whalen's room-->
       <h1 class="text-[#37394F] text-[225%] md:text-[375%] font-bold text-center">______ Year Survey</h1>     <!-- Fill in ______ with the year -->
       <div class="flex flex-col lg:flex-row">
-        <surveyCheckbox :classes="classes" class="md:mt-[1%] mt-[4%]"></surveyCheckbox>
+        <surveyCheckbox :choices="choices" :question="question" class="md:mt-[1%] mt-[4%]"></surveyCheckbox>
         <div class="border-black border-[0.5px] border-solid rounded-xl lg:w-[35%] w-[90%] lg:ml-28 lg:h-[70vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll">
           <div class="flex justify-center mt-[1%]">
             <p class="text-[150%] text-black">Drag course(s) into order of preference:</p>
@@ -30,7 +30,7 @@ import backButton from '../Reusables/backButton.vue'
   import nextButton from '../Reusables/nextButton.vue';
   import surveyCheckbox from "../Reusables/surveyCheckbox.vue";
 
-  const classes = [
+  const choices = [
     {
       id: "first-class",
       answer: "Biology (non-AP)",
@@ -73,7 +73,9 @@ import backButton from '../Reusables/backButton.vue'
     userData: Object
   });
   
-  console.log(props.userData)
+  console.log(props.userData.survey.questions[8].question)
+
+  const question = props.userData.survey.questions[8].question
 
   </script>
   
