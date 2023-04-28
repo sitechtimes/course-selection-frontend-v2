@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import ReturnToHome from '../components/SurveyPageComponents/pages/finalPage.vue';
+import ReturnToHome from '../components/SurveyPageComponents/pages/courseSelectionPages.vue';
 
 
 </script>
