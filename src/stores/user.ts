@@ -52,6 +52,7 @@ export const useUserStore = defineStore('user', {
                         'Authorization': `Bearer ${this.access_token}`
                     }
                 }).then((res)=>{
+                    this.data = res.data.data
                     console.log(res.data)
                 })
             }
