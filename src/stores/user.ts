@@ -56,6 +56,8 @@ export const useUserStore = defineStore('user', {
                             }
                             coursesAvailable{
                                 courseCode
+                                subject
+                                name
                             }
                         }
                         survey{
