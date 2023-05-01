@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <h1 class="text-[#37394F] text-[225%] md:text-[375%] font-bold text-center">______ Year Survey</h1>
-    <div>
+  <div class="h-screen w-full flex flex-col justify-center items-center">
+    <h1 class="text-[#37394F] text-[200%] md:text-[210%] font-bold text-center">{{ userStore.data.survey.grade }} Year Survey</h1>
+    <div class="w-11/12 flex flex-col justify-center items-center text-center ">
       <div>{{ currentIndex + 1 }}</div>
       <generalComponent v-if="currentQuestion.questionType === 'GENERAL'" :question="currentQuestion.question" ></generalComponent>
       <booleanComponent v-else-if="currentQuestion.questionType === 'BOOLEAN'" :question="currentQuestion.question"></booleanComponent>
@@ -22,6 +22,7 @@ import { ref, reactive } from 'vue';
 import { useUserStore } from "../stores/user";
 const userStore = useUserStore();
 
+const grade = ref('')
 const currentIndex = ref(0)
 let currentQuestion = reactive(userStore.data.survey.questions[currentIndex.value])
 
