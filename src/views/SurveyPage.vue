@@ -22,18 +22,27 @@ import { ref, reactive } from 'vue';
 import { useUserStore } from "../stores/user";
 const userStore = useUserStore();
 
-const grade = ref('')
 const currentIndex = ref(0)
 let currentQuestion = reactive(userStore.data.survey.questions[currentIndex.value])
+const choices = ref()
 
 const previousQuestion = () => {
   currentIndex.value--
   currentQuestion = userStore.data.survey.questions[currentIndex.value]
+  console.log(currentQuestion)
 }
 
 const nextQuestion = () => {
   currentIndex.value++
   currentQuestion = userStore.data.survey.questions[currentIndex.value]
+  console.log(currentQuestion.questionType)
+  getChoices()
+}
+
+const getChoices = () => {
+  if (currentQuestion.questionType != "GENERAL" && "BOOLEAN") {
+  console.log('ok')
+}
 }
 
 </script>
