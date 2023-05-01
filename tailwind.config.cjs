@@ -15,9 +15,10 @@ module.exports = {
         "secondary-s": "#334867",
         "tertiary-s": "#E9F0FA",
         "other-s": "#c1d6eb",
-        "primary-g": "#C5D4A4",
-        "secondary-g": "#49623C",
-        "tertiary-g": "#EDFBE2",
+        'primary-g': '#C5D4A4',
+        'secondary-g': '#49623C',
+        'tertiary-g': '#EDFBE2',
+        'other-g': '#99B76F',
       },
       spacing: {
         112: "28rem",

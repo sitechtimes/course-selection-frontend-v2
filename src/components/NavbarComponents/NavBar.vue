@@ -11,11 +11,7 @@ const userStore = useUserStore();
 let menuOpen = ref(false);
 
 const toggleMenu = () => {
-  if (!menuOpen.value) {
-    menuOpen.value = true;
-  } else {
-    menuOpen.value = false;
-  }
+  menuOpen.value = !menuOpen.value
 };
 </script>
 
