@@ -1,6 +1,5 @@
 <template>
     <section class="md:mt-[4%] mt-[20%] lg:text-left text-center"> <!-- Each 1% is 15.328 pixels. 1 rem is 16 pixels. Values based off of the computer in Whalen's room-->
-      <h1 class="text-[#37394F] text-[225%] md:text-[375%] font-bold text-center">______ Year Survey</h1>     <!-- Fill in ______ with the year -->
       <div class="flex flex-col lg:flex-row">
         <surveyCheckbox :choices="choices" :question="question" class="md:mt-[1%] mt-[4%]"></surveyCheckbox>
         <div class="border-black border-[0.5px] border-solid rounded-xl lg:w-[35%] w-[90%] lg:ml-28 lg:h-[70vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll">
@@ -19,16 +18,16 @@
           </div>
         </div>
       </div>
-      <backButton class="mt-8 absolute left-10 md:left-32"></backButton>
-      <nextButton class="mt-8 absolute right-10 md:right-32"></nextButton> <!-- Use a v-if here later to make it grayed out -->
     </section>
   </template>
   
 <script setup lang="ts">
   import { propsToAttrMap } from '@vue/shared';
-import backButton from '../Reusables/backButton.vue'
-  import nextButton from '../Reusables/nextButton.vue';
   import surveyCheckbox from "../Reusables/surveyCheckbox.vue";
+
+  defineProps({
+    question: String
+  });
 
   const choices = [
     {
@@ -68,14 +67,7 @@ import backButton from '../Reusables/backButton.vue'
       answer: "Anatomy and Physiology",
     },
   ];
-
-  const props = defineProps({
-    userData: Object
-  });
   
-  console.log(props.userData.survey.questions[8].question)
-
-  const question = props.userData.survey.questions[8].question
 
   </script>
   
