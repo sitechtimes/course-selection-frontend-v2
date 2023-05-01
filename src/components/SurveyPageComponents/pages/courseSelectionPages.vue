@@ -1,5 +1,5 @@
 <template>
-    <section class="md:mt-[4%] mt-[20%] lg:text-left text-center"> <!-- Each 1% is 15.328 pixels. 1 rem is 16 pixels. Values based off of the computer in Whalen's room-->
+    <section class="lg:text-left text-center">
       <div class="flex flex-col lg:flex-row">
         <surveyCheckbox :choices="choices" :question="question" class="md:mt-[1%] mt-[4%]"></surveyCheckbox>
         <div class="border-black border-[0.5px] border-solid rounded-xl lg:w-[35%] w-[90%] lg:ml-28 lg:h-[70vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll">
