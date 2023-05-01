@@ -78,6 +78,7 @@ export const useUserStore = defineStore('user', {
                             coursesAvailable{
                                 courseCode
                             }
+                            meeting
                         }
                         survey{
                             questions{
@@ -88,6 +89,7 @@ export const useUserStore = defineStore('user', {
                         answeredSurvey{
                             answers
                         }
+                        
                         }`,
                     },{
                     headers:{

@@ -4,6 +4,9 @@ import { useUserStore } from '../stores/user';
 
 const userStore = useUserStore()
 let annoucement = 'Surveys are closing next week on 03/12/2023.'
+
+console.log(userStore.data.student.meeting)
+
 </script>
 
 <template>
@@ -30,6 +33,10 @@ let annoucement = 'Surveys are closing next week on 03/12/2023.'
             Course Survey
           </button>
         </RouterLink>
+      </div>
+      <div >
+        <h1 v-if="userStore.data.student.meeting != undefined || userStore.data.student.meeting !=null" >You meet with your guidance councelor on {{ userStore.data.student.meeting.split('T')[0] }} at {{ userStore.data.student.meeting.split('T')[1].split('+')[0] }}.</h1>
+        <h1 v-else>Your guidance councelor has not yet set a meeting time.</h1>
       </div>
     </div>
     <div
