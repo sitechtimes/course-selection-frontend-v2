@@ -22,52 +22,14 @@
   </template>
   
 <script setup lang="ts">
-  import { propsToAttrMap } from '@vue/shared';
   import surveyCheckbox from "../Reusables/surveyCheckbox.vue";
 
   defineProps({
-    question: String
+    question: String,
+    choices: Array
   });
 
-  const choices = [
-    {
-      id: "first-class",
-      answer: "Biology (non-AP)",
-    },
-    {
-      id: "second-class",
-      answer: "AP Biology",
-    },
-    {
-      id: "third-class",
-      answer: "AP Psychology",
-    },
-    {
-      id: "fourth-class",
-      answer: "AP Chemistry",
-    },
-    {
-      id: "fifth-class",
-      answer: "AP Physics 1",
-    },
-    {
-      id: "sixth-class",
-      answer: "AP Physics 2",
-    },
-    {
-      id: "seventh-class",
-      answer: "AP Physics C",
-    },
-    {
-      id: "eighth-class",
-      answer: "Applied Physics",
-    },
-    {
-      id: "ninth-class",
-      answer: "Anatomy and Physiology",
-    },
-  ];
-  
+ 
 
   </script>
   

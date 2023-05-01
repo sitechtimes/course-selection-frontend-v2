@@ -5,7 +5,7 @@
       <div>{{ currentIndex + 1 }}</div>
       <generalComponent v-if="currentQuestion.questionType === 'GENERAL'" :question="currentQuestion.question" ></generalComponent>
       <booleanComponent v-else-if="currentQuestion.questionType === 'BOOLEAN'" :question="currentQuestion.question"></booleanComponent>
-      <checkboxComponent v-else :question="currentQuestion.question"></checkboxComponent>
+      <checkboxComponent v-else :question="currentQuestion.question" :choices="choices"></checkboxComponent>
     </div>
     <div>
       <button @click="previousQuestion()" class="bg-[#6A9FD1] text-white w-[30%] h-[3.5rem] text-[1.5rem] md:w-[10rem] md:text-[2rem] ">Back</button>
@@ -24,7 +24,7 @@ const userStore = useUserStore();
 
 const currentIndex = ref(0)
 let currentQuestion = reactive(userStore.data.survey.questions[currentIndex.value])
-const choices = ref()
+let choices = ref()
 
 const previousQuestion = () => {
   currentIndex.value--
@@ -40,8 +40,10 @@ const nextQuestion = () => {
 }
 
 const getChoices = () => {
-  if (currentQuestion.questionType != "GENERAL" && "BOOLEAN") {
-  console.log('ok')
+  if (currentQuestion.questionType != "GENERAL" && currentQuestion.questionType != "BOOLEAN") {
+  const classes = userStore.data.student.coursesAvailable
+  choices = classes.filter(x => x.subject === currentQuestion.questionType)
+  console.log(choices)
 }
 }
 

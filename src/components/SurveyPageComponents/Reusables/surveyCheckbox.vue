@@ -7,10 +7,10 @@
           <input
             type="checkbox"
             class="w-6 h-6 outline-1 self-center flex flex-wrap flex-row checked:border-1 checked:border-black outline-black checked:outline-black checked:outline-1 checked:outline-offset-0 bg-[#EAEAEA] focus:ring-transparent checked:bg-none checked:bg-[#6A9FD1] checked:hover:bg-[#6A9FD1] checked:focus:bg-[#6A9FD1] shadow-[inset_0px_4px_4px_rgba(0,0,0,0.25) "
-            :id="choice.id"
+            :id="choice.courseCode"
             :name="question"
           />
-          <label :for="choice.id" class="flex flex-wrap self-center ml-2 flex-row ">{{ choice.answer }}</label>
+          <label :for="choice.courseCode" class="flex flex-wrap self-center ml-2 flex-row ">{{ choice.name }}</label>
         </div>
       </div>
       </fieldset>
