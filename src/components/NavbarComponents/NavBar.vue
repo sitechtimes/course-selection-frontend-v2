@@ -5,6 +5,8 @@ import MenuIcon from '../icons/MenuIcon.vue';
 import CloseMenu from "../icons/CloseMenu.vue";
 import MobileNav from "./MobileNav.vue";
 import { ref } from "vue";
+import router from '../../router';
+
 
 const userStore = useUserStore();
 let menuOpen = ref(false);
@@ -12,13 +14,13 @@ let menuOpen = ref(false);
 const redirect = () => {
     if (userStore.isLoggedIn === true) {
         if (userStore.userType === 'student') {
-            return '/student/dashboard'
+            router.push('/student/dashboard')
         } 
         if (userStore.userType === 'guidance') {
-            return '/guidance/dashboard'
+            router.push('/guidance/dashboard')
         }
     } else {
-        return '/'
+        return router.push('/')
     }
 }
 
@@ -31,9 +33,9 @@ const toggleMenu = () => {
 
 <template>
     <nav id="navbar" class="absolute w-full top-0 h-24 flex justify-between items-center px-8 md:px-12 lg:px-16 overflow-visible">
-        <RouterLink to="/">
+        <div @click="redirect()" class="cursor-pointer">
             <h1 class="text-3xl font-semibold z-50">Course Selection</h1>
-        </RouterLink>
+        </div>
         <div v-if="userStore.isLoggedIn && userStore.userType === 'student'" class="hidden justify-center items-center space-x-12 md:flex">
             <RouterLink to="/courses">
                 <p class="text-base">Courses</p>
@@ -41,7 +43,7 @@ const toggleMenu = () => {
             <RouterLink to="/survey">
                 <p class="text-base">Survey</p>
             </RouterLink>
-            <p @click="userStore.isLoggedIn = false" id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>
+            <p @click="userStore.$reset" id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>
         </div>
         <div v-if="userStore.isLoggedIn && userStore.userType === 'guidance'" class="hidden justify-center items-center space-x-12 md:flex">
             <RouterLink to="/courses">
