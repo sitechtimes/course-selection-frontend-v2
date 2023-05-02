@@ -77,10 +77,13 @@ export const useUserStore = defineStore('user', {
                             }
                             coursesAvailable{
                                 courseCode
+                                subject
+                                name
                             }
                             meeting
                         }
                         survey{
+                            grade
                             questions{
                                 question
                                 questionType
