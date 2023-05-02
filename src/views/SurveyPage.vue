@@ -35,32 +35,31 @@ const max: Ref<boolean> = ref(false)
 
 const previousQuestion = () => {
   currentIndex.value--
-  max.value = false
   currentQuestion = userStore.data.survey.questions[currentIndex.value]
-  console.log(currentQuestion)
+  
+  max.value = false
   if(currentIndex.value === 0) {
     min.value = true
   }
-  console.log('back', min.value + 'min', max.value + 'max')
 }
 
 const nextQuestion = () => {
   currentIndex.value++
+  currentQuestion = userStore.data.survey.questions[currentIndex.value]
+
   min.value = false
   if(currentIndex.value === userStore.data.survey.questions.length - 1) {
     max.value = true
   }
-  currentQuestion = userStore.data.survey.questions[currentIndex.value]
-  console.log(currentQuestion.questionType)
-  getChoices()
-  console.log('next', min.value + 'min', max.value + 'max')
+
+  if (currentQuestion.questionType != "GENERAL" && currentQuestion.questionType != "BOOLEAN") {
+    getChoices()
+  }
 }
 
 const getChoices = () => {
-  if (currentQuestion.questionType != "GENERAL" && currentQuestion.questionType != "BOOLEAN") {
     const classes = userStore.data.student.coursesAvailable
     choices = classes.filter(x => x.subject === currentQuestion.questionType)
-  }
 }
 
 </script>
