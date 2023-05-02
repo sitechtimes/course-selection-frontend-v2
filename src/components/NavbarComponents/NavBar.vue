@@ -34,7 +34,7 @@ const toggleMenu = () => {
         <RouterLink to="/">
             <h1 class="text-3xl font-semibold z-50">Course Selection</h1>
         </RouterLink>
-        <div v-if="userStore.isLoggedIn" class="hidden justify-center items-center space-x-12 md:flex">
+        <div v-if="userStore.isLoggedIn && userStore.userType === 'student'" class="hidden justify-center items-center space-x-12 md:flex">
             <RouterLink to="/courses">
                 <p class="text-base">Courses</p>
             </RouterLink>
@@ -43,7 +43,16 @@ const toggleMenu = () => {
             </RouterLink>
             <p @click="userStore.isLoggedIn = false" id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>
         </div>
-        <div v-else class="hidden justify-center items-center space-x-12 md:flex">
+        <div v-if="userStore.isLoggedIn && userStore.userType === 'guidance'" class="hidden justify-center items-center space-x-12 md:flex">
+            <RouterLink to="/courses">
+                <p class="text-base">Students</p>
+            </RouterLink>
+            <RouterLink to="/survey">
+                <p class="text-base">Calendar</p>
+            </RouterLink>
+            <p @click="userStore.isLoggedIn = false" id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>
+        </div>
+        <div v-if="!userStore.isLoggedIn" class="hidden justify-center items-center space-x-12 md:flex">
             <RouterLink to="/courses">
                 <p class="text-base">Courses</p>
             </RouterLink>
