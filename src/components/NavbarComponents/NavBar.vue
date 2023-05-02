@@ -35,7 +35,7 @@ const toggleMenu = () => {
 
 <template>
     <nav id="navbar" class="absolute w-full top-0 h-24 flex justify-between items-center px-8 md:px-12 lg:px-16 overflow-visible">
-        <RouterLink :to="redirect()">
+        <RouterLink to="/">
             <h1 class="text-3xl font-semibold z-50">Course Selection</h1>
         </RouterLink>
         <div v-if="userStore.isLoggedIn" class="hidden justify-center items-center space-x-12 md:flex">
