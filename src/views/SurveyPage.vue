@@ -20,16 +20,12 @@ import booleanComponent from '../components/SurveyPageComponents/Reusables/surve
 import generalComponent from '../components/SurveyPageComponents/Reusables/surveyGeneral.vue'
 import { ref, reactive, Ref } from 'vue';
 import { useUserStore } from "../stores/user";
+import { surveyQuestion, courses } from '../types/interface';
 const userStore = useUserStore();
 
-interface Question {
-  question: string,
-  questionType: string
-}
-
 const currentIndex: Ref<number> = ref(0)
-let currentQuestion: Question = reactive(userStore.data.survey.questions[currentIndex.value])
-let choices = ref() //create course interface
+let currentQuestion: surveyQuestion = reactive(userStore.data.survey.questions[currentIndex.value])
+let choices: Ref<courses | undefined> = ref() 
 const min: Ref<boolean> = ref(true)
 const max: Ref<boolean> = ref(false)
 
