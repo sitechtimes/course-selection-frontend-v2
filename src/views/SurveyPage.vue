@@ -8,8 +8,8 @@
       <checkboxComponent v-else :question="currentQuestion.question" :choices="choices"></checkboxComponent>
     </div>
     <div>
-      <button @click="previousQuestion()" class="bg-[#6A9FD1] text-white w-[30%] h-[3.5rem] text-[1.5rem] md:w-[10rem] md:text-[2rem] ">Back</button>
-      <button @click="nextQuestion()" class="bg-[#6A9FD1] text-white w-[30%] h-[3.5rem] text-[1.5rem] md:w-[10rem] md:text-[2rem] disabled:text-stone-400">Next</button>
+      <button @click="previousQuestion()" class="bg-[#6A9FD1] text-white w-[30%] h-[3.5rem] text-[1.5rem] md:w-[10rem] md:text-[2rem] disabled:bg-stone-400" :disabled="min">Back</button>
+      <button @click="nextQuestion()" class="bg-[#6A9FD1] text-white w-[30%] h-[3.5rem] text-[1.5rem] md:w-[10rem] md:text-[2rem] disabled:bg-stone-400" :disabled="max">Next</button>
     </div>
   </div>
 </template>
@@ -30,21 +30,30 @@ interface Question {
 const currentIndex: Ref<number> = ref(0)
 let currentQuestion: Question = reactive(userStore.data.survey.questions[currentIndex.value])
 let choices = ref() //create course interface
+const min: Ref<boolean> = ref(true)
+const max: Ref<boolean> = ref(false)
 
 const previousQuestion = () => {
   currentIndex.value--
+  max.value = false
   currentQuestion = userStore.data.survey.questions[currentIndex.value]
   console.log(currentQuestion)
-  // if(currentIndex === userStore.data.survey.questions.length - 1) {
-
-  // }
+  if(currentIndex.value === 0) {
+    min.value = true
+  }
+  console.log('back', min.value + 'min', max.value + 'max')
 }
 
 const nextQuestion = () => {
   currentIndex.value++
+  min.value = false
+  if(currentIndex.value === userStore.data.survey.questions.length - 1) {
+    max.value = true
+  }
   currentQuestion = userStore.data.survey.questions[currentIndex.value]
   console.log(currentQuestion.questionType)
   getChoices()
+  console.log('next', min.value + 'min', max.value + 'max')
 }
 
 const getChoices = () => {
