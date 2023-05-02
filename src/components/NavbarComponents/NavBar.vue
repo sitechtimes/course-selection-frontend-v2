@@ -25,11 +25,7 @@ const redirect = () => {
 // let page = redirect()
 
 const toggleMenu = () => {
-  if (!menuOpen.value) {
-    menuOpen.value = true;
-  } else {
-    menuOpen.value = false;
-  }
+  menuOpen.value = !menuOpen.value
 };
 </script>
 

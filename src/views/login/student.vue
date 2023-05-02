@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import BaseLogin from '../../components/LoginComponents/BaseLogin.vue';
-
 </script>
 
 <template>
