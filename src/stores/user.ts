@@ -45,7 +45,7 @@ export const useUserStore = defineStore('user', {
                                         email
                                     }
                                     osis
-                                    
+                                    homeroom
                                 }
                             }
                             allSurveys {
