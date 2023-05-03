@@ -8,14 +8,6 @@ const userStore = useUserStore()
 const newstudents = userStore.data.guidance.students;
 const input = ref("")
 
-const students = computed(() => {
-      return newstudents.value.filter((student: { firstName: string; }) => {
-        return (
-          student.firstName.toLowerCase().indexOf(input.value.toLowerCase()) != -1
-        );
-      });
-})
-
 </script>
 
 <template>
