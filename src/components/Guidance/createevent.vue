@@ -333,4 +333,10 @@ h2 {
     font-size: 0.6rem;
   }
 }
+@media only screen and (max-width: 404px) {
+  .x {
+    margin-left: 5rem;
+    width: 0.8rem;
+  }
+}
 </style>
