@@ -8,11 +8,12 @@ const userStore = useUserStore()
 const newstudents = userStore.data.guidance.students;
 const input = ref("")
 
+console.log(userStore.data)
+
 </script>
 
 <template>
     <div class="flex flex-col mt-10 justify-center items-center" id="table">
-        <SearchBar class="" type="text" v-model="input" placeholder="Search Students..." />
         <table class="w-[100rem] border-2 border-black table-auto text-left">
             <thead class="fill-primary-g border-2 border-black">
                 <tr class="bg-primary-g">
