@@ -41,7 +41,11 @@ export const useUserStore = defineStore('user', {
                                 students{
                                     user{
                                         firstName
+                                        lastName
+                                        email
                                     }
+                                    osis
+                                    
                                 }
                             }
 
