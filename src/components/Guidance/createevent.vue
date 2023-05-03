@@ -162,6 +162,11 @@ h2 {
   font-size: 2rem;
   margin-bottom: 1rem;
 }
+@media only screen and (max-width: 1380px) {
+  .x {
+    margin-left: 28rem;
+  }
+}
 
 @media only screen and (max-width: 1180px) {
   .createevent {
@@ -177,14 +182,13 @@ h2 {
     margin-left: 2rem;
     display: block;
     width: 20rem;
-
     border-radius: 0.4rem;
     font-size: 1.2rem;
     padding-left: 0.7rem;
     height: 0rem;
   }
   .x {
-    margin-left: 18rem;
+    margin-left: 30rem;
   }
   svg {
     width: 1rem;
@@ -200,6 +204,11 @@ h2 {
   }
   .item {
     margin-top: 0.8rem;
+  }
+}
+@media only screen and (max-width: 900px) {
+  .x {
+    margin-left: 20rem;
   }
 }
 @media only screen and (max-width: 800px) {
@@ -317,8 +326,11 @@ h2 {
 }
 @media only screen and (max-width: 604px) {
   .x {
-    margin-left: 4rem;
-    width: 0.8rem;
+    margin-left: 12rem;
+    width: 1rem;
+  }
+  .space {
+    font-size: 0.6rem;
   }
 }
 </style>
