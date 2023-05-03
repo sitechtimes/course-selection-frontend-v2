@@ -5,19 +5,21 @@ import { useUserStore } from '../stores/user';
 const userStore = useUserStore()
 let annoucement = 'Surveys are closing next week on 03/12/2023.'
 
-const SplitTime = userStore.data.student.meeting.substring(11,16).split(":") // Substring is there to get only the time part (2023-05-01T16:09:54+00:00 was the value for meeting)
 let time  
+let date
+
+if (userStore.data.student.meeting != undefined || userStore.data.student.meeting !=null) {
+const SplitTime = userStore.data.student.meeting.substring(11,16).split(":") // Substring is there to get only the time part (2023-05-01T16:09:54+00:00 was the value for meeting)
 if (SplitTime[0] > 12) {
   SplitTime[0] -= 12
   time = SplitTime.join(':') + " PM"
 }  else {
   time = SplitTime.join(':') + " AM"
 }
-
 const SplitDate = userStore.data.student.meeting.substring(0,10).split("-")
 SplitDate.splice(0, 3, SplitDate[1], SplitDate[2], SplitDate[0]);
-const date = SplitDate.join("/")
-
+date = SplitDate.join("/")
+}
 </script>
 
 <template>
@@ -46,7 +48,7 @@ const date = SplitDate.join("/")
         </RouterLink>
       </div>
       <div >
-        <h1 v-if="userStore.data.student.meeting != undefined || userStore.data.student.meeting !=null" >You meet with your guidance councelor on {{ date }} at {{ time }}.</h1>
+        <h1 v-if="userStore.data.student.meeting != undefined || userStore.data.student.meeting !=null" >You should meet with your guidance councelor on {{ date }} at {{ time }}.</h1>
         <h1 v-else>Your guidance councelor has not yet set a meeting time.</h1>
       </div>
     </div>
