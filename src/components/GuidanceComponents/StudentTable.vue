@@ -8,11 +8,19 @@ const userStore = useUserStore()
 const newstudents = userStore.data.guidance.students;
 const input = ref("")
 
+/* const students = computed(() => {
+      return newstudents.value.filter((student: { firstName: string; }) => {
+         return (
+          student.user.firstName.toLowerCase().indexOf(input.value.toLowerCase()) != -1
+        ); 
+      });
+}) */
+
 </script>
 
 <template>
     <div class="flex flex-col mt-10 justify-center items-center" id="table">
-        <SearchBar class="" type="text" v-model="input" placeholder="Search Students..." />
+        <SearchBar id="search" class="" type="text" v-model="input" placeholder="Search Students..." />
         <table class="w-[100rem] border-2 border-black table-auto text-left">
             <thead class="fill-primary-g border-2 border-black">
                 <tr class="bg-primary-g">
