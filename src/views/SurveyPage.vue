@@ -1,19 +1,3 @@
-<template>
-  <div class="h-screen w-full flex flex-col justify-center items-center">
-    <h1 class="text-[#37394F] text-[200%] md:text-[210%] font-bold text-center">{{ userStore.data.survey.grade }} Year Survey</h1>
-    <div class="w-11/12 h-2/3 flex flex-col justify-center items-center text-center">
-      <div>{{ currentIndex + 1 }}</div>
-      <generalComponent v-if="currentQuestion.questionType === 'GENERAL'" :question="currentQuestion.question" ></generalComponent>
-      <booleanComponent v-else-if="currentQuestion.questionType === 'BOOLEAN'" :question="currentQuestion.question"></booleanComponent>
-      <checkboxComponent v-else :question="currentQuestion.question" :choices="choices"></checkboxComponent>
-    </div>
-    <div>
-      <button @click="previousQuestion()" class="bg-[#6A9FD1] text-white w-[30%] h-[3.5rem] text-[1.5rem] md:w-[10rem] md:text-[2rem] disabled:bg-stone-400" :disabled="min">Back</button>
-      <button @click="nextQuestion()" class="bg-[#6A9FD1] text-white w-[30%] h-[3.5rem] text-[1.5rem] md:w-[10rem] md:text-[2rem] disabled:bg-stone-400" :disabled="max">Next</button>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import checkboxComponent from '../components/SurveyPageComponents/pages/courseSelectionPages.vue';
 import booleanComponent from '../components/SurveyPageComponents/Reusables/surveyBoolean.vue'
@@ -59,5 +43,21 @@ const getChoices = () => {
 }
 
 </script>
+
+<template>
+  <div class="h-screen flex flex-col justify-center items-center space-y-8">
+    <h1 class="text-5xl font-semibold">{{ userStore.data.survey.grade }} Year Survey</h1>
+    <div class="flex flex-col justify-center items-center bg-purple-200 min-h-[20rem]">
+      <generalComponent v-if="currentQuestion.questionType === 'GENERAL'" :question="currentQuestion.question" ></generalComponent>
+      <booleanComponent v-else-if="currentQuestion.questionType === 'BOOLEAN'" :question="currentQuestion.question"></booleanComponent>
+      <checkboxComponent v-else :question="currentQuestion.question" :choices="choices"></checkboxComponent>
+    </div>
+    <div>
+      <button @click="previousQuestion()" class="bg-[#6A9FD1] text-white disabled:bg-stone-400" :disabled="min">Back</button>
+      <button @click="nextQuestion()" class="bg-[#6A9FD1] text-white disabled:bg-stone-400" :disabled="max">Next</button>
+    </div>
+    <p class="absolute bottom-8 right-16 text-2xl font-semibold">{{ currentIndex + 1 }}</p>
+  </div>
+</template>
 
 <style scoped></style>
