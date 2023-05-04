@@ -1,15 +1,23 @@
 <template>
 
-  <div class="mt-96 height-48">
-    <h1>ok</h1>
-
-    <draggable v-model="courses" group="courses" item-key="name" @start="log" @end="log">
+  <div class="h-full ">
+    <div class="flex p-4 justify-center text-center text-3xl h-">
+      <Draggable class="p-4 mx-4 border-2 border-black w-1/3  " v-model="courses" group="courses" item-key="id">
       <template #item="{ element }">
         <div>
           {{ element.name }}
         </div>
       </template>
-    </draggable>
+    </Draggable>
+    <Draggable class="border-2 p-4 mx-4 border-black w-1/3 " v-model="sortedList" group="courses" item-key="id">
+      <template #item="{ element }">
+        <div>
+          {{ element.name }}
+        </div>
+      </template>
+    </Draggable>
+    </div>
+
   </div>
 </template>
 
@@ -17,8 +25,8 @@
 
 <script setup lang="ts">
 import SurveyButton from "../components/SurveyPageComponents/SurveyButton.vue";
-import draggable from "vuedraggable";
-
+import Draggable from "vuedraggable";
+import { ref } from "vue"
 // test stuff
 let drag = false
 const form = [
@@ -31,47 +39,38 @@ const form = [
     answer: "Yes",
   },
 ];
-const courses = [
+const courses = ref([
   {
     name: "A",
-    order: 0
+    id: 10
   },
   {
     name: "B",
-    order: 1
+    id: 1
   },
   {
     name: "C",
-    order: 2
+    id: 2
   },
   {
     name: "D",
-    order: 3
+    id: 3
   },
   {
     name: "E",
-    order: 4
+    id: 4
   },
   {
     name: "F",
-    order: 5
+    id: 5
   },
   {
     name: "G",
-    order: 6
+    id: 6
   },
-]
-console.log(courses)
-const name = "eighth";
+])
 
-function log(){
-  console.log(courses)
-}
+const sortedList = ref([
 
-function onChange() {
-    reorder()
-}
-function reorder() {
-    courses.forEach((item, index) => (item.order = index))
-}
+])
 </script>
