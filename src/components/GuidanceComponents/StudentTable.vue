@@ -8,7 +8,9 @@ const userStore = useUserStore()
 const newstudents = userStore.data.guidance.students;
 const input = ref("")
 
-console.log(userStore.data)
+defineProps({
+    viewingUser: Boolean,
+});
 
 </script>
 
@@ -23,6 +25,7 @@ console.log(userStore.data)
                     <th class="p-4">Email</th>
                     <th class="p-4">Progress</th>
                     <th class="p-4">Details</th>
+                    <th @click="viewingUser = !viewingUser">{{ viewingUser }}</th>
                 </tr>
             </thead>
             <tbody v-for="student in newstudents" class="border-2 border-black">

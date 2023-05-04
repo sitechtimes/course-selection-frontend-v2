@@ -15,8 +15,9 @@ export default {
   },
   data() {
     return {
-        students: students,
+      students: students,
       input: ref(""),
+      viewingUser: true
     };
   },
 };
@@ -28,6 +29,7 @@ export default {
         <Sort :students="students"/>
         <SearchBar class="" type="text" v-model="input" placeholder="Search Students..." />
         </div>
-        <StudentTable/>
+        <StudentTable :viewingUser="viewingUser"/>
+        <h1 v-if=viewingUser>asioduasdijha</h1>
     </div>
 </template>
