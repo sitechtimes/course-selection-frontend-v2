@@ -1,76 +1,93 @@
 <template>
-
-  <div class="h-full ">
-    <div class="flex p-4 justify-center text-center text-3xl h-">
-      <Draggable class="p-4 mx-4 border-2 border-black w-1/3  " v-model="courses" group="courses" item-key="id">
-      <template #item="{ element }">
-        <div>
-          {{ element.name }}
-        </div>
-      </template>
-    </Draggable>
-    <Draggable class="border-2 p-4 mx-4 border-black w-1/3 " v-model="sortedList" group="courses" item-key="id">
-      <template #item="{ element }">
-        <div>
-          {{ element.name }}
-        </div>
-      </template>
-    </Draggable>
+  <div class="h-screen w-full flex flex-col justify-center items-center">
+    <h1 class="text-[#37394F] text-[200%] md:text-[210%] font-bold text-center">
+      {{ userStore.data.survey.grade }} Year Survey
+    </h1>
+    <div
+      class="w-11/12 h-2/3 flex flex-col justify-center items-center text-center"
+    >
+      <div>{{ currentIndex + 1 }}</div>
+      <generalComponent
+        v-if="currentQuestion.questionType === 'GENERAL'"
+        :question="currentQuestion.question"
+      ></generalComponent>
+      <booleanComponent
+        v-else-if="currentQuestion.questionType === 'BOOLEAN'"
+        :question="currentQuestion.question"
+      ></booleanComponent>
+      <checkboxComponent
+        v-else
+        :question="currentQuestion.question"
+        :choices="choices"
+      ></checkboxComponent>
     </div>
-
+    <div>
+      <button
+        @click="previousQuestion()"
+        class="bg-[#6A9FD1] text-white w-[30%] h-[3.5rem] text-[1.5rem] md:w-[10rem] md:text-[2rem] disabled:bg-stone-400"
+        :disabled="min"
+      >
+        Back
+      </button>
+      <button
+        @click="nextQuestion()"
+        class="bg-[#6A9FD1] text-white w-[30%] h-[3.5rem] text-[1.5rem] md:w-[10rem] md:text-[2rem] disabled:bg-stone-400"
+        :disabled="max"
+      >
+        Next
+      </button>
+    </div>
   </div>
 </template>
 
-<style></style>
-
 <script setup lang="ts">
-import SurveyButton from "../components/SurveyPageComponents/SurveyButton.vue";
-import Draggable from "vuedraggable";
-import { ref } from "vue"
-// test stuff
-let drag = false
-const form = [
-  {
-    id: "first-question",
-    answer: "Not Sure",
-  },
-  {
-    id: "second-question",
-    answer: "Yes",
-  },
-];
-const courses = ref([
-  {
-    name: "A",
-    id: 10
-  },
-  {
-    name: "B",
-    id: 1
-  },
-  {
-    name: "C",
-    id: 2
-  },
-  {
-    name: "D",
-    id: 3
-  },
-  {
-    name: "E",
-    id: 4
-  },
-  {
-    name: "F",
-    id: 5
-  },
-  {
-    name: "G",
-    id: 6
-  },
-])
+import checkboxComponent from "../components/SurveyPageComponents/pages/courseSelectionPages.vue";
+import booleanComponent from "../components/SurveyPageComponents/Reusables/surveyBoolean.vue";
+import generalComponent from "../components/SurveyPageComponents/Reusables/surveyGeneral.vue";
+import { ref, reactive, Ref } from "vue";
+import { useUserStore } from "../stores/user";
+import { surveyQuestion, courses } from "../types/interface";
+const userStore = useUserStore();
 
-const sortedList = ref([
+const currentIndex: Ref<number> = ref(0);
+let currentQuestion: surveyQuestion = reactive(
+  userStore.data.survey.questions[currentIndex.value]
+);
+let choices: Ref<courses | undefined> = ref();
+const min: Ref<boolean> = ref(true);
+const max: Ref<boolean> = ref(false);
 
-])
+const previousQuestion = () => {
+  currentIndex.value--;
+  currentQuestion = userStore.data.survey.questions[currentIndex.value];
+
+  max.value = false;
+  if (currentIndex.value === 0) {
+    min.value = true;
+  }
+};
+
+const nextQuestion = () => {
+  currentIndex.value++;
+  currentQuestion = userStore.data.survey.questions[currentIndex.value];
+
+  min.value = false;
+  if (currentIndex.value === userStore.data.survey.questions.length - 1) {
+    max.value = true;
+  }
+
+  if (
+    currentQuestion.questionType != "GENERAL" &&
+    currentQuestion.questionType != "BOOLEAN"
+  ) {
+    getChoices();
+  }
+};
+
+const getChoices = () => {
+  const classes = userStore.data.student.coursesAvailable;
+  choices = classes.filter((x) => x.subject === currentQuestion.questionType);
+};
 </script>
+
+<style scoped></style>
