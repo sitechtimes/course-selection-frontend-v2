@@ -5,8 +5,8 @@ import { useUserStore } from '../stores/user';
 const userStore = useUserStore()
 let annoucement = 'Surveys are closing next week on 03/12/2023.'
 
-let time  
-let date
+let time: String
+let date: String
 
 if (userStore.data.student.meeting != undefined || userStore.data.student.meeting !=null) {
 const SplitTime = userStore.data.student.meeting.substring(11,16).split(":") // Substring is there to get only the time part (2023-05-01T16:09:54+00:00 was the value for meeting)
@@ -48,7 +48,7 @@ date = SplitDate.join("/")
         </RouterLink>
       </div>
       <div >
-        <h1 v-if="userStore.data.student.meeting != undefined || userStore.data.student.meeting !=null" >You should meet with your guidance councelor on {{ date }} at {{ time }}.</h1>
+        <h1 v-if="userStore.data.student.meeting != undefined || userStore.data.student.meeting !=null" >You have a scheduled meeting with your guidance councelor on {{ date }} at {{ time }}.</h1>
         <h1 v-else>Your guidance councelor has not yet set a meeting time.</h1>
       </div>
     </div>
