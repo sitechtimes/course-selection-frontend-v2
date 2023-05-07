@@ -30,8 +30,9 @@ export interface user {
 }
 
 export interface surveyQuestion {
-    question: string,
+    question: string
     questionType: string
+    id: string
 }
 
 export type course_type = 'MATH' | 'ENGLISH' | 'LANG' | 'SS' | 'TECH' | 'PE' | 'CAREER' | 'SCIENCE' | 'ARTS' | 'OTHER'

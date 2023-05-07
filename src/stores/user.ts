@@ -103,6 +103,7 @@ export const useUserStore = defineStore('user', {
                         survey{
                             grade
                             questions{
+                                id
                                 question
                                 questionType
                             }
@@ -120,7 +121,7 @@ export const useUserStore = defineStore('user', {
 
                 }).then((res: any) => {
                     this.data = res.data.data // data needs to be filtered properly
-                    console.log(this.data)
+                    console.log(this.data, this.access_token)
 
                 })
             }

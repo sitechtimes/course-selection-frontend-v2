@@ -28,8 +28,10 @@ let currentQuestion: surveyQuestion = reactive(userStore.data.survey.questions[c
 let choices: Ref<courses | undefined> = ref() 
 const min: Ref<boolean> = ref(true)
 const max: Ref<boolean> = ref(false)
+let answers: Array<object> = JSON.parse(userStore.data.answeredSurvey.answers)
+let currentAnswer: object | undefined = reactive(answers.find(x => x.id === currentQuestion.id))
 
-const previousQuestion = () => {
+const previousQuestion = () => {  
   currentIndex.value--
   currentQuestion = userStore.data.survey.questions[currentIndex.value]
   
@@ -40,6 +42,23 @@ const previousQuestion = () => {
 }
 
 const nextQuestion = () => {
+  currentAnswer = answers.find(x => x.id === currentQuestion.id)
+  if (currentAnswer) {
+    console.log("yes")
+  } else {
+    console.log(userStore.data.answeredSurvey.answers)
+    
+    //different question types are saved differently 
+    const questionAnswer = {
+      id: currentQuestion.id,
+      answer: "test"
+    }
+    answers.push(questionAnswer)
+    console.log(currentQuestion.id, currentQuestion)
+    console.log(currentAnswer)
+    console.log(answers)
+  }
+
   currentIndex.value++
   currentQuestion = userStore.data.survey.questions[currentIndex.value]
 
