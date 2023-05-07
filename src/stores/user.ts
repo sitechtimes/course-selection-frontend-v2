@@ -182,6 +182,26 @@ export const useUserStore = defineStore('user', {
                         console.log("meeting changed")
                     })  
         },
+        // async saveSurvey(osis: string, answers: JSON) {
+        //     await axios.post('https://api.siths.dev/graphql/', {
+        //                 query: `mutation {
+        //                     updateMeeting(osis: "${osis}", meeting:"${newTime}") {
+        //                         student{
+        //                             osis
+        //                             meeting
+        //                         }
+        //                     }
+        //                 }`
+        //             },{
+        //                 headers:{
+        //                     'Content-Type': 'application/json',
+        //                     'Authorization': `Bearer ${this.access_token}`
+        //                 }
+        //             }).then((res)=>{
+        //                 // this.data = res.data.data 
+        //                 console.log("meeting changed")
+        //             })  
+        // },
     },
     persist: true,
 })
