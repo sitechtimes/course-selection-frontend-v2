@@ -182,26 +182,27 @@ export const useUserStore = defineStore('user', {
                         console.log("meeting changed")
                     })  
         },
-        // async saveSurvey(osis: string, answers: JSON) {
-        //     await axios.post('https://api.siths.dev/graphql/', {
-        //                 query: `mutation {
-        //                     updateMeeting(osis: "${osis}", meeting:"${newTime}") {
-        //                         student{
-        //                             osis
-        //                             meeting
-        //                         }
-        //                     }
-        //                 }`
-        //             },{
-        //                 headers:{
-        //                     'Content-Type': 'application/json',
-        //                     'Authorization': `Bearer ${this.access_token}`
-        //                 }
-        //             }).then((res)=>{
-        //                 // this.data = res.data.data 
-        //                 console.log("meeting changed")
-        //             })  
-        // },
+        async saveSurvey(osis: string, answers: object) {
+            let json = JSON.stringify(answers)
+            await axios.post('https://api.siths.dev/graphql/', {
+                        query: `mutation {
+                            updateSurvey(osis: "123", answers: "{\"yep\": 15}") {
+                                survey {
+                                    osis
+                                    answers
+                                }
+                            }
+                        }`
+                    },{
+                        headers:{
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${this.access_token}`
+                        }
+                    }).then((res)=>{
+                        // this.data = res.data.data 
+                        console.log("survey updated")
+                    }) 
+        },
     },
     persist: true,
 })

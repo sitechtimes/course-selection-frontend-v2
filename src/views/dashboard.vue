@@ -20,6 +20,18 @@ const SplitDate = userStore.data.student.meeting.substring(0,10).split("-")
 SplitDate.splice(0, 3, SplitDate[1], SplitDate[2], SplitDate[0]);
 date = SplitDate.join("/")
 }
+
+const testAnswer = {
+  name: "yes",
+  answers: 1234
+}
+
+function testing(answer: Object) {
+ let json = JSON.stringify(answer)
+ userStore.saveSurvey("123", answer)
+// userStore.saveSurvey()
+  console.log(json)
+}
 </script>
 
 <template>
@@ -51,6 +63,7 @@ date = SplitDate.join("/")
         <h1 v-if="userStore.data.student.meeting != undefined || userStore.data.student.meeting !=null" >You have a scheduled meeting with your guidance councelor on {{ date }} at {{ time }}.</h1>
         <h1 v-else>Your guidance councelor has not yet set a meeting time.</h1>
       </div>
+      <p @click="testing(testAnswer)">yay</p>
     </div>
     <div
       id="circles"
