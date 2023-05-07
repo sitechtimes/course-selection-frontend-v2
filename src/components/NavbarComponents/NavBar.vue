@@ -43,7 +43,9 @@ const toggleMenu = () => {
             <RouterLink to="/survey">
                 <p class="text-base">Survey</p>
             </RouterLink>
-            <p @click="userStore.$reset" id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>
+            <RouterLink to="/">
+                <p @click="userStore.$reset" id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>
+            </RouterLink>
         </div>
         <div v-if="userStore.isLoggedIn && userStore.userType === 'guidance'" class="hidden justify-center items-center space-x-12 md:flex">
             <RouterLink to="/courses">
