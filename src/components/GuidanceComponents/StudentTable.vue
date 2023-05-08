@@ -25,7 +25,6 @@ defineProps({
                     <th class="p-4">Email</th>
                     <th class="p-4">Progress</th>
                     <th class="p-4">Details</th>
-                    <th @click="viewingUser = !viewingUser">{{ viewingUser }}</th>
                 </tr>
             </thead>
             <tbody v-for="student in newstudents" class="border-2 border-black">
@@ -43,7 +42,7 @@ defineProps({
                     <td class="p-4" v-else-if="student.progress === 'Complete'">
                         <p class="text-[#174616] bg-[#A8D480] w-[8rem] font-semibold text-center p-1 rounded-2xl">{{ student.progress }}</p>
                     </td>
-                    <td class="p-4">View</td>
+                    <td class="p-4" @click="viewingUser = !viewingUser && console.log(viewingUser)">View</td>
                 </tr>
             </tbody>
         </table>
