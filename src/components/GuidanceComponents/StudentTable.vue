@@ -16,7 +16,15 @@ const input = ref("")
       });
 }) */
 
-
+const search = document.getElementById('search');
+search.addEventListener('keyup', (e) => {
+    const searchString = e.target.value.toLowerCase();
+    const filteredStudents = newstudents.filter((student: any) => {
+        return (
+            student.toLowerCase().includes(searchString)
+        )
+    })
+})
 
 </script>
 
