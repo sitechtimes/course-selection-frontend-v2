@@ -13,9 +13,10 @@
       </div>
       <div class="flex flex-col w-1/4">
          <div
-         @dragover="e => e.target.classList.add('border-dotted', 'shadow-inner')"
-         @dragleave="e => e.target.classList.remove('border-dotted')"
-          class=" m-2 p-2 rounded-lg h-14 border-black shadow-deepinner bg-white"
+         @dragover="e => e.target.classList.add('bg-gray-100')"
+         @dragleave="e => e.target.classList.remove('bg-gray-100')"
+
+          class=" m-2 p-2 rounded-lg h-14 shadow-deepinner bg-white"
           v-for="course in courses"
           :key="course.name"
         ></div>
