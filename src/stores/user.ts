@@ -185,9 +185,10 @@ export const useUserStore = defineStore('user', {
         },
         async saveSurvey(osis: string, answers: object) {
             let json = JSON.stringify(answers)
+            console.log(json)
             await axios.post('https://api.siths.dev/graphql/', {
                         query: `mutation {
-                            updateSurvey(osis: "123", answers: "{\"yep\": 15}") {
+                            updateSurvey(osis: "123", answers: "${json}") {
                                 survey {
                                     osis
                                     answers
