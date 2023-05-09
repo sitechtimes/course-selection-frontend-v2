@@ -3,7 +3,6 @@ import SearchBar from '../components/GuidanceComponents/SearchBar.vue';
 import DownArrow from '../components/icons/DownArrow.vue';
 import Sort from '../components/GuidanceComponents/Sort.vue';
 import StudentTable from '../components/GuidanceComponents/StudentTable.vue'
-import StudentSurvey from '../components/GuidanceComponents/StudentSurvey.vue'
 import { useUserStore } from '../stores/user';
 import { students } from '../mockdata';
 import { ref } from 'vue'
@@ -13,13 +12,11 @@ export default {
     SearchBar,
     Sort,
     StudentTable,
-    StudentSurvey
   },
   data() {
     return {
       students: students,
       input: ref(""),
-      viewingUser: true
     };
   },
 };
@@ -31,7 +28,6 @@ export default {
         <Sort :students="students"/>
         <SearchBar class="" type="text" v-model="input" placeholder="Search Students..." />
         </div>
-        <StudentTable :viewingUser="viewingUser"/>
-        <StudentSurvey v-if="viewingUser"></StudentSurvey>
+        <StudentTable/>
     </div>
 </template>

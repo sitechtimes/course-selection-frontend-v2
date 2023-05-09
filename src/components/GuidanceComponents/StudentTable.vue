@@ -3,14 +3,16 @@ import { ref, computed } from 'vue';
 /* import { students } from '../../mockdata'; */
 import { useUserStore } from '../../stores/user';
 import SearchBar from "./SearchBar.vue"
+import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
 const newstudents = userStore.data.guidance.students;
 const input = ref("")
+const router = useRouter()
 
-defineProps({
-    viewingUser: Boolean,
-});
+function userClick(osis:Number) {
+    router.push(`/guidance-survey/${osis}`)
+}
 
 </script>
 
@@ -28,7 +30,7 @@ defineProps({
                 </tr>
             </thead>
             <tbody v-for="student in newstudents" class="border-2 border-black">
-                <tr>
+                <tr @click="userClick(student.osis)">
                     <td class="p-4">{{ student.lastname }}, {{ student.user.firstName }}</td>
                     <td class="p-4">{{ student.grade }}</td>
                     <td class="p-4">{{ student.osis }}</td>
@@ -42,7 +44,6 @@ defineProps({
                     <td class="p-4" v-else-if="student.progress === 'Complete'">
                         <p class="text-[#174616] bg-[#A8D480] w-[8rem] font-semibold text-center p-1 rounded-2xl">{{ student.progress }}</p>
                     </td>
-                    <td class="p-4" @click="viewingUser = !viewingUser && console.log(viewingUser)">View</td>
                 </tr>
             </tbody>
         </table>
