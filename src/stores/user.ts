@@ -41,7 +41,10 @@ export const useUserStore = defineStore('user', {
                                 students{
                                     user{
                                         firstName
+                                        lastName
                                     }
+                                    osis
+                                    
                                 }
                             }
                             allSurveys {
@@ -59,6 +62,7 @@ export const useUserStore = defineStore('user', {
                                     node{
                                         osis 
                                         answers
+                                        status
                                     }
                                 }
                             }                       
