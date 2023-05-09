@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen select-none">
+  <div class="h-screen select-none ">
     <div class="mt-48 p-4 flex justify-center text-center text-3xl h-screen">
       <div class="p-4 mx-4 w-1/3 h-fit grid grid-cols-2">
         <div v-for="course in courses" :key="course.name"
@@ -11,11 +11,11 @@
       <div class="flex flex-col mt-2">
         <div class="my-4" v-for="n in computedHeight" :key="n">{{ n }}.</div>
       </div>
-      <div class="flex flex-col w-1/4 bg-gray-100">
+      <div class="flex flex-col w-1/4">
          <div
          @dragover="e => e.target.classList.add('border-dotted', 'shadow-inner')"
          @dragleave="e => e.target.classList.remove('border-dotted')"
-          class=" m-2 p-2 rounded-lg h-14 border-black shadow-inner bg-white"
+          class=" m-2 p-2 rounded-lg h-14 border-black shadow-deepinner bg-white"
           v-for="course in courses"
           :key="course.name"
         ></div>
