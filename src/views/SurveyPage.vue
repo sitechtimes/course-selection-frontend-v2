@@ -52,11 +52,11 @@ const getChoices = () => {
       <booleanComponent v-else-if="currentQuestion.questionType === 'BOOLEAN'" :question="currentQuestion.question"></booleanComponent>
       <checkboxComponent v-else :question="currentQuestion.question" :choices="choices"></checkboxComponent>
     </div>
-    <div>
-      <button @click="previousQuestion()" class="bg-[#6A9FD1] text-white disabled:bg-stone-400" :disabled="min">Back</button>
-      <button @click="nextQuestion()" class="bg-[#6A9FD1] text-white disabled:bg-stone-400" :disabled="max">Next</button>
+    <div class="flex justify-center items-center space-x-4">
+      <button @click="previousQuestion()" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:bg-stone-400" :disabled="min">Back</button>
+      <button @click="nextQuestion()" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md  disabled:bg-stone-400" :disabled="max">Next</button>
     </div>
-    <p class="absolute bottom-8 right-16 text-2xl font-semibold">{{ currentIndex + 1 }}</p>
+    <p class="absolute bottom-8 right-16 text-xl font-semibold">{{ currentIndex + 1 }}</p>
   </div>
 </template>
 

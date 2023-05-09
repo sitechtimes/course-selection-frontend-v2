@@ -1,10 +1,8 @@
 <template>
-    <div class="md:text-4xl lg:text-[200%] text-2xl flex  flex-row md:ml-32 items-center justify-center">
-      <fieldset class="field flex w-[100%]">
-      <legend class="flex flex-wrap overflow-visible">{{ question }}</legend>
-      <div class="field flex flex-row">
-        <input type="text">
-      </div>
+    <div class="flex items-center justify-center">
+      <fieldset class="w-11/12 flex items-center justify-start">
+        <legend class="text-xl">{{ question }}</legend>
+        <input class="block py-2 px-3 mt-3 w-3/4 text-base bg-transparent rounded-md border border-solid border-zinc-400  focus:outline-none focus:ring-0 focus:border-blue-400" type="text">
       </fieldset>
     </div>
   </template>
