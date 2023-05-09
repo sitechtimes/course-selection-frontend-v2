@@ -42,9 +42,10 @@ export const useUserStore = defineStore('user', {
                                     user{
                                         firstName
                                         lastName
+                                        email
                                     }
                                     osis
-                                    
+                                    grade
                                 }
                             }
                             allSurveys {
