@@ -20,7 +20,7 @@ import booleanComponent from '../components/SurveyPageComponents/Reusables/surve
 import generalComponent from '../components/SurveyPageComponents/Reusables/surveyGeneral.vue'
 import { ref, reactive, Ref } from 'vue';
 import { useUserStore } from "../stores/user";
-import { surveyQuestion, courses } from '../types/interface';
+import { surveyQuestion, courses, surveyAnswer } from '../types/interface';
 const userStore = useUserStore();
 
 const currentIndex: Ref<number> = ref(0)
@@ -29,7 +29,7 @@ let choices: Ref<courses | undefined> = ref()
 const min: Ref<boolean> = ref(true)
 const max: Ref<boolean> = ref(false)
 let answers: Array<object> = JSON.parse(userStore.data.answeredSurvey.answers)
-let currentAnswer: object | undefined = reactive(answers.find(x => x.id === currentQuestion.id))
+let currentAnswer: surveyAnswer | undefined = reactive(answers.find(x => x.id === currentQuestion.id))
 
 const previousQuestion = () => {  
   currentIndex.value--
@@ -43,6 +43,7 @@ const previousQuestion = () => {
 
 const nextQuestion = () => {
   currentAnswer = answers.find(x => x.id === currentQuestion.id)
+  console.log(currentAnswer)
   if (currentAnswer) {
     console.log("yes")
   } else {
@@ -51,7 +52,8 @@ const nextQuestion = () => {
     //different question types are saved differently 
     const questionAnswer = {
       id: currentQuestion.id,
-      answer: "test"
+      question: currentQuestion.question,
+      answer: [1,2,3]
     }
     answers.push(questionAnswer)
     console.log(currentQuestion.id, currentQuestion)

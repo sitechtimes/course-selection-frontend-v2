@@ -35,6 +35,12 @@ export interface surveyQuestion {
     id: string
 }
 
+export interface surveyAnswer {
+    id: string
+    question: string
+    answer: Array<object>
+}
+
 export type course_type = 'MATH' | 'ENGLISH' | 'LANG' | 'SS' | 'TECH' | 'PE' | 'CAREER' | 'SCIENCE' | 'ARTS' | 'OTHER'
 export type account_type = 'student' | 'guidance' | null;
 export type grade = 'freshman' | 'sophomore' | 'junior' | 'senior';
