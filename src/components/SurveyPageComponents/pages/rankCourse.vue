@@ -11,11 +11,11 @@
       <div class="flex flex-col mt-2">
         <div class="my-4" v-for="n in computedHeight" :key="n">{{ n }}.</div>
       </div>
-      <div class="flex flex-col w-1/4">
+      <div class="flex flex-col w-1/4 bg-gray-100">
          <div
-         @dragover="e => e.target.classList.add('border-dotted')"
+         @dragover="e => e.target.classList.add('border-dotted', 'shadow-inner')"
          @dragleave="e => e.target.classList.remove('border-dotted')"
-          class=" border-2 m-2 p-2 rounded-lg h-14 border-black"
+          class=" m-2 p-2 rounded-lg h-14 border-black shadow-inner bg-white"
           v-for="course in courses"
           :key="course.name"
         ></div>
