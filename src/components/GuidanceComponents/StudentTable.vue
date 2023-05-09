@@ -16,6 +16,8 @@ const input = ref("")
       });
 }) */
 
+
+
 </script>
 
 <template>
@@ -34,7 +36,7 @@ const input = ref("")
             </thead>
             <tbody v-for="student in newstudents" class="border-2 border-black">
                 <tr>
-                    <td class="p-4">{{ student.lastname }}, {{ student.user.firstName }}</td>
+                    <td class="p-4">{{ student.user.lastName }}, {{ student.user.firstName }}</td>
                     <td class="p-4">{{ student.grade }}</td>
                     <td class="p-4">{{ student.osis }}</td>
                     <td class="p-4">{{ student.email }}</td>
