@@ -47,7 +47,7 @@ const getChoices = () => {
 <template>
   <div class="h-screen flex flex-col justify-center items-center space-y-8">
     <h1 class="text-5xl font-semibold">{{ userStore.data.survey.grade }} Year Survey</h1>
-    <div class="flex flex-col justify-center items-center bg-purple-200 min-h-[20rem]">
+    <div class="flex flex-col justify-center items-center min-h-[20rem]">
       <generalComponent v-if="currentQuestion.questionType === 'GENERAL'" :question="currentQuestion.question" ></generalComponent>
       <booleanComponent v-else-if="currentQuestion.questionType === 'BOOLEAN'" :question="currentQuestion.question"></booleanComponent>
       <checkboxComponent v-else :question="currentQuestion.question" :choices="choices"></checkboxComponent>
