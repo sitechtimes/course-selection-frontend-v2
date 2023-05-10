@@ -1,9 +1,9 @@
 <template>
   <div class="h-screen select-none ">
     <div class="mt-48 p-4 flex justify-center text-center text-3xl h-screen">
-      <div class="p-4 mx-4 w-1/3 h-fit grid grid-cols-2">
+      <div class="p-4 mx-4 w-1/3 h-fit grid grid-cols-2" @drop.prevent="e => bringBack(e)">
         <div v-for="course in courses" :key="course.name"
-            class="bg-[#D6EEFF] m-2 p-2 rounded-lg shadow-xl text-[#37394F] cursor-grab active:cursor-grabbing font-semibold h-14" draggable="true"
+            class="bg-[#D6EEFF] m-2 p-2 rounded-lg shadow-xl text-[#37394F] cursor-grab active:cursor-grabbing font-semibold h-14" draggable="true" @dragstart="e => dragElement = e.target"
           >
             {{ course.name }}
           </div>
@@ -13,10 +13,11 @@
       </div>
       <div class="flex flex-col w-1/4">
          <div
-         @dragover="e => e.target.classList.add('bg-gray-100')"
-         @dragleave="e => e.target.classList.remove('bg-gray-100')"
-
-          class=" m-2 p-2 rounded-lg h-14 shadow-deepinner bg-white"
+         id="a"
+         @dragover.prevent="e => e.target.classList.add('bg-gray-100')"
+         @dragleave.prevent="e => e.target.classList.remove('bg-gray-100')"
+          @drop.prevent="even => test(even)"
+          class="m-2 rounded-lg h-14 shadow-deepinner"
           v-for="course in courses"
           :key="course.name"
         ></div>
@@ -101,12 +102,26 @@ const ncourses = [
     id: 6,
   }
 ];
+let dragElement:HTMLElement;
 const courses = ref(ncourses);
 let dragging: Boolean = false;
 const computedHeight = computed(() => {
   return ncourses.length;
 });
 
-console.log(computedHeight);
+const bringBack = function(e){
+  console.log(e.target)
+  e.target.appendChild(dragElement)
+}
+const test = function(e){
+  dragElement.classList.remove("m-2", "shadow-xl")
+  dragElement.classList.add("shadow-deepinner")
+  e.target.classList.remove('bg-gray-100')
+  if(e.target.id == "a"){
+    e.target.appendChild(dragElement)
+  }
+  
+  
+}
 const sortedList = ref([]);
 </script>
