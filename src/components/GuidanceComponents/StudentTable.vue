@@ -5,32 +5,23 @@ import { useUserStore } from '../../stores/user';
 import SearchBar from "./SearchBar.vue"
 
 const userStore = useUserStore()
-const newstudents = userStore.data.guidance.students;
+let newstudents = userStore.data.guidance.students;
 const input = ref("")
 
-/* const students = computed(() => {
+function students() {
       return newstudents.value.filter((student: { firstName: string; }) => {
-         return (
-          student.user.firstName.toLowerCase().indexOf(input.value.toLowerCase()) != -1
-        ); 
-      });
-}) */
-
-/* const search = document.getElementById('search');
-search.addEventListener('keyup', (e) => {
-    const searchString = e.target.value.toLowerCase();
-    const filteredStudents = newstudents.filter((student: any) => {
         return (
-            student.toLowerCase().includes(searchString)
-        )
-    })
-    showStudents(filteredStudents)
-}) */
+          student.firstName.toLowerCase().indexOf(input.value.toLowerCase()) != -1
+        );
+      });
+}
 
 </script>
 
 <template>
     <div class="flex flex-col mt-10 justify-center items-center w-5/6" id="table">
+        <div id="help">
+        </div>
         <SearchBar id="search" class="" type="text" v-model="input" placeholder="Search Students..." />
         <table class="w-full border-2 border-black table-auto text-left">
             <thead class="fill-primary-g border-2 border-black">
@@ -43,7 +34,7 @@ search.addEventListener('keyup', (e) => {
                     <th class="p-4">Details</th>
                 </tr>
             </thead>
-            <tbody v-for="student in newstudents" class="border-2 border-black">
+            <tbody v-for="student in students" class="border-2 border-black">
                 <tr>
                     <td class="p-4">{{ student.user.lastName }}, {{ student.user.firstName }}</td>
                     <td class="p-4">{{ student.grade }}</td>
