@@ -97,6 +97,24 @@
 </template>
 <script setup lang="ts">
 const hidee = true;
+
+<!-- const title = ref("");
+const date = ref("");
+const people = ref("");
+const description = ref("");
+
+const createevent = async () => {
+  const createevent = await $fetch(`${config.public.api_url}/calendar`, {
+    method: "POST",
+    body: {
+      title: title.value,
+      date: date.value,
+      people: people.value,
+      description: description.value,
+    },
+  });
+};
+console.log(createevent); -->
 </script>
 <style scoped>
 .event {

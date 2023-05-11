@@ -2,11 +2,6 @@ import { defineStore } from "pinia";
 import axios from 'axios'
 import {user, account_type, userData} from "../types/interface";
 
-
-
-
-
-
 export const useUserStore = defineStore('user', {
     state: (): user => ({
         first_name: '',
