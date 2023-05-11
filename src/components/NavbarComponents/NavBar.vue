@@ -16,7 +16,7 @@ const toggleMenu = () => {
 </script>
 
 <template>
-    <nav id="navbar" class="absolute w-full top-0 h-24 flex justify-between items-center px-8 md:px-12 lg:px-16 overflow-visible">
+    <nav id="navbar" class=" w-full top-0 h-24 flex justify-between items-center px-8 md:px-12 lg:px-16 overflow-visible">
         <RouterLink to="/">
             <h1 class="text-3xl font-semibold">Course Selection</h1>
         </RouterLink>
