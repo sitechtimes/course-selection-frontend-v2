@@ -1,9 +1,11 @@
 <template>
   <div class="h-screen select-none ">
     <div class="mt-48 p-4 flex justify-center text-center text-3xl h-screen">
-      <div class="p-4 mx-4 w-1/3 h-fit grid grid-cols-2" @drop.prevent="e => bringBack(e)">
+      <div class="p-4 mx-4 w-1/3 h-fit grid grid-cols-2" @dragover.prevent="log" @drop.prevent="en => bringBack(en)">
         <div v-for="course in courses" :key="course.name"
-            class="bg-[#D6EEFF] m-2 p-2 rounded-lg shadow-xl text-[#37394F] cursor-grab active:cursor-grabbing font-semibold h-14" draggable="true" @dragstart="e => dragElement = e.target"
+            class="bg-[#D6EEFF] m-2 p-2 rounded-lg shadow-xl text-[#37394F] cursor-grab active:cursor-grabbing font-semibold h-14 course" draggable="true"             
+            @dragstart="e => dragElement = e.target"
+            @dragover="n => swap(n)"
           >
             {{ course.name }}
           </div>
@@ -22,46 +24,6 @@
           :key="course.name"
         ></div>
       </div>
-     
-      <!-- <Draggable
-        class="p-4 mx-4 w-1/3 h-fit grid grid-cols-2"
-        v-model="courses"
-        group="courses"
-        item-key="id"
-        ghost-class="dragging"
-      >
-        <template #item="{ element }">
-          <div
-            class="bg-[#D6EEFF] m-2 p-2 rounded-lg shadow-xl text-[#37394F] cursor-grab active:cursor-grabbing font-semibold h-14"
-          >
-            {{ element.name }}
-          </div>
-        </template>
-      </Draggable>
-
-      <div class="flex flex-col mt-4">
-        <div class="my-3" v-for="n in computedHeight" :key="n">{{ n }}.</div>
-      </div>
-
-      <Draggable
-        class="p-4 mx-4 w-1/4"
-        v-model="sortedList"
-        group="courses"
-        item-key="id"
-      >
-        <template #item="{ element }">
-          <div
-            class="bg-[#D6EEFF] m-2 p-2 rounded-lg shadow-xl text-[#37394F] cursor-grab active:cursor-grabbing font-semibold"
-          >
-            {{ element.name }}
-          </div>
-        </template>
-      </Draggable> -->
-      <!-- <div
-          class="border-dotted border-2 m-2 p-2 rounded-lg h-14 border-black"
-          v-for="course in courses"
-          :key="course.name"
-        ></div> -->
     </div>
   </div>
 </template>
@@ -110,18 +72,34 @@ const computedHeight = computed(() => {
 });
 
 const bringBack = function(e){
-  console.log(e.target)
-  e.target.appendChild(dragElement)
+  console.log(e.currentTarget)
+  console.log("ok")
+  dragElement.classList.add("m-2", "shadow-xl")
+  dragElement.classList.remove("shadow-deepinner")
+  if(e.target.classList.contains("course")){
+    e.target.parentElement.appendChild(dragElement)
+  }
+  else{
+    e.target.appendChild(dragElement)
+  }
+
 }
 const test = function(e){
+  console.log("okok")
+  console.log(e.target.parentElement)
   dragElement.classList.remove("m-2", "shadow-xl")
-  dragElement.classList.add("shadow-deepinner")
+  dragElement.classList.add("shadow-deepinner", "sorted-course")
   e.target.classList.remove('bg-gray-100')
   if(e.target.id == "a"){
     e.target.appendChild(dragElement)
   }
-  
-  
+}
+
+const swap = function(e){
+  //drop down one and yes
+}
+const log = function(e){
+  console.log("o")
 }
 const sortedList = ref([]);
 </script>
