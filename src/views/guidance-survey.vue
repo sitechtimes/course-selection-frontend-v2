@@ -20,17 +20,17 @@ console.log(userStore.data)
 
 <template>
   <section>
-    <div class="text-3xl ml-32 ">
-      <h1 class="font-bold text-[#37394F] text-5xl ">{{ viewedUser.user.firstName }} {{ viewedUser.user.lastName }}'s Survey</h1>
+    <div class="text-3xl ml-32 mt-4 mb-4">
+      <h1 class="font-bold text-[#37394F] text-5xl  mb-6">{{ viewedUser.user.firstName }} {{ viewedUser.user.lastName }}'s Survey</h1>
       <h2 v-if="viewedUser.grade === 'SOPHOMORE'">Grade : 9</h2>
       <h2 v-if="viewedUser.grade === 'JUNIOR'">Grade : 10</h2>
       <h2 v-if="viewedUser.grade === 'SENIOR'">Grade : 11</h2>
     </div>
     <div v-for="question in usedSurvey.node.questions">
-      <booleanComponent v-if="question.questionType === 'BOOLEAN'" :question="question.question"></booleanComponent>
-      <generalComponent v-if="question.questionType === 'GENERAL'" :question="question.question"></generalComponent>
+      <booleanComponent class="mb-6" v-if="question.questionType === 'BOOLEAN'" :question="question" :usedSurvey="usedSurvey.node.questions"></booleanComponent>
+      <generalComponent class="mb-6" v-if="question.questionType === 'GENERAL'" :question="question.question" :usedSurvey="usedSurvey.node.questions"></generalComponent>
     </div>
-    <div class="flex justify-center">
+    <div class="flex justify-center mb-6">
       <button class="bg-[#C5D4A4] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-36 h-12 text-2xl font-bold text-[#37394F]">Complete</button>
     </div>
   </section>
