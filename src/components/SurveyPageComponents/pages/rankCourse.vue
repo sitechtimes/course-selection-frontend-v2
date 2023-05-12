@@ -1,24 +1,32 @@
 <template>
-  <div class="h-screen select-none ">
+  <div class="h-screen select-none">
     <div class="mt-48 p-4 flex justify-center text-center text-3xl h-screen">
-      <div class="p-4 mx-4 w-1/3 h-fit grid grid-cols-2" @dragover.prevent="log" @drop.prevent="en => bringBack(en)">
-        <div v-for="course in courses" :key="course.name"
-            class="bg-[#D6EEFF] m-2 p-2 rounded-lg shadow-xl text-[#37394F] cursor-grab active:cursor-grabbing font-semibold h-14 course" draggable="true"             
-            @dragstart="e => dragElement = e.target"
-            @dragover="n => swap(n)"
-          >
-            {{ course.name }}
-          </div>
+      <div
+        class="p-4 mx-4 w-1/3 h-fit grid grid-cols-2"
+        @dragover.prevent=""
+        @drop.prevent="(en) => bringBack(en)"
+      >
+        <div
+          v-for="course in courses"
+          :key="course.name"
+          class="bg-[#D6EEFF] m-2 p-2 rounded-lg shadow-xl text-[#37394F] cursor-grab active:cursor-grabbing font-semibold h-14 course"
+          draggable="true"
+          @dragover.prevent="(e) => hoverBox(e)"
+          @dragstart="(e) => (dragElement = e.target)"
+          @drop.prevent="(n) => swap(n)"
+        >
+          {{ course.name }}
+        </div>
       </div>
       <div class="flex flex-col mt-2">
         <div class="my-4" v-for="n in computedHeight" :key="n">{{ n }}.</div>
       </div>
       <div class="flex flex-col w-1/4">
-         <div
-         id="a"
-         @dragover.prevent="e => e.target.classList.add('bg-gray-100')"
-         @dragleave.prevent="e => e.target.classList.remove('bg-gray-100')"
-          @drop.prevent="even => test(even)"
+        <div
+          id="a"
+          @dragover.prevent="(e) => e.target.classList.add('bg-gray-100')"
+          @dragleave.prevent="(e) => e.target.classList.remove('bg-gray-100')"
+          @drop.prevent="(even) => test(even)"
           class="m-2 rounded-lg h-14 shadow-deepinner"
           v-for="course in courses"
           :key="course.name"
@@ -62,44 +70,50 @@ const ncourses = [
   {
     name: "G",
     id: 6,
-  }
+  },
 ];
-let dragElement:HTMLElement;
+let dragElement: HTMLElement;
 const courses = ref(ncourses);
 let dragging: Boolean = false;
 const computedHeight = computed(() => {
   return ncourses.length;
 });
 
-const bringBack = function(e){
-  console.log(e.currentTarget)
-  console.log("ok")
-  dragElement.classList.add("m-2", "shadow-xl")
-  dragElement.classList.remove("shadow-deepinner")
-  if(e.target.classList.contains("course")){
-    e.target.parentElement.appendChild(dragElement)
+const bringBack = function (e) {
+  if (dragElement.classList.contains("sorted-course")) {
+    dragElement.classList.add("m-2", "shadow-xl");
+    dragElement.classList.remove("shadow-deepinner", "sorted-course");
+    if (e.target.classList.contains("course")) {
+      e.target.parentElement.appendChild(dragElement);
+    } else {
+      e.target.appendChild(dragElement);
+    }
   }
-  else{
-    e.target.appendChild(dragElement)
+};
+const test = function (e) {
+  if (!dragElement.classList.contains("sorted-course")) {
+    dragElement.classList.remove("m-2", "shadow-xl");
+    dragElement.classList.add("shadow-deepinner", "sorted-course");
+    e.target.classList.remove("bg-gray-100");
+    if (e.target.id == "a") {
+      e.target.appendChild(dragElement);
+    }
   }
-
-}
-const test = function(e){
-  console.log("okok")
-  console.log(e.target.parentElement)
-  dragElement.classList.remove("m-2", "shadow-xl")
-  dragElement.classList.add("shadow-deepinner", "sorted-course")
-  e.target.classList.remove('bg-gray-100')
-  if(e.target.id == "a"){
-    e.target.appendChild(dragElement)
+};
+const hoverBox = function (e) {
+  if (
+    e.target.classList.contains("sorted-course") &&
+    dragElement.classList.contains("sorted-course")
+  ) {
+    let dragParent = dragElement.parentElement;
+    e.target.parentElement.appendChild(dragElement);
+    dragParent.appendChild(e.target);
+    // e.target.parentElement.nextElementSibling.appendChild(dragElement);
   }
-}
-
-const swap = function(e){
-  //drop down one and yes
-}
-const log = function(e){
-  console.log("o")
-}
+};
+const swap = function (e) {};
+const log = function (e) {
+  console.log("o");
+};
 const sortedList = ref([]);
 </script>
