@@ -1,66 +1,86 @@
 <script setup lang="ts">
-import BellIcon from '../components/icons/BellIcon.vue';
-import { useUserStore } from '../stores/user';
+import BellIcon from "../components/icons/BellIcon.vue";
+import { useUserStore } from "../stores/user";
 
-const userStore = useUserStore()
-let annoucement = 'Surveys are closing next week on 03/12/2023.'
+const userStore = useUserStore();
+let annoucement = "Surveys are closing next week on 03/12/2023.";
 
-let time: String
-let date: String
+let time: String;
+let date: String;
 
-if (userStore.data.student.meeting != undefined || userStore.data.student.meeting !=null) {
-const SplitTime = userStore.data.student.meeting.substring(11,16).split(":") // Substring is there to get only the time part (2023-05-01T16:09:54+00:00 was the value for meeting)
-if (SplitTime[0] > 12) {
-  SplitTime[0] -= 12
-  time = SplitTime.join(':') + " PM"
-}  else {
-  time = SplitTime.join(':') + " AM"
+if (
+  userStore.data.student.meeting != undefined ||
+  userStore.data.student.meeting != null
+) {
+  const SplitTime = userStore.data.student.meeting.substring(11, 16).split(":"); // Substring is there to get only the time part (2023-05-01T16:09:54+00:00 was the value for meeting)
+  if (SplitTime[0] > 12) {
+    SplitTime[0] -= 12;
+    time = SplitTime.join(":") + " PM";
+  } else {
+    time = SplitTime.join(":") + " AM";
+  }
+  const SplitDate = userStore.data.student.meeting.substring(0, 10).split("-");
+  SplitDate.splice(0, 3, SplitDate[1], SplitDate[2], SplitDate[0]);
+  date = SplitDate.join("/");
 }
-const SplitDate = userStore.data.student.meeting.substring(0,10).split("-")
-SplitDate.splice(0, 3, SplitDate[1], SplitDate[2], SplitDate[0]);
-date = SplitDate.join("/")
-}
 
-const testAnswer = {
-  name: "yes",
-  answers: 1234
-}
+const testAnswer = { name: "if this works ima cry", answers: 1234 };
 
 function testing(answer: Object) {
- let json = JSON.stringify(answer)
- userStore.saveSurvey("123", answer)
-// userStore.saveSurvey()
- // console.log(json)
+  let json = JSON.stringify(answer);
+  userStore.saveSurvey("123", answer);
+  // userStore.saveSurvey()
+  // console.log(json)
 }
 </script>
 
 <template>
   <div class="h-screen w-full flex flex-row justify-center items-center">
-    <div id="left" class="w-11/12 flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left md:w-3/4 lg:max-w-3xl lg:space-y-6 lg:ml-12">
+    <div
+      id="left"
+      class="w-11/12 flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left md:w-3/4 lg:max-w-3xl lg:space-y-6 lg:ml-12"
+    >
       <h1 id="name" class="text-5xl font-bold">
-        Welcome back, 
+        Welcome back,
         <span>{{ userStore.first_name }} {{ userStore.last_name }}</span>
       </h1>
-      <div id="announcements" class="flex justify-center items-center ml-4 lg:ml-0 lg:justify-start">
+      <div
+        id="announcements"
+        class="flex justify-center items-center ml-4 lg:ml-0 lg:justify-start"
+      >
         <BellIcon />
         <h2 class="text-xl text-left flex ml-2">
           {{ annoucement }}
         </h2>
       </div>
-      <div class="flex flex-col justify-start items-center space-y-4 lg:flex-row lg:space-y-0 lg:space-x-4">
+      <div
+        class="flex flex-col justify-start items-center space-y-4 lg:flex-row lg:space-y-0 lg:space-x-4"
+      >
         <RouterLink to="/schedule">
-          <button class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
+          <button
+            class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s"
+          >
             Schedule
           </button>
         </RouterLink>
         <RouterLink to="/survey">
-          <button class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
+          <button
+            class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s"
+          >
             Course Survey
           </button>
         </RouterLink>
       </div>
-      <div >
-        <h1 v-if="userStore.data.student.meeting != undefined || userStore.data.student.meeting !=null" >You have a scheduled meeting with your guidance councelor on {{ date }} at {{ time }}.</h1>
+      <div>
+        <h1
+          v-if="
+            userStore.data.student.meeting != undefined ||
+            userStore.data.student.meeting != null
+          "
+        >
+          You have a scheduled meeting with your guidance councelor on
+          {{ date }} at {{ time }}.
+        </h1>
         <h1 v-else>Your guidance councelor has not yet set a meeting time.</h1>
       </div>
       <p @click="testing(testAnswer)">yay</p>
