@@ -13,7 +13,7 @@
           draggable="true"
           @dragover.prevent="(e) => hoverBox(e)"
           @dragstart="(e) => (dragElement = e.target)"
-          @drop.prevent="(n) => swap(n)"
+          @drop.prevent="(e) => hoverBox(e)"
         >
           {{ course.name }}
         </div>
@@ -91,15 +91,47 @@ const bringBack = function (e) {
   }
 };
 const test = function (e) {
-  if (!dragElement.classList.contains("sorted-course")) {
-    dragElement.classList.remove("m-2", "shadow-xl");
-    dragElement.classList.add("shadow-deepinner", "sorted-course");
-    e.target.classList.remove("bg-gray-100");
-    if (e.target.id == "a") {
-      e.target.appendChild(dragElement);
-    }
+  dragElement.classList.remove("m-2", "shadow-xl");
+  // if (!dragElement.classList.contains("sorted-course")) {
+  dragElement.classList.add("shadow-deepinner", "sorted-course");
+  // }
+  e.target.classList.remove("bg-gray-100");
+  if (e.target.id == "a") {
+    e.target.appendChild(dragElement);
   }
 };
+
+function emptyBelow(e) {
+  let currentElement = e.target.parentElement.nextElementSibling;
+  while (currentElement) {
+    if (currentElement.childNodes.length == 0) {
+      return true;
+    }
+    currentElement = currentElement.nextElementSibling;
+  }
+  return false;
+}
+
+function fillBelow(element: any) {
+  if (element.childNodes.length === 0) {
+    return true;
+  } else if (element.nextElementSibling === null) {
+    return false;
+  }
+  if (fillBelow(element.nextElementSibling)) {
+    element.nextSibling.appendChild(element.childNodes[0]);
+  }
+}
+function fillAbove(element: any) {
+  if (element.childNodes.length === 0) {
+    return true;
+  } else if (element.previousSibling === null) {
+    return false;
+  }
+  if (fillAbove(element.previousSibling)) {
+    element.previousSibling.appendChild(element.childNodes[0]);
+  }
+}
 const hoverBox = function (e) {
   if (
     e.target.classList.contains("sorted-course") &&
@@ -108,7 +140,11 @@ const hoverBox = function (e) {
     let dragParent = dragElement.parentElement;
     e.target.parentElement.appendChild(dragElement);
     dragParent.appendChild(e.target);
+    dragElement.classList.remove("bg-gray-100");
     // e.target.parentElement.nextElementSibling.appendChild(dragElement);
+  } else {
+    fillBelow(e.target.parentElement);
+    fillAbove(e.target.parentElement);
   }
 };
 const swap = function (e) {};
