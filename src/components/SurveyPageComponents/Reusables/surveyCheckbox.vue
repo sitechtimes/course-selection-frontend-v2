@@ -1,16 +1,16 @@
 <template>
-    <div class="lg:text-[225%] md:text-[187.5%] text-[150%] flex flex-wrap flex-row lg:ml-[3.5%] text-black ">
-      <fieldset class="field flex overflow-visible h-[40rem]"> <!-- I did this because I have no idea how to make it fill the rest of the page, so this will let the page decide how long it should be.  -->
-      <legend class="flex flex-wrap overflow-visible md:self-center">{{ question }}</legend>
-      <div class="field flex flex-col flex-wrap w-fit ">
-        <div v-for="choice in choices" :key="choice" class="square-button flex flex-wrap flex-column m-[3.43%] w-max">
+    <div class="flex items-center justify-center max-w-[40rem] overflow-hidden">
+      <fieldset class="flex items-center justify-start"> <!-- I did this because I have no idea how to make it fill the rest of the page, so this will let the page decide how long it should be.  -->
+      <legend class="text-xl md:text-2xl">{{ question }}</legend>
+      <div class="flex flex-col flex-wrap justify-center items-start">
+        <div v-for="choice in choices" :key="choice" class="flex flex-wrap flex-column justify-center items-center m-4 w-max">
           <input
             type="checkbox"
-            class="w-6 h-6 outline-1 self-center flex flex-wrap flex-row checked:border-1 checked:border-black outline-black checked:outline-black checked:outline-1 checked:outline-offset-0 bg-[#EAEAEA] focus:ring-transparent checked:bg-none checked:bg-[#6A9FD1] checked:hover:bg-[#6A9FD1] checked:focus:bg-[#6A9FD1] shadow-[inset_0px_4px_4px_rgba(0,0,0,0.25) "
+            class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
             :id="choice.courseCode"
             :name="question"
           />
-          <label :for="choice.courseCode" class="flex flex-wrap self-center ml-2 flex-row ">{{ choice.name }}</label>
+          <label :for="choice.courseCode" class="text-lg md:text-xl ml-4">{{ choice.name }}</label>
         </div>
       </div>
       </fieldset>
