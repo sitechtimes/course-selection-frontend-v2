@@ -14,6 +14,10 @@
         </div>
       </div>
       </fieldset>
+      <div class="bottom-28 w-11/12 md:w-4/5 lg:w-3/4 absolute flex justify-between items-center px-4">
+        <button @click="$emit('back')" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:bg-stone-400" :disabled="min">Back</button>
+        <button @click="$emit('next')" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md  disabled:bg-stone-400" :disabled="max">Next</button>
+      </div>
     </div>
   </template>
   
@@ -21,5 +25,7 @@
   const choices = ["Yes", "No"]
   defineProps({
     question: String,
+    min: Boolean,
+    max: Boolean
   });
   </script>

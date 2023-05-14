@@ -1,5 +1,21 @@
+<template>
+  <div class="h-screen flex flex-col justify-center items-center space-y-8">
+    <div class="w-11/12 md:w-4/5 lg:w-3/4 flex flex-col justify-center items-center min-h-[20rem] space-y-8 mb-10">
+      <h1 class="text-4xl font-semibold">{{ userStore.data.survey.grade }} Year Survey</h1>
+      <generalComponent v-if="currentQuestion.questionType === 'GENERAL'" :question="currentQuestion.question" :max="max" :min="min" @back="previousQuestion()" @next="nextQuestion()"></generalComponent>
+      <booleanComponent v-else-if="currentQuestion.questionType === 'BOOLEAN'" :question="currentQuestion.question" :max="max" :min="min" @back="previousQuestion()" @next="nextQuestion()"></booleanComponent>
+      <checkboxComponent v-else :question="currentQuestion.question" :choices="choices" :max="max" :min="min" @back="previousQuestion()" @next="nextQuestion()"></checkboxComponent>
+    </div>
+    <!-- <div class="bottom-28 w-11/12 md:w-4/5 lg:w-3/4 absolute flex justify-between items-center px-4">
+        <button @click="previousQuestion()" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:bg-stone-400" :disabled="min">Back</button>
+        <button @click="nextQuestion()" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md  disabled:bg-stone-400" :disabled="max">Next</button>
+    </div> -->
+    <p class="absolute bottom-8 right-16 text-xl font-semibold">{{ currentIndex + 1 }}</p>
+  </div>
+</template>
+
 <script setup lang="ts">
-import checkboxComponent from '../components/SurveyPageComponents/pages/courseSelectionPages.vue';
+import checkboxComponent from '../components/SurveyPageComponents/Reusables/surveyCheckbox.vue';
 import booleanComponent from '../components/SurveyPageComponents/Reusables/surveyBoolean.vue'
 import generalComponent from '../components/SurveyPageComponents/Reusables/surveyGeneral.vue'
 import { ref, reactive, Ref } from 'vue';
@@ -12,22 +28,24 @@ let currentQuestion: surveyQuestion = reactive(userStore.data.survey.questions[c
 let choices: Ref<courses | undefined> = ref() 
 const min: Ref<boolean> = ref(true)
 const max: Ref<boolean> = ref(false)
-let answers: Array<object> = JSON.parse(userStore.data.answeredSurvey.answers)
+let answers: Array<object> = [JSON.parse(userStore.data.answeredSurvey.answers)] // find way to fix when answers is returned as object
 let currentAnswer: surveyAnswer | undefined = reactive(answers.find(x => x.id == currentQuestion.id))
 
-const previousQuestion = () => {  
+const previousQuestion = (x) => {  
   currentIndex.value--
   currentQuestion = userStore.data.survey.questions[currentIndex.value]
-  
+  console.log(userStore.data.survey.questions)
+  console.log(x)
   max.value = false
   if(currentIndex.value === 0) {
     min.value = true
   }
 }
 
-const nextQuestion = () => {
+const nextQuestion = (x) => {
   currentAnswer = answers.find(x => x.id == currentQuestion.id)
-
+  console.log(userStore.data.survey.questions)
+  console.log(x)
   const questionAnswer = {
         id: currentQuestion.id,
         question: currentQuestion.question,
@@ -77,20 +95,5 @@ const getChoices = () => {
 
 </script>
 
-<template>
-  <div class="h-screen flex flex-col justify-center items-center space-y-8">
-    <div class="w-11/12 md:w-4/5 lg:w-3/4 flex flex-col justify-center items-center min-h-[20rem] space-y-8 mb-10">
-      <h1 class="text-4xl font-semibold">{{ userStore.data.survey.grade }} Year Survey</h1>
-      <generalComponent v-if="currentQuestion.questionType === 'GENERAL'" :question="currentQuestion.question" ></generalComponent>
-      <booleanComponent v-else-if="currentQuestion.questionType === 'BOOLEAN'" :question="currentQuestion.question"></booleanComponent>
-      <checkboxComponent v-else :question="currentQuestion.question" :choices="choices"></checkboxComponent>
-    </div>
-    <div class="bottom-28 w-11/12 md:w-4/5 lg:w-3/4 absolute flex justify-between items-center px-4">
-        <button @click="previousQuestion()" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:bg-stone-400" :disabled="min">Back</button>
-        <button @click="nextQuestion()" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md  disabled:bg-stone-400" :disabled="max">Next</button>
-      </div>
-    <p class="absolute bottom-8 right-16 text-xl font-semibold">{{ currentIndex + 1 }}</p>
-  </div>
-</template>
 
 <style scoped></style>
