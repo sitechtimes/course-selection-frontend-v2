@@ -1,3 +1,10 @@
+<script setup lang="ts">
+const hidee = true;
+function submit(){
+
+}
+</script>
+
 <template>
   <div class="event h-screen w-full flex flex-column mt-20">
     <div v-if="hidee" class="createevent h-screen flex flex-row m-auto mt-5">
@@ -95,9 +102,7 @@
     </div>
   </div>
 </template>
-<script setup lang="ts">
-const hidee = true;
-</script>
+
 <style scoped>
 .event {
   display: flex;
