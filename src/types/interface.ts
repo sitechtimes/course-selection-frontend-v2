@@ -38,7 +38,7 @@ export interface surveyQuestion {
 export interface surveyAnswer {
     id: string
     question: string
-    answer: Array<object>
+    answer: Array<string>
 }
 
 export type course_type = 'MATH' | 'ENGLISH' | 'LANG' | 'SS' | 'TECH' | 'PE' | 'CAREER' | 'SCIENCE' | 'ARTS' | 'OTHER'
