@@ -11,7 +11,9 @@
             type="checkbox"
             class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
             :id="choice.courseCode"
-            :name="question"
+            :name="choice.courseCode"
+            :value="choice.courseCode"
+            v-model="response"
           />
           <label :for="choice.courseCode" class="text-lg md:text-xl ml-4">{{ choice.name }}</label>
         </div>
@@ -38,8 +40,8 @@
         </div>
       </div>
       <div class="bottom-28 w-11/12 md:w-4/5 lg:w-3/4 absolute flex justify-between items-center px-4">
-        <button @click="$emit('back')" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:bg-stone-400" :disabled="min">Back</button>
-        <button @click="$emit('next')" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md  disabled:bg-stone-400" :disabled="max">Next</button>
+        <button @click="$emit('back');" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:bg-stone-400" :disabled="min">Back</button>
+        <button @click="$emit('next'); yes()" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md  disabled:bg-stone-400" :disabled="max">Next</button>
       </div>
     </section>
 </template>
@@ -51,4 +53,11 @@
     min: Boolean,
     max: Boolean
   });
+
+  let response: String | undefined
+
+  const yes = () => {
+    console.log(response)
+  }
+
 </script>  
