@@ -1,54 +1,63 @@
+<script setup lang="ts">
+import checkboxComponent from '../components/SurveyPageComponents/pages/courseSelectionPages.vue';
+import booleanComponent from '../components/SurveyPageComponents/Reusables/surveyBoolean.vue'
+import generalComponent from '../components/SurveyPageComponents/Reusables/surveyGeneral.vue'
+import { ref, reactive, Ref } from 'vue';
+import { useUserStore } from "../stores/user";
+import { surveyQuestion, courses } from '../types/interface';
+const userStore = useUserStore();
+
+const currentIndex: Ref<number> = ref(0)
+let currentQuestion: surveyQuestion = reactive(userStore.data.survey.questions[currentIndex.value])
+let choices: Ref<courses | undefined> = ref() 
+const min: Ref<boolean> = ref(true)
+const max: Ref<boolean> = ref(false)
+
+const previousQuestion = () => {
+  currentIndex.value--
+  currentQuestion = userStore.data.survey.questions[currentIndex.value]
+  
+  max.value = false
+  if(currentIndex.value === 0) {
+    min.value = true
+  }
+}
+
+const nextQuestion = () => {
+  currentIndex.value++
+  currentQuestion = userStore.data.survey.questions[currentIndex.value]
+
+  min.value = false
+  if(currentIndex.value === userStore.data.survey.questions.length - 1) {
+    max.value = true
+  }
+
+  if (currentQuestion.questionType != "GENERAL" && currentQuestion.questionType != "BOOLEAN") {
+    getChoices()
+  }
+}
+
+const getChoices = () => {
+    const classes = userStore.data.student.coursesAvailable
+    choices = classes.filter(x => x.subject === currentQuestion.questionType)
+}
+
+</script>
+
 <template>
-  <!-- Page 1 (for everyone)
-    <h1>______ Year Survey</h1>     Fill in ______ with the year
-    <label for="major">What college majors are you considering upon graduation from high school?</label>
-    <input type="text" id="major"/>
-    <label for="career">What careers are you considering upon graduation?</label>
-    <input type="text" id="career"/>
-    <label for="afterSchool">List after-school activities such as clubs, teams, volunteer, or paid employment.</label>
-    <input type="text" id="afterSchool"/> -->
-
-  <!-- Page 2 (for everyone) -->
-  <!-- <div class="survey">
-    <h1 class="text-4xl font-semibold">______ Year Survey</h1>
-    <fieldset class="flex flex-col">
-      <label for="AP-interested" class=""
-        >How Many AP or college-level courses are you interested in
-        taking?</label
-      >
-      <input type="text" class="border-2 border-gray-500 rounded-sm w-4/5" id="AP-interested" />
-    </fieldset>
-
-    <h2>Are you interested in a 8th academic period (1-9 schedule)?</h2>
-    <fieldset>
-      <input type="radio" id="eighth-yes" name="eighth" />
-      <label for="eighth-yes">Yes</label>
-      <input type="radio" id="eighth-no" name="eighth" />
-      <label for="eighth-no">No</label>
-      <input type="radio" id="eighth-ns" name="eighth" />
-      <label for="eighth-ns">Not sure</label>
-    </fieldset>
-  </div> -->
-  <div class="mt-96 height-48">
-    <SurveyButton :form="form" :name="name" />
+  <div class="h-screen flex flex-col justify-center items-center space-y-8">
+    <div class="w-11/12 md:w-4/5 lg:w-3/4 flex flex-col justify-center items-center min-h-[20rem] space-y-8 mb-10">
+      <h1 class="text-4xl font-semibold">{{ userStore.data.survey.grade }} Year Survey</h1>
+      <generalComponent v-if="currentQuestion.questionType === 'GENERAL'" :question="currentQuestion.question" ></generalComponent>
+      <booleanComponent v-else-if="currentQuestion.questionType === 'BOOLEAN'" :question="currentQuestion.question"></booleanComponent>
+      <checkboxComponent v-else :question="currentQuestion.question" :choices="choices"></checkboxComponent>
+    </div>
+    <div class="bottom-28 w-11/12 md:w-4/5 lg:w-3/4 absolute flex justify-between items-center px-4">
+        <button @click="previousQuestion()" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:bg-stone-400" :disabled="min">Back</button>
+        <button @click="nextQuestion()" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md  disabled:bg-stone-400" :disabled="max">Next</button>
+      </div>
+    <p class="absolute bottom-8 right-16 text-xl font-semibold">{{ currentIndex + 1 }}</p>
   </div>
 </template>
 
-<style></style>
-
-<script setup lang="ts">
-import SurveyButton from "../components/SurveyPageComponents/SurveyButton.vue";
-
-// test stuff
-const form = [
-  {
-    id: "first-question",
-    answer: "Not Sure",
-  },
-  {
-    id: "second-question",
-    answer: "Yes",
-  },
-];
-const name = "eighth";
-</script>
+<style scoped></style>

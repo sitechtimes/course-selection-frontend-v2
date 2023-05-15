@@ -10,9 +10,14 @@ const router = createRouter({
       component: () => import('../views/landing.vue')
     },
     {
-      path: '/guidance-home',
-      name: 'GuidanceHome',
+      path: '/guidance/dashboard',
+      name: 'guidanceDash',
       component: () => import('../views/GuidanceHome.vue')
+    },
+    {
+      path: '/guidance-studentlist',
+      name: 'Guidance-Studentlist',
+      component: () => import('../views/Guidance-StudentList.vue')
     },
     // {
     //   path: '/courses',
@@ -45,6 +50,11 @@ const router = createRouter({
       path: '/guidanceCalendar',
       name: 'guidanceCalendar',
       component: () => import('../views/GuidanceCalendar.vue')
+    },
+    {
+      path: '/student/dashboard',
+      name: 'studentDash',
+      component: () => import('../views/dashboard.vue')
     },
   ]
 })
