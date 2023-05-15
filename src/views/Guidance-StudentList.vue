@@ -23,7 +23,7 @@ export default {
 </script>
 
 <template>
-    <div class="h-screen w-full flex flex-col justify-center items-center">
+    <div class="h-[80vh] w-full flex flex-col justify-center items-center">
         <div class="ml-20 flex flex-row items-center">
         <Sort :students="students"/>
         <SearchBar class="" type="text" v-model="input" placeholder="Search Students..." />

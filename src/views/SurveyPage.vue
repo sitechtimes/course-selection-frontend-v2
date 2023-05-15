@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen w-full flex flex-col justify-center items-center">
+  <div class="h-[80vh] w-full flex flex-col justify-center items-center">
     <h1 class="text-[#37394F] text-[200%] md:text-[210%] font-bold text-center">{{ userStore.data.survey.grade }} Year Survey</h1>
     <div class="w-11/12 h-2/3 flex flex-col justify-center items-center text-center">
       <div>{{ currentIndex + 1 }}</div>
