@@ -200,13 +200,13 @@ body {
 }
 .weeks {
   text-align: center;
+  border-top: #e5e7eb 2px solid;
 }
 .calendar .days {
   margin-bottom: 20px;
 }
 .days {
   text-align: right;
-  margin-top: 1rem;
 }
 .calendar li {
   color: #333;
