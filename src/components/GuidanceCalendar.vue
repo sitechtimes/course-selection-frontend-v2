@@ -92,48 +92,48 @@
         <li class="border-x-2 px-11">Sat</li>
       </ul>
       <ul class="days">
-        <li class="mr-4">26</li>
-        <li class="mr-4">27</li>
-        <li class="mr-4">28</li>
-        <li class="mr-4">29</li>
-        <li class="mr-4">30</li>
-        <li class="mr-4">31</li>
-        <li class="mr-4">1</li>
-        <li class="mr-4">2</li>
-        <li class="mr-4">3</li>
-        <li class="mr-4">4</li>
-        <li class="mr-4">5</li>
-        <li class="mr-4">6</li>
-        <li class="mr-4">7</li>
-        <li class="mr-4">8</li>
-        <li class="mr-4">9</li>
-        <li class="mr-4">10</li>
-        <li class="mr-4">11</li>
-        <li class="mr-4">12</li>
-        <li class="mr-4">13</li>
-        <li class="mr-4">14</li>
-        <li class="mr-4">15</li>
-        <li class="mr-4">16</li>
-        <li class="mr-4">17</li>
-        <li class="mr-4">18</li>
-        <li class="mr-4">19</li>
-        <li class="mr-4">20</li>
-        <li class="mr-4">21</li>
-        <li class="mr-4">22</li>
-        <li class="mr-4">23</li>
-        <li class="mr-4">24</li>
-        <li class="mr-4">25</li>
-        <li class="mr-4">26</li>
-        <li class="mr-4">27</li>
-        <li class="mr-4">28</li>
-        <li class="mr-4">29</li>
-        <li class="mr-4">30</li>
-        <li class="mr-4">1</li>
-        <li class="mr-4">2</li>
-        <li class="mr-4">3</li>
-        <li class="mr-4">4</li>
-        <li class="mr-4">5</li>
-        <li class="mr-4">6</li>
+        <li class="">26</li>
+        <li class="">27</li>
+        <li class="">28</li>
+        <li class=" ">29</li>
+        <li class=" ">30</li>
+        <li class=" ">31</li>
+        <li class=" ">1</li>
+        <li class=" ">2</li>
+        <li class=" ">3</li>
+        <li class=" ">4</li>
+        <li class=" ">5</li>
+        <li class=" ">6</li>
+        <li class=" ">7</li>
+        <li class=" ">8</li>
+        <li class=" ">9</li>
+        <li class=" ">10</li>
+        <li class=" ">11</li>
+        <li class=" ">12</li>
+        <li class=" ">13</li>
+        <li class=" ">14</li>
+        <li class=" ">15</li>
+        <li class=" ">16</li>
+        <li class=" ">17</li>
+        <li class=" ">18</li>
+        <li class=" ">19</li>
+        <li class=" ">20</li>
+        <li class=" ">21</li>
+        <li class=" ">22</li>
+        <li class=" ">23</li>
+        <li class=" ">24</li>
+        <li class=" ">25</li>
+        <li class=" ">26</li>
+        <li class=" ">27</li>
+        <li class=" ">28</li>
+        <li class=" ">29</li>
+        <li class=" ">30</li>
+        <li class=" ">1</li>
+        <li class=" ">2</li>
+        <li class=" ">3</li>
+        <li class=" ">4</li>
+        <li class=" ">5</li>
+        <li class=" ">6</li>
       </ul>
     </div>
   </div>
@@ -197,10 +197,13 @@ body {
   flex-wrap: wrap;
   list-style: none;
   overflow: hidden;
+  border: #e5e7eb 1px solid;
 }
 .weeks {
   text-align: center;
   border-top: #e5e7eb 2px solid;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 .calendar .days {
   margin-bottom: 20px;
@@ -228,6 +231,7 @@ body {
 }
 .days li {
   border: #e5e7eb 2px solid;
+  font-size: 0.7rem;
 }
 .days li.inactive {
   color: #aaa;
