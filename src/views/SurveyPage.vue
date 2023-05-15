@@ -12,15 +12,26 @@ let currentQuestion: surveyQuestion = reactive(userStore.data.survey.questions[c
 let choices: Ref<courses | undefined> = ref() 
 const min: Ref<boolean> = ref(true)
 const max: Ref<boolean> = ref(false)
-let answers: Array<object> = [JSON.parse(userStore.data.answeredSurvey.answers)] // find way to fix when answers is returned as object
+let answers: Array<object> = JSON.parse(userStore.data.answeredSurvey.answers) // find way to fix when answers is returned as object
 // let currentAnswer: surveyAnswer | undefined = reactive(answers.find(x => x.id == currentQuestion.id))
 
-const previousQuestion = (response: Object | undefined) => {  
+const previousQuestion = (response: Array<string> | undefined) => {  
+  const questionAnswer = {
+        id: currentQuestion.id,
+        question: currentQuestion.question,
+        answer: response
+  }
+  updateAnswers(questionAnswer)
+
   currentIndex.value--
   currentQuestion = userStore.data.survey.questions[currentIndex.value]
   max.value = false
   if(currentIndex.value === 0) {
     min.value = true
+  }
+
+  if (currentQuestion.questionType != "GENERAL" && currentQuestion.questionType != "BOOLEAN") {
+    getChoices()
   }
 }
 
