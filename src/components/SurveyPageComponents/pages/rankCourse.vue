@@ -12,7 +12,7 @@
           class="bg-[#D6EEFF] m-2 p-2 rounded-lg shadow-xl text-[#37394F] cursor-grab active:cursor-grabbing font-semibold h-14 course"
           draggable="true"
           @dragover.prevent="(e) => hoverBox(e)"
-          @dragstart="(e) => (dragElement = e.target)"
+          @dragstart="(e) => setElements(e)"
           @drop.prevent="(e) => hoverBox(e)"
         >
           {{ course.name }}
@@ -27,7 +27,7 @@
           @dragover.prevent="(e) => e.target.classList.add('bg-gray-100')"
           @dragleave.prevent="(e) => e.target.classList.remove('bg-gray-100')"
           @drop.prevent="(even) => test(even)"
-          class="m-2 rounded-lg h-14 shadow-deepinner"
+          class="m-2 rounded-lg h-14 shadow-deepinner placeholder"
           v-for="course in courses"
           :key="course.name"
         ></div>
@@ -75,10 +75,22 @@ const ncourses = [
 let dragElement: HTMLElement;
 const courses = ref(ncourses);
 let dragging: Boolean = false;
+let placeholders: NodeList;
+let placeholderChildren: Array<Element>;
+let childrenCopy: Array<Element>;
 const computedHeight = computed(() => {
   return ncourses.length;
 });
 
+const setElements = function (e) {
+  placeholders = document.querySelectorAll(".placeholder");
+  let a = Array.prototype.slice.call(placeholders);
+  placeholderChildren = a.map(function (element) {
+    return element.childNodes[0];
+  });
+  dragElement = e.target;
+  console.log(placeholderChildren);
+};
 const bringBack = function (e) {
   if (dragElement.classList.contains("sorted-course")) {
     dragElement.classList.add("m-2", "shadow-xl");
@@ -112,25 +124,46 @@ function emptyBelow(e) {
   return false;
 }
 
-function fillBelow(element: any) {
-  if (element.childNodes.length === 0) {
+function fillBelow(index: number) {
+  if (placeholderChildren[index] === undefined) {
     return true;
-  } else if (element.nextElementSibling === null) {
-    return false;
   }
-  if (fillBelow(element.nextElementSibling)) {
-    element.nextSibling.appendChild(element.childNodes[0]);
+  if (fillAbove(index + 1)) {
+    [childrenCopy[index], childrenCopy[index + 1]] = [
+      childrenCopy[index + 1],
+      childrenCopy[index],
+    ];
   }
 }
-function fillAbove(element: any) {
-  if (element.childNodes.length === 0) {
+function fillAbove(index: any) {
+  if (placeholderChildren[index] === undefined) {
     return true;
-  } else if (element.previousSibling === null) {
-    return false;
   }
-  if (fillAbove(element.previousSibling)) {
-    element.previousSibling.appendChild(element.childNodes[0]);
+  if (fillAbove(index - 1)) {
+    [childrenCopy[index], childrenCopy[index - 1]] = [
+      childrenCopy[index - 1],
+      childrenCopy[index],
+    ];
   }
+}
+
+function fillAboveBelow(index: number) {
+  //if on bottom, shift everyting up
+  if (index + 1 === placeholders.length) {
+    fillAbove(index);
+  }
+  //if on top, shift everything down
+  else if (index === 0) {
+    fillBelow(index);
+  } else if (
+    placeholderChildren
+      .slice(index + 1, placeholderChildren.length)
+      .contains(undefined)
+  ) {
+    fillBelow(index);
+  }
+  //if there is space on bottom, shift under it down
+  //if there is space on top, shift above up
 }
 const hoverBox = function (e) {
   if (
@@ -143,8 +176,10 @@ const hoverBox = function (e) {
     dragElement.classList.remove("bg-gray-100");
     // e.target.parentElement.nextElementSibling.appendChild(dragElement);
   } else {
-    fillBelow(e.target.parentElement);
-    fillAbove(e.target.parentElement);
+    childrenCopy = placeholderChildren;
+    console.log(e.target);
+    console.log(placeholderChildren);
+    fillAboveBelow(placeholderChildren.findIndex(e.target));
   }
 };
 const swap = function (e) {};
