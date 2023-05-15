@@ -128,14 +128,14 @@ function fillBelow(index: number) {
   if (placeholderChildren[index] === undefined) {
     return true;
   }
-  if (fillAbove(index + 1)) {
+  if (fillBelow(index + 1)) {
     [childrenCopy[index], childrenCopy[index + 1]] = [
       childrenCopy[index + 1],
       childrenCopy[index],
     ];
   }
 }
-function fillAbove(index: any) {
+function fillAbove(index: number) {
   if (placeholderChildren[index] === undefined) {
     return true;
   }
@@ -148,6 +148,18 @@ function fillAbove(index: any) {
 }
 
 function fillAboveBelow(index: number) {
+  let undefinedBelow: Boolean = false
+  let undefinedAbove: Boolean = false
+  placeholderChildren.forEach(function(element, i){
+    if(element === undefined){
+      if(i < index){
+        undefinedAbove = true
+      }
+      else if(i > index){
+        undefinedBelow = true
+      }
+    }
+  })
   //if on bottom, shift everyting up
   if (index + 1 === placeholders.length) {
     fillAbove(index);
@@ -156,14 +168,25 @@ function fillAboveBelow(index: number) {
   else if (index === 0) {
     fillBelow(index);
   } else if (
-    placeholderChildren
-      .slice(index + 1, placeholderChildren.length)
-      .contains(undefined)
+    undefinedBelow
   ) {
     fillBelow(index);
   }
+  else if(
+    undefinedAbove){
+fillAbove(index)
+      }
+      display(childrenCopy)
   //if there is space on bottom, shift under it down
   //if there is space on top, shift above up
+}
+
+function display(arr){
+  console.log(arr)
+  arr.forEach(function(element, index){
+    console.log(element)
+    placeholders[index].appendChild(element)
+  })
 }
 const hoverBox = function (e) {
   if (
@@ -177,9 +200,14 @@ const hoverBox = function (e) {
     // e.target.parentElement.nextElementSibling.appendChild(dragElement);
   } else {
     childrenCopy = placeholderChildren;
-    console.log(e.target);
-    console.log(placeholderChildren);
-    fillAboveBelow(placeholderChildren.findIndex(e.target));
+    placeholderChildren.forEach(function(element, index){
+      if(element === e.target){
+        fillAboveBelow(index);
+      }
+
+
+    })
+    
   }
 };
 const swap = function (e) {};
