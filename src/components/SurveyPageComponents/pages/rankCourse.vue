@@ -83,10 +83,15 @@ const computedHeight = computed(() => {
 });
 
 const setElements = function (e) {
+  console.log("ok");
   placeholders = document.querySelectorAll(".placeholder");
   let a = Array.prototype.slice.call(placeholders);
   placeholderChildren = a.map(function (element) {
-    return element.childNodes[0];
+    if (!element === undefined) {
+      return element.childNodes[0].cloneNode(true);
+    } else {
+      return element.childNodes[0];
+    }
   });
   dragElement = e.target;
   console.log(placeholderChildren);
@@ -125,41 +130,53 @@ function emptyBelow(e) {
 }
 
 function fillBelow(index: number) {
-  if (placeholderChildren[index] === undefined) {
+  let u: number;
+  placeholderChildren.every(function (element, i) {
+    if (i > index) {
+      if (element === undefined) {
+        u = i;
+        return false;
+      }
+    }
     return true;
-  }
-  if (fillBelow(index + 1)) {
-    [childrenCopy[index], childrenCopy[index + 1]] = [
-      childrenCopy[index + 1],
-      childrenCopy[index],
+  });
+  for (let j = index; j < u; j++) {
+    [childrenCopy[j], childrenCopy[j + 1]] = [
+      childrenCopy[j + 1],
+      childrenCopy[j],
     ];
   }
 }
+
 function fillAbove(index: number) {
-  if (placeholderChildren[index] === undefined) {
-    return true;
-  }
-  if (fillAbove(index - 1)) {
-    [childrenCopy[index], childrenCopy[index - 1]] = [
-      childrenCopy[index - 1],
-      childrenCopy[index],
+  let u: number;
+  placeholderChildren.forEach(function (element, i) {
+    if (i < index) {
+      if (element === undefined) {
+        u = i;
+      }
+    }
+  });
+  for (let j = u; j < index; j++) {
+    [childrenCopy[j], childrenCopy[j + 1]] = [
+      childrenCopy[j + 1],
+      childrenCopy[j],
     ];
   }
 }
 
 function fillAboveBelow(index: number) {
-  let undefinedBelow: Boolean = false
-  let undefinedAbove: Boolean = false
-  placeholderChildren.forEach(function(element, i){
-    if(element === undefined){
-      if(i < index){
-        undefinedAbove = true
-      }
-      else if(i > index){
-        undefinedBelow = true
+  let undefinedBelow: Boolean = false;
+  let undefinedAbove: Boolean = false;
+  placeholderChildren.forEach(function (element, i) {
+    if (element === undefined) {
+      if (i < index) {
+        undefinedAbove = true;
+      } else if (i > index) {
+        undefinedBelow = true;
       }
     }
-  })
+  });
   //if on bottom, shift everyting up
   if (index + 1 === placeholders.length) {
     fillAbove(index);
@@ -167,26 +184,22 @@ function fillAboveBelow(index: number) {
   //if on top, shift everything down
   else if (index === 0) {
     fillBelow(index);
-  } else if (
-    undefinedBelow
-  ) {
+  } else if (undefinedBelow) {
     fillBelow(index);
+  } else if (undefinedAbove) {
+    fillAbove(index);
   }
-  else if(
-    undefinedAbove){
-fillAbove(index)
-      }
-      display(childrenCopy)
+  display(childrenCopy);
   //if there is space on bottom, shift under it down
   //if there is space on top, shift above up
 }
 
-function display(arr){
-  console.log(arr)
-  arr.forEach(function(element, index){
-    console.log(element)
-    placeholders[index].appendChild(element)
-  })
+function display(arr) {
+  arr.forEach(function (element, index) {
+    if (element) {
+      placeholders[index].appendChild(element);
+    }
+  });
 }
 const hoverBox = function (e) {
   if (
@@ -198,16 +211,14 @@ const hoverBox = function (e) {
     dragParent.appendChild(e.target);
     dragElement.classList.remove("bg-gray-100");
     // e.target.parentElement.nextElementSibling.appendChild(dragElement);
-  } else {
+  } else if (e.target.classList.contains("sorted-course")) {
     childrenCopy = placeholderChildren;
-    placeholderChildren.forEach(function(element, index){
-      if(element === e.target){
+    placeholderChildren.every(function (element, index) {
+      if (element === e.target) {
         fillAboveBelow(index);
+        return true;
       }
-
-
-    })
-    
+    });
   }
 };
 const swap = function (e) {};
