@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// const daysTag = document.querySelector(".days");
+const daysTag = document.querySelector(".days");
 // const currentMonth = document.querySelector(".month");
 // const currentYear = document.querySelector(".year");
 // const prevNextIcon = document.querySelectorAll(".icons span");
@@ -49,7 +49,7 @@
 //   }
 //   //   currentMonth.innerText = `${months[currMonth]}`;
 //   //   currentYear.innerText = `${currYear}`;
-//   //   daysTag.innerHTML = liTag;
+// daysTag.innerHTML = liTag;
 // };
 // renderCalendar();
 // prevNextIcon.forEach((icon) => {
@@ -83,13 +83,13 @@
     </div>
     <div class="calendar">
       <ul class="weeks text-2xl font-bold">
-        <li class="border-x-2 px-11">Sun</li>
-        <li class="border-s-2 px-11">Mon</li>
-        <li class="border-x-2 px-11">Tue</li>
-        <li class="border-s-2 px-11">Wed</li>
-        <li class="border-x-2 px-11">Thu</li>
-        <li class="border-s-2 px-11">Fri</li>
-        <li class="border-x-2 px-11">Sat</li>
+        <li class="border-x-2">Sun</li>
+        <li class="border-x-2">Mon</li>
+        <li class="border-x-2">Tue</li>
+        <li class="border-x-2">Wed</li>
+        <li class="border-x-2">Thu</li>
+        <li class="border-x-2">Fri</li>
+        <li class="border-x-2">Sat</li>
       </ul>
       <ul class="days">
         <li class="">26</li>
@@ -177,36 +177,33 @@ body {
   min-height: 100vh;
   background: #9b59b6;
 }
-.wrapper {
-  width: 450px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
-}
-.wrapper header {
+/* .wrapper header {
   display: flex;
   align-items: center;
   padding: 25px 30px 10px;
   justify-content: space-between;
-}
+} */
 .calendar {
-  padding: 20px;
+  width: 75%;
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 5rem;
+  border: #e5e7eb 2px solid;
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
 }
 .calendar ul {
   display: flex;
   flex-wrap: wrap;
   list-style: none;
   overflow: hidden;
-  border: #e5e7eb 1px solid;
 }
 .weeks {
   text-align: center;
-  border-top: #e5e7eb 2px solid;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
 }
-.calendar .days {
-  margin-bottom: 20px;
+.weeks li {
+  text-align: center;
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
 }
 .days {
   text-align: right;
@@ -223,7 +220,6 @@ body {
 }
 .calendar .days li {
   z-index: 1;
-  cursor: pointer;
   position: relative;
   padding-top: 0.5rem;
   padding-bottom: 4rem;
