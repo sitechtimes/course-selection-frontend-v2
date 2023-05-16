@@ -11,7 +11,7 @@
             type="checkbox"
             class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
             :id="choice"
-            :value="choice.name"
+            :value="choice.courseCode"
             v-model="response"
             @click="yes"
           />
@@ -57,10 +57,7 @@
   });
 
   // let response: Array<string> | undefined 
-  let currentQuestion: Array<string | undefined> | undefined = reactive()
+  let response: Array<string | undefined> | undefined = reactive([])
 
-    const yes = () => {
-      console.log(response)
-    }
 
 </script>  
