@@ -10,12 +10,12 @@
           <input
             type="checkbox"
             class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
-            :id="choice.courseCode"
-            :name="choice.courseCode"
-            :value="choice.courseCode"
+            :id="choice"
+            :value="choice.name"
             v-model="response"
+            @click="yes"
           />
-          <label :for="choice.courseCode" class="text-lg md:text-xl ml-4">{{ choice.name }}</label>
+          <label :for="choice" class="text-lg md:text-xl ml-4">{{ choice.name }}</label>
         </div>
       </div>
       </fieldset>
@@ -47,6 +47,8 @@
 </template>
   
 <script setup lang="ts">
+  import { Ref, ref, reactive } from 'vue';
+
   defineProps({
     choices: Array,
     question: String,
@@ -54,10 +56,11 @@
     max: Boolean
   });
 
-  let response: String | undefined
+  // let response: Array<string> | undefined 
+  let currentQuestion: Array<string | undefined> | undefined = reactive()
 
-  const yes = () => {
-    console.log(response)
-  }
+    const yes = () => {
+      console.log(response)
+    }
 
 </script>  
