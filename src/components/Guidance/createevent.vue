@@ -1,7 +1,8 @@
 <script setup lang="ts">
 const hidee = true;
-function submit(){
-
+function submit() {
+  document.getElementById("form").reset();
+  console.log("test");
 }
 </script>
 
@@ -24,7 +25,7 @@ function submit(){
           </svg>
         </div>
 
-        <form @submit.prevent="createevent">
+        <form id="form" @submit.prevent="createevent">
           <div class="item">
             <label class="formt" for="title">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
