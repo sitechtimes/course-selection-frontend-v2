@@ -2,27 +2,38 @@
 const hidee = true;
 function submit() {
   document.getElementById("form").reset();
-  document.querySelector(".space");
+  const input = document.querySelector(".space");
+  console.log(input.value);
   console.log("test");
 }
-// function show(){
-//   const createevent = document.querySelector('.createevent');
-//     if (createevent.style.display === "block") {
-//       } else {
-//         createevent.style.display = "none";
-//       }
+function show() {
+  const createevent = document.querySelector(".createevent");
+  if (createevent.style.display === "none") {
+    createevent.style.display = "block";
+  } else {
+    createevent.style.display = "block";
+  }
+}
+
+// function hide() {
+//   const createevent = document.querySelector(".createevent");
+//   if (createevent.style.display === "none") {
+//     createevent.style.display === "none";
+//   } else {
+//     createevent.style.display === "block";
+//   }
 // }
 </script>
 
 <template>
   <div class="event h-screen w-full flex flex-column mt-20">
-    <button @click="show">create event</button>
+    <button class="test" @click="show">create event</button>
     <div v-if="hidee" class="createevent h-screen flex flex-row m-auto mt-5">
       <div class="event">
         <div class="top">
           <h2 class="m-8 font-bold">Create Event</h2>
           <svg
-            @click="hidee = !hidee"
+            @click="hide"
             class="x"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 320 512"
@@ -114,6 +125,9 @@ function submit() {
 </template>
 
 <style scoped>
+.test {
+  margin-bottom: 0rem;
+}
 .event {
   display: flex;
   flex-direction: column;
@@ -183,10 +197,11 @@ svg {
   font-weight: bold;
 }
 .createevent {
+  display: none;
   width: 65%;
   height: 35rem;
   border-radius: 1rem;
-  margin-top: 8rem;
+  margin-top: 5rem;
   border: 1px black solid;
 }
 h2 {
