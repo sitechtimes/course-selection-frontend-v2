@@ -4,10 +4,18 @@ function submit() {
   document.getElementById("form").reset();
   console.log("test");
 }
+// function show(){
+//   const createevent = document.querySelector('.createevent');
+//     if (createevent.style.display === "block") {
+//       } else {
+//         createevent.style.display = "none";
+//       }
+// }
 </script>
 
 <template>
   <div class="event h-screen w-full flex flex-column mt-20">
+    <button @click="show">create event</button>
     <div v-if="hidee" class="createevent h-screen flex flex-row m-auto mt-5">
       <div class="event">
         <div class="top">
