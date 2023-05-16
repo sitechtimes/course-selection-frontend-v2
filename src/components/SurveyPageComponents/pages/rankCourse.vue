@@ -25,7 +25,7 @@
         <div
           id="a"
           @dragover.prevent="(e) => e.target.classList.add('bg-gray-100')"
-          @dragleave.prevent="(e) => e.target.classList.remove('bg-gray-100')"
+          @dragleave.prevent="(e) => dragPlaceholders(e)"
           @drop.prevent="(even) => test(even)"
           class="m-2 rounded-lg h-14 shadow-deepinner placeholder"
           v-for="course in courses"
@@ -82,6 +82,17 @@ const computedHeight = computed(() => {
   return ncourses.length;
 });
 
+const dragPlaceholders = function(e){
+  e.target.classList.remove('bg-gray-100')
+  placeholderChildren.sort(sorter)
+  // display(placeholderChildren)
+  // if(e.target.childNodes.length === 0){
+  //   placeholderChildren.sort(sorter)
+  // display(placeholderChildren)
+  // console.log(placeholderChildren)
+  // }
+  
+}
 const setElements = function (e) {
   placeholders = document.querySelectorAll(".placeholder");
   let a = [...placeholders];
@@ -126,6 +137,8 @@ function emptyBelow(e) {
 
 function fillBelow(index: number) {
   let u: number;
+  childrenCopy.sort(sorter)
+  placeholderChildren.sort(sorter)
   placeholderChildren.every(function (element, i) {
     if (i > index) {
       if (element[1] === undefined) {
@@ -146,7 +159,7 @@ function fillBelow(index: number) {
 
 function fillAbove(index: number) {
   let u: number;
-  placeholderChildren.forEach(function (element, i) {
+  placeholderChildren.every(function (element, i) {
     if (i < index) {
       if (element[1] === undefined) {
         u = i;
@@ -156,6 +169,7 @@ function fillAbove(index: number) {
     }
     return true;
   });
+  console.log(index)
   for (let j = index; j < u; j++) {
     [childrenCopy[j], childrenCopy[j + 1]] = [
       childrenCopy[j + 1],
@@ -219,15 +233,24 @@ const hoverBox = function (e) {
   } else if (e.target.classList.contains("sorted-course")) {
     placeholderChildren.sort(sorter);
     childrenCopy = placeholderChildren;
-    console.log(placeholderChildren);
-    placeholderChildren.every(function (element, index) {
-      if (element[1] === e.target) {
+    for(let i = 0; i < placeholderChildren.length; i++){
+      if (placeholderChildren[i][1] === e.target) {
+        console.log("ok")
         console.log("OKOK");
-        fillAboveBelow(index);
-        return false;
+        fillAboveBelow(i);
+        break;
       }
-    });
-    return true;
+    }
+    // placeholderChildren.every(function (element, index) {
+    //   console.log(index)
+    //   if (element[1] === e.target) {
+    //     console.log("ok")
+    //     console.log("OKOK");
+    //     fillAboveBelow(index);
+    //     return false;
+    //   }
+    // });
+    // return true;
   }
 };
 const swap = function (e) {};
