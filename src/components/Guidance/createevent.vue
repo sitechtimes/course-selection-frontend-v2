@@ -2,6 +2,7 @@
 const hidee = true;
 function submit() {
   document.getElementById("form").reset();
+  document.querySelector(".space");
   console.log("test");
 }
 // function show(){
