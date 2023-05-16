@@ -1,12 +1,44 @@
-<script setup lang="ts">
+<script lang="ts">
 import { ref, computed } from 'vue';
 /* import { students } from '../../mockdata'; */
 import { useUserStore } from '../../stores/user';
 import SearchBar from "./SearchBar.vue"
 
-const userStore = useUserStore()
+export default {
+  components: {
+    SearchBar,
+  },
+  data() {
+    return {
+      students: useUserStore().data.guidance.students,
+      input: ref(""),
+    };
+  },
+  computed: {
+    newstudents() {
+      return this.students.filter((student: { user: { firstName: string; lastName: string; }; osis: string|string[]; }) => {
+        return (
+          student.user.firstName.toLowerCase().indexOf(this.input.toLowerCase()) != -1 || student.user.lastName.toLowerCase().indexOf(this.input.toLowerCase()) != -1 || student.osis.indexOf(this.input) != -1
+        );
+      });
+    },
+  },
+  mounted() {
+    this.newstudents;
+  },
+};
+
+/* const userStore = useUserStore()
 let newstudents = userStore.data.guidance.students;
 const input = ref("")
+
+function students() {
+      return newstudents.value.filter((student) => {
+        return (
+          student.firstName.toLowerCase().indexOf(input.value.toLowerCase()) != -1
+        );
+      });
+} */
 
 </script>
 
@@ -26,7 +58,7 @@ const input = ref("")
                     <th class="p-4">Details</th>
                 </tr>
             </thead>
-            <tbody v-for="student in newstudents" class="border-2 border-black">
+            <tbody v-for="student in newstudents" :student="student" class="border-2 border-black">
                 <tr>
                     <td class="p-4">{{ student.user.lastName }}, {{ student.user.firstName }}</td>
                     <td class="p-4">{{ student.grade }}</td>

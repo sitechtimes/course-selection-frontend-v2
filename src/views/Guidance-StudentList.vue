@@ -7,6 +7,8 @@ import { useUserStore } from '../stores/user';
 import { students } from '../mockdata';
 import { ref } from 'vue'
 
+const input = ref("")
+
 </script>
 
 <template>
