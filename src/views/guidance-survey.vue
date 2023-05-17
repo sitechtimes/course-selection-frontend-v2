@@ -20,14 +20,14 @@ console.log(userStore.data)
 
 <template>
   <section>
-    <div class="text-3xl ml-32 mt-4 mb-4">
+    <div class="text-3xl ml-32 mt-24 mb-4">
       <h1 class="font-bold text-[#37394F] text-5xl  mb-6">{{ viewedUser.user.firstName }} {{ viewedUser.user.lastName }}'s Survey</h1>
       <h2 v-if="viewedUser.grade === 'SOPHOMORE'">Grade : 9</h2>
       <h2 v-if="viewedUser.grade === 'JUNIOR'">Grade : 10</h2>
       <h2 v-if="viewedUser.grade === 'SENIOR'">Grade : 11</h2>
     </div>
-    <div v-for="question in usedSurvey.node.questions">
-      <booleanComponent class="mb-6" v-if="question.questionType === 'BOOLEAN'" :question="question" :usedSurvey="usedSurvey.node.questions"></booleanComponent>
+    <div v-for="question in usedSurvey.node.questions" class="flex justify-center">
+      <booleanComponent class="mb-6 " v-if="question.questionType === 'BOOLEAN'" :question="question" :usedSurvey="usedSurvey.node.questions"></booleanComponent>
       <generalComponent class="mb-6" v-if="question.questionType === 'GENERAL'" :question="question.question" :usedSurvey="usedSurvey.node.questions"></generalComponent>
     </div>
     <div class="flex justify-center mb-6">

@@ -1,6 +1,6 @@
 <template>
-    <div class="md:text-4xl lg:text-[200%] text-2xl flex flex-wrap flex-row md:ml-32 ">
-      <fieldset class="field flex w-[100%]">
+    <div class="md:text-4xl lg:text-[180%] text-2xl flex flex-wrap flex-row w-3/4">
+      <fieldset class="field">
       <legend class="flex flex-wrap overflow-visible" v-if="typeof(question) === 'object'">{{ question.question }}</legend>
       <legend class="flex flex-wrap overflow-visible" v-else-if="typeof(question) === 'string'">{{ question }}</legend>
       <div class="field flex flex-row">
