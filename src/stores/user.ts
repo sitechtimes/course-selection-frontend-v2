@@ -115,6 +115,7 @@ export const useUserStore = defineStore('user', {
                         answeredSurvey{
                             answers
                         }
+                        
                         }`,
                 }, {
                     headers: {
