@@ -24,8 +24,8 @@
       <div class="flex flex-col w-1/4">
         <div
           id="a"
-          @dragover.prevent="(e) => e.target.classList.add('bg-gray-100')"
-          @dragleave.prevent="(e) => dragPlaceholders(e)"
+          @dragleave.prevent="(e) => e.target.classList.remove('bg-gray-100')"
+          @dragover.prevent="(e) => dragPlaceholders(e)"
           @drop.prevent="(even) => test(even)"
           class="m-2 rounded-lg h-14 shadow-deepinner placeholder"
           v-for="course in courses"
@@ -83,12 +83,26 @@ const computedHeight = computed(() => {
 });
 
 const dragPlaceholders = function(e){
-  e.target.classList.remove('bg-gray-100')
+  e.target.classList.add('bg-gray-100')
+  console.log(placeholderChildren)
+  let index: number;
+  let place = [...placeholders].filter(function(element, i){
+    if(element === e.target){
+      index = i
+      return true
+    }
+    
+  })
+  console.log(index)
   placeholderChildren.sort(sorter)
+  console.log(placeholderChildren[index])
+  if (placeholderChildren[index] === undefined){
+    display(placeholderChildren)
+  }
   // display(placeholderChildren)
   // if(e.target.childNodes.length === 0){
-  //   placeholderChildren.sort(sorter)
-  // display(placeholderChildren)
+  //   
+  // 
   // console.log(placeholderChildren)
   // }
   
