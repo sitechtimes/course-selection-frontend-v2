@@ -10,16 +10,19 @@
           <input
             type="checkbox"
             class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
-            :id="choice"
+            :id="choice.courseCode"
             :value="choice.courseCode"
             v-model="response"
             @click="yes"
           />
-          <label :for="choice" class="text-lg md:text-xl ml-4">{{ choice.name }}</label>
+          <label :for="choice.courseCode" class="text-lg md:text-xl ml-4">{{ choice.name }}</label>
         </div>
       </div>
       </fieldset>
-      
+      <div v-for="x in names" :key="x.name" @click="yes()">
+    <input type="checkbox" :id="x" :value="x.name" v-model="response"/>
+    <label :for="x">{{ x.name }}</label>
+  </div>
     </div>
     </div>
         <div class="border-black border-[0.5px] border-solid rounded-xl lg:w-[35%] w-[90%] lg:ml-28 lg:h-[50-vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll">
@@ -56,8 +59,20 @@
     max: Boolean
   });
 
+  const names = [
+       {name: "jack",
+       id: 123},
+        {name: "bob",
+       id: 123},
+        {name: "sob",
+       id: 123}
+      ]
+
   // let response: Array<string> | undefined 
   let response: Array<string | undefined> | undefined = reactive([])
 
+  const yes = () => {
+    console.log(response)
+  }
 
 </script>  
