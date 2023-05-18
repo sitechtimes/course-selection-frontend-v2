@@ -1,10 +1,17 @@
 <script setup lang="ts">
+import { ref } from "vue";
 const hidee = true;
 function submit() {
   document.getElementById("form").reset();
-  const input = document.querySelector(".space");
-  console.log(input.value);
   console.log("test");
+  // data(){
+  //   return{
+  //     title: ref(""),
+  //     date: ref (""),
+  //     people: ref(""),
+  //     description: ref(""),
+  //   }
+  // }
 }
 function hide() {
   const createevent = document.querySelector(".createevent");
