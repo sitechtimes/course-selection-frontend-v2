@@ -426,8 +426,9 @@ h2 {
 }
 @media only screen and (max-width: 404px) {
   .x {
-    margin-left: 5rem;
-    width: 0.8rem;
+    margin-left: 0rem;
+    width: 0.5rem;
+    margin-top: 0.5rem;
   }
 }
 </style>
