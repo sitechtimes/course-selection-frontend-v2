@@ -28,7 +28,8 @@ console.log(userStore.data)
     </div>
     <div v-for="question in usedSurvey.node.questions" class="flex justify-center">
       <booleanComponent class="mb-6 " v-if="question.questionType === 'BOOLEAN'" :question="question" :usedSurvey="usedSurvey.node.questions"></booleanComponent>
-      <generalComponent class="mb-6" v-if="question.questionType === 'GENERAL'" :question="question.question" :usedSurvey="usedSurvey.node.questions"></generalComponent>
+      <generalComponent class="mb-6" v-if="question.questionType === 'GENERAL'" :question="question" :usedSurvey="usedSurvey.node.questions"></generalComponent>
+      
     </div>
     <div class="flex justify-center mb-6">
       <button class="bg-[#C5D4A4] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-36 h-12 text-2xl font-bold text-[#37394F]">Complete</button>
