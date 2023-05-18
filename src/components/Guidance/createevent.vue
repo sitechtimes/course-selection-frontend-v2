@@ -128,10 +128,48 @@ function show() {
         </form>
       </div>
     </div>
+    <div class="tab freshman">Freshman meet</div>
+    <div class="tab sophomore">Sophomore meet</div>
+    <div class="tab junior">Junior meet</div>
+    <div class="tab senior">Senior meet</div>
   </div>
 </template>
 
 <style scoped>
+.tab {
+  border-radius: 5px;
+  text-align: left;
+  padding: 5px;
+  width: 10rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding-left: 10px;
+  font-weight: bold;
+  transition: 0.5s;
+}
+.tab:hover {
+  opacity: 0.8;
+  cursor: pointer;
+  box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
+}
+.freshman {
+  background-color: rgb(238, 215, 253);
+  color: rgb(45, 0, 75);
+}
+.sophomore {
+  background-color: rgb(245, 205, 205);
+  color: rgb(89, 0, 0);
+}
+.junior {
+  background-color: rgb(210, 246, 210);
+  color: rgb(0, 52, 0);
+}
+.senior {
+  background-color: rgb(204, 221, 245);
+  color: rgb(0, 34, 84);
+}
 .test {
   margin-bottom: 0rem;
 }
