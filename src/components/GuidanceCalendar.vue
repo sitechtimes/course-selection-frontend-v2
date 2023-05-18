@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import PlusIcon from "../components/icons/PlusIcon.vue";
 const daysTag = document.querySelector(".days");
 // const currentMonth = document.querySelector(".month");
 // const currentYear = document.querySelector(".year");
@@ -92,48 +93,48 @@ const daysTag = document.querySelector(".days");
         <li class="border-x-2">Sat</li>
       </ul>
       <ul class="days">
-        <li class="">26</li>
-        <li class="">27</li>
-        <li class="">28</li>
-        <li class=" ">29</li>
-        <li class=" ">30</li>
-        <li class=" ">31</li>
-        <li class=" ">1</li>
-        <li class=" ">2</li>
-        <li class=" ">3</li>
-        <li class=" ">4</li>
-        <li class=" ">5</li>
-        <li class=" ">6</li>
-        <li class=" ">7</li>
-        <li class=" ">8</li>
-        <li class=" ">9</li>
-        <li class=" ">10</li>
-        <li class=" ">11</li>
-        <li class=" ">12</li>
-        <li class=" ">13</li>
-        <li class=" ">14</li>
-        <li class=" ">15</li>
-        <li class=" ">16</li>
-        <li class=" ">17</li>
-        <li class=" ">18</li>
-        <li class=" ">19</li>
-        <li class=" ">20</li>
-        <li class=" ">21</li>
-        <li class=" ">22</li>
-        <li class=" ">23</li>
-        <li class=" ">24</li>
-        <li class=" ">25</li>
-        <li class=" ">26</li>
-        <li class=" ">27</li>
-        <li class=" ">28</li>
-        <li class=" ">29</li>
-        <li class=" ">30</li>
-        <li class=" ">1</li>
-        <li class=" ">2</li>
-        <li class=" ">3</li>
-        <li class=" ">4</li>
-        <li class=" ">5</li>
-        <li class=" ">6</li>
+        <li class="">26<PlusIcon class="plusIcon" /></li>
+        <li class="">27<PlusIcon class="plusIcon" /></li>
+        <li class="">28<PlusIcon class="plusIcon" /></li>
+        <li class=" ">29<PlusIcon class="plusIcon" /></li>
+        <li class=" ">30<PlusIcon class="plusIcon" /></li>
+        <li class=" ">31<PlusIcon class="plusIcon" /></li>
+        <li class=" ">1<PlusIcon class="plusIcon" /></li>
+        <li class=" ">2<PlusIcon class="plusIcon" /></li>
+        <li class=" ">3<PlusIcon class="plusIcon" /></li>
+        <li class=" ">4<PlusIcon class="plusIcon" /></li>
+        <li class=" ">5<PlusIcon class="plusIcon" /></li>
+        <li class=" ">6<PlusIcon class="plusIcon" /></li>
+        <li class=" ">7<PlusIcon class="plusIcon" /></li>
+        <li class=" ">8<PlusIcon class="plusIcon" /></li>
+        <li class=" ">9<PlusIcon class="plusIcon" /></li>
+        <li class=" ">10<PlusIcon class="plusIcon" /></li>
+        <li class=" ">11<PlusIcon class="plusIcon" /></li>
+        <li class=" ">12<PlusIcon class="plusIcon" /></li>
+        <li class=" ">13<PlusIcon class="plusIcon" /></li>
+        <li class=" ">14<PlusIcon class="plusIcon" /></li>
+        <li class=" ">15<PlusIcon class="plusIcon" /></li>
+        <li class=" ">16<PlusIcon class="plusIcon" /></li>
+        <li class=" ">17<PlusIcon class="plusIcon" /></li>
+        <li class=" ">18<PlusIcon class="plusIcon" /></li>
+        <li class=" ">19<PlusIcon class="plusIcon" /></li>
+        <li class=" ">20<PlusIcon class="plusIcon" /></li>
+        <li class=" ">21<PlusIcon class="plusIcon" /></li>
+        <li class=" ">22<PlusIcon class="plusIcon" /></li>
+        <li class=" ">23<PlusIcon class="plusIcon" /></li>
+        <li class=" ">24<PlusIcon class="plusIcon" /></li>
+        <li class=" ">25<PlusIcon class="plusIcon" /></li>
+        <li class=" ">26<PlusIcon class="plusIcon" /></li>
+        <li class=" ">27<PlusIcon class="plusIcon" /></li>
+        <li class=" ">28<PlusIcon class="plusIcon" /></li>
+        <li class=" ">29<PlusIcon class="plusIcon" /></li>
+        <li class=" ">30<PlusIcon class="plusIcon" /></li>
+        <li class=" ">1<PlusIcon class="plusIcon" /></li>
+        <li class=" ">2<PlusIcon class="plusIcon" /></li>
+        <li class=" ">3<PlusIcon class="plusIcon" /></li>
+        <li class=" ">4<PlusIcon class="plusIcon" /></li>
+        <li class=" ">5<PlusIcon class="plusIcon" /></li>
+        <li class=" ">6<PlusIcon class="plusIcon" /></li>
       </ul>
     </div>
   </div>
@@ -169,14 +170,6 @@ const daysTag = document.querySelector(".days");
   border-style: solid;
   border-width: 2px;
 } */
-body {
-  display: flex;
-  align-items: center;
-  padding: 0 10px;
-  justify-content: center;
-  min-height: 100vh;
-  background: #9b59b6;
-}
 /* .wrapper header {
   display: flex;
   align-items: center;
@@ -197,6 +190,11 @@ body {
   list-style: none;
   overflow: hidden;
 }
+
+.calendar li {
+  width: calc(100% / 7);
+  font-size: 1.07rem;
+}
 .weeks {
   text-align: center;
 }
@@ -204,14 +202,6 @@ body {
   text-align: center;
   padding-top: 0.3rem;
   padding-bottom: 0.3rem;
-}
-.days {
-  text-align: right;
-}
-.calendar li {
-  color: #333;
-  width: calc(100% / 7);
-  font-size: 1.07rem;
 }
 .calendar .weeks li {
   font-weight: 500;
@@ -222,13 +212,24 @@ body {
   z-index: 1;
   position: relative;
   padding-top: 0.5rem;
-  padding-bottom: 4rem;
+  padding-bottom: 0.5rem;
   padding-right: 1rem;
 }
 .days li {
   border: #e5e7eb 2px solid;
   font-size: 0.7rem;
+  padding-left: 11%;
 }
+.plusIcon {
+  width: 0.5rem;
+  padding-top: 4rem;
+  cursor: pointer;
+  display: none;
+}
+.days li:hover + .plusIcon {
+  display: block;
+}
+
 .days li.inactive {
   color: #aaa;
 }
