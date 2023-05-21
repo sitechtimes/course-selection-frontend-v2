@@ -12,7 +12,7 @@
             class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
             :id="choice.courseCode"
             :value="choice.courseCode"
-            @click="yes(choice.courseCode)"
+            @click="updateReponse(choice.courseCode)"
           />
           <label :for="choice.courseCode" class="text-lg md:text-xl ml-4">{{ choice.name }}</label>
         </div>
@@ -38,14 +38,14 @@
         </div>
       </div>
       <div class="bottom-28 w-11/12 md:w-4/5 lg:w-3/4 absolute flex justify-between items-center px-4">
-        <button @click="$emit('back');" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:bg-stone-400" :disabled="min">Back</button>
-        <button @click="$emit('next'); yes()" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md  disabled:bg-stone-400" :disabled="max">Next</button>
+        <button @click="$emit('back', response);" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:bg-stone-400" :disabled="min">Back</button>
+        <button @click="$emit('next', response);" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md  disabled:bg-stone-400" :disabled="max">Next</button>
       </div>
     </section>
 </template>
   
 <script setup lang="ts">
-  import { Ref, ref, reactive } from 'vue';
+  import { reactive } from 'vue';
 
   defineProps({
     choices: Array,
@@ -54,18 +54,15 @@
     max: Boolean
   });
 
-  // let response: Array<string> | undefined 
-  let response: Array<string | undefined> = reactive([])
+  let response: Array<String | undefined> = reactive([])
 
-  const yes = (o) => {
-    // console.log(o, "o")
-    if (response.find(res => res === o)) {
-      const index = response.findIndex(res => res === o)
-      response.slice(index,0)
+  const updateReponse = (chosenChoice: String) => {
+    if (response.find(res => res === chosenChoice)) {
+      const index = response.findIndex(res => res === chosenChoice)
+      response.splice(index, 1)
     } else {
-      response.push(o)
+      response.push(chosenChoice)
     }
-    console.log(response)
   }
 
 </script>  

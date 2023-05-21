@@ -197,7 +197,6 @@ export const useUserStore = defineStore("user", {
           }
         )
         .then((res) => {
-          // this.data = res.data.data
           console.log("meeting changed");
         });
     },
@@ -228,7 +227,6 @@ export const useUserStore = defineStore("user", {
           }
         )
         .then((res) => {
-          // this.data = res.data.data
           console.log(res);
         });
     },
