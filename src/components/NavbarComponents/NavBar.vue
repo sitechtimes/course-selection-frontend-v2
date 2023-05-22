@@ -4,7 +4,7 @@ import { RouterLink } from "vue-router";
 import MenuIcon from '../icons/MenuIcon.vue';
 import CloseMenu from "../icons/CloseMenu.vue";
 import MobileNav from "./MobileNav.vue";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import router from '../../router';
 
 
@@ -25,10 +25,6 @@ const redirect = () => {
 }
 
 // let page = redirect()
-
-const toggleMenu = () => {
-  menuOpen.value = !menuOpen.value
-};
 </script>
 
 <template>
