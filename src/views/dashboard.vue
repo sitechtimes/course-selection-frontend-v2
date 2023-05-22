@@ -24,14 +24,6 @@ if (
   date = SplitDate.join("/");
 }
 
-const testAnswer = { name: "if this works ima cry", answers: 1234 };
-
-function testing(answer: Object) {
-  let json = JSON.stringify(answer);
-  userStore.saveSurvey("123", answer);
-  // userStore.saveSurvey()
-  // console.log(json)
-}
 </script>
 
 <template>
@@ -83,7 +75,6 @@ function testing(answer: Object) {
         </h1>
         <h1 v-else>Your guidance councelor has not yet set a meeting time.</h1>
       </div>
-      <p @click="testing(testAnswer)">yay</p>
     </div>
     <div
       id="circles"
