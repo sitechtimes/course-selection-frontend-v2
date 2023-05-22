@@ -2,18 +2,18 @@
 import NavBar from './components/NavbarComponents/NavBar.vue';
 import { ref, watch } from 'vue';
 
-let path = null
-console.log(path.value)
+let path = ref(window.location.pathname)
 
 function pathChanged() {
-  path = window.location.pathname
+  path.value = window.location.pathname
+  console.log(path)
 }
 
 </script>
 
 <template>
   <div id="app">
-    <nav-bar></nav-bar>
+    <nav-bar :path="path" :key="path" @click="pathChanged()"></nav-bar>
     <router-view @click="pathChanged()"></router-view>
   </div>
 </template>
