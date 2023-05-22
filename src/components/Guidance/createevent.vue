@@ -4,14 +4,6 @@ const hidee = true;
 function submit() {
   document.getElementById("form").reset();
   console.log("test");
-  // data(){
-  //   return{
-  //     title: ref(""),
-  //     date: ref (""),
-  //     people: ref(""),
-  //     description: ref(""),
-  //   }
-  // }
 }
 function hide() {
   const createevent = document.querySelector(".createevent");
@@ -126,6 +118,12 @@ function show() {
             </button>
           </div>
         </form>
+        <div class="events">
+          <p>Title : {{ title }}</p>
+          <p>Date : {{ date }}</p>
+          <p>People : {{ people }}</p>
+          <p>Description : {{ description }}</p>
+        </div>
       </div>
     </div>
     <div class="tab freshman">Freshman meet</div>
