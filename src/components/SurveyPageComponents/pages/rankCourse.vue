@@ -82,31 +82,30 @@ const computedHeight = computed(() => {
   return ncourses.length;
 });
 
-const dragPlaceholders = function(e){
-  e.target.classList.add('bg-gray-100')
-  console.log(placeholderChildren)
+const dragPlaceholders = function (e) {
+  e.target.classList.add("bg-gray-100");
+  console.log(placeholderChildren);
   let index: number;
-  let place = [...placeholders].filter(function(element, i){
-    if(element === e.target){
-      index = i
-      return true
+  let place = [...placeholders].filter(function (element, i) {
+    if (element === e.target.parentElement) {
+      index = i;
+      return true;
     }
-    
-  })
-  console.log(index)
-  placeholderChildren.sort(sorter)
-  console.log(placeholderChildren[index])
-  if (placeholderChildren[index] === undefined){
-    display(placeholderChildren)
+  });
+  console.log(index);
+  placeholderChildren.sort(sorter);
+  console.log(placeholderChildren[index]);
+  if (placeholderChildren[index] === undefined) {
+    console.log(placeholderChildren);
+    display(placeholderChildren);
   }
   // display(placeholderChildren)
   // if(e.target.childNodes.length === 0){
-  //   
-  // 
+  //
+  //
   // console.log(placeholderChildren)
   // }
-  
-}
+};
 const setElements = function (e) {
   placeholders = document.querySelectorAll(".placeholder");
   let a = [...placeholders];
@@ -151,8 +150,8 @@ function emptyBelow(e) {
 
 function fillBelow(index: number) {
   let u: number;
-  childrenCopy.sort(sorter)
-  placeholderChildren.sort(sorter)
+  childrenCopy.sort(sorter);
+  placeholderChildren.sort(sorter);
   placeholderChildren.every(function (element, i) {
     if (i > index) {
       if (element[1] === undefined) {
@@ -183,7 +182,7 @@ function fillAbove(index: number) {
     }
     return true;
   });
-  console.log(index)
+  console.log(index);
   for (let j = index; j < u; j++) {
     [childrenCopy[j], childrenCopy[j + 1]] = [
       childrenCopy[j + 1],
@@ -227,6 +226,7 @@ function fillAboveBelow(index: number) {
 function display(arr) {
   arr.forEach(function (element, index) {
     if (element[1]) {
+      //here, something wrong with displaying gg
       placeholders[index].appendChild(element[1]);
     }
   });
@@ -247,9 +247,9 @@ const hoverBox = function (e) {
   } else if (e.target.classList.contains("sorted-course")) {
     placeholderChildren.sort(sorter);
     childrenCopy = placeholderChildren;
-    for(let i = 0; i < placeholderChildren.length; i++){
+    for (let i = 0; i < placeholderChildren.length; i++) {
       if (placeholderChildren[i][1] === e.target) {
-        console.log("ok")
+        console.log("ok");
         console.log("OKOK");
         fillAboveBelow(i);
         break;
