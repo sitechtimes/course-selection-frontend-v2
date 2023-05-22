@@ -5,7 +5,21 @@ import { useUserStore } from '../../stores/user';
 import SearchBar from "./SearchBar.vue"
 
 export default {
-  components: {
+  props: {
+    method: { type: Function },
+  },
+  data() {
+    return {
+    input: 'e'
+    }
+  },
+  mounted() {
+    // Instead of calling the method we emit an event
+    this.$emit('created', this.input);
+  }
+}
+
+/*   components: {
     SearchBar,
   },
   data() {
@@ -25,8 +39,7 @@ export default {
   },
   mounted() {
     this.newstudents;
-  },
-};
+  }, */
 
 /* const userStore = useUserStore()
 let newstudents = userStore.data.guidance.students;
