@@ -8,9 +8,9 @@ import { ref, watch } from "vue";
 import router from '../../router';
 
 
-defineProps({
-    path: String, 
-});
+function viewingSurvey() {
+    return router.currentRoute.value.path.includes('guidance-survey')
+}
 
 const userStore = useUserStore();
 let menuOpen = ref(false);
@@ -66,7 +66,7 @@ const redirect = () => {
             <MenuIcon @click="toggleMenu" v-if="!menuOpen" />
             <CloseMenu @click="toggleMenu" v-else />
         </div>
-        <h1 v-if="path?.includes('guidance-survey')">work!</h1>
+        <h1 v-if="viewingSurvey()">work!</h1>
     <MobileNav v-if="menuOpen" @e="toggleMenu" />
     </nav>
 </template>
