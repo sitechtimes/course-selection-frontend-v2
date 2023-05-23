@@ -1,9 +1,16 @@
 <script setup lang="ts">
 import { ref } from "vue";
 const hidee = true;
-function submit() {
+// function submit() {
+//   document.getElementById("form").reset();
+//   console.log("test");
+// }
+
+function submit(res: String) {
   document.getElementById("form").reset();
-  console.log("test");
+  // let json = JSON.stringify(res);
+  // .changeMeeting("123", res);
+  // console.log(json);
 }
 function hide() {
   const createevent = document.querySelector(".createevent");
