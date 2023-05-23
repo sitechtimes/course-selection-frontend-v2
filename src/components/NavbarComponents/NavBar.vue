@@ -36,7 +36,7 @@ const redirect = () => {
         <div @click="redirect()" class="cursor-pointer">
             <h1 class="text-3xl font-semibold z-50">Course Selection</h1>
         </div>
-        <div v-if="userStore.isLoggedIn && userStore.userType === 'student'" class="hidden justify-center items-center space-x-12 md:flex">
+        <div v-if="userStore.isLoggedIn && userStore.userType === 'student' && viewingSurvey()  === false" class="hidden justify-center items-center space-x-12 md:flex">
             <RouterLink to="/courses">
                 <p class="text-base">Courses</p>
             </RouterLink>
@@ -45,7 +45,7 @@ const redirect = () => {
             </RouterLink>
             <p @click="userStore.$reset" id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>
         </div>
-        <div v-if="userStore.isLoggedIn && userStore.userType === 'guidance'" class="hidden justify-center items-center space-x-12 md:flex">
+        <div v-if="userStore.isLoggedIn && userStore.userType === 'guidance' && viewingSurvey() === false" class="hidden justify-center items-center space-x-12 md:flex">
             <RouterLink to="/courses">
                 <p class="text-base">Students</p>
             </RouterLink>
@@ -54,7 +54,7 @@ const redirect = () => {
             </RouterLink>
             <p @click="userStore.isLoggedIn = false" id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>
         </div>
-        <div v-if="!userStore.isLoggedIn" class="hidden justify-center items-center space-x-12 md:flex">
+        <div v-if="!userStore.isLoggedIn && viewingSurvey() === false" class="hidden justify-center items-center space-x-12 md:flex">
             <RouterLink to="/courses">
                 <p class="text-base">Courses</p>
             </RouterLink>
@@ -66,7 +66,7 @@ const redirect = () => {
             <MenuIcon @click="toggleMenu" v-if="!menuOpen" />
             <CloseMenu @click="toggleMenu" v-else />
         </div>
-        <h1 v-if="viewingSurvey()">work!</h1>
+        <h1 v-if="viewingSurvey()" class="text-[#37394F] text-2xl">Save and Exit</h1>
     <MobileNav v-if="menuOpen" @e="toggleMenu" />
     </nav>
 </template>
