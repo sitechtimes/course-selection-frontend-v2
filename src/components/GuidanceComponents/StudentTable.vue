@@ -5,12 +5,12 @@ import { useUserStore } from '../../stores/user';
 import SearchBar from "./SearchBar.vue"
 
 export default {
-  props: {
+  props: {   
     method: { type: Function },
   },
   data() {
     return {
-    input: 'e'
+    input: 'sadasd'
     }
   },
   mounted() {
