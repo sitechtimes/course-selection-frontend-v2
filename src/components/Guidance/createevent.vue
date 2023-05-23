@@ -12,6 +12,7 @@ function submit(res: String) {
   // .changeMeeting("123", res);
   // console.log(json);
 }
+
 function hide() {
   const createevent = document.querySelector(".createevent");
   if (createevent.style.display === "block") {
