@@ -15,6 +15,8 @@ const max: Ref<boolean> = ref(false)
 let answers: Array<object> = JSON.parse(userStore.data.answeredSurvey.answers) 
 // let currentAnswer: surveyAnswer | undefined = reactive(answers.find(x => x.id == currentQuestion.id))
 
+console.log(answers)
+
 const previousQuestion = (response: Array<string> | undefined) => {  
   const questionAnswer = {
         id: currentQuestion.id,
@@ -42,6 +44,10 @@ const nextQuestion = (response: Array<string> | undefined) => {
         answer: response
   }
   updateAnswers(questionAnswer)
+
+  let answerId = answers.findIndex(x => x.id == currentQuestion.id)
+
+  console.log(answers[answerId])
 
   currentIndex.value++
   currentQuestion = userStore.data.survey.questions[currentIndex.value]
