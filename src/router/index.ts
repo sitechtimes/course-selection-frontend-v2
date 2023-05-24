@@ -51,6 +51,11 @@ const router = createRouter({
       name: 'studentDash',
       component: () => import('../views/dashboard.vue')
     },
+    {
+      path: '/guidance-survey/:osis',
+      name: 'guidance-survey',
+      component: () => import('../views/guidance-survey.vue')
+    }
   ]
 })
 

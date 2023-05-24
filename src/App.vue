@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import NavBar from './components/NavbarComponents/NavBar.vue';
+
 </script>
 
 <template>
