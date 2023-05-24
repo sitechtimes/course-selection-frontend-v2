@@ -3,10 +3,10 @@ import { ref } from "vue";
 // import { useUserStore } from '../stores/user';
 // const userStore = useUserStore()
 const hidee = true;
-let title = "";
-let date = "";
-let people = "";
-let description = "";
+let title: String;
+let date: String;
+let people: String;
+let description: String;
 
 function submit(date: String) {
   document.getElementById("form").reset();
