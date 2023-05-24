@@ -83,19 +83,44 @@ const computedHeight = computed(() => {
 });
 
 const dragPlaceholders = function (e) {
+  console.log(e.target);
   e.target.classList.add("bg-gray-100");
-  console.log(placeholderChildren);
   let index: number;
-  let place = [...placeholders].filter(function (element, i) {
-    if (element === e.target.parentElement) {
-      index = i;
-      return true;
+  for (let i = 0; i < placeholders.length; i++) {
+    const element = placeholders[i];
+    if (e.target.classList.contains("sorted-course")) {
+      console.log(e.target.parentElement);
+      if (element === e.target.parentElement) {
+        console.log(i);
+        index = i;
+        break;
+      }
+    } else {
+      if (element === e.target) {
+        index = i;
+        break;
+      }
     }
-  });
-  console.log(index);
+  }
+  // [...placeholders].every(function (element, i) {
+  //   if (e.target.classList.contains("sorted-course")) {
+  //     if (element === e.target.parentElement) {
+  //       console.log("ok");
+  //       index = i;
+  //       return true;
+  //     }
+  //   } else {
+  //     if (element === e.target) {
+  //       index = i;
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // });
   placeholderChildren.sort(sorter);
-  console.log(placeholderChildren[index]);
-  if (placeholderChildren[index] === undefined) {
+  console.log(index);
+  console.log(placeholderChildren[index][1]);
+  if (placeholderChildren[index][1] === undefined) {
     console.log(placeholderChildren);
     display(placeholderChildren);
   }
@@ -156,7 +181,6 @@ function fillBelow(index: number) {
     if (i > index) {
       if (element[1] === undefined) {
         u = i;
-        console.log(u);
         return false;
       }
     }
@@ -182,13 +206,11 @@ function fillAbove(index: number) {
     }
     return true;
   });
-  console.log(index);
   for (let j = index; j < u; j++) {
     [childrenCopy[j], childrenCopy[j + 1]] = [
       childrenCopy[j + 1],
       childrenCopy[j],
     ];
-    console.log(j);
   }
 }
 
@@ -204,10 +226,8 @@ function fillAboveBelow(index: number) {
       }
     }
   });
-  console.log("o");
   //if on bottom, shift everyting up
   if (index + 1 === placeholders.length) {
-    console.log("ok");
     fillAbove(index);
   }
   //if on top, shift everything down
@@ -224,6 +244,7 @@ function fillAboveBelow(index: number) {
 }
 
 function display(arr) {
+  console.log(arr);
   arr.forEach(function (element, index) {
     if (element[1]) {
       //here, something wrong with displaying gg
@@ -249,8 +270,6 @@ const hoverBox = function (e) {
     childrenCopy = placeholderChildren;
     for (let i = 0; i < placeholderChildren.length; i++) {
       if (placeholderChildren[i][1] === e.target) {
-        console.log("ok");
-        console.log("OKOK");
         fillAboveBelow(i);
         break;
       }
