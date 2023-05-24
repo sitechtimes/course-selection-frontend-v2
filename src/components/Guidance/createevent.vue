@@ -1,17 +1,23 @@
 <script setup lang="ts">
 import { ref } from "vue";
+// import { useUserStore } from '../stores/user';
+// const userStore = useUserStore()
 const hidee = true;
+let title = "";
+let date = "";
+let people = "";
+let description = "";
+
+function submit(date: String) {
+  document.getElementById("form").reset();
+  //let json = JSON.stringify(date);
+  userStore.changeMeeting("123", date);
+  console.log(json);
+}
 // function submit() {
 //   document.getElementById("form").reset();
 //   console.log("test");
 // }
-
-function submit(res: String) {
-  document.getElementById("form").reset();
-  // let json = JSON.stringify(res);
-  // .changeMeeting("123", res);
-  // console.log(json);
-}
 
 function hide() {
   const createevent = document.querySelector(".createevent");
