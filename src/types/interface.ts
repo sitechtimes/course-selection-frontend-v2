@@ -22,6 +22,7 @@ export interface user {
     last_name: string
     email: string
     data: object // this is a temporary fix , will have fields for the diff types of data
+    currentResponse: Array<object>
     grade?: grade
     userType: account_type
     isLoggedIn: boolean

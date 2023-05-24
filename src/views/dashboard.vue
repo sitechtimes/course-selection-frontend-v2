@@ -55,6 +55,7 @@ if (
             Schedule
           </button>
         </RouterLink>
+        <!-- check if survey exists, if not create new and set current -->
         <RouterLink to="/survey">
           <button
             class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s"

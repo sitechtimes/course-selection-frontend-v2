@@ -12,7 +12,7 @@ let currentQuestion: surveyQuestion = reactive(userStore.data.survey.questions[c
 let choices: Ref<courses | undefined> = ref() 
 const min: Ref<boolean> = ref(true)
 const max: Ref<boolean> = ref(false)
-let answers: Array<object> = JSON.parse(userStore.data.answeredSurvey.answers) // find way to fix when answers is returned as object
+let answers: Array<object> = JSON.parse(userStore.data.answeredSurvey.answers) 
 // let currentAnswer: surveyAnswer | undefined = reactive(answers.find(x => x.id == currentQuestion.id))
 
 const previousQuestion = (response: Array<string> | undefined) => {  
