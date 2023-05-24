@@ -24,14 +24,6 @@ if (
   date = SplitDate.join("/");
 }
 
-const testAnswer = { name: "if this works ima cry", answers: 1234 };
-
-function testing(answer: Object) {
-  let json = JSON.stringify(answer);
-  userStore.saveSurvey("123", answer);
-  // userStore.saveSurvey()
-  // console.log(json)
-}
 </script>
 
 <template>
@@ -63,6 +55,7 @@ function testing(answer: Object) {
             Schedule
           </button>
         </RouterLink>
+        <!-- check if survey exists, if not create new and set current -->
         <RouterLink to="/survey">
           <button
             class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s"
@@ -83,7 +76,6 @@ function testing(answer: Object) {
         </h1>
         <h1 v-else>Your guidance councelor has not yet set a meeting time.</h1>
       </div>
-      <p @click="testing(testAnswer)">yay</p>
     </div>
     <div
       id="circles"

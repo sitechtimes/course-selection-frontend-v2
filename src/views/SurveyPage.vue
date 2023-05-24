@@ -12,7 +12,7 @@ let currentQuestion: surveyQuestion = reactive(userStore.data.survey.questions[c
 let choices: Ref<courses | undefined> = ref() 
 const min: Ref<boolean> = ref(true)
 const max: Ref<boolean> = ref(false)
-let answers: Array<object> = JSON.parse(userStore.data.answeredSurvey.answers) // find way to fix when answers is returned as object
+let answers: Array<object> = JSON.parse(userStore.data.answeredSurvey.answers) 
 // let currentAnswer: surveyAnswer | undefined = reactive(answers.find(x => x.id == currentQuestion.id))
 
 const previousQuestion = (response: Array<string> | undefined) => {  
@@ -81,7 +81,6 @@ const updateAnswers = (questionAnswer: surveyAnswer) => {
       <generalComponent v-if="currentQuestion.questionType === 'GENERAL'" :question="currentQuestion.question" :max="max" :min="min" @back="previousQuestion" @next="nextQuestion"></generalComponent>
       <booleanComponent v-else-if="currentQuestion.questionType === 'BOOLEAN'" :question="currentQuestion.question" :max="max" :min="min" @back="previousQuestion" @next="nextQuestion"></booleanComponent>
       <checkboxComponent v-else :question="currentQuestion.question" :choices="choices" :max="max" :min="min" @back="previousQuestion" @next="nextQuestion"></checkboxComponent>
-      <button @click="userStore.saveSurvey('123', answers)">save test button :)</button>
     </div>
     <!-- <div class="bottom-28 w-11/12 md:w-4/5 lg:w-3/4 absolute flex justify-between items-center px-4">
         <button @click="previousQuestion()" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:bg-stone-400" :disabled="min">Back</button>

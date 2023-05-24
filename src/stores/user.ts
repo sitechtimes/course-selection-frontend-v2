@@ -6,6 +6,7 @@ export const useUserStore = defineStore("user", {
   state: (): user => ({
     first_name: "",
     data: {},
+    currentResponse: [],
     last_name: "",
     email: "",
     userType: null,
@@ -218,6 +219,31 @@ export const useUserStore = defineStore("user", {
               osis: osis,
               answers: json,
             },
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${this.access_token}`,
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+        });
+    },
+    async createSurvey(osis: string) {
+      await axios
+        .post(
+          "https://api.siths.dev/graphql/",
+          {
+            query: `mutation {
+                newSurvey(osis: ${osis}, answers: "[]") {
+                      survey {
+                          id
+                          
+                      }
+                }
+          }`
           },
           {
             headers: {
