@@ -7,10 +7,6 @@ import { useUserStore } from "../stores/user";
 import { surveyQuestion, courses, surveyAnswer } from '../types/interface';
 const userStore = useUserStore();
 
-const userAnswers = userStore.data.answeredSurvey
-
-console.log(userAnswers)
-
 const currentIndex: Ref<number> = ref(0)
 let currentQuestion: surveyQuestion = reactive(userStore.data.survey.questions[currentIndex.value])
 let choices: Ref<courses | undefined> = ref() 
