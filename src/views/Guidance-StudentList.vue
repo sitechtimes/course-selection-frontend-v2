@@ -13,11 +13,15 @@ export default {
     Sort,
     StudentTable,
   },
+  data() {
+    return {
+      haha: ref("")
+    }
+  },
   methods: {
-    handleCreate(event: any, input: any) {
-      // Our event handler gets the event, as well as any
-      // arguments the child passes to the event
-      console.log('From the child:', input);
+    handleCreate(input: any) {
+      let userInput = input;
+      console.log('From the child:', userInput);
     }
   }
 }
@@ -41,8 +45,8 @@ export default {
 <template>
     <div class="h-screen w-full flex flex-col justify-center items-center">
         <div class="ml-20 flex flex-row items-center">
-        <Sort :students="students"/>
-        <SearchBar class="" type="text" v-model="input" placeholder="Search Students..." />
+        <Sort/>
+        <SearchBar class="" type="text" v-model="haha" placeholder="Search Students..." />
         </div>
         <StudentTable @created="handleCreate"/>
     </div>

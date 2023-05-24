@@ -6,14 +6,26 @@ import SearchBar from "./SearchBar.vue"
 
 export default {
   props: {   
-    method: { type: Function },
+  
   },
   data() {
     return {
-    input: 'sadasd'
+    students: useUserStore().data.guidance.students,
+    input: ref(""),
     }
   },
+  computed: {
+    newstudents() {
+      return this.students.filter((student: { user: { firstName: string; lastName: string; }; osis: string|string[]; }) => {
+        return (
+          student.user.firstName.toLowerCase().indexOf(this.input.toLowerCase()) != -1 || student.user.lastName.toLowerCase().indexOf(this.input.toLowerCase()) != -1 || student.osis.indexOf(this.input) != -1
+        );
+      });
+    },
+  },
   mounted() {
+    this.newstudents;
+
     // Instead of calling the method we emit an event
     this.$emit('created', this.input);
   }
@@ -59,7 +71,6 @@ function students() {
     <div class="flex flex-col mt-10 justify-center items-center w-5/6" id="table">
         <div id="help">
         </div>
-        <SearchBar id="search" class="" type="text" v-model="input" placeholder="Search Students..." />
         <table class="w-full border-2 border-black table-auto text-left">
             <thead class="fill-primary-g border-2 border-black">
                 <tr class="bg-primary-g">
@@ -71,7 +82,7 @@ function students() {
                     <th class="p-4">Details</th>
                 </tr>
             </thead>
-            <tbody v-for="student in newstudents" :student="student" class="border-2 border-black">
+            <tbody v-for="student in students" :student="student" class="border-2 border-black">
                 <tr>
                     <td class="p-4">{{ student.user.lastName }}, {{ student.user.firstName }}</td>
                     <td class="p-4">{{ student.grade }}</td>
