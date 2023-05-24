@@ -3,23 +3,37 @@ import BellIcon from '../components/icons/BellIcon.vue';
 import { useUserStore } from '../stores/user';
 
 const userStore = useUserStore()
+const date = new Date();
 let annoucement = 'Surveys are closing next week on 03/12/2023.'
 
-let time  
-let date
+let meetingTime  
+let meetingDate
+let openMeeting = true
 
-if (userStore.data.student.meeting != undefined || userStore.data.student.meeting !=null) {
+if (userStore.data.student.meeting != undefined && userStore.data.student.meeting !=null) {
 const SplitTime = userStore.data.student.meeting.substring(11,16).split(":") // Substring is there to get only the time part (2023-05-01T16:09:54+00:00 was the value for meeting)
 if (SplitTime[0] > 12) {
   SplitTime[0] -= 12
-  time = SplitTime.join(':') + " PM"
+  meetingTime = SplitTime.join(':') + " PM"
 }  else {
-  time = SplitTime.join(':') + " AM"
+  meetingTime = SplitTime.join(':') + " AM"
 }
 const SplitDate = userStore.data.student.meeting.substring(0,10).split("-")
 SplitDate.splice(0, 3, SplitDate[1], SplitDate[2], SplitDate[0]);
-date = SplitDate.join("/")
+meetingDate = SplitDate.join("/")
+  if (SplitDate[1] < date.getDate()) {
+    console.log(SplitDate[1], date.getDate())
+    console.log("yes")
+  }
 }
+
+
+let day = date.getDate();
+let month = date.getMonth() + 1;
+let year = date.getFullYear();
+
+
+
 </script>
 
 <template>
@@ -48,7 +62,7 @@ date = SplitDate.join("/")
         </RouterLink>
       </div>
       <div >
-        <h1 v-if="userStore.data.student.meeting != undefined || userStore.data.student.meeting !=null" >You should meet with your guidance councelor on {{ date }} at {{ time }}.</h1>
+        <h1 v-if="userStore.data.student.meeting != undefined || userStore.data.student.meeting !=null" >You should meet with your guidance councelor on {{ meetingDate }} at {{ meetingTime }}.</h1>
         <h1 v-else>Your guidance councelor has not yet set a meeting time.</h1>
       </div>
     </div>
