@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
-// import { useUserStore } from '../stores/user';
-// const userStore = useUserStore()
+import { useUserStore } from "../../stores/user";
+const userStore = useUserStore();
 const hidee = true;
 let title: String;
 let date: String;
@@ -9,24 +9,21 @@ let people: String;
 let description: String;
 
 function submit(date: String) {
+  console.log(date);
   document.getElementById("form").reset();
-  //let json = JSON.stringify(date);
+  let json = JSON.stringify(date);
   userStore.changeMeeting("123", date);
   console.log(json);
 }
-// function submit() {
-//   document.getElementById("form").reset();
-//   console.log("test");
-// }
 
-function hide() {
-  const createevent = document.querySelector(".createevent");
-  if (createevent.style.display === "block") {
-    createevent.style.display === "none";
-  } else {
-    createevent.style.display === "none";
-  }
-}
+// function hide() {
+//   const createevent = document.querySelector(".createevent");
+//   if (createevent.style.display === "block") {
+//     createevent.style.display === "none";
+//   } else {
+//     createevent.style.display === "none";
+//   }
+// }
 function show() {
   const createevent = document.querySelector(".createevent");
   if (createevent.style.display === "none") {
@@ -127,7 +124,7 @@ function show() {
             />
           </div>
           <div class="item submit">
-            <button @click="submit" type="submit" class="font-bold">
+            <button @click="submit(date)" type="submit" class="font-bold">
               Save
             </button>
           </div>
