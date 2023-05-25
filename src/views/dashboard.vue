@@ -28,7 +28,6 @@ meetingDate = SplitDate.join("/")
       }
     }
   }
-  console.log(openMeeting)
 }
 </script>
 
@@ -51,7 +50,12 @@ meetingDate = SplitDate.join("/")
             Schedule
           </button>
         </RouterLink>
-        <RouterLink to="/survey">
+        <RouterLink v-if="openMeeting" to="/survey">
+          <button class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
+            Course Survey
+          </button>
+        </RouterLink>        
+        <RouterLink v-else to="/survey">
           <button class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
             Course Survey
           </button>
