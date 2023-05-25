@@ -10,7 +10,7 @@ let meetingTime
 let meetingDate
 let openMeeting = true
 
-if (userStore.data.student.meeting != undefined && userStore.data.student.meeting !=null) {
+if (userStore.data.student.meeting != undefined && userStore.data.student.meeting != null) {
 const SplitTime = userStore.data.student.meeting.substring(11,16).split(":") // Substring is there to get only the time part (2023-05-01T16:09:54+00:00 was the value for meeting)
 if (SplitTime[0] > 12) {
   SplitTime[0] -= 12
@@ -21,19 +21,15 @@ if (SplitTime[0] > 12) {
 const SplitDate = userStore.data.student.meeting.substring(0,10).split("-")
 SplitDate.splice(0, 3, SplitDate[1], SplitDate[2], SplitDate[0]);
 meetingDate = SplitDate.join("/")
-  if (SplitDate[1] < date.getDate()) {
-    console.log(SplitDate[1], date.getDate())
-    console.log("yes")
+  if (SplitDate[2] <= date.getFullYear()) {
+    if (SplitDate[0] <= date.getMonth() + 1) { // Get month starts at 0, not 1
+      if (SplitDate[1] < date.getDate()) {
+        openMeeting = false
+      }
+    }
   }
+  console.log(openMeeting)
 }
-
-
-let day = date.getDate();
-let month = date.getMonth() + 1;
-let year = date.getFullYear();
-
-
-
 </script>
 
 <template>
