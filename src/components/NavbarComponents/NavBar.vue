@@ -9,8 +9,9 @@ import router from '../../router';
 
 
 function viewingSurvey() {
-    return router.currentRoute.value.path.includes('guidance-survey')
+    return router.currentRoute.value.path.includes('survey')
 }
+
 
 const userStore = useUserStore();
 let menuOpen = ref(false);

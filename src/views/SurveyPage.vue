@@ -14,6 +14,7 @@ const min: Ref<boolean> = ref(true)
 const max: Ref<boolean> = ref(false)
 const date = new Date();
 let openMeeting = true
+let usedSurvey = []
 
 const previousQuestion = () => {
   currentIndex.value--
@@ -44,8 +45,8 @@ const getChoices = () => {
     choices = classes.filter(x => x.subject === currentQuestion.questionType)
 }
 
-if (userStore.data.student.meeting != undefined && userStore.data.student.meeting != null) {
-const SplitDate = userStore.data.student.meeting.substring(0,10).split("-")
+if (userStore.data.survey.dueDate != undefined && userStore.data.survey.dueDate != null) {
+const SplitDate = userStore.data.survey.dueDate.substring(0,10).split("-")
 SplitDate.splice(0, 3, SplitDate[1], SplitDate[2], SplitDate[0]);
 if (SplitDate[2] <= date.getFullYear()) {
   if (SplitDate[0] <= date.getMonth() + 1) { // Get month starts at 0, not 1
@@ -72,25 +73,22 @@ if (SplitDate[2] <= date.getFullYear()) {
       </div>
     <p class="absolute bottom-8 right-16 text-xl font-semibold">{{ currentIndex + 1 }}</p>
   </div>
-  <section>
+  <section v-else>
     <div class="text-3xl ml-32 mt-24 mb-4">
-      <h1 class="font-bold text-[#37394F] text-5xl  mb-6">{{ userStore.data.firstName }} {{ userStore.data.lastName }}'s Survey</h1>
+      <h1 class="font-bold text-[#37394F] text-5xl  mb-6">Your Survey</h1>
       <h2 v-if="userStore.data.survey.grade === 'SOPHOMORE'">Grade : 9</h2>
       <h2 v-if="userStore.data.survey.grade === 'JUNIOR'">Grade : 10</h2>
       <h2 v-if="userStore.data.survey.grade === 'SENIOR'">Grade : 11</h2>
     </div>
-<!--     <div v-for="question in usedSurvey.node.questions" class="flex justify-center">
-      <booleanComponent class="mb-6 " v-if="question.questionType === 'BOOLEAN'" :question="question" :usedSurvey="usedSurvey.node.questions"></booleanComponent>
-      <generalComponent class="mb-6" v-if="question.questionType === 'GENERAL'" :question="question" :usedSurvey="usedSurvey.node.questions"></generalComponent>
+  <div v-for="question in userStore.data.survey.questions" class="flex justify-center">
+      <booleanComponent class="mb-6 " v-if="question.questionType === 'BOOLEAN'" :question="question" :usedSurvey="userStore.data.survey.questions"></booleanComponent>
+      <generalComponent class="mb-6" v-if="question.questionType === 'GENERAL'" :question="question" :usedSurvey="userStore.data.survey.questions"></generalComponent>
       <section v-if="question.questionType != 'BOOLEAN' && question.questionType != 'GENERAL'" class="flex items-center justify-start w-3/4 overflow-x-visible mb-6">
         <div class=" items-center space-y-6 w-full">
           <h1 class="text-xl md:text-2xl lg:text-[180%]">{{ question.question }}</h1>
           <input class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base bg-transparent rounded-md border border-solid border-zinc-400  focus:outline-none focus:ring-0 focus:border-blue-400 lg:text-[180%] " type="text">
         </div>
       </section>
-    </div> -->
-    <div class="flex justify-center mb-6">
-      <button class="bg-[#C5D4A4] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-36 h-12 text-2xl font-bold text-[#37394F]">Complete</button>
     </div>
   </section>
 </template>

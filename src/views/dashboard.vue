@@ -4,11 +4,13 @@ import { useUserStore } from '../stores/user';
 
 const userStore = useUserStore()
 const date = new Date();
-let annoucement = 'Surveys are closing next week on 03/12/2023.'
+let surveyClose
 
 let meetingTime  
 let meetingDate
 let openMeeting = true
+
+console.log(userStore.data.survey.dueDate)
 
 if (userStore.data.student.meeting != undefined && userStore.data.student.meeting != null) {
 const SplitTime = userStore.data.student.meeting.substring(11,16).split(":") // Substring is there to get only the time part (2023-05-01T16:09:54+00:00 was the value for meeting)
@@ -21,6 +23,12 @@ if (SplitTime[0] > 12) {
 const SplitDate = userStore.data.student.meeting.substring(0,10).split("-")
 SplitDate.splice(0, 3, SplitDate[1], SplitDate[2], SplitDate[0]);
 meetingDate = SplitDate.join("/")
+}
+
+if (userStore.data.student.meeting != undefined && userStore.data.student.meeting != null) {
+const SplitDate = userStore.data.survey.dueDate.substring(0,10).split("-")
+SplitDate.splice(0, 3, SplitDate[1], SplitDate[2], SplitDate[0]);
+surveyClose = SplitDate.join("/")
   if (SplitDate[2] <= date.getFullYear()) {
     if (SplitDate[0] <= date.getMonth() + 1) { // Get month starts at 0, not 1
       if (SplitDate[1] < date.getDate()) {
@@ -29,6 +37,7 @@ meetingDate = SplitDate.join("/")
     }
   }
 }
+
 </script>
 
 <template>
@@ -41,7 +50,7 @@ meetingDate = SplitDate.join("/")
       <div id="announcements" class="flex justify-center items-center ml-4 lg:ml-0 lg:justify-start">
         <BellIcon />
         <h2 class="text-xl text-left flex ml-2">
-          {{ annoucement }}
+          Surveys are closing on {{ surveyClose }}
         </h2>
       </div>
       <div class="flex flex-col justify-start items-center space-y-4 lg:flex-row lg:space-y-0 lg:space-x-4">
