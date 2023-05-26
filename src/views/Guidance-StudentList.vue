@@ -4,7 +4,6 @@ import DownArrow from '../components/icons/DownArrow.vue';
 import Sort from '../components/GuidanceComponents/Sort.vue';
 import StudentTable from '../components/GuidanceComponents/StudentTable.vue'
 import { useUserStore } from '../stores/user';
-import { students } from '../mockdata';
 import { ref } from 'vue'
 
 export default {

@@ -1,6 +1,5 @@
 <script lang="ts">
 import { ref, computed } from 'vue';
-/* import { students } from '../../mockdata'; */
 import { useUserStore } from '../../stores/user';
 import SearchBar from "./SearchBar.vue"
 

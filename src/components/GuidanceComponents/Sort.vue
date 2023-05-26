@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
+import { useUserStore } from '../../stores/user';
 import DownArrow from '../icons/DownArrow.vue';
-import { students } from '../../mockdata';
+const students = useUserStore().data.guidance.students;
 const input = ref("");
 const props = ["title"];
 const selected = ref("Sort By");
@@ -16,6 +17,16 @@ const menuarray = ref([
   "Grade 10",
   "Grade 11",
 ])
+
+const SubjectSort = computed(() => {
+  function compare(a, b) {
+    if (a.user.lastName < b.user.lastName) return -1;
+    if (a.user.lastName > b.user.lastName) return 1;
+    return 0;
+  }
+ 
+  console.log(students.value.sort(compare));
+});
 
 function show() {
   onMounted(() => {
@@ -44,7 +55,7 @@ function show() {
       </div>
       <div class="sub-menu absolute shadow-[4px_3px_3px_rgba(0,0,0,0.25)]" v-if="isOpen" >
         <div v-for="menu in menuarray" class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
-          <button class="ml-2">{{ menu }}</button>
+          <button @click="SubjectSort()" class="ml-2">{{ menu }}</button>
         </div>
       </div>
     </div>
