@@ -5,16 +5,18 @@ const userStore = useUserStore();
 const hidee = true;
 let title: String;
 let date: String;
+let time: String;
 let people: String;
 let description: String;
 
-function submit(date: String, people: String) {
+function submit(date: String, people: String, time: String) {
   console.log(date);
   console.log(people);
   document.getElementById("form").reset();
-  let json = JSON.stringify(date);
+  let json = JSON.stringify(date, time);
   userStore.changeMeeting("123", date);
   console.log(json);
+  console.log(time);
 }
 
 // function hide() {
