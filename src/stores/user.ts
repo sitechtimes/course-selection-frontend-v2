@@ -56,6 +56,7 @@ export const useUserStore = defineStore('user', {
                                             question
                                             questionType
                                         }
+                                        dueDate
                                     }
                                 }
                             }
@@ -111,6 +112,7 @@ export const useUserStore = defineStore('user', {
                                 question
                                 questionType
                             }
+                            dueDate
                         }
                         answeredSurvey{
                             answers
