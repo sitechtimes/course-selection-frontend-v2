@@ -5,30 +5,7 @@ import { useUserStore } from '../../stores/user';
 import SearchBar from "./SearchBar.vue"
 
 export default {
-  props: {   
-  
-  },
-  data() {
-    return {
-    students: useUserStore().data.guidance.students,
-    input: ref(""),
-    }
-  },
-  computed: {
-    newstudents() {
-      return this.students.filter((student: { user: { firstName: string; lastName: string; }; osis: string|string[]; }) => {
-        return (
-          student.user.firstName.toLowerCase().indexOf(this.input.toLowerCase()) != -1 || student.user.lastName.toLowerCase().indexOf(this.input.toLowerCase()) != -1 || student.osis.indexOf(this.input) != -1
-        );
-      });
-    },
-  },
-  mounted() {
-    this.newstudents;
-
-    // Instead of calling the method we emit an event
-    this.$emit('created', this.input);
-  }
+  props: {  newstudents: Function },
 }
 
 /*   components: {
@@ -82,7 +59,7 @@ function students() {
                     <th class="p-4">Details</th>
                 </tr>
             </thead>
-            <tbody v-for="student in students" :student="student" class="border-2 border-black">
+            <tbody v-for="student in newstudents" :student="student" class="border-2 border-black">
                 <tr>
                     <td class="p-4">{{ student.user.lastName }}, {{ student.user.firstName }}</td>
                     <td class="p-4">{{ student.grade }}</td>

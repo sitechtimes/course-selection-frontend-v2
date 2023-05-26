@@ -15,15 +15,19 @@ export default {
   },
   data() {
     return {
-      haha: ref("")
+      students: useUserStore().data.guidance.students,
+      input: ref("")
     }
   },
-  methods: {
-    handleCreate(input: any) {
-      let userInput = input;
-      console.log('From the child:', userInput);
-    }
-  }
+  computed: {
+    newstudents() {
+      return this.students.filter((student: { user: { firstName: string; lastName: string; }; osis: string|string[]; }) => {
+        return (
+          student.user.firstName.toLowerCase().indexOf(this.input.toLowerCase()) != -1 || student.user.lastName.toLowerCase().indexOf(this.input.toLowerCase()) != -1 || student.osis.indexOf(this.input) != -1
+        );
+      });
+    },
+  },
 }
 
 /* export default {
@@ -46,8 +50,8 @@ export default {
     <div class="h-screen w-full flex flex-col justify-center items-center">
         <div class="ml-20 flex flex-row items-center">
         <Sort/>
-        <SearchBar class="" type="text" v-model="haha" placeholder="Search Students..." />
+        <SearchBar class="" type="text" v-model="input" placeholder="Search Students..." />
         </div>
-        <StudentTable @created="handleCreate"/>
+        <StudentTable :newstudents="newstudents"/>
     </div>
 </template>
