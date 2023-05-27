@@ -9,7 +9,7 @@ import router from '../../router';
 
 
 function viewingSurvey() {
-    return router.currentRoute.value.path.includes('guidance-survey')
+    return router.currentRoute.value.path.includes('survey')
 }
 
 const userStore = useUserStore();
@@ -43,7 +43,9 @@ const redirect = () => {
             <RouterLink to="/survey">
                 <p class="text-base">Survey</p>
             </RouterLink>
-            <p @click="userStore.$reset" id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>
+            <RouterLink to="/">
+                <p @click="userStore.$reset" id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>
+            </RouterLink>
         </div>
         <div v-if="userStore.isLoggedIn && userStore.userType === 'guidance' && viewingSurvey() === false" class="hidden justify-center items-center space-x-12 md:flex">
             <RouterLink to="/courses">
@@ -52,7 +54,9 @@ const redirect = () => {
             <RouterLink to="/survey">
                 <p class="text-base">Calendar</p>
             </RouterLink>
-            <p @click="userStore.isLoggedIn = false" id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>
+            <RouterLink to="/">
+                <p @click="userStore.$reset" id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>
+            </RouterLink>
         </div>
         <div v-if="!userStore.isLoggedIn && viewingSurvey() === false" class="hidden justify-center items-center space-x-12 md:flex">
             <RouterLink to="/courses">
@@ -66,7 +70,7 @@ const redirect = () => {
             <MenuIcon @click="toggleMenu" v-if="!menuOpen" />
             <CloseMenu @click="toggleMenu" v-else />
         </div>
-        <h1 v-if="viewingSurvey()" class="text-[#37394F] text-2xl">Save and Exit</h1>
+        <p v-if="viewingSurvey()" class="text-[#37394F] text-2xl">Save and Exit</p>
     <MobileNav v-if="menuOpen" @e="toggleMenu" />
     </nav>
 </template>
