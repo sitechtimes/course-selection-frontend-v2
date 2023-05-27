@@ -2,7 +2,7 @@
 import checkboxComponent from '../components/SurveyPageComponents/Reusables/surveyCheckbox.vue';
 import booleanComponent from '../components/SurveyPageComponents/Reusables/surveyBoolean.vue'
 import generalComponent from '../components/SurveyPageComponents/Reusables/surveyGeneral.vue'
-import { ref, reactive, Ref } from 'vue';
+import { ref, reactive, Ref, onMounted} from 'vue';
 import { useUserStore } from "../stores/user";
 import { surveyQuestion, courses, surveyAnswer } from '../types/interface';
 const userStore = useUserStore();
@@ -13,10 +13,15 @@ let choices: Ref<courses | undefined> = ref()
 const min: Ref<boolean> = ref(true)
 const max: Ref<boolean> = ref(false)
 let answers: Array<object> = JSON.parse(userStore.data.answeredSurvey.answers) 
-// let currentAnswer: surveyAnswer | undefined = reactive(answers.find(x => x.id == currentQuestion.id))
+let currentAnswer: surveyAnswer = reactive({})
 
-console.log(answers)
+onMounted(() => {
+  userStore.data.currentAnswer = JSON.parse(userStore.data.answeredSurvey.answers)
+  const answerId = userStore.data.currentAnswer.findIndex(x => x.id == currentQuestion.id)
+  currentAnswer = userStore.data.currentAnswer[answerId]
+})
 
+console.log(currentAnswer)
 const previousQuestion = (response: Array<string> | undefined) => {  
   const questionAnswer = {
         id: currentQuestion.id,
@@ -27,6 +32,11 @@ const previousQuestion = (response: Array<string> | undefined) => {
 
   currentIndex.value--
   currentQuestion = userStore.data.survey.questions[currentIndex.value]
+
+  const answerId = userStore.data.currentAnswer.findIndex(x => x.id == currentQuestion.id)
+  currentAnswer = userStore.data.currentAnswer[answerId]
+  console.log(currentAnswer.answer)
+
   max.value = false
   if(currentIndex.value === 0) {
     min.value = true
@@ -45,12 +55,12 @@ const nextQuestion = (response: Array<string> | undefined) => {
   }
   updateAnswers(questionAnswer)
 
-  let answerId = answers.findIndex(x => x.id == currentQuestion.id)
-
-  console.log(answers[answerId])
-
   currentIndex.value++
   currentQuestion = userStore.data.survey.questions[currentIndex.value]
+
+  const answerId = userStore.data.currentAnswer.findIndex(x => x.id == currentQuestion.id)
+  currentAnswer = userStore.data.currentAnswer[answerId]
+  console.log(currentAnswer.answer)
 
   min.value = false
   if(currentIndex.value === userStore.data.survey.questions.length - 1) {
@@ -68,13 +78,13 @@ const getChoices = () => {
 }
 
 const updateAnswers = (questionAnswer: surveyAnswer) => {
-  const currentAnswerIndex = answers.findIndex(x => x.id == currentQuestion.id)
+  const currentAnswerIndex = userStore.data.currentAnswer.findIndex(x => x.id == currentQuestion.id)
   if(currentAnswerIndex < 0) {
-    answers.push(questionAnswer)
-    console.log(answers ,'added')
+    userStore.data.currentAnswer.push(questionAnswer)
+    console.log(userStore.data.currentAnswer ,'added')
   } else {
-    answers[currentAnswerIndex].answer = questionAnswer.answer
-    console.log(answers, 'updated')
+    userStore.data.currentAnswer[currentAnswerIndex].answer = questionAnswer.answer
+    console.log(userStore.data.currentAnswer, 'updated')
   }
 }
 
@@ -87,6 +97,7 @@ const updateAnswers = (questionAnswer: surveyAnswer) => {
       <generalComponent v-if="currentQuestion.questionType === 'GENERAL'" :question="currentQuestion.question" :max="max" :min="min" @back="previousQuestion" @next="nextQuestion"></generalComponent>
       <booleanComponent v-else-if="currentQuestion.questionType === 'BOOLEAN'" :question="currentQuestion.question" :max="max" :min="min" @back="previousQuestion" @next="nextQuestion"></booleanComponent>
       <checkboxComponent v-else :question="currentQuestion.question" :choices="choices" :max="max" :min="min" @back="previousQuestion" @next="nextQuestion"></checkboxComponent>
+      <p>{{ currentAnswer }}</p>
     </div>
     <!-- <div class="bottom-28 w-11/12 md:w-4/5 lg:w-3/4 absolute flex justify-between items-center px-4">
         <button @click="previousQuestion()" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:bg-stone-400" :disabled="min">Back</button>
