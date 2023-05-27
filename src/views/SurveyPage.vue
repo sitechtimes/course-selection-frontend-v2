@@ -34,6 +34,7 @@ const previousQuestion = (response: Array<string> | undefined) => {
   currentIndex.value--
   currentQuestion = userStore.data.survey.questions[currentIndex.value]
 
+  // check if answer exists, if not, then set empty array
   const answerId = surveyStore.currentSurvey.findIndex(x => x.id == currentQuestion.id)
   currentAnswer = surveyStore.currentSurvey[answerId]
   console.log(currentAnswer.answer)
