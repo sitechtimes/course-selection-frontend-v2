@@ -14,13 +14,12 @@ let choices: Ref<courses | undefined> = ref()
 const min: Ref<boolean> = ref(true)
 const max: Ref<boolean> = ref(false)
 let answers: Array<object> = JSON.parse(userStore.data.answeredSurvey.answers) 
-let currentAnswer: surveyAnswer = reactive({})
+let currentAnswer: Array<string>
 
 onBeforeMount(() => {
   surveyStore.currentSurvey = JSON.parse(userStore.data.answeredSurvey.answers) // move this elsewhere
-  const answerId = surveyStore.currentSurvey.findIndex(x => x.id == currentQuestion.id)
-  currentAnswer = surveyStore.currentSurvey[answerId]
-  console.log(currentAnswer.answer, 'ooo')
+  const answer = surveyStore.currentSurvey.find(x => x.id == currentQuestion.id)
+  currentAnswer = answer.answer
 })
 
 const previousQuestion = (response: Array<string> | undefined) => {  
@@ -29,15 +28,19 @@ const previousQuestion = (response: Array<string> | undefined) => {
         question: currentQuestion.question,
         answer: response
   }
+ 
   updateAnswers(questionAnswer)
 
   currentIndex.value--
   currentQuestion = userStore.data.survey.questions[currentIndex.value]
 
   // check if answer exists, if not, then set empty array
-  const answerId = surveyStore.currentSurvey.findIndex(x => x.id == currentQuestion.id)
-  currentAnswer = surveyStore.currentSurvey[answerId]
-  console.log(currentAnswer.answer)
+  const answer = surveyStore.currentSurvey.find(x => x.id == currentQuestion.id)
+  if(answer) {
+    currentAnswer = answer.answer
+  } else {
+    currentAnswer = []
+  }
 
   max.value = false
   if(currentIndex.value === 0) {
@@ -55,15 +58,19 @@ const nextQuestion = (response: Array<string> | undefined) => {
         question: currentQuestion.question,
         answer: response
   }
-  
+
   updateAnswers(questionAnswer)
 
   currentIndex.value++
   currentQuestion = userStore.data.survey.questions[currentIndex.value]
 
-  const answerId = surveyStore.currentSurvey.findIndex(x => x.id == currentQuestion.id)
-  currentAnswer = surveyStore.currentSurvey[answerId]
-  console.log(currentAnswer.answer)
+  // const answerId = surveyStore.currentSurvey.findIndex(x => x.id == currentQuestion.id)
+  const answer = surveyStore.currentSurvey.find(x => x.id == currentQuestion.id)
+  if(answer) {
+    currentAnswer = answer.answer
+  } else {
+    currentAnswer = []
+  }
 
   min.value = false
   if(currentIndex.value === userStore.data.survey.questions.length - 1) {
@@ -97,9 +104,9 @@ const updateAnswers = (questionAnswer: surveyAnswer) => {
   <div class="h-screen flex flex-col justify-center items-center space-y-8">
     <div class="w-11/12 md:w-4/5 lg:w-3/4 flex flex-col justify-center items-center min-h-[20rem] space-y-8 mb-10">
       <h1 class="text-4xl font-semibold">{{ userStore.data.survey.grade }} Year Survey</h1>
-      <generalComponent v-if="currentQuestion.questionType === 'GENERAL'" :question="currentQuestion.question" :max="max" :min="min" :answers="currentAnswer.answer" @back="previousQuestion" @next="nextQuestion"></generalComponent>
-      <booleanComponent v-else-if="currentQuestion.questionType === 'BOOLEAN'" :question="currentQuestion.question" :max="max" :min="min" @back="previousQuestion" @next="nextQuestion"></booleanComponent>
-      <checkboxComponent v-else :question="currentQuestion.question" :choices="choices" :max="max" :min="min" @back="previousQuestion" @next="nextQuestion"></checkboxComponent>
+      <generalComponent v-if="currentQuestion.questionType === 'GENERAL'" :question="currentQuestion.question" :max="max" :min="min" :answers="currentAnswer" @back="previousQuestion" @next="nextQuestion"></generalComponent>
+      <booleanComponent v-else-if="currentQuestion.questionType === 'BOOLEAN'" :question="currentQuestion.question" :max="max" :min="min" :answers="currentAnswer" @back="previousQuestion" @next="nextQuestion"></booleanComponent>
+      <checkboxComponent v-else :question="currentQuestion.question" :choices="choices" :max="max" :min="min"   @back="previousQuestion" @next="nextQuestion"></checkboxComponent>
     </div>
     <!-- <div class="bottom-28 w-11/12 md:w-4/5 lg:w-3/4 absolute flex justify-between items-center px-4">
         <button @click="previousQuestion()" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:bg-stone-400" :disabled="min">Back</button>

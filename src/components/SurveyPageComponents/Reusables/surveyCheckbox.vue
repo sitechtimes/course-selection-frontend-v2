@@ -12,7 +12,7 @@
             class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
             :id="choice.courseCode"
             :value="choice.courseCode"
-            @click="updateReponse(choice.courseCode)"
+            v-model="response"
           />
           <label :for="choice.courseCode" class="text-lg md:text-xl ml-4">{{ choice.name }}</label>
         </div>
@@ -34,7 +34,7 @@
               Confirm
             </button>
           </div> -->
-          <p>---</p>
+          <p>hmm {{ response }}</p>
         </div>
       </div>
       <div class="bottom-28 w-11/12 md:w-4/5 lg:w-3/4 absolute flex justify-between items-center px-4">
@@ -45,7 +45,7 @@
 </template>
   
 <script setup lang="ts">
-  import { reactive } from 'vue';
+  import { reactive, ref } from 'vue';
 
   defineProps({
     choices: Array,
@@ -54,15 +54,6 @@
     max: Boolean
   });
 
-  let response: Array<String | undefined> = reactive([])
-
-  const updateReponse = (chosenChoice: String) => {
-    if (response.find(res => res === chosenChoice)) {
-      const index = response.findIndex(res => res === chosenChoice)
-      response.splice(index, 1)
-    } else {
-      response.push(chosenChoice)
-    }
-  }
+  const response: Array<String | undefined> = ref([])
 
 </script>  

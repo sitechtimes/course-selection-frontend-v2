@@ -35,14 +35,22 @@
   </template>
   
   <script setup lang="ts">
-  import { ref, Ref, onMounted } from 'vue';
-  defineProps({
+  import { watch } from 'vue';
+  const props = defineProps({
     question: String,
     min: Boolean,
-    max: Boolean
+    max: Boolean,
+    answers: Array,
   });
 
-  let response: String | undefined
+  let response: String | undefined | unknown = props.answers[0] // check if undefined on mount
+
+  console.log(response, 'oo')
+
+  watch(() => props.answers, (newResponse) => {
+    response = newResponse[0]
+  })
+
 
   const clear = () => {
     response = ''
