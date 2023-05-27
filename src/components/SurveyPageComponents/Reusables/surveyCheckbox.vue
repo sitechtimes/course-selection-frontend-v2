@@ -45,15 +45,23 @@
 </template>
   
 <script setup lang="ts">
-  import { reactive, ref } from 'vue';
+  import { watch, ref, onBeforeMount } from 'vue';
 
-  defineProps({
+  const props = defineProps({
     choices: Array,
     question: String,
     min: Boolean,
-    max: Boolean
+    max: Boolean,
+    answers: Array,
   });
 
-  const response: Array<String | undefined> = ref([])
+  let response: Array<String | undefined> = ref([])
 
+  onBeforeMount(() => {
+    response = props.answers
+  })
+
+  watch(() => props.answers, (newResponse) => {
+    response = newResponse
+  })
 </script>  

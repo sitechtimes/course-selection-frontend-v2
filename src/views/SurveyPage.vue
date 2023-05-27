@@ -106,7 +106,7 @@ const updateAnswers = (questionAnswer: surveyAnswer) => {
       <h1 class="text-4xl font-semibold">{{ userStore.data.survey.grade }} Year Survey</h1>
       <generalComponent v-if="currentQuestion.questionType === 'GENERAL'" :question="currentQuestion.question" :max="max" :min="min" :answers="currentAnswer" @back="previousQuestion" @next="nextQuestion"></generalComponent>
       <booleanComponent v-else-if="currentQuestion.questionType === 'BOOLEAN'" :question="currentQuestion.question" :max="max" :min="min" :answers="currentAnswer" @back="previousQuestion" @next="nextQuestion"></booleanComponent>
-      <checkboxComponent v-else :question="currentQuestion.question" :choices="choices" :max="max" :min="min"   @back="previousQuestion" @next="nextQuestion"></checkboxComponent>
+      <checkboxComponent v-else :question="currentQuestion.question" :choices="choices" :max="max" :min="min"   @back="previousQuestion" :answers="currentAnswer" @next="nextQuestion"></checkboxComponent>
     </div>
     <!-- <div class="bottom-28 w-11/12 md:w-4/5 lg:w-3/4 absolute flex justify-between items-center px-4">
         <button @click="previousQuestion()" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:bg-stone-400" :disabled="min">Back</button>
