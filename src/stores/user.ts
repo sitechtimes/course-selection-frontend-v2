@@ -6,7 +6,6 @@ export const useUserStore = defineStore("user", {
   state: (): user => ({
     first_name: "",
     data: {},
-    currentResponse: [],
     last_name: "",
     email: "",
     userType: null,
@@ -256,6 +255,21 @@ export const useUserStore = defineStore("user", {
           console.log(res);
         });
     },
+  },
+  persist: true,
+});
+
+
+export const useSurveyStore = defineStore("survey", { 
+  state: () => ({
+    currentSurvey: [],
+    currentResponse: []
+  }),
+  getters: {
+    //
+  },
+  actions: {
+    //
   },
   persist: true,
 });

@@ -2,10 +2,11 @@
 import checkboxComponent from '../components/SurveyPageComponents/Reusables/surveyCheckbox.vue';
 import booleanComponent from '../components/SurveyPageComponents/Reusables/surveyBoolean.vue'
 import generalComponent from '../components/SurveyPageComponents/Reusables/surveyGeneral.vue'
-import { ref, reactive, Ref, onMounted} from 'vue';
-import { useUserStore } from "../stores/user";
+import { ref, reactive, Ref, onMounted, onBeforeMount} from 'vue';
+import { useUserStore, useSurveyStore } from "../stores/user";
 import { surveyQuestion, courses, surveyAnswer } from '../types/interface';
 const userStore = useUserStore();
+const surveyStore = useSurveyStore();
 
 const currentIndex: Ref<number> = ref(0)
 let currentQuestion: surveyQuestion = reactive(userStore.data.survey.questions[currentIndex.value])
@@ -15,13 +16,13 @@ const max: Ref<boolean> = ref(false)
 let answers: Array<object> = JSON.parse(userStore.data.answeredSurvey.answers) 
 let currentAnswer: surveyAnswer = reactive({})
 
-onMounted(() => {
-  userStore.data.currentAnswer = JSON.parse(userStore.data.answeredSurvey.answers)
-  const answerId = userStore.data.currentAnswer.findIndex(x => x.id == currentQuestion.id)
-  currentAnswer = userStore.data.currentAnswer[answerId]
+onBeforeMount(() => {
+  surveyStore.currentSurvey = JSON.parse(userStore.data.answeredSurvey.answers) // move this elsewhere
+  const answerId = surveyStore.currentSurvey.findIndex(x => x.id == currentQuestion.id)
+  currentAnswer = surveyStore.currentSurvey[answerId]
+  console.log(currentAnswer.answer, 'ooo')
 })
 
-console.log(currentAnswer)
 const previousQuestion = (response: Array<string> | undefined) => {  
   const questionAnswer = {
         id: currentQuestion.id,
@@ -33,8 +34,8 @@ const previousQuestion = (response: Array<string> | undefined) => {
   currentIndex.value--
   currentQuestion = userStore.data.survey.questions[currentIndex.value]
 
-  const answerId = userStore.data.currentAnswer.findIndex(x => x.id == currentQuestion.id)
-  currentAnswer = userStore.data.currentAnswer[answerId]
+  const answerId = surveyStore.currentSurvey.findIndex(x => x.id == currentQuestion.id)
+  currentAnswer = surveyStore.currentSurvey[answerId]
   console.log(currentAnswer.answer)
 
   max.value = false
@@ -53,13 +54,14 @@ const nextQuestion = (response: Array<string> | undefined) => {
         question: currentQuestion.question,
         answer: response
   }
+  
   updateAnswers(questionAnswer)
 
   currentIndex.value++
   currentQuestion = userStore.data.survey.questions[currentIndex.value]
 
-  const answerId = userStore.data.currentAnswer.findIndex(x => x.id == currentQuestion.id)
-  currentAnswer = userStore.data.currentAnswer[answerId]
+  const answerId = surveyStore.currentSurvey.findIndex(x => x.id == currentQuestion.id)
+  currentAnswer = surveyStore.currentSurvey[answerId]
   console.log(currentAnswer.answer)
 
   min.value = false
@@ -78,13 +80,13 @@ const getChoices = () => {
 }
 
 const updateAnswers = (questionAnswer: surveyAnswer) => {
-  const currentAnswerIndex = userStore.data.currentAnswer.findIndex(x => x.id == currentQuestion.id)
+  const currentAnswerIndex = surveyStore.currentSurvey.findIndex(x => x.id == currentQuestion.id)
   if(currentAnswerIndex < 0) {
-    userStore.data.currentAnswer.push(questionAnswer)
-    console.log(userStore.data.currentAnswer ,'added')
+    surveyStore.currentSurvey.push(questionAnswer)
+    console.log(surveyStore.currentSurvey ,'added')
   } else {
-    userStore.data.currentAnswer[currentAnswerIndex].answer = questionAnswer.answer
-    console.log(userStore.data.currentAnswer, 'updated')
+    surveyStore.currentSurvey[currentAnswerIndex].answer = questionAnswer.answer
+    console.log(surveyStore.currentSurvey, 'updated')
   }
 }
 
@@ -94,10 +96,9 @@ const updateAnswers = (questionAnswer: surveyAnswer) => {
   <div class="h-screen flex flex-col justify-center items-center space-y-8">
     <div class="w-11/12 md:w-4/5 lg:w-3/4 flex flex-col justify-center items-center min-h-[20rem] space-y-8 mb-10">
       <h1 class="text-4xl font-semibold">{{ userStore.data.survey.grade }} Year Survey</h1>
-      <generalComponent v-if="currentQuestion.questionType === 'GENERAL'" :question="currentQuestion.question" :max="max" :min="min" @back="previousQuestion" @next="nextQuestion"></generalComponent>
+      <generalComponent v-if="currentQuestion.questionType === 'GENERAL'" :question="currentQuestion.question" :max="max" :min="min" :answers="currentAnswer.answer" @back="previousQuestion" @next="nextQuestion"></generalComponent>
       <booleanComponent v-else-if="currentQuestion.questionType === 'BOOLEAN'" :question="currentQuestion.question" :max="max" :min="min" @back="previousQuestion" @next="nextQuestion"></booleanComponent>
       <checkboxComponent v-else :question="currentQuestion.question" :choices="choices" :max="max" :min="min" @back="previousQuestion" @next="nextQuestion"></checkboxComponent>
-      <p>{{ currentAnswer }}</p>
     </div>
     <!-- <div class="bottom-28 w-11/12 md:w-4/5 lg:w-3/4 absolute flex justify-between items-center px-4">
         <button @click="previousQuestion()" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:bg-stone-400" :disabled="min">Back</button>
