@@ -27,11 +27,8 @@ if (
 </script>
 
 <template>
-  <div class="h-screen w-full flex flex-row justify-center items-center">
-    <div
-      id="left"
-      class="w-11/12 flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left md:w-3/4 lg:max-w-3xl lg:space-y-6 lg:ml-12"
-    >
+  <div class="h-[80vh] w-full flex flex-row justify-center items-center">
+    <div id="left" class="w-11/12 flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left md:w-3/4 lg:max-w-3xl lg:space-y-6 lg:ml-12">
       <h1 id="name" class="text-5xl font-bold">
         Welcome back,
         <span>{{ userStore.first_name }} {{ userStore.last_name }}</span>
