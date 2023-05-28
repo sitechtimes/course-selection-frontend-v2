@@ -117,6 +117,7 @@ export const useUserStore = defineStore("user", {
                             }
                         }
                         answeredSurvey{
+                            osis
                             answers
                         }
                         
@@ -205,8 +206,12 @@ export const useUserStore = defineStore("user", {
           console.log("meeting changed");
         });
     },
-    async saveSurvey(osis: string, answers: object) {
+    async saveSurvey() {
+      const surveyStore = useSurveyStore()
+      const osis = this.data.answeredSurvey.osis
+      const answers = surveyStore.currentSurvey
       let json = JSON.stringify(answers);
+      
       await axios
         .post(
           "https://api.siths.dev/graphql/",
@@ -263,7 +268,6 @@ export const useUserStore = defineStore("user", {
   },
   persist: true,
 });
-
 
 export const useSurveyStore = defineStore("survey", { 
   state: () => ({

@@ -7,13 +7,12 @@ import MobileNav from "./MobileNav.vue";
 import { ref, watch } from "vue";
 import router from '../../router';
 
+const userStore = useUserStore();
+let menuOpen = ref(false);
 
 function viewingSurvey() {
     return router.currentRoute.value.path.includes('survey')
 }
-
-const userStore = useUserStore();
-let menuOpen = ref(false);
 
 const redirect = () => {
     if (userStore.isLoggedIn === true) {
@@ -70,7 +69,7 @@ const redirect = () => {
             <MenuIcon @click="toggleMenu" v-if="!menuOpen" />
             <CloseMenu @click="toggleMenu" v-else />
         </div>
-        <p v-if="viewingSurvey()" class="text-[#37394F] text-2xl">Save and Exit</p>
+        <p v-if="viewingSurvey()" @click="userStore.saveSurvey()" class="text-[#37394F] text-2xl">Save and Exit</p>
     <MobileNav v-if="menuOpen" @e="toggleMenu" />
     </nav>
 </template>
