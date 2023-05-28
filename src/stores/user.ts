@@ -42,9 +42,21 @@ export const useUserStore = defineStore("user", {
                                         lastName
                                         email
                                     }
-                                    osis
                                     homeroom
+                                    osis
                                     grade
+                                    coursesTaken{
+                                        courseCode
+                                    }
+                                    coursesRequired{
+                                        courseCode
+                                    }
+                                    coursesAvailable{
+                                        courseCode
+                                        subject
+                                        name
+                                    }
+                                    meeting
                                 }
                             }
                             allSurveys {
@@ -53,6 +65,7 @@ export const useUserStore = defineStore("user", {
                                         questions{
                                             question
                                             questionType
+                                            id
                                         }
                                     }
                                 }
@@ -95,6 +108,8 @@ export const useUserStore = defineStore("user", {
                         }
                         student{
                             homeroom
+                            osis
+                            grade
                             coursesTaken{
                                 courseCode
                             }
@@ -243,8 +258,8 @@ export const useUserStore = defineStore("user", {
             this.data.answeredSurvey.answers = jsonString
           } else if(this.userType === "guidance") {
             // find student in list and update their survey
-            const studentIndex = this.data.guidance.allAnsweredSurveys.edges.findIndex(x => x[0].osis === surveyStore.currentSurvey.osis)
-            this.data.guidance.allAnsweredSurveys.edges[studentIndex][0].answers = jsonString
+            const studentIndex = this.data.allAnsweredSurveys.edges.findIndex(x => x.node.osis == surveyStore.currentSurvey.osis)
+            this.data.allAnsweredSurveys.edges[studentIndex].node.answers = jsonString
           } else {
             console.log("not logged in??")
           }
