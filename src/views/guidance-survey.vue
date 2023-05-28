@@ -36,10 +36,10 @@ const getChoices = (question) => {
       <h2 v-if="viewedUser.grade === 'JUNIOR'">Grade : 10</h2>
       <h2 v-if="viewedUser.grade === 'SENIOR'">Grade : 11</h2>
     </div>
-    <div v-for="question in usedSurvey.node.questions" class="flex justify-center">
+    <div v-for="question in usedSurvey.node.questions" :key="question" class="flex justify-center">
       <booleanComponent class="mb-6 " v-if="question.questionType === 'BOOLEAN'" :question="question" ></booleanComponent>
       <generalComponent class="mb-6" v-else-if="question.questionType === 'GENERAL'" :question="question" ></generalComponent>
-      <checkboxComponent v-else :question="question.question" :choices="getChoices(question)"></checkboxComponent>
+      <checkboxComponent v-else :question="question" :choices="getChoices(question)"></checkboxComponent>
       <!-- <section v-else class="flex items-center justify-start w-3/4 overflow-x-visible mb-6">
         <div class=" items-center space-y-6 w-full">
           <h1 class="text-xl md:text-2xl lg:text-[180%]">{{ question.question }}</h1>
