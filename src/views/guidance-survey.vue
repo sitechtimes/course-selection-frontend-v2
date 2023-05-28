@@ -22,11 +22,6 @@ if (viewedUser.grade === "JUNIOR") {
   usedSurvey = userStore.data.allSurveys.edges[2]
 }
 
-const getAnswer = (question) => {
-  const answer = surveyStore.currentResponse.find(x => x.id == question.id)
-  return answer.answer
-}
-console.log(viewedUser)
 const getChoices = (question) => {
   const classes = viewedUser.coursesAvailable
   return classes.filter(x => x.subject === question.questionType)
@@ -42,9 +37,9 @@ const getChoices = (question) => {
       <h2 v-if="viewedUser.grade === 'SENIOR'">Grade : 11</h2>
     </div>
     <div v-for="question in usedSurvey.node.questions" class="flex justify-center">
-      <booleanComponent class="mb-6 " v-if="question.questionType === 'BOOLEAN'" :question="question.question" :answers="getAnswer(question)"></booleanComponent>
-      <generalComponent class="mb-6" v-else-if="question.questionType === 'GENERAL'" :question="question.question" :answers="getAnswer(question)"></generalComponent>
-      <checkboxComponent v-else :question="question.question" :answers="getAnswer(question)" :choices="getChoices(question)"></checkboxComponent>
+      <booleanComponent class="mb-6 " v-if="question.questionType === 'BOOLEAN'" :question="question" ></booleanComponent>
+      <generalComponent class="mb-6" v-else-if="question.questionType === 'GENERAL'" :question="question" ></generalComponent>
+      <checkboxComponent v-else :question="question.question" :choices="getChoices(question)"></checkboxComponent>
       <!-- <section v-else class="flex items-center justify-start w-3/4 overflow-x-visible mb-6">
         <div class=" items-center space-y-6 w-full">
           <h1 class="text-xl md:text-2xl lg:text-[180%]">{{ question.question }}</h1>

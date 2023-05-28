@@ -4,7 +4,7 @@
         <div>
       <div class="flex items-center justify-center max-w-[40rem] overflow-hidden">
       <fieldset class="flex items-center justify-start"> <!-- I did this because I have no idea how to make it fill the rest of the page, so this will let the page decide how long it should be.  -->
-      <legend class="text-xl md:text-2xl">{{ question }}</legend>
+      <legend class="text-xl md:text-2xl">{{ question.question }}</legend>
       <div class="flex flex-col flex-wrap justify-center items-start">
         <div v-for="choice in choices" :key="choice.courseCode" class="flex flex-wrap flex-column justify-center items-center m-4 w-max">
           <input
@@ -12,13 +12,12 @@
             class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
             :id="choice.courseCode"
             :value="choice.courseCode"
-            v-model="response"
+            v-model="surveyStore.currentResponse[index].answer"
           />
           <label :for="choice.courseCode" class="text-lg md:text-xl ml-4">{{ choice.name }}</label>
         </div>
       </div>
       </fieldset>
-      <p @click="test">??????????????????</p>
     </div>
     </div>
         <div class="border-black border-[0.5px] border-solid rounded-xl lg:w-[35%] w-[90%] lg:ml-28 lg:h-[50-vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll">
@@ -35,37 +34,27 @@
               Confirm
             </button>
           </div> -->
-          <p>hmm {{ response }}</p>
+          <p>hmm {{ surveyStore.currentResponse[index].answer }}</p>
         </div>
-      </div>
-      <div class="bottom-28 w-11/12 md:w-4/5 lg:w-3/4 absolute flex justify-between items-center px-4">
-        <button @click="$emit('back', response);" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:bg-stone-400" :disabled="min">Back</button>
-        <button @click="$emit('next', response);" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md  disabled:bg-stone-400" :disabled="max">Next</button>
       </div>
     </section>
 </template>
   
 <script setup lang="ts">
-  import { watch, ref, onBeforeMount } from 'vue';
-
   const props = defineProps({
     choices: Array,
-    question: String,
-    min: Boolean,
-    max: Boolean,
+    question: Object,
     answers: Array,
   });
 
-  let response: Array<String | undefined> = ref([])
+  import { useSurveyStore } from '../../../stores/user';
+  import { watch } from 'vue';
 
-  const test = () => {
-    console.log(response)
-  }
-  onBeforeMount(() => {
-    response = props.answers
-  })
+  const surveyStore = useSurveyStore()
+  let index: number = surveyStore.currentResponse.findIndex(x => x.id == props.question.id)
 
-  watch(() => props.answers, (newResponse) => {
-    response = newResponse
+  watch(() => props.question, (newResponse) => {
+    index = surveyStore.currentResponse.findIndex(x => x.id == newResponse.id)
+    console.log(index)
   })
 </script>  
