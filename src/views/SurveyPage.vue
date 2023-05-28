@@ -2,22 +2,15 @@
 import checkboxComponent from '../components/SurveyPageComponents/Reusables/surveyCheckbox.vue';
 import booleanComponent from '../components/SurveyPageComponents/Reusables/surveyBoolean.vue'
 import generalComponent from '../components/SurveyPageComponents/Reusables/surveyGeneral.vue'
-import { ref, reactive, Ref, onMounted, onBeforeMount} from 'vue';
+import { ref, reactive, Ref } from 'vue';
 import { useUserStore, useSurveyStore } from "../stores/user";
 import { surveyQuestion, courses, surveyAnswer } from '../types/interface';
 const userStore = useUserStore();
-const surveyStore = useSurveyStore();
 
 const currentIndex: Ref<number> = ref(0)
 let currentQuestion: surveyQuestion = reactive(userStore.data.survey.questions[currentIndex.value])
 const min: Ref<boolean> = ref(true)
 const max: Ref<boolean> = ref(false)
-
-onBeforeMount(() => {
-  surveyStore.currentSurvey = userStore.data.answeredSurvey // move this elsewhere
-  surveyStore.currentResponse = JSON.parse(userStore.data.answeredSurvey.answers) // move this elsewhere
-  console.log(surveyStore.currentResponse)
-})
 
 const previousQuestion = () => {  
   currentIndex.value--
@@ -29,7 +22,7 @@ const previousQuestion = () => {
   }
 }
 
-const nextQuestion = (response: Array<string> | undefined) => {
+const nextQuestion = () => {
   currentIndex.value++
   currentQuestion = userStore.data.survey.questions[currentIndex.value]
 
@@ -56,7 +49,8 @@ const getChoices = () => {
     </div>
     <div class="bottom-28 w-11/12 md:w-4/5 lg:w-3/4 absolute flex justify-between items-center px-4">
         <button @click="previousQuestion()" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:bg-stone-400" :disabled="min">Back</button>
-        <button @click="nextQuestion()" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md  disabled:bg-stone-400" :disabled="max">Next</button>
+        <button @click="nextQuestion()" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:hidden" :disabled="max">Next</button>
+        <button class="bg-emerald-600 text-white w-auto px-3 h-10 rounded-md inline disabled:hidden" :disabled="!max">Review and Submit</button>
     </div>
     <p class="absolute bottom-8 right-16 text-xl font-semibold">{{ currentIndex + 1 }}</p>
   </div>

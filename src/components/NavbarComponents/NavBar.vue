@@ -40,7 +40,7 @@ const redirect = () => {
                 <p class="text-base">Courses</p>
             </RouterLink>
             <RouterLink to="/survey">
-                <p class="text-base">Survey</p>
+                <p @click="userStore.setSurvey(userStore.data.student.osis, userStore.data.survey.questions)" class="text-base">Survey</p>
             </RouterLink>
             <RouterLink to="/">
                 <p @click="userStore.$reset" id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>
@@ -69,7 +69,10 @@ const redirect = () => {
             <MenuIcon @click="toggleMenu" v-if="!menuOpen" />
             <CloseMenu @click="toggleMenu" v-else />
         </div>
-        <p v-if="viewingSurvey()" @click="userStore.saveSurvey()" class="text-[#37394F] text-2xl">Save and Exit</p>
+        <div v-if="viewingSurvey()" class="flex flex-row w-1/6 justify-between">
+            <p @click="userStore.saveSurvey()" class="text-[#37394F] text-2xl cursor-pointer">Save</p>
+            <p @click="redirect()" class="text-[#37394F] text-2xl cursor-pointer">Exit</p>
+        </div>
     <MobileNav v-if="menuOpen" @e="toggleMenu" />
     </nav>
 </template>

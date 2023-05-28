@@ -2,7 +2,6 @@ import { defineStore } from "pinia";
 import axios from "axios";
 import { user, account_type, userData } from "../types/interface";
 
-// create empty answeredsurvey
 export const useUserStore = defineStore("user", {
   state: (): user => ({
     first_name: "",
@@ -226,8 +225,7 @@ export const useUserStore = defineStore("user", {
       const surveyStore = useSurveyStore()
       const osis = surveyStore.currentSurvey.osis
       const answers = surveyStore.currentResponse
-      console.log(answers, 'oo')
-      let jsonString = JSON.stringify(answers);
+      const jsonString = JSON.stringify(answers);
       
       await axios
         .post(
@@ -258,7 +256,7 @@ export const useUserStore = defineStore("user", {
           if(this.userType === "student") {
             this.data.answeredSurvey.answers = jsonString
           } else if(this.userType === "guidance") {
-            // find student in list and update their survey
+            // needs testing
             const studentIndex = this.data.allAnsweredSurveys.edges.findIndex(x => x.node.osis == surveyStore.currentSurvey.osis)
             this.data.allAnsweredSurveys.edges[studentIndex].node.answers = jsonString
           } else {
@@ -266,19 +264,36 @@ export const useUserStore = defineStore("user", {
           }
         });
     },
-    async createSurvey(osis: string) {
+    async startSurvey(osis: string, survey: Array<object>) {
+      let newSurvey: Array<object> = []
+      survey.forEach((question) => {
+        const questionAnswer = {
+          id: question.id,
+          question: question.question,
+          answer: []
+        }
+        newSurvey.push(questionAnswer)
+      })
+
+      const jsonString = JSON.stringify(newSurvey);
+
       await axios
         .post(
           "https://api.siths.dev/graphql/",
           {
-            query: `mutation {
-                newSurvey(osis: ${osis}, answers: "[]") {
-                      survey {
-                          id
-                          
-                      }
-                }
-          }`
+            query: `mutation updateSurvey($osis: String, $answers: JSONString) {
+              newSurvey(osis: $osis, answers: $answers) {
+                  survey {
+                      id
+                      osis
+                      answers
+                  }
+              }
+          }`,
+          variables: {
+            osis: osis,
+            answers: jsonString,
+          },
           },
           {
             headers: {
@@ -288,9 +303,26 @@ export const useUserStore = defineStore("user", {
           }
         )
         .then((res) => {
-          console.log(res);
+          this.data.answeredSurvey = res.data.data.newSurvey.survey;
+          console.log(this.data.answeredSurvey);
         });
     },
+    async setSurvey(osis: string, survey: Array<object>) {
+      const surveyStore = useSurveyStore()
+
+      if(this.data.answeredSurvey === null) {
+        this.startSurvey(osis, survey)
+      }
+
+      if(this.userType === "student") {
+        surveyStore.currentSurvey = this.data.answeredSurvey 
+        surveyStore.currentResponse = JSON.parse(this.data.answeredSurvey.answers)
+      } else if(this.userType === "guidance") {
+        // 
+      } else {
+        console.log("not logged in??")
+      }
+    }
   },
   persist: true,
 });
