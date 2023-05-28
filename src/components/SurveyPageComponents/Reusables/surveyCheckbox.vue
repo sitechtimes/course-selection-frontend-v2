@@ -6,7 +6,7 @@
       <fieldset class="flex items-center justify-start"> <!-- I did this because I have no idea how to make it fill the rest of the page, so this will let the page decide how long it should be.  -->
       <legend class="text-xl md:text-2xl">{{ question }}</legend>
       <div class="flex flex-col flex-wrap justify-center items-start">
-        <div v-for="choice in choices" :key="choice" class="flex flex-wrap flex-column justify-center items-center m-4 w-max">
+        <div v-for="choice in choices" :key="choice.courseCode" class="flex flex-wrap flex-column justify-center items-center m-4 w-max">
           <input
             type="checkbox"
             class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
@@ -18,6 +18,7 @@
         </div>
       </div>
       </fieldset>
+      <p @click="test">??????????????????</p>
     </div>
     </div>
         <div class="border-black border-[0.5px] border-solid rounded-xl lg:w-[35%] w-[90%] lg:ml-28 lg:h-[50-vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll">
@@ -57,6 +58,9 @@
 
   let response: Array<String | undefined> = ref([])
 
+  const test = () => {
+    console.log(response)
+  }
   onBeforeMount(() => {
     response = props.answers
   })

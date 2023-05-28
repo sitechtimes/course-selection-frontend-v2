@@ -208,9 +208,10 @@ export const useUserStore = defineStore("user", {
     },
     async saveSurvey() {
       const surveyStore = useSurveyStore()
-      const osis = this.data.answeredSurvey.osis
-      const answers = surveyStore.currentSurvey
-      let json = JSON.stringify(answers);
+      const osis = surveyStore.currentSurvey.osis
+      const answers = surveyStore.currentResponse
+      console.log(answers, 'oo')
+      let jsonString = JSON.stringify(answers);
       
       await axios
         .post(
@@ -226,7 +227,7 @@ export const useUserStore = defineStore("user", {
             }`,
             variables: {
               osis: osis,
-              answers: json,
+              answers: jsonString,
             },
           },
           {
@@ -238,6 +239,15 @@ export const useUserStore = defineStore("user", {
         )
         .then((res) => {
           console.log(res);
+          if(this.userType === "student") {
+            this.data.answeredSurvey.answers = jsonString
+          } else if(this.userType === "guidance") {
+            // find student in list and update their survey
+            const studentIndex = this.data.guidance.allAnsweredSurveys.edges.findIndex(x => x[0].osis === surveyStore.currentSurvey.osis)
+            this.data.guidance.allAnsweredSurveys.edges[studentIndex][0].answers = jsonString
+          } else {
+            console.log("not logged in??")
+          }
         });
     },
     async createSurvey(osis: string) {
@@ -272,7 +282,8 @@ export const useUserStore = defineStore("user", {
 export const useSurveyStore = defineStore("survey", { 
   state: () => ({
     currentSurvey: [],
-    currentResponse: []
+    currentResponse: [],
+    currentQuestion: [],
   }),
   getters: {
     //

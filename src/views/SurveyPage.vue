@@ -17,8 +17,10 @@ let answers: Array<object> = JSON.parse(userStore.data.answeredSurvey.answers)
 let currentAnswer: Array<string>
 
 onBeforeMount(() => {
-  surveyStore.currentSurvey = JSON.parse(userStore.data.answeredSurvey.answers) // move this elsewhere
-  const answer = surveyStore.currentSurvey.find(x => x.id == currentQuestion.id)
+  surveyStore.currentSurvey = userStore.data.answeredSurvey // move this elsewhere
+  surveyStore.currentResponse = JSON.parse(userStore.data.answeredSurvey.answers) // move this elsewhere
+  console.log(surveyStore.currentResponse)
+  const answer = surveyStore.currentResponse.find(x => x.id == currentQuestion.id)
   currentAnswer = answer.answer
 })
 
@@ -35,7 +37,7 @@ const previousQuestion = (response: Array<string> | undefined) => {
   currentQuestion = userStore.data.survey.questions[currentIndex.value]
 
   // check if answer exists, if not, then set empty array
-  const answer = surveyStore.currentSurvey.find(x => x.id == currentQuestion.id)
+  const answer = surveyStore.currentResponse.find(x => x.id == currentQuestion.id)
   if(answer) {
     currentAnswer = answer.answer
   } else {
@@ -64,8 +66,8 @@ const nextQuestion = (response: Array<string> | undefined) => {
   currentIndex.value++
   currentQuestion = userStore.data.survey.questions[currentIndex.value]
 
-  // const answerId = surveyStore.currentSurvey.findIndex(x => x.id == currentQuestion.id)
-  const answer = surveyStore.currentSurvey.find(x => x.id == currentQuestion.id)
+  // const answerId = surveyStore.currentResponse.findIndex(x => x.id == currentQuestion.id)
+  const answer = surveyStore.currentResponse.find(x => x.id == currentQuestion.id)
   if(answer) {
     currentAnswer = answer.answer
   } else {
@@ -88,13 +90,13 @@ const getChoices = () => {
 }
 
 const updateAnswers = (questionAnswer: surveyAnswer) => {
-  const currentAnswerIndex = surveyStore.currentSurvey.findIndex(x => x.id == currentQuestion.id)
+  const currentAnswerIndex = surveyStore.currentResponse.findIndex(x => x.id == currentQuestion.id)
   if(currentAnswerIndex < 0) {
-    surveyStore.currentSurvey.push(questionAnswer)
-    console.log(surveyStore.currentSurvey ,'added')
+    surveyStore.currentResponse.push(questionAnswer)
+    console.log(surveyStore.currentResponse ,'added')
   } else {
-    surveyStore.currentSurvey[currentAnswerIndex].answer = questionAnswer.answer
-    console.log(surveyStore.currentSurvey, 'updated')
+    surveyStore.currentResponse[currentAnswerIndex].answer = questionAnswer.answer
+    console.log(surveyStore.currentResponse, 'updated')
   }
 }
 
