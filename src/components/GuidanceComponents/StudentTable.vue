@@ -12,7 +12,7 @@ const router = useRouter()
 
 async function userClick(student: object) {
     await userStore.setSurvey(student.osis, userStore.data.allSurveys.edges.find(x => x.node.grade === student.grade).node.questions)
-    router.push(`/guidance-survey/${student.osis}`)
+    router.push(`/guidance/survey/${student.osis}`)
 }
 
 </script>

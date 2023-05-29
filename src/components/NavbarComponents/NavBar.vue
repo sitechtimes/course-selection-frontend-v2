@@ -20,7 +20,7 @@ const redirect = () => {
             router.push('/student/dashboard')
         } 
         if (userStore.userType === 'guidance') {
-            router.push('/guidance/dashboard')
+            router.push('/guidance/studentlist')
         }
     } else {
         return router.push('/')

@@ -15,7 +15,7 @@ const router = createRouter({
       component: () => import('../views/GuidanceHome.vue')
     },
     {
-      path: '/guidance-studentlist',
+      path: '/guidance/studentlist',
       name: 'Guidance-Studentlist',
       component: () => import('../views/Guidance-StudentList.vue')
     },
@@ -52,7 +52,7 @@ const router = createRouter({
       component: () => import('../views/dashboard.vue')
     },
     {
-      path: '/guidance-survey/:osis',
+      path: '/guidance/survey/:osis',
       name: 'guidance-survey',
       component: () => import('../views/guidance-survey.vue')
     }
