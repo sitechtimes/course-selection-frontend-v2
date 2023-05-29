@@ -7,23 +7,14 @@ import checkboxComponent from '../components/SurveyPageComponents/Reusables/surv
 const userStore = useUserStore()
 const surveyStore = useSurveyStore()
 
-const viewedUser = userStore.data.guidance.students.filter(student => student.osis === window.location.pathname.substring(17))[0]
-const studentIndex = userStore.data.allAnsweredSurveys.edges.findIndex(x => x.node.osis == viewedUser.osis)
-surveyStore.currentSurvey = userStore.data.allAnsweredSurveys.edges[studentIndex].node
-surveyStore.currentResponse = JSON.parse(userStore.data.allAnsweredSurveys.edges[studentIndex].node.answers)
+const viewedStudent = userStore.data.guidance.students.filter(student => student.osis === window.location.pathname.substring(17))[0]
 
-let usedSurvey = null
+let currentSurvey = null
 
-if (viewedUser.grade === "JUNIOR") {
-  usedSurvey = userStore.data.allSurveys.edges[1]
-} else if (viewedUser.grade === "SENIOR") {
-  usedSurvey = userStore.data.allSurveys.edges[0]
-} else if (viewedUser.grade === "SOPHOMORE") {
-  usedSurvey = userStore.data.allSurveys.edges[2]
-}
+currentSurvey = userStore.data.allSurveys.edges.find(x => x.node.grade === viewedStudent.grade).node
 
 const getChoices = (question) => {
-  const classes = viewedUser.coursesAvailable
+  const classes = viewedStudent.coursesAvailable
   return classes.filter(x => x.subject === question.questionType)
 }
 </script>
@@ -31,12 +22,12 @@ const getChoices = (question) => {
 <template>
   <section>
     <div class="text-3xl ml-32 mt-24 mb-4">
-      <h1 class="font-bold text-[#37394F] text-5xl  mb-6">{{ viewedUser.user.firstName }} {{ viewedUser.user.lastName }}'s Survey</h1>
-      <h2 v-if="viewedUser.grade === 'SOPHOMORE'">Grade : 9</h2>
-      <h2 v-if="viewedUser.grade === 'JUNIOR'">Grade : 10</h2>
-      <h2 v-if="viewedUser.grade === 'SENIOR'">Grade : 11</h2>
+      <h1 class="font-bold text-[#37394F] text-5xl  mb-6">{{ viewedStudent.user.firstName }} {{ viewedStudent.user.lastName }}'s Survey</h1>
+      <h2 v-if="viewedStudent.grade === 'SOPHOMORE'">Grade : 9</h2>
+      <h2 v-if="viewedStudent.grade === 'JUNIOR'">Grade : 10</h2>
+      <h2 v-if="viewedStudent.grade === 'SENIOR'">Grade : 11</h2>
     </div>
-    <div v-for="question in usedSurvey.node.questions" :key="question" class="flex justify-center">
+    <div v-for="question in currentSurvey.questions" :key="question" class="flex justify-center">
       <booleanComponent class="mb-6 " v-if="question.questionType === 'BOOLEAN'" :question="question" ></booleanComponent>
       <generalComponent class="mb-6" v-else-if="question.questionType === 'GENERAL'" :question="question" ></generalComponent>
       <checkboxComponent v-else :question="question" :choices="getChoices(question)"></checkboxComponent>

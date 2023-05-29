@@ -62,6 +62,7 @@ export const useUserStore = defineStore("user", {
                             allSurveys {
                                 edges{
                                     node{
+                                        grade
                                         questions{
                                             question
                                             questionType
@@ -303,22 +304,41 @@ export const useUserStore = defineStore("user", {
           }
         )
         .then((res) => {
-          this.data.answeredSurvey = res.data.data.newSurvey.survey;
-          console.log(this.data.answeredSurvey);
+          if(this.userType === "student") {
+            this.data.answeredSurvey = res.data.data.newSurvey.survey;
+            console.log(this.data.answeredSurvey);
+          } else if(this.userType === "guidance") {
+            const newStudentSurvey = {
+              node: res.data.data.newSurvey.survey
+            }
+            this.data.allAnsweredSurveys.edges.push(newStudentSurvey)
+            console.log("??")
+          } else {
+            console.log("not logged in??")
+          }
+          // console.log(res)
         });
     },
     async setSurvey(osis: string, survey: Array<object>) {
       const surveyStore = useSurveyStore()
 
-      if(this.data.answeredSurvey === null) {
-        this.startSurvey(osis, survey)
-      }
-
       if(this.userType === "student") {
+        if(this.data.answeredSurvey === null) {
+          this.startSurvey(osis, survey)
+        }
+
         surveyStore.currentSurvey = this.data.answeredSurvey 
         surveyStore.currentResponse = JSON.parse(this.data.answeredSurvey.answers)
       } else if(this.userType === "guidance") {
-        // 
+        let studentIndex = this.data.allAnsweredSurveys.edges.findIndex(x => x.node.osis === osis)
+
+        if(studentIndex < 0) {
+          await this.startSurvey(osis, survey)
+          studentIndex = this.data.allAnsweredSurveys.edges.findIndex(x => x.node.osis === osis)
+          console.log(studentIndex)
+        } 
+        surveyStore.currentSurvey = this.data.allAnsweredSurveys.edges[studentIndex].node
+        surveyStore.currentResponse = JSON.parse(surveyStore.currentSurvey.answers)
       } else {
         console.log("not logged in??")
       }

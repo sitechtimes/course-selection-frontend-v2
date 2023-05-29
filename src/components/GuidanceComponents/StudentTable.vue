@@ -10,8 +10,9 @@ const newstudents = userStore.data.guidance.students;
 const input = ref("")
 const router = useRouter()
 
-function userClick(osis:Number) {
-    router.push(`/guidance-survey/${osis}`)
+async function userClick(student: object) {
+    await userStore.setSurvey(student.osis, userStore.data.allSurveys.edges.find(x => x.node.grade === student.grade).node.questions)
+    router.push(`/guidance-survey/${student.osis}`)
 }
 
 </script>
@@ -29,8 +30,8 @@ function userClick(osis:Number) {
                     <th class="p-4">Details</th>
                 </tr>
             </thead>
-            <tbody v-for="student in newstudents" class="border-2 border-black">
-                <tr @click="userClick(student.osis)">
+            <tbody v-for="student in newstudents" :key="student" class="border-2 border-black">
+                <tr @click="userClick(student)"> 
                     <td class="p-4">{{ student.lastname }}, {{ student.user.firstName }}</td>
                     <td class="p-4">{{ student.grade }}</td>
                     <td class="p-4">{{ student.osis }}</td>
