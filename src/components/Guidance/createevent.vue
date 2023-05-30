@@ -19,6 +19,25 @@ function submit(date: String, people: String, time: String) {
   console.log(time);
 }
 
+// let time: String;
+// let date: String;
+
+// if (
+//   userStore.data.student.meeting != undefined ||
+//   userStore.data.student.meeting != null
+// ) {
+//   const SplitTime = userStore.data.student.meeting.substring(11, 16).split(":"); // Substring is there to get only the time part (2023-05-01T16:09:54+00:00 was the value for meeting)
+//   if (SplitTime[0] > 12) {
+//     SplitTime[0] -= 12;
+//     time = SplitTime.join(":") + " PM";
+//   } else {
+//     time = SplitTime.join(":") + " AM";
+//   }
+//   const SplitDate = userStore.data.student.meeting.substring(0, 10).split("-");
+//   SplitDate.splice(0, 3, SplitDate[1], SplitDate[2], SplitDate[0]);
+//   date = SplitDate.join("/");
+// }
+
 // function hide() {
 //   const createevent = document.querySelector(".createevent");
 //   if (createevent.style.display === "block") {
@@ -43,7 +62,7 @@ function show() {
     <div v-if="hidee" class="createevent h-screen flex flex-row m-auto mt-5">
       <div class="event">
         <div class="top">
-          <h2 class="m-8 font-bold">Create Event</h2>
+          <h2 class="h2 font-bold">Create Event</h2>
           <button class="mt-5" @click="hide">
             <svg
               class="x"
@@ -172,8 +191,8 @@ function show() {
 </template>
 
 <style scoped>
-.d {
-  width: 50%;
+.h2 {
+  margin: 2rem;
 }
 .times {
   display: flex;
@@ -252,7 +271,7 @@ svg {
   cursor: pointer;
 }
 .item {
-  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 .submit {
   margin-left: 2rem;
@@ -273,6 +292,7 @@ svg {
   padding-left: 0.7rem;
   height: 0rem;
 }
+
 .form {
   text-align: left;
 }
@@ -294,7 +314,7 @@ svg {
 }
 h2 {
   font-size: 2rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 @media only screen and (max-width: 1380px) {
   .x {
@@ -341,8 +361,21 @@ h2 {
   }
 }
 @media only screen and (max-width: 900px) {
+  .createevent {
+    height: 35rem;
+  }
+  .top {
+    margin: 0rem;
+    padding: 0rem;
+  }
   .x {
     margin-left: 20rem;
+  }
+  .times {
+    flex-direction: column;
+  }
+  .top {
+    padding-top: 0;
   }
 }
 @media only screen and (max-width: 800px) {
