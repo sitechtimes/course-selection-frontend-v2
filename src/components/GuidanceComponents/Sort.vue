@@ -18,14 +18,21 @@ const menuarray = ref([
   "Grade 11",
 ])
 
-const SubjectSort = computed(() => {
-  function compare(a, b) {
+const LastNameInc = computed(() => {
+  function compare(a: { user: { lastName: any; }; }, b: { user: { lastName: any; }; }) {
     if (a.user.lastName < b.user.lastName) return -1;
     if (a.user.lastName > b.user.lastName) return 1;
     return 0;
   }
- 
-  console.log(students.value.sort(compare));
+  return (students.sort(compare));
+});
+const LastNameDec = computed(() => {
+  function compare(a: { user: { lastName: any; }; }, b: { user: { lastName: any; }; }) {
+    if (a.user.lastName > b.user.lastName) return -1;
+    if (a.user.lastName < b.user.lastName) return 1;
+    return 0;
+  }
+  return (students.sort(compare));
 });
 
 function show() {
@@ -55,7 +62,7 @@ function show() {
       </div>
       <div class="sub-menu absolute shadow-[4px_3px_3px_rgba(0,0,0,0.25)]" v-if="isOpen" >
         <div v-for="menu in menuarray" class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
-          <button @click="SubjectSort()" class="ml-2">{{ menu }}</button>
+          <button @click="LastNameInc()" class="ml-2">{{ menu }}</button>
         </div>
       </div>
     </div>
