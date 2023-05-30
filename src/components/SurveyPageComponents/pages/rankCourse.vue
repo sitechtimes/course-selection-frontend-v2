@@ -274,16 +274,6 @@ const hoverBox = function (e) {
         break;
       }
     }
-    // placeholderChildren.every(function (element, index) {
-    //   console.log(index)
-    //   if (element[1] === e.target) {
-    //     console.log("ok")
-    //     console.log("OKOK");
-    //     fillAboveBelow(index);
-    //     return false;
-    //   }
-    // });
-    // return true;
   }
 };
 const swap = function (e) {};
