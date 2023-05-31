@@ -1,52 +1,13 @@
-<script lang="ts">
+<script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useUserStore } from '../../stores/user';
 import SearchBar from "./SearchBar.vue"
 import { useRouter } from 'vue-router'
 
-export default {
-  props: {  newstudents: Function },
-}
-
-/*   components: {
-    SearchBar,
-  },
-  data() {
-    return {
-      students: useUserStore().data.guidance.students,
-      input: ref(""),
-    };
-  },
-  computed: {
-    newstudents() {
-      return this.students.filter((student: { user: { firstName: string; lastName: string; }; osis: string|string[]; }) => {
-        return (
-          student.user.firstName.toLowerCase().indexOf(this.input.toLowerCase()) != -1 || student.user.lastName.toLowerCase().indexOf(this.input.toLowerCase()) != -1 || student.osis.indexOf(this.input) != -1
-        );
-      });
-    },
-  },
-  mounted() {
-    this.newstudents;
-  }, */
-
-/* const userStore = useUserStore()
-let newstudents = userStore.data.guidance.students;
-const input = ref("")
+const props = defineProps(['newstudents'])
+const userStore = useUserStore()
 const router = useRouter()
 
-async function userClick(student: object) {
-    await userStore.setSurvey(student.osis, userStore.data.allSurveys.edges.find(x => x.node.grade === student.grade).node.questions)
-    router.push(`/guidance/survey/${student.osis}`)
-}
-
-function students() {
-      return newstudents.value.filter((student) => {
-        return (
-          student.firstName.toLowerCase().indexOf(input.value.toLowerCase()) != -1
-        );
-      });
-} */
 
 </script>
 
@@ -65,8 +26,8 @@ function students() {
                     <th class="p-4">Details</th>
                 </tr>
             </thead>
-            <tbody v-for="student in newstudents" :student="student" class="border-2 border-black">
-                <tr>
+            <tbody v-for="student in newstudents" :key="student" class="border-2 border-black">
+                <tr @click="router.push(`/guidance/survey/${student.osis}`)">
                     <td class="p-4">{{ student.user.lastName }}, {{ student.user.firstName }}</td>
                     <td class="p-4">{{ student.grade }}</td>
                     <td class="p-4">{{ student.osis }}</td>

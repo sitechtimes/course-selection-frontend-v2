@@ -28,21 +28,6 @@ export default {
     },
   },
 }
-
-/* export default {
-    components: {
-    SearchBar,
-    Sort,
-    StudentTable,
-    newstudents
-  },
-  data() {
-    return {
-      students: useUserStore().data.guidance.students,
-      input: ref(""),
-    };
-  },
-} */
 </script>
 
 <template>

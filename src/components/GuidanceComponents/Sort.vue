@@ -61,7 +61,7 @@ function show() {
       <DownArrow class="mt-2.5"/>
       </div>
       <div class="sub-menu absolute shadow-[4px_3px_3px_rgba(0,0,0,0.25)]" v-if="isOpen" >
-        <div v-for="menu in menuarray" class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
+        <div v-for="menu in menuarray" :key="menu" class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
           <button @click="LastNameInc()" class="ml-2">{{ menu }}</button>
         </div>
       </div>

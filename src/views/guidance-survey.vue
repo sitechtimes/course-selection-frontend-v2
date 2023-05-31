@@ -5,13 +5,14 @@ import generalComponent from '../components/SurveyPageComponents/Reusables/surve
 import checkboxComponent from '../components/SurveyPageComponents/Reusables/surveyCheckbox.vue';
 
 const userStore = useUserStore()
-const surveyStore = useSurveyStore()
 
 const viewedStudent = userStore.data.guidance.students.filter(student => student.osis === window.location.pathname.substring(17))[0]
 
 let currentSurvey = null
 
-currentSurvey = userStore.data.allSurveys.edges.find(x => x.node.grade === viewedStudent.grade).node
+console.log(userStore.data.allSurveys.edges)
+
+currentSurvey = userStore.data.allSurveys.edges.find(x => x.grade === viewedStudent.grade).node
 
 const getChoices = (question) => {
   const classes = viewedStudent.coursesAvailable
