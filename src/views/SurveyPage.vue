@@ -61,7 +61,7 @@ const SplitDate = userStore.data.survey.dueDate.substring(0,10).split("-")
     }
   }
   }
-
+console.log(currentQuestion)
 </script>
 
 <template>
