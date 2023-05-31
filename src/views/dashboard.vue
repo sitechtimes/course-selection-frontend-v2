@@ -3,7 +3,6 @@ import BellIcon from '../components/icons/BellIcon.vue';
 import { useUserStore } from '../stores/user';
 
 const userStore = useUserStore()
-const date = new Date();
 let surveyClose
 
 let meetingTime  
@@ -29,13 +28,6 @@ if (userStore.data.student.meeting != undefined && userStore.data.student.meetin
 const SplitDate = userStore.data.survey.dueDate.substring(0,10).split("-")
 SplitDate.splice(0, 3, SplitDate[1], SplitDate[2], SplitDate[0]);
 surveyClose = SplitDate.join("/")
-  if (SplitDate[2] <= date.getFullYear()) {
-    if (SplitDate[0] <= date.getMonth() + 1) { // Get month starts at 0, not 1
-      if (SplitDate[1] < date.getDate()) {
-        openMeeting = false
-      }
-    }
-  }
 }
 
 </script>
