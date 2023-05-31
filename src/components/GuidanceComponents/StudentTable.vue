@@ -3,16 +3,22 @@ import { ref, computed } from 'vue';
 /* import { students } from '../../mockdata'; */
 import { useUserStore } from '../../stores/user';
 import SearchBar from "./SearchBar.vue"
+import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
 const newstudents = userStore.data.guidance.students;
 const input = ref("")
+const router = useRouter()
+
+async function userClick(student: object) {
+    await userStore.setSurvey(student.osis, userStore.data.allSurveys.edges.find(x => x.node.grade === student.grade).node.questions)
+    router.push(`/guidance/survey/${student.osis}`)
+}
 
 </script>
 
 <template>
     <div class="flex flex-col mt-10 justify-center items-center" id="table">
-        <SearchBar class="" type="text" v-model="input" placeholder="Search Students..." />
         <table class="w-[100rem] border-2 border-black table-auto text-left">
             <thead class="fill-primary-g border-2 border-black">
                 <tr class="bg-primary-g">
@@ -24,8 +30,8 @@ const input = ref("")
                     <th class="p-4">Details</th>
                 </tr>
             </thead>
-            <tbody v-for="student in newstudents" class="border-2 border-black">
-                <tr>
+            <tbody v-for="student in newstudents" :key="student" class="border-2 border-black">
+                <tr @click="userClick(student)"> 
                     <td class="p-4">{{ student.lastname }}, {{ student.user.firstName }}</td>
                     <td class="p-4">{{ student.grade }}</td>
                     <td class="p-4">{{ student.osis }}</td>
@@ -39,7 +45,6 @@ const input = ref("")
                     <td class="p-4" v-else-if="student.progress === 'Complete'">
                         <p class="text-[#174616] bg-[#A8D480] w-[8rem] font-semibold text-center p-1 rounded-2xl">{{ student.progress }}</p>
                     </td>
-                    <td class="p-4">View</td>
                 </tr>
             </tbody>
         </table>
