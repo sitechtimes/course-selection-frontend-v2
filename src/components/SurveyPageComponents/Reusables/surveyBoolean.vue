@@ -7,23 +7,21 @@
           <input
             type="radio"
             class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
-            id="Yes"
-            value="Yes"
-            :name="question"
+            :id="question.id + 'Yes'"
+            :value="question.id + 'Yes'"
             v-model="surveyStore.currentResponse[index].answer"
           />
-          <label for="Yes">Yes</label>
+          <label :for="question.id + 'Yes'">Yes</label>
         </div>
         <div class="flex justify-center items-center flex-wrap m-4">
           <input
             type="radio"
             class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
-            id="No"
-            value="No"
-            :name="question"
+            :id="question.id + 'No'"
+            :value="question.id + 'No'"
             v-model="surveyStore.currentResponse[index].answer"
           />
-          <label for="No">No</label>
+          <label :for="question.id + 'No'">No</label>
         </div>
       </div>
       </fieldset>
@@ -44,6 +42,5 @@
 
   watch(() => props.question, (newResponse) => {
     index = surveyStore.currentResponse.findIndex(x => x.id == newResponse.id)
-    console.log(index)
   })
   </script>

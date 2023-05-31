@@ -324,7 +324,7 @@ export const useUserStore = defineStore("user", {
 
       if(this.userType === "student") {
         if(this.data.answeredSurvey === null) {
-          this.startSurvey(osis, survey)
+          await this.startSurvey(osis, survey)
         }
 
         surveyStore.currentSurvey = this.data.answeredSurvey 

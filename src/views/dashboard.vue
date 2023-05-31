@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import BellIcon from "../components/icons/BellIcon.vue";
 import { useUserStore, useSurveyStore } from "../stores/user";
+import { useRouter } from 'vue-router'
 
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
+const router = useRouter()
 
 let annoucement = "Surveys are closing next week on 03/12/2023.";
 
@@ -26,6 +28,11 @@ if (
   date = SplitDate.join("/");
 }
 
+async function setSurvey() {
+  await userStore.setSurvey(userStore.data.student.osis, userStore.data.survey.questions)
+  router.push("/survey")
+}
+
 </script>
 
 <template>
@@ -46,11 +53,9 @@ if (
           </button>
         </RouterLink>
         <!-- check if survey exists, if not create new and set current -->
-        <RouterLink to="/survey">
-          <button @click="userStore.setSurvey(userStore.data.student.osis, userStore.data.survey.questions)" class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
+        <button @click="setSurvey()" class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
             Course Survey
-          </button>
-        </RouterLink>
+        </button>
       </div>
       <div>
         <p v-if="userStore.data.student.meeting != undefined || userStore.data.student.meeting != null">You have a scheduled meeting with your guidance councelor on {{ date }} at {{ time }}.</p>
