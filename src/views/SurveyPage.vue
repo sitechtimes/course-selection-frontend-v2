@@ -12,8 +12,8 @@ let currentQuestion: surveyQuestion = reactive(userStore.data.survey.questions[c
 let choices: Ref<courses | undefined> = ref() 
 const min: Ref<boolean> = ref(true)
 const max: Ref<boolean> = ref(false)
-let date = new Date();
-let openMeeting = false
+const date = new Date();
+let openMeeting = true
 let usedSurvey = []
 
 const previousQuestion = () => {
@@ -45,15 +45,17 @@ const getChoices = () => {
     choices = classes.filter(x => x.subject === currentQuestion.questionType)
 }
 
-
 if (userStore.data.survey.dueDate != undefined && userStore.data.survey.dueDate != null) {
-let SplitDate = userStore.data.survey.dueDate.substring(0,10).split("-")
-SplitDate = SplitDate[0] + SplitDate[1] + SplitDate[2]
-date = [date.getFullYear(), date.getMonth()+1, date.getDate()]
-date = date[0].toString() + date[1].toString() + date[2].toString()
-if (SplitDate > date) {
-  openMeeting = true
-}}
+const SplitDate = userStore.data.survey.dueDate.substring(0,10).split("-")
+SplitDate.splice(0, 3, SplitDate[1], SplitDate[2], SplitDate[0]);
+if (SplitDate[2] <= date.getFullYear()) {
+  if (SplitDate[0] <= date.getMonth() + 1) { // Get month starts at 0, not 1
+    if (SplitDate[1] < date.getDate()) {
+        openMeeting = false
+      }
+    }
+  }
+}
 
 </script>
 
