@@ -1,5 +1,5 @@
 <template>
-  <survey-draggable :courses="ncourses" :numbered="false"></survey-draggable>
+  <survey-draggable :courses="ncourses" :numbered="true"></survey-draggable>
 </template>
 
 <script setup lang="ts">

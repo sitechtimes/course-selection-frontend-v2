@@ -2,7 +2,9 @@
   <div class="h-screen select-none">
     <div class="mt-48 p-4 flex justify-center text-center text-3xl h-screen">
       <div v-if="numbered" class="flex flex-col mt-2">
-        <div class="my-4" v-for="n in computedHeight" :key="n">{{ n }}.</div>
+        <div class="mt-5 mb-4" v-for="n in computedHeight" :key="n">
+          {{ n }}.
+        </div>
       </div>
       <div class="flex flex-col mt-2 w-1/3">
         <div
@@ -13,7 +15,7 @@
           :key="course.name"
         >
           <div
-            class="bg-[#D6EEFF] p-2 rounded-lg shadow-deepinner text-[#37394F] cursor-grab active:cursor-grabbing font-semibold h-14 course"
+            class="bg-[#D6EEFF] p-2 rounded-lg shadow-lg text-[#37394F] cursor-grab active:cursor-grabbing font-semibold h-14 course"
             draggable="true"
             @dragover.prevent="(e) => hoverBox(e)"
             @dragstart="(e) => (dragElement = e.target)"
