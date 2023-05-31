@@ -15,6 +15,7 @@ function submit(date: String, people: String, time: String) {
   document.getElementById("form").reset();
   let json = JSON.stringify(date, time);
   userStore.changeMeeting("123", date);
+
   console.log(json);
   console.log(time);
 }
@@ -325,10 +326,13 @@ h2 {
 @media only screen and (max-width: 1180px) {
   .createevent {
     width: 70%;
-    height: 30rem;
+    height: 35rem;
     border-radius: 0.8rem;
     margin-top: 3rem;
     border: 1px black solid;
+  }
+  .times {
+    flex-direction: column;
   }
   .space {
     justify-content: center;
@@ -342,7 +346,7 @@ h2 {
     height: 0rem;
   }
   .x {
-    margin-left: 30rem;
+    margin-left: 25rem;
   }
   svg {
     width: 1rem;
@@ -357,16 +361,24 @@ h2 {
     font-size: 1.3rem;
   }
   .item {
-    margin-top: 0.8rem;
+    margin-top: 0rem;
+    margin-bottom: 0.7rem;
   }
 }
 @media only screen and (max-width: 900px) {
+  .item {
+    margin-bottom: 0.2rem;
+  }
   .createevent {
-    height: 35rem;
+    height: 32rem;
   }
   .top {
     margin: 0rem;
     padding: 0rem;
+  }
+  .h2 {
+    margin: 2rem;
+    padding-bottom: 0rem;
   }
   .x {
     margin-left: 20rem;
@@ -376,6 +388,10 @@ h2 {
   }
   .top {
     padding-top: 0;
+  }
+  button {
+    margin-top: 1rem;
+    margin-bottom: 0;
   }
 }
 @media only screen and (max-width: 800px) {
@@ -453,7 +469,7 @@ h2 {
     height: 0rem;
   }
   .x {
-    margin-left: 5rem;
+    margin-left: 4rem;
     width: 0.8rem;
   }
   svg {
@@ -501,10 +517,43 @@ h2 {
   }
 }
 @media only screen and (max-width: 404px) {
+  .h2 {
+    margin-bottom: 0rem;
+    padding: 0;
+  }
+  .createevent {
+    height: 20rem;
+  }
+  #form {
+    margin-top: 0;
+  }
+  svg {
+    width: 0.5rem;
+    margin-left: 0px;
+  }
+  .times {
+    margin: 0rem;
+  }
+  .h2 {
+    margin: 10px;
+  }
   .x {
     margin-left: 0rem;
     width: 0.5rem;
     margin-top: 0.5rem;
+  }
+  .formt {
+    font-size: 15px;
+    margin-left: 10px;
+  }
+  .space {
+    margin-left: 10px;
+  }
+  .item {
+    margin: 0;
+  }
+  label {
+    font-size: 5px;
   }
 }
 </style>
