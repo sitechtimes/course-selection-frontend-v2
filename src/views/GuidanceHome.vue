@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div class="h-screen w-full flex flex-row justify-center items-center">
+  <div class="h-[80vh] w-full flex flex-row justify-center items-center">
     <div id="left" class="w-11/12 flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left lg:w-3/4 max-w-3xl lg:space-y-6 lg:ml-12">
       <h1 id="heading" class="text-4xl font-bold lg:text-5xl">
         Hello!
@@ -12,7 +12,7 @@
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus deleniti doloremque nisi at.
       </h2>
       <div class="flex justify-start items-center space-x-4">
-      <RouterLink to="/guidance-studentlist">
+      <RouterLink to="/guidance/studentlist">
         <button class="bg-other-g w-36 h-12 rounded text-lg font-semibold hover:bg-primary-g">
           View Students
         </button>

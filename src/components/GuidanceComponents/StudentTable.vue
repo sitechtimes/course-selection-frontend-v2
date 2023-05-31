@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue';
 import { useUserStore } from '../../stores/user';
 import SearchBar from "./SearchBar.vue"
+import { useRouter } from 'vue-router'
 
 export default {
   props: {  newstudents: Function },
@@ -32,6 +33,12 @@ export default {
 /* const userStore = useUserStore()
 let newstudents = userStore.data.guidance.students;
 const input = ref("")
+const router = useRouter()
+
+async function userClick(student: object) {
+    await userStore.setSurvey(student.osis, userStore.data.allSurveys.edges.find(x => x.node.grade === student.grade).node.questions)
+    router.push(`/guidance/survey/${student.osis}`)
+}
 
 function students() {
       return newstudents.value.filter((student) => {
@@ -73,7 +80,6 @@ function students() {
                     <td class="p-4" v-else-if="student.progress === 'Complete'">
                         <p class="text-[#174616] bg-[#A8D480] w-[8rem] font-semibold text-center p-1 rounded-2xl">{{ student.progress }}</p>
                     </td>
-                    <td class="p-4">View</td>
                 </tr>
             </tbody>
         </table>

@@ -1,17 +1,28 @@
 <template>
-    <div class="md:text-4xl lg:text-[200%] text-2xl flex  flex-row md:ml-32 items-center justify-center">
-      <fieldset class="field flex w-[100%]">
-      <legend class="flex flex-wrap overflow-visible">{{ question }}</legend>
-      <div class="field flex flex-row">
-        <input type="text">
-      </div>
+    <div class="flex items-center justify-center w-3/4 " >
+      <div class="flex items-center justify-center">
+      <fieldset class="flex items-center justify-start space-y-6">
+        <legend class="text-xl md:text-2xl">{{ question.question }}</legend>
+        <input class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base bg-transparent rounded-md border border-solid border-zinc-400  focus:outline-none focus:ring-0 focus:border-blue-400" type="text" v-model="surveyStore.currentResponse[index].answer">
       </fieldset>
+    </div>
     </div>
   </template>
   
   <script setup lang="ts">
-  defineProps({
-    question: String,
+  const props = defineProps({
+    question: Object,
+    answers: Array,
   });
+
+  import { useSurveyStore } from '../../../stores/user';
+  import { watch } from 'vue';
+
+  const surveyStore = useSurveyStore()
+  let index: number = surveyStore.currentResponse.findIndex(x => x.id == props.question.id)
+
+  watch(() => props.question, (newResponse) => {
+    index = surveyStore.currentResponse.findIndex(x => x.id == newResponse.id)
+    console.log(index)
+  })
   </script>
-  

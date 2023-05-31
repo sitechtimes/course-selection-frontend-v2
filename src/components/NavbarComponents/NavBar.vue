@@ -4,32 +4,60 @@ import { RouterLink } from "vue-router";
 import MenuIcon from '../icons/MenuIcon.vue';
 import CloseMenu from "../icons/CloseMenu.vue";
 import MobileNav from "./MobileNav.vue";
-import UserMenu from './UserMenu.vue';
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import router from '../../router';
 
 const userStore = useUserStore();
 let menuOpen = ref(false);
 
-const toggleMenu = () => {
-  menuOpen.value = !menuOpen.value
-};
+function viewingSurvey() {
+    return router.currentRoute.value.path.includes('survey')
+}
+
+const redirect = () => {
+    if (userStore.isLoggedIn === true) {
+        if (userStore.userType === 'student') {
+            router.push('/student/dashboard')
+        } 
+        if (userStore.userType === 'guidance') {
+            router.push('/guidance/studentlist')
+        }
+    } else {
+        return router.push('/')
+    }
+}
+
+// let page = redirect()
 </script>
 
 <template>
     <nav id="navbar" class="absolute w-full top-0 h-24 flex justify-between items-center px-8 md:px-12 lg:px-16 overflow-visible">
-        <RouterLink to="/">
-            <h1 class="text-3xl font-semibold">Course Selection</h1>
-        </RouterLink>
-        <div v-if="userStore.isLoggedIn" class="hidden justify-center items-center space-x-12 md:flex">
+        <div @click="redirect()" class="cursor-pointer">
+            <h1 class="text-3xl font-semibold z-50">Course Selection</h1>
+        </div>
+        <div v-if="userStore.isLoggedIn && userStore.userType === 'student' && viewingSurvey()  === false" class="hidden justify-center items-center space-x-12 md:flex">
             <RouterLink to="/courses">
                 <p class="text-base">Courses</p>
             </RouterLink>
             <RouterLink to="/survey">
-                <p class="text-base">Survey</p>
+                <p @click="userStore.setSurvey(userStore.data.student.osis, userStore.data.survey.questions)" class="text-base">Survey</p>
             </RouterLink>
-            <UserMenu />
+            <RouterLink to="/">
+                <p @click="userStore.$reset" id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>
+            </RouterLink>
         </div>
-        <div v-else class="hidden justify-center items-center space-x-12 md:flex">
+        <div v-if="userStore.isLoggedIn && userStore.userType === 'guidance' && viewingSurvey() === false" class="hidden justify-center items-center space-x-12 md:flex">
+            <RouterLink to="/courses">
+                <p class="text-base">Students</p>
+            </RouterLink>
+            <RouterLink to="/survey">
+                <p class="text-base">Calendar</p>
+            </RouterLink>
+            <RouterLink to="/">
+                <p @click="userStore.$reset" id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>
+            </RouterLink>
+        </div>
+        <div v-if="!userStore.isLoggedIn && viewingSurvey() === false" class="hidden justify-center items-center space-x-12 md:flex">
             <RouterLink to="/courses">
                 <p class="text-base">Courses</p>
             </RouterLink>
@@ -41,7 +69,10 @@ const toggleMenu = () => {
             <MenuIcon @click="toggleMenu" v-if="!menuOpen" />
             <CloseMenu @click="toggleMenu" v-else />
         </div>
-
+        <div v-if="viewingSurvey()" class="flex flex-row w-1/6 justify-between">
+            <p @click="userStore.saveSurvey()" class="text-[#37394F] text-2xl cursor-pointer">Save</p>
+            <p @click="redirect()" class="text-[#37394F] text-2xl cursor-pointer">Exit</p>
+        </div>
     <MobileNav v-if="menuOpen" @e="toggleMenu" />
     </nav>
 </template>
