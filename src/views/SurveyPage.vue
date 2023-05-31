@@ -13,7 +13,7 @@ let choices: Ref<courses | undefined> = ref()
 const min: Ref<boolean> = ref(true)
 const max: Ref<boolean> = ref(false)
 const date = new Date();
-let openMeeting = true
+let openMeeting = false
 let usedSurvey = []
 
 const previousQuestion = () => {
@@ -47,15 +47,20 @@ const getChoices = () => {
 
 if (userStore.data.survey.dueDate != undefined && userStore.data.survey.dueDate != null) {
 const SplitDate = userStore.data.survey.dueDate.substring(0,10).split("-")
-SplitDate.splice(0, 3, SplitDate[1], SplitDate[2], SplitDate[0]);
-if (SplitDate[2] <= date.getFullYear()) {
-  if (SplitDate[0] <= date.getMonth() + 1) { // Get month starts at 0, not 1
-    if (SplitDate[1] < date.getDate()) {
-        openMeeting = false
+  if (Number(SplitDate[0]) > date.getFullYear()) {
+    openMeeting = true
+  }
+  else if (Number(SplitDate[0]) === date.getFullYear()) {
+    if (Number(SplitDate[1]) > date.getMonth() + 1) { // Get month starts at 0, not 1
+      openMeeting = true
+    }
+    else if (Number(SplitDate[1]) === date.getMonth() + 1) {
+      if (Number(SplitDate[2]) > date.getDate()) {
+        openMeeting = true
       }
     }
   }
-}
+  }
 
 </script>
 
