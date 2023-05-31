@@ -8,7 +8,7 @@
             type="radio"
             class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
             :id="question.id + 'Yes'"
-            :value="question.id + 'Yes'"
+            value="Yes"
             v-model="surveyStore.currentResponse[index].answer"
           />
           <label :for="question.id + 'Yes'">Yes</label>
@@ -18,7 +18,7 @@
             type="radio"
             class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
             :id="question.id + 'No'"
-            :value="question.id + 'No'"
+            value="No"
             v-model="surveyStore.currentResponse[index].answer"
           />
           <label :for="question.id + 'No'">No</label>
