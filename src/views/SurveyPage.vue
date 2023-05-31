@@ -47,10 +47,10 @@ const getChoices = () => {
 
 if (userStore.data.survey.dueDate != undefined && userStore.data.survey.dueDate != null) {
 const SplitDate = userStore.data.survey.dueDate.substring(0,10).split("-")
-  if (Number(SplitDate[0]) > date.getFullYear()) {
+  if (Number(SplitDate[0]) > 2024) {
     openMeeting = true
   }
-  else if (Number(SplitDate[0]) === date.getFullYear()) {
+  else if (Number(SplitDate[0]) === 2024) {
     if (Number(SplitDate[1]) > date.getMonth() + 1) { // Get month starts at 0, not 1
       openMeeting = true
     }
@@ -61,7 +61,6 @@ const SplitDate = userStore.data.survey.dueDate.substring(0,10).split("-")
     }
   }
   }
-console.log(currentQuestion)
 </script>
 
 <template>
