@@ -15,8 +15,6 @@ async function userClick(student: object) {
     router.push(`/guidance/survey/${student.osis}`)
 }
 
-console.log(userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === "123").node.status)
-
 newstudents.forEach(y => {
     const ok = userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === y.osis)
     console.log(ok, y.osis)

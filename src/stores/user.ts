@@ -278,6 +278,7 @@ export const useUserStore = defineStore("user", {
                       id
                       osis
                       answers
+                      status
                   }
               }
           }`,
