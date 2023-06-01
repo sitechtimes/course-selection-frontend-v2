@@ -28,11 +28,6 @@ if (
   date = SplitDate.join("/");
 }
 
-async function setSurvey() {
-  await userStore.setSurvey(userStore.data.student.osis, userStore.data.survey.questions)
-  router.push("/survey")
-}
-
 </script>
 
 <template>
@@ -53,9 +48,11 @@ async function setSurvey() {
           </button>
         </RouterLink>
         <!-- check if survey exists, if not create new and set current -->
-        <button @click="setSurvey()" class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
+        <RouterLink to="/survey">
+          <button class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
             Course Survey
-        </button>
+          </button>
+        </RouterLink>
       </div>
       <div>
         <p v-if="userStore.data.student.meeting != undefined || userStore.data.student.meeting != null">You have a scheduled meeting with your guidance councelor on {{ date }} at {{ time }}.</p>

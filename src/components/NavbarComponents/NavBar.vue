@@ -27,7 +27,6 @@ const redirect = () => {
     }
 }
 
-// let page = redirect()
 </script>
 
 <template>
@@ -40,7 +39,7 @@ const redirect = () => {
                 <p class="text-base">Courses</p>
             </RouterLink>
             <RouterLink to="/survey">
-                <p @click="userStore.setSurvey(userStore.data.student.osis, userStore.data.survey.questions)" class="text-base">Survey</p>
+                <p class="text-base">Survey</p>
             </RouterLink>
             <RouterLink to="/">
                 <p @click="userStore.$reset" id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>

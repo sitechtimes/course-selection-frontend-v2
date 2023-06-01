@@ -2,15 +2,20 @@
 import checkboxComponent from '../components/SurveyPageComponents/Reusables/surveyCheckbox.vue';
 import booleanComponent from '../components/SurveyPageComponents/Reusables/surveyBoolean.vue'
 import generalComponent from '../components/SurveyPageComponents/Reusables/surveyGeneral.vue'
-import { ref, reactive, Ref } from 'vue';
+import { ref, reactive, Ref, onBeforeMount } from 'vue';
 import { useUserStore, useSurveyStore } from "../stores/user";
 import { surveyQuestion, courses, surveyAnswer } from '../types/interface';
 const userStore = useUserStore();
+const surveyStore = useSurveyStore();
 
 const currentIndex: Ref<number> = ref(0)
 let currentQuestion: surveyQuestion = reactive(userStore.data.survey.questions[currentIndex.value])
 const min: Ref<boolean> = ref(true)
 const max: Ref<boolean> = ref(false)
+
+onBeforeMount(() => {
+  userStore.setSurvey(userStore.data.student.osis, userStore.data.survey.questions)
+})
 
 const previousQuestion = () => {  
   currentIndex.value--
@@ -41,7 +46,8 @@ const getChoices = () => {
 
 <template>
   <div class="h-screen flex flex-col justify-center items-center space-y-8">
-    <div class="w-11/12 md:w-4/5 lg:w-3/4 flex flex-col justify-center items-center min-h-[20rem] space-y-8 mb-10">
+    <p v-if="surveyStore.loading">Setting things up...</p>
+    <div v-else class="w-11/12 md:w-4/5 lg:w-3/4 flex flex-col justify-center items-center min-h-[20rem] space-y-8 mb-10">
       <h1 class="text-4xl font-semibold">{{ userStore.data.survey.grade }} Year Survey</h1>
       <generalComponent v-if="currentQuestion.questionType === 'GENERAL'" :question="currentQuestion" :answers="currentAnswer"></generalComponent>
       <booleanComponent v-else-if="currentQuestion.questionType === 'BOOLEAN'" :question="currentQuestion" :answers="currentAnswer"></booleanComponent>
