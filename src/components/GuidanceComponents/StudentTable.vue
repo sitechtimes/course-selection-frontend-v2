@@ -15,6 +15,13 @@ async function userClick(student: object) {
     router.push(`/guidance/survey/${student.osis}`)
 }
 
+console.log(userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === "123").node.status)
+
+newstudents.forEach(y => {
+    const ok = userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === y.osis)
+    console.log(ok, y.osis)
+});
+
 </script>
 
 <template>
@@ -32,19 +39,24 @@ async function userClick(student: object) {
             </thead>
             <tbody v-for="student in newstudents" :key="student" class="border-2 border-black">
                 <tr @click="userClick(student)"> 
-                    <td class="p-4">{{ student.lastname }}, {{ student.user.firstName }}</td>
-                    <td class="p-4">{{ student.grade }}</td>
+                    <td class="p-4">{{ student.user.lastName }}, {{ student.user.firstName }}</td>
+
+                    <td class="p-4" v-if="student.grade === 'SOPHOMORE'">9</td>
+                    <td class="p-4" v-if="student.grade === 'JUNIOR'">10</td>
+                    <td class="p-4" v-if="student.grade === 'SENIOR'">11</td>
+
                     <td class="p-4">{{ student.osis }}</td>
-                    <td class="p-4">{{ student.email }}</td>
-                    <td class="p-4" v-if="student.progress === 'Not Started'">
-                        <p class="text-[#461616] bg-[#EA9F9F] w-[8rem] font-semibold text-center p-1 rounded-2xl">{{ student.progress }}</p>
+                    <td class="p-4">{{ student.user.email }}</td>
+                    <td class="p-4" v-if="userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === student.osis) === undefined">
+                        <p class="text-[#461616] bg-[#EA9F9F] w-[8rem] font-semibold text-center p-1 rounded-2xl">Not Started</p>
                     </td>
-                    <td class="p-4" v-else-if="student.progress === 'In Progress'">
-                        <p class="text-[#461616] bg-[#F9D477] w-[8rem] font-semibold text-center p-1 rounded-2xl">{{ student.progress }}</p>
+                    <td class="p-4" v-else-if="userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === student.osis).node.status === 'INCOMPLETE'">
+                        <p class="text-[#461616] bg-[#F9D477] w-[8rem] font-semibold text-center p-1 rounded-2xl">In Progress</p>
                     </td>
-                    <td class="p-4" v-else-if="student.progress === 'Complete'">
-                        <p class="text-[#174616] bg-[#A8D480] w-[8rem] font-semibold text-center p-1 rounded-2xl">{{ student.progress }}</p>
+                    <td class="p-4" v-else-if="userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === student.osis).node.status === 'COMPLETE'">
+                        <p class="text-[#174616] bg-[#A8D480] w-[8rem] font-semibold text-center p-1 rounded-2xl">Completed</p>
                     </td>
+                    <td>View Survey</td>
                 </tr>
             </tbody>
         </table>

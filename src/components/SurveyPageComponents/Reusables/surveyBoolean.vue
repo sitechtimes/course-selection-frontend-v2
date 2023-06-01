@@ -45,7 +45,7 @@
       const questionAnswer = {
           id: props.question.id,
           question: props.question.question,
-          answer: []
+          answer: ""
       }
       surveyStore.currentResponse.push(questionAnswer)
       

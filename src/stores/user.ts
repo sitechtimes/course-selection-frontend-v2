@@ -76,6 +76,7 @@ export const useUserStore = defineStore("user", {
                                     node{
                                         osis 
                                         answers
+                                        status
                                     }
                                 }
                             }                       
@@ -135,6 +136,7 @@ export const useUserStore = defineStore("user", {
                         answeredSurvey{
                             osis
                             answers
+                            status
                         }
                         
                         }`,
