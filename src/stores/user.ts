@@ -266,24 +266,12 @@ export const useUserStore = defineStore("user", {
         });
     },
     async startSurvey(osis: string, survey: Array<object>) {
-      let newSurvey: Array<object> = []
-      survey.forEach((question) => {
-        const questionAnswer = {
-          id: question.id,
-          question: question.question,
-          answer: []
-        }
-        newSurvey.push(questionAnswer)
-      })
-
-      const jsonString = JSON.stringify(newSurvey);
-
       await axios
         .post(
           "https://api.siths.dev/graphql/",
           {
-            query: `mutation updateSurvey($osis: String, $answers: JSONString) {
-              newSurvey(osis: $osis, answers: $answers) {
+            query: `mutation updateSurvey($osis: String) {
+              newSurvey(osis: $osis, answers: "[]") {
                   survey {
                       id
                       osis
@@ -292,8 +280,7 @@ export const useUserStore = defineStore("user", {
               }
           }`,
           variables: {
-            osis: osis,
-            answers: jsonString,
+            osis: osis
           },
           },
           {
@@ -306,39 +293,41 @@ export const useUserStore = defineStore("user", {
         .then((res) => {
           if(this.userType === "student") {
             this.data.answeredSurvey = res.data.data.newSurvey.survey;
-            console.log(this.data.answeredSurvey);
           } else if(this.userType === "guidance") {
             const newStudentSurvey = {
               node: res.data.data.newSurvey.survey
             }
             this.data.allAnsweredSurveys.edges.push(newStudentSurvey)
-            console.log("??")
           } else {
             console.log("not logged in??")
           }
-          // console.log(res)
         });
     },
     async setSurvey(osis: string, survey: Array<object>) {
       const surveyStore = useSurveyStore()
+      surveyStore.loading = true
 
       if(this.userType === "student") {
+
         if(this.data.answeredSurvey === null) {
-          this.startSurvey(osis, survey)
+          await this.startSurvey(osis, survey)
         }
 
         surveyStore.currentSurvey = this.data.answeredSurvey 
         surveyStore.currentResponse = JSON.parse(this.data.answeredSurvey.answers)
+        
+        surveyStore.loading = false
       } else if(this.userType === "guidance") {
         let studentIndex = this.data.allAnsweredSurveys.edges.findIndex(x => x.node.osis === osis)
 
         if(studentIndex < 0) {
           await this.startSurvey(osis, survey)
           studentIndex = this.data.allAnsweredSurveys.edges.findIndex(x => x.node.osis === osis)
-          console.log(studentIndex)
         } 
         surveyStore.currentSurvey = this.data.allAnsweredSurveys.edges[studentIndex].node
         surveyStore.currentResponse = JSON.parse(surveyStore.currentSurvey.answers)
+
+        surveyStore.loading = false
       } else {
         console.log("not logged in??")
       }
@@ -352,6 +341,7 @@ export const useSurveyStore = defineStore("survey", {
     currentSurvey: [],
     currentResponse: [],
     currentQuestion: [],
+    loading: true,
   }),
   getters: {
     //

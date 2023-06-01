@@ -16,13 +16,25 @@
   });
 
   import { useSurveyStore } from '../../../stores/user';
-  import { watch } from 'vue';
+  import { watch, onBeforeMount } from 'vue';
 
   const surveyStore = useSurveyStore()
   let index: number = surveyStore.currentResponse.findIndex(x => x.id == props.question.id)
 
+  onBeforeMount(() => {
+    if(index < 0) {
+      const questionAnswer = {
+          id: props.question.id,
+          question: props.question.question,
+          answer: []
+      }
+      surveyStore.currentResponse.push(questionAnswer)
+
+      index = surveyStore.currentResponse.findIndex(x => x.id == props.question.id)
+    }
+  })
+
   watch(() => props.question, (newResponse) => {
     index = surveyStore.currentResponse.findIndex(x => x.id == newResponse.id)
-    console.log(index)
   })
   </script>

@@ -27,7 +27,8 @@ const getChoices = (question) => {
       <h2 v-if="viewedStudent.grade === 'JUNIOR'">Grade : 10</h2>
       <h2 v-if="viewedStudent.grade === 'SENIOR'">Grade : 11</h2>
     </div>
-    <div v-for="question in currentSurvey.questions" :key="question" class="flex justify-center">
+    <p v-if="surveyStore.loading">Setting things up...</p>
+    <div v-else v-for="question in currentSurvey.questions" :key="question" class="flex justify-center">
       <booleanComponent class="mb-6 " v-if="question.questionType === 'BOOLEAN'" :question="question" ></booleanComponent>
       <generalComponent class="mb-6" v-else-if="question.questionType === 'GENERAL'" :question="question" ></generalComponent>
       <checkboxComponent v-else :question="question" :choices="getChoices(question)"></checkboxComponent>

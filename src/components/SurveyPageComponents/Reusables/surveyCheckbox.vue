@@ -11,8 +11,8 @@
             type="checkbox"
             class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
             :id="choice.courseCode"
-            :value="choice.courseCode"
-            v-model="surveyStore.currentResponse[index].answer"
+            :value="choice.name"
+            v-model="surveyStore.currentResponse[index].answer[0].chosenClasses"
           />
           <label :for="choice.courseCode" class="text-lg md:text-xl ml-4">{{ choice.name }}</label>
         </div>
@@ -48,13 +48,26 @@
   });
 
   import { useSurveyStore } from '../../../stores/user';
-  import { watch } from 'vue';
+  import { watch, onBeforeMount } from 'vue';
 
   const surveyStore = useSurveyStore()
   let index: number = surveyStore.currentResponse.findIndex(x => x.id == props.question.id)
 
+  onBeforeMount(() => {
+    if(index < 0) {
+      const questionAnswer = {
+          id: props.question.id,
+          question: props.question.question,
+          answer: [{chosenClasses: []},{classPreference: []}]
+      }
+      surveyStore.currentResponse.push(questionAnswer)
+      
+      index = surveyStore.currentResponse.findIndex(x => x.id == props.question.id)
+    }
+  })
+
+
   watch(() => props.question, (newResponse) => {
     index = surveyStore.currentResponse.findIndex(x => x.id == newResponse.id)
-    console.log(index)
   })
 </script>  
