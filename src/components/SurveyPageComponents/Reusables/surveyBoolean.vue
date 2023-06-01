@@ -29,16 +29,29 @@
   </template>
   
   <script setup lang="ts">
-  import { watch } from 'vue';
   const props = defineProps({
     question: Object,
     answers: Array,
   });
 
   import { useSurveyStore } from '../../../stores/user';
+  import { watch, onBeforeMount } from 'vue';
 
   const surveyStore = useSurveyStore()
   let index: number = surveyStore.currentResponse.findIndex(x => x.id == props.question.id)
+
+  onBeforeMount(() => {
+    if(index < 0) {
+      const questionAnswer = {
+          id: props.question.id,
+          question: props.question.question,
+          answer: []
+      }
+      surveyStore.currentResponse.push(questionAnswer)
+      
+      index = surveyStore.currentResponse.findIndex(x => x.id == props.question.id)
+    }
+  })
 
   watch(() => props.question, (newResponse) => {
     index = surveyStore.currentResponse.findIndex(x => x.id == newResponse.id)

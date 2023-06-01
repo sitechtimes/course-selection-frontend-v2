@@ -266,24 +266,12 @@ export const useUserStore = defineStore("user", {
         });
     },
     async startSurvey(osis: string, survey: Array<object>) {
-      let newSurvey: Array<object> = []
-      survey.forEach((question) => {
-        const questionAnswer = {
-          id: question.id,
-          question: question.question,
-          answer: []
-        }
-        newSurvey.push(questionAnswer)
-      })
-
-      const jsonString = JSON.stringify(newSurvey);
-
       await axios
         .post(
           "https://api.siths.dev/graphql/",
           {
-            query: `mutation updateSurvey($osis: String, $answers: JSONString) {
-              newSurvey(osis: $osis, answers: $answers) {
+            query: `mutation updateSurvey($osis: String) {
+              newSurvey(osis: $osis, answers: "[]") {
                   survey {
                       id
                       osis
@@ -292,8 +280,7 @@ export const useUserStore = defineStore("user", {
               }
           }`,
           variables: {
-            osis: osis,
-            answers: jsonString,
+            osis: osis
           },
           },
           {

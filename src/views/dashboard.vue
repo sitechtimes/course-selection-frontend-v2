@@ -27,7 +27,6 @@ if (
   SplitDate.splice(0, 3, SplitDate[1], SplitDate[2], SplitDate[0]);
   date = SplitDate.join("/");
 }
-
 </script>
 
 <template>

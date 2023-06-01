@@ -47,27 +47,27 @@
     answers: Array,
   });
 
-  import { onBeforeMount } from 'vue';
-
-  onBeforeMount(() => {
-    if(surveyStore.currentResponse[index].answer.length === 0) {
-      surveyStore.currentResponse[index].answer[0] = {
-        chosenClasses: []
-      }
-      surveyStore.currentResponse[index].answer[1] = {
-        classPreference: []
-      }
-    }
-  })
-
   import { useSurveyStore } from '../../../stores/user';
-  import { watch } from 'vue';
+  import { watch, onBeforeMount } from 'vue';
 
   const surveyStore = useSurveyStore()
   let index: number = surveyStore.currentResponse.findIndex(x => x.id == props.question.id)
 
+  onBeforeMount(() => {
+    if(index < 0) {
+      const questionAnswer = {
+          id: props.question.id,
+          question: props.question.question,
+          answer: [{chosenClasses: []},{classPreference: []}]
+      }
+      surveyStore.currentResponse.push(questionAnswer)
+      
+      index = surveyStore.currentResponse.findIndex(x => x.id == props.question.id)
+    }
+  })
+
+
   watch(() => props.question, (newResponse) => {
     index = surveyStore.currentResponse.findIndex(x => x.id == newResponse.id)
-    console.log(index)
   })
 </script>  
