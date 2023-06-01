@@ -5,9 +5,11 @@ import generalComponent from '../components/SurveyPageComponents/Reusables/surve
 import checkboxComponent from '../components/SurveyPageComponents/Reusables/surveyCheckbox.vue';
 import { surveyQuestion, surveyAnswer } from '../types/interface';
 import { watch, ref, Ref } from 'vue';
+import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
 const surveyStore = useSurveyStore()
+const router = useRouter()
 
 const message: Ref<string> = ref("Once you submit, you will still be able to make changes to your survey. However, please do so before the due date.")
 // let error: Array<string> = []
@@ -32,6 +34,7 @@ const checkAnswers = () => {
   })
   if(check.length === 0) {
     userStore.saveSurvey()
+    router.push('/student/dashboard')
   } else {
     message.value = "Please fill out all questions before submitting."
   }
