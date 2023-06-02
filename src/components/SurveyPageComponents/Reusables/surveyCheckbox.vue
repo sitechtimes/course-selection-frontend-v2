@@ -20,6 +20,7 @@
       </fieldset>
     </div>
     </div>
+    <surveyDraggable :courses="surveyStore.currentResponse[index].answer[0].chosenClasses" :numbered="true" :key="surveyStore.currentResponse[index].answer[0].chosenClasses"></surveyDraggable>
         <div class="border-black border-[0.5px] border-solid rounded-xl lg:w-[35%] w-[90%] lg:ml-28 lg:h-[50-vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll">
           <!-- <div class="flex justify-center mt-[1%]">
             <p class="text-[150%] text-black">Drag course(s) into order of preference:</p>
@@ -34,7 +35,8 @@
               Confirm
             </button>
           </div> -->
-          <p>hmm {{ surveyStore.currentResponse[index].answer }}</p>
+          <!-- <p>hmm {{ surveyStore.currentResponse[index].answer }}</p> -->
+      
         </div>
       </div>
     </section>
@@ -47,6 +49,7 @@
     answers: Array,
   });
 
+  import surveyDraggable from './surveyDraggable.vue';
   import { useSurveyStore } from '../../../stores/user';
   import { watch, onBeforeMount } from 'vue';
 

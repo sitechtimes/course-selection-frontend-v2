@@ -12,7 +12,7 @@
           @dragleave.prevent="(e) => e.target.classList.remove('bg-gray-100')"
           class="m-2 rounded-lg h-14 shadow-deepinner placeholder"
           v-for="course in ref_courses"
-          :key="course.name"
+          :key="course"
         >
           <div
             class="bg-[#D6EEFF] p-2 rounded-lg shadow-lg text-[#37394F] cursor-grab active:cursor-grabbing font-semibold h-14 course"
@@ -21,7 +21,7 @@
             @dragstart="(e) => (dragElement = e.target)"
             @drop.prevent="(e) => hoverBox(e)"
           >
-            {{ course.name }}
+            {{ course }}
           </div>
         </div>
       </div>
@@ -37,11 +37,13 @@ const props = defineProps({
   numbered: Boolean,
 });
 
+let dragElement: HTMLElement;
+
 const computedHeight = computed(() => {
   return props.courses.length;
 });
+
 const ref_courses = ref(props.courses);
-let dragElement: HTMLElement;
 
 const hoverBox = function (e) {
   let dragParent = dragElement.parentElement;
