@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import BellIcon from "../components/icons/BellIcon.vue";
 import { useUserStore, useSurveyStore } from "../stores/user";
-import { useRouter } from 'vue-router'
 
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
-const router = useRouter()
 
 let annoucement = "Surveys are closing next week on 03/12/2023.";
 

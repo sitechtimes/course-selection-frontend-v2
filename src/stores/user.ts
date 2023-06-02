@@ -12,6 +12,7 @@ export const useUserStore = defineStore("user", {
     isLoggedIn: false,
     access_token: "",
     refresh_token: "",
+    loading: false,
   }),
   getters: {
     // getStudents(name?: string): object[] | object | undefined {
@@ -92,6 +93,7 @@ export const useUserStore = defineStore("user", {
           )
           .then((res) => {
             this.data = res.data.data;
+            this.loading = false
             console.log(res.data);
           });
       } else {
@@ -150,6 +152,7 @@ export const useUserStore = defineStore("user", {
           )
           .then((res: any) => {
             this.data = res.data.data; // data needs to be filtered properly
+            this.loading = false
             console.log(this.data, this.access_token);
           });
       }
@@ -183,6 +186,7 @@ export const useUserStore = defineStore("user", {
         });
     },
     async GoogleLogin(res: any) {
+      this.loading = true
       await axios
         .post("https://api.siths.dev/social-login/google/", {
           access_token: res.access_token,
@@ -344,7 +348,7 @@ export const useSurveyStore = defineStore("survey", {
     currentSurvey: [],
     currentResponse: [],
     currentQuestion: [],
-    loading: true,
+    loading: false,
   }),
   getters: {
     //
