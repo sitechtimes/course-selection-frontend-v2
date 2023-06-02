@@ -27,11 +27,10 @@ const redirect = () => {
     }
 }
 
-// let page = redirect()
 </script>
 
 <template>
-    <nav id="navbar" class="absolute w-full top-0 h-24 flex justify-between items-center px-8 md:px-12 lg:px-16 overflow-visible">
+    <nav id="navbar" class="w-full top-0 h-24 flex justify-between items-center px-8 md:px-12 lg:px-16 overflow-visible">
         <div @click="redirect()" class="cursor-pointer">
             <h1 class="text-3xl font-semibold z-50">Course Selection</h1>
         </div>
@@ -40,7 +39,7 @@ const redirect = () => {
                 <p class="text-base">Courses</p>
             </RouterLink>
             <RouterLink to="/survey">
-                <p @click="userStore.setSurvey(userStore.data.student.osis, userStore.data.survey.questions)" class="text-base">Survey</p>
+                <p class="text-base">Survey</p>
             </RouterLink>
             <RouterLink to="/">
                 <p @click="userStore.$reset" id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>

@@ -27,6 +27,7 @@ export interface user {
     isLoggedIn: boolean
     access_token: string
     refresh_token: string
+    loading: boolean
 }
 
 export interface surveyQuestion {
