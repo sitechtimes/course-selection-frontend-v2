@@ -73,4 +73,37 @@
   watch(() => props.question, (newResponse) => {
     index = surveyStore.currentResponse.findIndex(x => x.id == newResponse.id)
   })
+
+  watch(() => surveyStore.currentResponse[index].answer[0].chosenClasses, (newResponse, oldResponse) => {
+    const preference = surveyStore.currentResponse[index].answer[1].classPreference
+
+    if(newResponse.length > oldResponse.length) {
+      const spreaded = [...newResponse, ...oldResponse]
+      const newClass = spreaded.filter(x => {
+        return !(newResponse.includes(x) && oldResponse.includes(x))
+      })
+      console.log(newClass)
+      
+        const rank = newResponse.length
+        const rankObject = {
+          rank: rank,
+          name: newClass
+        }
+        surveyStore.currentResponse[index].answer[1].classPreference.push(rankObject)
+        console.log('add')
+        console.log(surveyStore.currentResponse[index].answer[1].classPreference)
+      
+    } else if(newResponse.length < oldResponse.length) {
+      const spreaded = [...newResponse, ...oldResponse]
+      const newClass = spreaded.filter(x => {
+        return !(newResponse.includes(x) && oldResponse.includes(x))
+      })
+      console.log(newClass)
+    } else {
+
+    }
+
+    console.log(preference)
+    surveyStore.currentResponse[index].answer[1].classPreference = preference
+  })
 </script>  
