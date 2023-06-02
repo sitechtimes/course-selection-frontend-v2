@@ -1,8 +1,8 @@
 <template>
-    <div class="flex items-center justify-center">
-      <fieldset class="flex items-center justify-start" ref="form">
+  <div class="flex items-center justify-center">
+    <fieldset class="flex items-center justify-start" ref="form">
       <legend class="text-xl md:text-2xl">{{ question.question }}</legend>
-      <div class=" flex flex-row">
+      <div class="flex flex-row">
         <div class="flex justify-center items-center flex-wrap m-4">
           <input
             type="radio"
@@ -24,36 +24,45 @@
           <label :for="question.id + 'No'">No</label>
         </div>
       </div>
-      </fieldset>
-    </div>
-  </template>
-  
-  <script setup lang="ts">
-  const props = defineProps({
-    question: Object,
-    answers: Array,
-  });
+    </fieldset>
+  </div>
+</template>
 
-  import { useSurveyStore } from '../../../stores/user';
-  import { watch, onBeforeMount } from 'vue';
+<script setup lang="ts">
+const props = defineProps({
+  question: Object,
+  answers: Array,
+});
 
-  const surveyStore = useSurveyStore()
-  let index: number = surveyStore.currentResponse.findIndex(x => x.id == props.question.id)
+import { useSurveyStore } from "../../../stores/survey";
+import { watch, onBeforeMount } from "vue";
 
-  onBeforeMount(() => {
-    if(index < 0) {
-      const questionAnswer = {
-          id: props.question.id,
-          question: props.question.question,
-          answer: ""
-      }
-      surveyStore.currentResponse.push(questionAnswer)
-      
-      index = surveyStore.currentResponse.findIndex(x => x.id == props.question.id)
-    }
-  })
+const surveyStore = useSurveyStore();
+let index: number = surveyStore.currentResponse.findIndex(
+  (x) => x.id == props.question.id
+);
 
-  watch(() => props.question, (newResponse) => {
-    index = surveyStore.currentResponse.findIndex(x => x.id == newResponse.id)
-  })
-  </script>
+onBeforeMount(() => {
+  if (index < 0) {
+    const questionAnswer = {
+      id: props.question.id,
+      question: props.question.question,
+      answer: "",
+    };
+    surveyStore.currentResponse.push(questionAnswer);
+
+    index = surveyStore.currentResponse.findIndex(
+      (x) => x.id == props.question.id
+    );
+  }
+});
+
+watch(
+  () => props.question,
+  (newResponse) => {
+    index = surveyStore.currentResponse.findIndex(
+      (x) => x.id == newResponse.id
+    );
+  }
+);
+</script>

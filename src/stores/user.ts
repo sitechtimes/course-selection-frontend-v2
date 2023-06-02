@@ -93,7 +93,7 @@ export const useUserStore = defineStore("user", {
           )
           .then((res) => {
             this.data = res.data.data;
-            this.loading = false
+            this.loading = false;
             console.log(res.data);
           });
       } else {
@@ -152,7 +152,7 @@ export const useUserStore = defineStore("user", {
           )
           .then((res: any) => {
             this.data = res.data.data; // data needs to be filtered properly
-            this.loading = false
+            this.loading = false;
             console.log(this.data, this.access_token);
           });
       }
@@ -186,7 +186,7 @@ export const useUserStore = defineStore("user", {
         });
     },
     async GoogleLogin(res: any) {
-      this.loading = true
+      this.loading = true;
       await axios
         .post("https://api.siths.dev/social-login/google/", {
           access_token: res.access_token,
@@ -229,11 +229,11 @@ export const useUserStore = defineStore("user", {
         });
     },
     async saveSurvey() {
-      const surveyStore = useSurveyStore()
-      const osis = surveyStore.currentSurvey.osis
-      const answers = surveyStore.currentResponse
+      const surveyStore = useSurveyStore();
+      const osis = surveyStore.currentSurvey.osis;
+      const answers = surveyStore.currentResponse;
       const jsonString = JSON.stringify(answers);
-      
+
       await axios
         .post(
           "https://api.siths.dev/graphql/",
@@ -260,14 +260,17 @@ export const useUserStore = defineStore("user", {
         )
         .then((res) => {
           console.log(res);
-          if(this.userType === "student") {
-            this.data.answeredSurvey.answers = jsonString
-          } else if(this.userType === "guidance") {
+          if (this.userType === "student") {
+            this.data.answeredSurvey.answers = jsonString;
+          } else if (this.userType === "guidance") {
             // needs testing
-            const studentIndex = this.data.allAnsweredSurveys.edges.findIndex(x => x.node.osis == surveyStore.currentSurvey.osis)
-            this.data.allAnsweredSurveys.edges[studentIndex].node.answers = jsonString
+            const studentIndex = this.data.allAnsweredSurveys.edges.findIndex(
+              (x) => x.node.osis == surveyStore.currentSurvey.osis
+            );
+            this.data.allAnsweredSurveys.edges[studentIndex].node.answers =
+              jsonString;
           } else {
-            console.log("not logged in??")
+            console.log("not logged in??");
           }
         });
     },
@@ -286,9 +289,9 @@ export const useUserStore = defineStore("user", {
                   }
               }
           }`,
-          variables: {
-            osis: osis
-          },
+            variables: {
+              osis: osis,
+            },
           },
           {
             headers: {
@@ -298,63 +301,55 @@ export const useUserStore = defineStore("user", {
           }
         )
         .then((res) => {
-          if(this.userType === "student") {
+          if (this.userType === "student") {
             this.data.answeredSurvey = res.data.data.newSurvey.survey;
-          } else if(this.userType === "guidance") {
+          } else if (this.userType === "guidance") {
             const newStudentSurvey = {
-              node: res.data.data.newSurvey.survey
-            }
-            this.data.allAnsweredSurveys.edges.push(newStudentSurvey)
+              node: res.data.data.newSurvey.survey,
+            };
+            this.data.allAnsweredSurveys.edges.push(newStudentSurvey);
           } else {
-            console.log("not logged in??")
+            console.log("not logged in??");
           }
         });
     },
     async setSurvey(osis: string, survey: Array<object>) {
-      const surveyStore = useSurveyStore()
-      surveyStore.loading = true
+      const surveyStore = useSurveyStore();
+      surveyStore.loading = true;
 
-      if(this.userType === "student") {
-
-        if(this.data.answeredSurvey === null) {
-          await this.startSurvey(osis, survey)
+      if (this.userType === "student") {
+        if (this.data.answeredSurvey === null) {
+          await this.startSurvey(osis, survey);
         }
 
-        surveyStore.currentSurvey = this.data.answeredSurvey 
-        surveyStore.currentResponse = JSON.parse(this.data.answeredSurvey.answers)
-        
-        surveyStore.loading = false
-      } else if(this.userType === "guidance") {
-        let studentIndex = this.data.allAnsweredSurveys.edges.findIndex(x => x.node.osis === osis)
+        surveyStore.currentSurvey = this.data.answeredSurvey;
+        surveyStore.currentResponse = JSON.parse(
+          this.data.answeredSurvey.answers
+        );
 
-        if(studentIndex < 0) {
-          await this.startSurvey(osis, survey)
-          studentIndex = this.data.allAnsweredSurveys.edges.findIndex(x => x.node.osis === osis)
-        } 
-        surveyStore.currentSurvey = this.data.allAnsweredSurveys.edges[studentIndex].node
-        surveyStore.currentResponse = JSON.parse(surveyStore.currentSurvey.answers)
+        surveyStore.loading = false;
+      } else if (this.userType === "guidance") {
+        let studentIndex = this.data.allAnsweredSurveys.edges.findIndex(
+          (x) => x.node.osis === osis
+        );
 
-        surveyStore.loading = false
+        if (studentIndex < 0) {
+          await this.startSurvey(osis, survey);
+          studentIndex = this.data.allAnsweredSurveys.edges.findIndex(
+            (x) => x.node.osis === osis
+          );
+        }
+        surveyStore.currentSurvey =
+          this.data.allAnsweredSurveys.edges[studentIndex].node;
+        surveyStore.currentResponse = JSON.parse(
+          surveyStore.currentSurvey.answers
+        );
+
+        surveyStore.loading = false;
       } else {
-        console.log("not logged in??")
+        console.log("not logged in??");
       }
-    }
-  },
-  persist: true,
-});
-
-export const useSurveyStore = defineStore("survey", { 
-  state: () => ({
-    currentSurvey: [],
-    currentResponse: [],
-    currentQuestion: [],
-    loading: false,
-  }),
-  getters: {
-    //
-  },
-  actions: {
-    //
+    },
   },
   persist: true,
 });

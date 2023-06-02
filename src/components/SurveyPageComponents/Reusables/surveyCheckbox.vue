@@ -1,28 +1,47 @@
 <template>
   <section class="lg:text-left text-center">
-      <div class="flex flex-col lg:flex-row">
-        <div>
-      <div class="flex items-center justify-center max-w-[40rem] overflow-hidden">
-      <fieldset class="flex items-center justify-start"> <!-- I did this because I have no idea how to make it fill the rest of the page, so this will let the page decide how long it should be.  -->
-      <legend class="text-xl md:text-2xl">{{ question.question }}</legend>
-      <div class="flex flex-col flex-wrap justify-center items-start">
-        <div v-for="choice in choices" :key="choice.courseCode" class="flex flex-wrap flex-column justify-center items-center m-4 w-max">
-          <input
-            type="checkbox"
-            class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
-            :id="choice.courseCode"
-            :value="choice.name"
-            v-model="surveyStore.currentResponse[index].answer[0].chosenClasses"
-          />
-          <label :for="choice.courseCode" class="text-lg md:text-xl ml-4">{{ choice.name }}</label>
+    <div class="flex flex-col lg:flex-row">
+      <div>
+        <div
+          class="flex items-center justify-center max-w-[40rem] overflow-hidden"
+        >
+          <fieldset class="flex items-center justify-start">
+            <!-- I did this because I have no idea how to make it fill the rest of the page, so this will let the page decide how long it should be.  -->
+            <legend class="text-xl md:text-2xl">{{ question.question }}</legend>
+            <div class="flex flex-col flex-wrap justify-center items-start">
+              <div
+                v-for="choice in choices"
+                :key="choice.courseCode"
+                class="flex flex-wrap flex-column justify-center items-center m-4 w-max"
+              >
+                <input
+                  type="checkbox"
+                  class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
+                  :id="choice.courseCode"
+                  :value="choice.name"
+                  v-model="
+                    surveyStore.currentResponse[index].answer[0].chosenClasses
+                  "
+                />
+                <label
+                  :for="choice.courseCode"
+                  class="text-lg md:text-xl ml-4"
+                  >{{ choice.name }}</label
+                >
+              </div>
+            </div>
+          </fieldset>
         </div>
       </div>
-      </fieldset>
-    </div>
-    </div>
-    <surveyDraggable :courses="surveyStore.currentResponse[index].answer[0].chosenClasses" :numbered="true" :key="surveyStore.currentResponse[index].answer[0].chosenClasses"></surveyDraggable>
-        <div class="border-black border-[0.5px] border-solid rounded-xl lg:w-[35%] w-[90%] lg:ml-28 lg:h-[50-vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll">
-          <!-- <div class="flex justify-center mt-[1%]">
+      <surveyDraggable
+        :courses="surveyStore.currentResponse[index].answer[0].chosenClasses"
+        :numbered="true"
+        :key="surveyStore.currentResponse[index].answer[0].chosenClasses"
+      ></surveyDraggable>
+      <div
+        class="border-black border-[0.5px] border-solid rounded-xl lg:w-[35%] w-[90%] lg:ml-28 lg:h-[50-vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll"
+      >
+        <!-- <div class="flex justify-center mt-[1%]">
             <p class="text-[150%] text-black">Drag course(s) into order of preference:</p>
           </div>
           <div class="flex justify-center mt-[2%]"> 
@@ -35,75 +54,86 @@
               Confirm
             </button>
           </div> -->
-          <!-- <p>hmm {{ surveyStore.currentResponse[index].answer }}</p> -->
-      
-        </div>
+        <!-- <p>hmm {{ surveyStore.currentResponse[index].answer }}</p> -->
       </div>
-    </section>
+    </div>
+  </section>
 </template>
-  
+
 <script setup lang="ts">
-  const props = defineProps({
-    choices: Array,
-    question: Object,
-    answers: Array,
-  });
+const props = defineProps({
+  choices: Array,
+  question: Object,
+  answers: Array,
+});
 
-  import surveyDraggable from './surveyDraggable.vue';
-  import { useSurveyStore } from '../../../stores/user';
-  import { watch, onBeforeMount } from 'vue';
+import surveyDraggable from "./surveyDraggable.vue";
+import { useSurveyStore } from "../../../stores/survey";
+import { watch, onBeforeMount } from "vue";
 
-  const surveyStore = useSurveyStore()
-  let index: number = surveyStore.currentResponse.findIndex(x => x.id == props.question.id)
+const surveyStore = useSurveyStore();
+let index: number = surveyStore.currentResponse.findIndex(
+  (x) => x.id == props.question.id
+);
 
-  onBeforeMount(() => {
-    if(index < 0) {
-      const questionAnswer = {
-          id: props.question.id,
-          question: props.question.question,
-          answer: [{chosenClasses: []},{classPreference: []}]
-      }
-      surveyStore.currentResponse.push(questionAnswer)
-      
-      index = surveyStore.currentResponse.findIndex(x => x.id == props.question.id)
-    }
-  })
+onBeforeMount(() => {
+  if (index < 0) {
+    const questionAnswer = {
+      id: props.question.id,
+      question: props.question.question,
+      answer: [{ chosenClasses: [] }, { classPreference: [] }],
+    };
+    surveyStore.currentResponse.push(questionAnswer);
 
+    index = surveyStore.currentResponse.findIndex(
+      (x) => x.id == props.question.id
+    );
+  }
+});
 
-  watch(() => props.question, (newResponse) => {
-    index = surveyStore.currentResponse.findIndex(x => x.id == newResponse.id)
-  })
+watch(
+  () => props.question,
+  (newResponse) => {
+    index = surveyStore.currentResponse.findIndex(
+      (x) => x.id == newResponse.id
+    );
+  }
+);
 
-  watch(() => surveyStore.currentResponse[index].answer[0].chosenClasses, (newResponse, oldResponse) => {
-    const preference = surveyStore.currentResponse[index].answer[1].classPreference
+watch(
+  () => surveyStore.currentResponse[index].answer[0].chosenClasses,
+  (newResponse, oldResponse) => {
+    const preference =
+      surveyStore.currentResponse[index].answer[1].classPreference;
 
-    if(newResponse.length > oldResponse.length) {
-      const spreaded = [...newResponse, ...oldResponse]
-      const newClass = spreaded.filter(x => {
-        return !(newResponse.includes(x) && oldResponse.includes(x))
-      })
-      console.log(newClass)
-      
-        const rank = newResponse.length
-        const rankObject = {
-          rank: rank,
-          name: newClass
-        }
-        surveyStore.currentResponse[index].answer[1].classPreference.push(rankObject)
-        console.log('add')
-        console.log(surveyStore.currentResponse[index].answer[1].classPreference)
-      
-    } else if(newResponse.length < oldResponse.length) {
-      const spreaded = [...newResponse, ...oldResponse]
-      const newClass = spreaded.filter(x => {
-        return !(newResponse.includes(x) && oldResponse.includes(x))
-      })
-      console.log(newClass)
+    if (newResponse.length > oldResponse.length) {
+      const spreaded = [...newResponse, ...oldResponse];
+      const newClass = spreaded.filter((x) => {
+        return !(newResponse.includes(x) && oldResponse.includes(x));
+      });
+      console.log(newClass);
+
+      const rank = newResponse.length;
+      const rankObject = {
+        rank: rank,
+        name: newClass,
+      };
+      surveyStore.currentResponse[index].answer[1].classPreference.push(
+        rankObject
+      );
+      console.log("add");
+      console.log(surveyStore.currentResponse[index].answer[1].classPreference);
+    } else if (newResponse.length < oldResponse.length) {
+      const spreaded = [...newResponse, ...oldResponse];
+      const newClass = spreaded.filter((x) => {
+        return !(newResponse.includes(x) && oldResponse.includes(x));
+      });
+      console.log(newClass);
     } else {
-
     }
 
-    console.log(preference)
-    surveyStore.currentResponse[index].answer[1].classPreference = preference
-  })
-</script>  
+    console.log(preference);
+    surveyStore.currentResponse[index].answer[1].classPreference = preference;
+  }
+);
+</script>
