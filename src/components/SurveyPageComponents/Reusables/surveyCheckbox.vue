@@ -33,28 +33,22 @@
           </fieldset>
         </div>
       </div>
-      <surveyDraggable
-        :courses="surveyStore.currentResponse[index].answer[0].chosenClasses"
-        :numbered="true"
-        :key="surveyStore.currentResponse[index].answer[0].chosenClasses"
-      ></surveyDraggable>
       <div
         class="border-black border-[0.5px] border-solid rounded-xl lg:w-[35%] w-[90%] lg:ml-28 lg:h-[50-vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll"
       >
-        <!-- <div class="flex justify-center mt-[1%]">
+        <div class="flex justify-center mt-[1%]">
             <p class="text-[150%] text-black">Drag course(s) into order of preference:</p>
           </div>
-          <div class="flex justify-center mt-[2%]"> 
-            <div class="bg-[#D6EEFF] w-[18rem] h-[3rem] lg:w-[50%] lg:h-[5vh] flex justify-center items-center shadow-[4px_3px_3px_rgba(0,0,0,0.3)] rounded-2xl ">                
-              <p class="text-[#37394F] text-[150%] font-bold">AP Psychology</p>
-            </div>
-          </div>
+          <surveyDraggable
+          :courses="surveyStore.currentResponse[index].answer[1].classPreference"
+          :index="index"
+          :numbered="true"
+          :key="surveyStore.currentResponse[index].answer[1].classPreference"></surveyDraggable>
           <div class="flex flex-row-reverse mt-6 ">
             <button class="bg-[#6A9FD1] text-white w-[30%] h-[2.5rem] lg:h-[3.5rem] text-[1.5rem] md:text-[200%] mr-5 mb-5" >
               Confirm
             </button>
-          </div> -->
-        <!-- <p>hmm {{ surveyStore.currentResponse[index].answer }}</p> -->
+          </div>
       </div>
     </div>
   </section>
@@ -69,9 +63,11 @@ const props = defineProps({
 
 import surveyDraggable from "./surveyDraggable.vue";
 import { useSurveyStore } from "../../../stores/survey";
-import { watch, onBeforeMount } from "vue";
+import { watch, onBeforeMount, ref, Ref } from "vue";
 
 const surveyStore = useSurveyStore();
+
+const x: Ref<string>= ref('o')
 let index: number = surveyStore.currentResponse.findIndex(
   (x) => x.id == props.question.id
 );
@@ -103,8 +99,7 @@ watch(
 watch(
   () => surveyStore.currentResponse[index].answer[0].chosenClasses,
   (newResponse, oldResponse) => {
-    const preference =
-      surveyStore.currentResponse[index].answer[1].classPreference;
+    const preference = surveyStore.currentResponse[index].answer[1].classPreference;
 
     if (newResponse.length > oldResponse.length) {
       const spreaded = [...newResponse, ...oldResponse];
@@ -116,24 +111,39 @@ watch(
       const rank = newResponse.length;
       const rankObject = {
         rank: rank,
-        name: newClass,
+        name: newClass[0],
       };
       surveyStore.currentResponse[index].answer[1].classPreference.push(
         rankObject
       );
       console.log("add");
       console.log(surveyStore.currentResponse[index].answer[1].classPreference);
+
     } else if (newResponse.length < oldResponse.length) {
       const spreaded = [...newResponse, ...oldResponse];
-      const newClass = spreaded.filter((x) => {
+      const removeClass = spreaded.filter((x) => {
         return !(newResponse.includes(x) && oldResponse.includes(x));
       });
-      console.log(newClass);
-    } else {
+      const classIndex = surveyStore.currentResponse[index].answer[1].classPreference.findIndex(x => x.name === removeClass[0])
+
+      preference.forEach(x => {
+        const index = preference.indexOf(x) 
+        if(index > classIndex) {
+          preference[index].rank = preference[index].rank -1
+        }
+      })
+
+      surveyStore.currentResponse[index].answer[1].classPreference.splice(classIndex, 1)
     }
 
     console.log(preference);
     surveyStore.currentResponse[index].answer[1].classPreference = preference;
   }
 );
+
+// watch(() => surveyStore.currentResponse[index].answer[1].classPreference, (newResponse) => {
+//   x.value = x.value+'o'
+//   console.log(x.value)
+//   console.log('ookiojojoioijio')
+// }, { deep: true })
 </script>

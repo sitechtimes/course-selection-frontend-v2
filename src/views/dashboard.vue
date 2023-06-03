@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import BellIcon from "../components/icons/BellIcon.vue";
-import { useUserStore, useSurveyStore } from "../stores/user";
+import { useUserStore } from "../stores/user";
+import { useSurveyStore } from "../stores/survey";
 
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();

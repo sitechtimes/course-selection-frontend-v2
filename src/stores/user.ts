@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { useSurveyStore } from "./survey";
 import axios from "axios";
 import { user, account_type, userData } from "../types/interface";
 
