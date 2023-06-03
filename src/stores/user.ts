@@ -229,7 +229,7 @@ export const useUserStore = defineStore("user", {
           console.log("meeting changed");
         });
     },
-    async saveSurvey() {
+    async saveSurvey(status: String) {
       const surveyStore = useSurveyStore();
       const osis = surveyStore.currentSurvey.osis;
       const answers = surveyStore.currentResponse;
@@ -239,8 +239,8 @@ export const useUserStore = defineStore("user", {
         .post(
           "https://api.siths.dev/graphql/",
           {
-            query: `mutation updateSurvey($osis: String, $answers: JSONString) {
-                updateSurvey(osis: $osis, answers: $answers) {
+            query: `mutation updateSurvey($osis: String, $answers: JSONString, $status: String) {
+                updateSurvey(osis: $osis, answers: $answers, status: $status) {
                     survey {
                         id
                         answers
@@ -250,6 +250,7 @@ export const useUserStore = defineStore("user", {
             variables: {
               osis: osis,
               answers: jsonString,
+              status: status
             },
           },
           {

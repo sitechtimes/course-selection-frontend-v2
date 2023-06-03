@@ -69,7 +69,7 @@ const redirect = () => {
             <CloseMenu @click="toggleMenu" v-else />
         </div>
         <div v-if="viewingSurvey()" class="flex flex-row w-1/6 justify-between">
-            <p @click="userStore.saveSurvey()" class="text-[#37394F] text-2xl cursor-pointer">Save</p>
+            <p @click="userStore.saveSurvey('INCOMPLETE')" class="text-[#37394F] text-2xl cursor-pointer">Save</p>
             <p @click="redirect()" class="text-[#37394F] text-2xl cursor-pointer">Exit</p>
         </div>
     <MobileNav v-if="menuOpen" @e="toggleMenu" />

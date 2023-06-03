@@ -39,7 +39,7 @@ const completeSurvey = async () => {
     }
   })
   if(check.length === 0) {
-    userStore.saveSurvey()
+    userStore.saveSurvey('COMPLETE')
     // move this to store once backend is updated
     userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === viewedStudent.osis).node.status = 'COMPLETE'
     router.push('/guidance/studentlist')
