@@ -68,9 +68,7 @@ import { watch, onBeforeMount, ref, Ref } from "vue";
 const surveyStore = useSurveyStore();
 
 const x: Ref<string>= ref('o')
-let index: number = surveyStore.currentResponse.findIndex(
-  (x) => x.id == props.question.id
-);
+let index: number = surveyStore.currentResponse.findIndex((x) => x.id == props.question.id);
 
 onBeforeMount(() => {
   if (index < 0) {
@@ -84,6 +82,15 @@ onBeforeMount(() => {
     index = surveyStore.currentResponse.findIndex(
       (x) => x.id == props.question.id
     );
+  }
+
+  if(surveyStore.currentResponse.find(x => x.id === "allChosenCourses") === undefined) {
+    const allChosen = {
+      id: "allChosenCourses",
+      courses: [],
+      preference: []
+    }
+    surveyStore.currentResponse.push(allChosen)
   }
 });
 
@@ -100,24 +107,21 @@ watch(
   () => surveyStore.currentResponse[index].answer[0].chosenClasses,
   (newResponse, oldResponse) => {
     const preference = surveyStore.currentResponse[index].answer[1].classPreference;
-
+    const totalIndex = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');
+  
     if (newResponse.length > oldResponse.length) {
       const spreaded = [...newResponse, ...oldResponse];
       const newClass = spreaded.filter((x) => {
         return !(newResponse.includes(x) && oldResponse.includes(x));
       });
-      console.log(newClass);
 
       const rank = newResponse.length;
       const rankObject = {
         rank: rank,
         name: newClass[0],
       };
-      surveyStore.currentResponse[index].answer[1].classPreference.push(
-        rankObject
-      );
-      console.log("add");
-      console.log(surveyStore.currentResponse[index].answer[1].classPreference);
+      surveyStore.currentResponse[index].answer[1].classPreference.push(rankObject);
+      surveyStore.currentResponse[totalIndex].courses.push(newClass[0])
 
     } else if (newResponse.length < oldResponse.length) {
       const spreaded = [...newResponse, ...oldResponse];
@@ -125,6 +129,7 @@ watch(
         return !(newResponse.includes(x) && oldResponse.includes(x));
       });
       const classIndex = surveyStore.currentResponse[index].answer[1].classPreference.findIndex(x => x.name === removeClass[0])
+      const allClassIndex = surveyStore.currentResponse[totalIndex].courses.findIndex(x => x === removeClass[0])
 
       preference.forEach(x => {
         const index = preference.indexOf(x) 
@@ -134,9 +139,10 @@ watch(
       })
 
       surveyStore.currentResponse[index].answer[1].classPreference.splice(classIndex, 1)
+      surveyStore.currentResponse[totalIndex].courses.splice(allClassIndex, 1)
     }
 
-    console.log(preference);
+    console.log(surveyStore.currentResponse[totalIndex].courses);
     surveyStore.currentResponse[index].answer[1].classPreference = preference;
   }
 );
