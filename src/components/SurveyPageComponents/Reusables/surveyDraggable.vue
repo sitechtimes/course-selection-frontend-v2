@@ -96,6 +96,9 @@ function updateRank(n, dragIndex) {
   } else {
     console.log('no change')
   }
+  ref_courses.value.sort(function(a, b) {
+    return parseFloat(a.rank) - parseFloat(b.rank);
+  });
   surveyStore.currentResponse[props.index].answer[1].classPreference = ref_courses.value
   console.log(surveyStore.currentResponse[props.index].answer[1].classPreference)
 }

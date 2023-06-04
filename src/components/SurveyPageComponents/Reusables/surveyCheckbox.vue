@@ -120,8 +120,16 @@ watch(
         rank: rank,
         name: newClass[0],
       };
+
+      const overallRank = newResponse.length;
+      const overallRankObject = {
+        rank: overallRank,
+        name: newClass[0],
+      };
+
       surveyStore.currentResponse[index].answer[1].classPreference.push(rankObject);
       surveyStore.currentResponse[totalIndex].courses.push(newClass[0])
+      surveyStore.currentResponse[totalIndex].preference.push(overallRankObject)
 
     } else if (newResponse.length < oldResponse.length) {
       const spreaded = [...newResponse, ...oldResponse];
@@ -130,6 +138,7 @@ watch(
       });
       const classIndex = surveyStore.currentResponse[index].answer[1].classPreference.findIndex(x => x.name === removeClass[0])
       const allClassIndex = surveyStore.currentResponse[totalIndex].courses.findIndex(x => x === removeClass[0])
+      const allPreferenceIndex = surveyStore.currentResponse[totalIndex].preference.findIndex(x => x.name === removeClass[0])
 
       preference.forEach(x => {
         const index = preference.indexOf(x) 
@@ -137,12 +146,18 @@ watch(
           preference[index].rank = preference[index].rank -1
         }
       })
+      
+      surveyStore.currentResponse[totalIndex].preference.forEach(x => {
+        const index = surveyStore.currentResponse[totalIndex].preference.indexOf(x) 
+        if(index > allPreferenceIndex) {
+          surveyStore.currentResponse[totalIndex].preference[index].rank = surveyStore.currentResponse[totalIndex].preference[index].rank -1
+        }
+      })
 
       surveyStore.currentResponse[index].answer[1].classPreference.splice(classIndex, 1)
       surveyStore.currentResponse[totalIndex].courses.splice(allClassIndex, 1)
+      surveyStore.currentResponse[totalIndex].preference.splice(allPreferenceIndex, 1)
     }
-
-    console.log(surveyStore.currentResponse[totalIndex].courses);
     surveyStore.currentResponse[index].answer[1].classPreference = preference;
   }
 );
