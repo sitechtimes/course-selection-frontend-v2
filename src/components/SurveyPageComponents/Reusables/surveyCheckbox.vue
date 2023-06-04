@@ -43,7 +43,7 @@
           :courses="surveyStore.currentResponse[index].answer[1].classPreference"
           :index="index"
           :numbered="true"
-          :key="surveyStore.currentResponse[index].answer[1].classPreference"></surveyDraggable>
+          :key="x"></surveyDraggable>
           <div class="flex flex-row-reverse mt-6 ">
             <button class="bg-[#6A9FD1] text-white w-[30%] h-[2.5rem] lg:h-[3.5rem] text-[1.5rem] md:text-[200%] mr-5 mb-5" >
               Confirm
@@ -141,9 +141,7 @@ watch(
   }
 );
 
-// watch(() => surveyStore.currentResponse[index].answer[1].classPreference, (newResponse) => {
-//   x.value = x.value+'o'
-//   console.log(x.value)
-//   console.log('ookiojojoioijio')
-// }, { deep: true })
+watch(() => surveyStore.currentResponse[index].answer[1].classPreference, (newResponse) => {
+  x.value = x.value+'o'
+}, { deep: true })
 </script>
