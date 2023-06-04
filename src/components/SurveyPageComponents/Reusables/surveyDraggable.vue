@@ -1,39 +1,20 @@
 <template>
   <div class="h-auto select-none">
-    <!-- <div v-for="x in xx" :id="x.omg" :key="x.name">{{ x.name }}, {{ x.omg }}</div> -->
-    <!-- <button @click="xx[1].name = 'ooooo'">oiahdiushadawui</button> -->
-    <div class="p-4 flex justify-center text-center text-3xl h-screen">
-     <div class="flex flex-col mt-2">
-        <!-- <div class="mt-5 mb-4 flex flex-row" v-for="n in ref_courses" :key="n.name" :id="n.rank">
-        <p>{{ n.rank }}.</p>
-        <div
-          id="a"
-          class="m-2 rounded-lg h-14 shadow-deepinner placeholder">
-          <div
-            class="bg-[#D6EEFF] p-2 rounded-lg shadow-lg text-[#37394F] cursor-grab active:cursor-grabbing font-semibold h-14 course"
-            draggable="true"
-            @dragover.prevent="(e) => hoverBoxOver(e)"
-            @dragstart="(e) => (dragElement = e.target)"
-            @drop.prevent="(e) => hoverBox(e, n.rank)"
-          >
-            {{ n.name }}
-          </div>
-        </div>
-      </div> -->
-        <div class="mt-5 mb-4 flex flex-row" v-for="n in computedHeight" :key="n" :id="n.toString()">
+    <div class="p-4 flex justify-center text-center text-lg md:text-xl xl:text-2xl">
+     <div v-if="props.courses?.length > 0" class="flex flex-col mt-2">
+        <div class="my-1.5 flex flex-row items-center" v-for="n in computedHeight" :key="n" :id="n.toString()">
         <p>{{ n }}.</p>
         <div
-       
-          class="m-2 rounded-lg h-14 shadow-deepinner placeholder">
-          <div
-            class="bg-[#D6EEFF] p-2 rounded-lg shadow-lg text-[#37394F] cursor-grab active:cursor-grabbing font-semibold h-14 course"
+          class="h-12 mx-2 xl:h-16  placeholder flex items-center justify-center bg-[#D6EEFF] p-2 rounded-lg shadow-lg text-[#37394F] cursor-grab active:cursor-grabbing font-semibold course">
+          <p
+            class="h-full"
             draggable="true"
             @dragover.prevent="(e) => hoverBoxOver(e)"
             @dragstart="(e) => (dragElement = e.target)"
             @drop.prevent="(e) => hoverBox(e, n)"
           >
-            {{ surveyStore.currentResponse[props.index].answer[1].classPreference.find(x => x.rank == n).name }}
-          </div>
+            {{ currentResponse.find(x => x.rank == n).name }}
+          </p>
         </div>
       </div>
       </div>
@@ -53,6 +34,13 @@ const props = defineProps({
 
 const surveyStore = useSurveyStore()
 let dragElement: HTMLElement;
+let currentResponse: Array<object> = ref()
+
+if(props.index === surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses')) {
+  currentResponse = surveyStore.currentResponse[props.index].preference
+} else {
+  currentResponse = surveyStore.currentResponse[props.index].answer[1].classPreference
+}
 
 const computedHeight = computed(() => {
   return props.courses.length;
@@ -90,7 +78,7 @@ function updateRank(n, dragIndex) {
       if(x.rank > +n && x.rank <= +dragIndex){
         ref_courses.value[index].rank = ref_courses.value[index].rank - 1
       }
-    });
+    })
     ref_courses.value[startObject].rank = +dragIndex
 
   } else {
@@ -98,8 +86,12 @@ function updateRank(n, dragIndex) {
   }
   ref_courses.value.sort(function(a, b) {
     return parseFloat(a.rank) - parseFloat(b.rank);
-  });
-  surveyStore.currentResponse[props.index].answer[1].classPreference = ref_courses.value
-  console.log(surveyStore.currentResponse[props.index].answer[1].classPreference)
+  })
+  if(props.index === surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses')) {
+    surveyStore.currentResponse[props.index].preference = ref_courses.value
+  } else {
+    surveyStore.currentResponse[props.index].answer[1].classPreference = ref_courses.value
+  }
+  
 }
 </script>

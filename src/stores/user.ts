@@ -265,7 +265,6 @@ export const useUserStore = defineStore("user", {
           if (this.userType === "student") {
             this.data.answeredSurvey.answers = jsonString;
           } else if (this.userType === "guidance") {
-            // needs testing
             const studentIndex = this.data.allAnsweredSurveys.edges.findIndex(
               (x) => x.node.osis == surveyStore.currentSurvey.osis
             );
@@ -277,12 +276,31 @@ export const useUserStore = defineStore("user", {
         });
     },
     async startSurvey(osis: string, survey: Array<object>) {
+      const answers: Array<object> = []
+      const allChosen = {
+        id: "allChosenCourses",
+        courses: [],
+        preference: []
+      }
+
+      const noteToGuidance = {
+        id: "noteToGuidance",
+        answer: ''
+      }
+
+      const guidanceFinalNote = {
+        id: 'guidanceFinalNote',
+        answer: ''
+      }
+
+      answers.push(noteToGuidance, allChosen, guidanceFinalNote)
+      const jsonString = JSON.stringify(answers);
       await axios
         .post(
           "https://api.siths.dev/graphql/",
           {
-            query: `mutation updateSurvey($osis: String) {
-              newSurvey(osis: $osis, answers: "[]") {
+            query: `mutation updateSurvey($osis: String, $answers: JSONString) {
+              newSurvey(osis: $osis, answers: $answers) {
                   survey {
                       id
                       osis
@@ -293,6 +311,7 @@ export const useUserStore = defineStore("user", {
           }`,
             variables: {
               osis: osis,
+              answers: jsonString
             },
           },
           {

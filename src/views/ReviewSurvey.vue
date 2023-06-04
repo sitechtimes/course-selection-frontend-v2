@@ -4,6 +4,7 @@ import { useSurveyStore } from '../stores/survey';
 import booleanComponent from '../components/SurveyPageComponents/Reusables/surveyBoolean.vue'
 import generalComponent from '../components/SurveyPageComponents/Reusables/surveyGeneral.vue'
 import checkboxComponent from '../components/SurveyPageComponents/Reusables/surveyCheckbox.vue';
+import surveyDraggable from '../components/SurveyPageComponents/Reusables/surveyDraggable.vue';
 import { surveyQuestion, surveyAnswer } from '../types/interface';
 import { watch, ref, Ref } from 'vue';
 import { useRouter } from 'vue-router'
@@ -13,6 +14,9 @@ const surveyStore = useSurveyStore()
 const router = useRouter()
 
 const message: Ref<string> = ref("Once you submit, you will still be able to make changes to your survey. However, please do so before the due date.")
+const indexAll = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');
+const indexNote = surveyStore.currentResponse.findIndex((x) => x.id === 'noteToGuidance');
+const x: Ref<number> = ref(0)
 // let error: Array<string> = []
 
 // surveyStore.currentResponse.forEach((x) => {
@@ -47,21 +51,38 @@ const getChoices = (question:  surveyQuestion) => {
   return classes.filter(x => x.subject === question.questionType)
 }
 
-// deep watch is bad for performance :((
 // watch(() => surveyStore.currentResponse, (newReponse) => {
 //   checkAnswers()
 //   console.log(error)
 // }, { deep: true })
-
+watch(() => surveyStore.currentResponse[indexAll].preference, (newResponse) => {
+  x.value = x.value+1
+}, { deep: true })
 </script>
 
 <template>
   <section>
-    <!-- <p v-if="error.includes('27')">test</p> -->
     <div v-for="question in userStore.data.survey.questions" :key="question.id" class="flex justify-center">
       <booleanComponent class="mb-6 " v-if="question.questionType === 'BOOLEAN'" :question="question" ></booleanComponent>
       <generalComponent class="mb-6" v-else-if="question.questionType === 'GENERAL'" :question="question" ></generalComponent>
       <checkboxComponent v-else :question="question" :choices="getChoices(question)"></checkboxComponent>
+    </div>
+    <div>
+      <p>For the final part of the survey, please drag your classes in the order of priority, with the first choice being your top priority.</p>
+      <surveyDraggable 
+        :courses="surveyStore.currentResponse[indexAll].preference" 
+        :index="indexAll"
+        :numbered="true"
+        :key="x">
+      </surveyDraggable>
+    </div>
+    <div>
+      <p>Final note to your guidance counselor:</p>
+      <input
+          class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base bg-transparent rounded-md border border-solid border-zinc-400 focus:outline-none focus:ring-0 focus:border-blue-400"
+          type="text"
+          v-model="surveyStore.currentResponse[indexNote].answer"
+        />
     </div>
     <div class="flex justify-center mb-6 flex-col items-center">
       <p>{{ message }}</p>

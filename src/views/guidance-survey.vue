@@ -3,10 +3,11 @@ import { useUserStore } from '../stores/user'
 import { useSurveyStore } from '../stores/survey';
 import booleanComponent from '../components/SurveyPageComponents/Reusables/surveyBoolean.vue'
 import generalComponent from '../components/SurveyPageComponents/Reusables/surveyGeneral.vue'
-import checkboxComponent from '../components/SurveyPageComponents/Reusables/surveyCheckbox.vue';
+import checkboxComponent from '../components/SurveyPageComponents/Reusables/surveyCheckbox.vue'
+import surveyDraggable from '../components/SurveyPageComponents/Reusables/surveyDraggable.vue';
 import { surveyQuestion, surveyAnswer } from '../types/interface';
 import { useRouter } from 'vue-router'
-import { ref, Ref } from 'vue';
+import { ref, Ref, watch } from 'vue';
 
 const userStore = useUserStore()
 const surveyStore = useSurveyStore()
@@ -16,6 +17,10 @@ const viewedStudent = userStore.data.guidance.students.filter(student => student
 
 let currentSurvey = null
 const missing: Ref<boolean> = ref(false) 
+const x: Ref<number> = ref(0)
+const indexAll = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');
+const indexNote = surveyStore.currentResponse.findIndex((x) => x.id === 'noteToGuidance');
+const indexGuidance = surveyStore.currentResponse.findIndex((x) => x.id === 'guidanceFinalNote');
 
 currentSurvey = userStore.data.allSurveys.edges.find(x => x.node.grade === viewedStudent.grade).node
 
@@ -47,6 +52,10 @@ const completeSurvey = async () => {
     missing.value = true
   }
 }
+
+watch(() => surveyStore.currentResponse[indexAll].preference, (newResponse) => {
+  x.value = x.value+1
+}, { deep: true })
 </script>
 
 <template>
@@ -58,19 +67,46 @@ const completeSurvey = async () => {
       <h2 v-if="viewedStudent.grade === 'SENIOR'">Grade : 11</h2>
     </div>
     <p v-if="surveyStore.loading">Setting things up...</p>
-    <div v-else v-for="question in currentSurvey.questions" :key="question" class="flex justify-center">
-      <booleanComponent class="mb-6 " v-if="question.questionType === 'BOOLEAN'" :question="question" ></booleanComponent>
-      <generalComponent class="mb-6" v-else-if="question.questionType === 'GENERAL'" :question="question" ></generalComponent>
-      <checkboxComponent v-else :question="question" :choices="getChoices(question)"></checkboxComponent>
-      <!-- <section v-else class="flex items-center justify-start w-3/4 overflow-x-visible mb-6">
-        <div class=" items-center space-y-6 w-full">
-          <h1 class="text-xl md:text-2xl lg:text-[180%]">{{ question.question }}</h1>
-          <input class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base bg-transparent rounded-md border border-solid border-zinc-400  focus:outline-none focus:ring-0 focus:border-blue-400 lg:text-[180%] " type="text">
-        </div>
-      </section> -->
+    <div v-else>
+      <div v-for="question in currentSurvey.questions" :key="question" class="flex justify-center">
+        <booleanComponent class="mb-6 " v-if="question.questionType === 'BOOLEAN'" :question="question" ></booleanComponent>
+        <generalComponent class="mb-6" v-else-if="question.questionType === 'GENERAL'" :question="question" ></generalComponent>
+        <checkboxComponent v-else :question="question" :choices="getChoices(question)"></checkboxComponent>
+        <!-- <section v-else class="flex items-center justify-start w-3/4 overflow-x-visible mb-6">
+          <div class=" items-center space-y-6 w-full">
+            <h1 class="text-xl md:text-2xl lg:text-[180%]">{{ question.question }}</h1>
+            <input class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base bg-transparent rounded-md border border-solid border-zinc-400  focus:outline-none focus:ring-0 focus:border-blue-400 lg:text-[180%] " type="text">
+          </div>
+        </section> -->
+      </div>
+      <div>
+        <p>Please drag the courses into your order of preference.</p>
+        <surveyDraggable 
+          :courses="surveyStore.currentResponse[indexAll].preference" 
+          :index="indexAll"
+          :numbered="true"
+          :key="x">
+        </surveyDraggable>
+      </div>
+      <div>
+        <p>Note from the student:</p>
+        <input
+            class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base bg-transparent rounded-md border border-solid border-zinc-400 focus:outline-none focus:ring-0 focus:border-blue-400"
+            type="text"
+            v-model="surveyStore.currentResponse[indexNote].answer"
+          />
+      </div>
+      <div>
+        <p>Final counselor notes:</p>
+        <input
+            class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base bg-transparent rounded-md border border-solid border-zinc-400 focus:outline-none focus:ring-0 focus:border-blue-400"
+            type="text"
+            v-model="surveyStore.currentResponse[indexGuidance].answer"
+          />
+      </div>
     </div>
     <div class="flex justify-center mb-6 flex-col items-center">
-      <p v-if="missing">Please fill out all questions before submitting.</p>
+      <p v-if="missing">Student's order of priority:</p>
       <button @click="completeSurvey()" class="bg-[#C5D4A4] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-36 h-12 text-2xl font-bold text-[#37394F]">Complete</button>
     </div>
   </section>

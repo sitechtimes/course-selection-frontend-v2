@@ -30,7 +30,7 @@ const redirect = () => {
 </script>
 
 <template>
-    <nav id="navbar" class="w-full top-0 h-24 flex justify-between items-center px-8 md:px-12 lg:px-16 overflow-visible">
+    <nav id="navbar" class="w-full top-0 h-[15vh] flex justify-between items-center px-8 md:px-12 lg:px-16 overflow-visible">
         <div @click="redirect()" class="cursor-pointer">
             <h1 class="text-3xl font-semibold z-50">Course Selection</h1>
         </div>

@@ -17,12 +17,10 @@ let currentQuestion: surveyQuestion = reactive(
 const min: Ref<boolean> = ref(true);
 const max: Ref<boolean> = ref(false);
 
-onBeforeMount(() => {
-  userStore.setSurvey(
-    userStore.data.student.osis,
-    userStore.data.survey.questions
-  );
-});
+userStore.setSurvey(
+  userStore.data.student.osis,
+  userStore.data.survey.questions
+);
 
 const previousQuestion = () => {
   currentIndex.value--;
@@ -51,37 +49,41 @@ const getChoices = () => {
 </script>
 
 <template>
-  <div class="h-screen flex flex-col justify-center items-center space-y-8">
+  <div class="h-[80vh] flex flex-col justify-center items-center space-y-8">
     <p v-if="surveyStore.loading">Setting things up...</p>
     <div
       v-else
-      class="w-11/12 md:w-4/5 lg:w-3/4 flex flex-col justify-center items-center min-h-[20rem] space-y-8 mb-10"
+      class="w-11/12 md:w-4/5 lg:w-3/4 flex flex-col justify-center items-center min-h-[20rem] space-y-8 h-5/6"
     >
-      <h1 class="text-4xl font-semibold">
+      <div class="mt-5">
+        <h1 class="text-4xl font-semibold">
         {{ userStore.data.survey.grade }} Year Survey
-      </h1>
-      <generalComponent
-        v-if="currentQuestion.questionType === 'GENERAL'"
-        :question="currentQuestion"
-        :answers="currentAnswer"
-        :key="currentQuestion.id"
-      ></generalComponent>
-      <booleanComponent
-        v-else-if="currentQuestion.questionType === 'BOOLEAN'"
-        :question="currentQuestion"
-        :answers="currentAnswer"
-        :key="currentQuestion.question"
-      ></booleanComponent>
-      <checkboxComponent
-        v-else
-        :question="currentQuestion"
-        :choices="getChoices()"
-        :answers="currentAnswer"
-        :key="currentQuestion.questionType"
-      ></checkboxComponent>
+        </h1>
+      </div>
+      <div class="h-5/6 flex items-center justify-center">
+        <generalComponent
+          v-if="currentQuestion.questionType === 'GENERAL'"
+          :question="currentQuestion"
+          :answers="currentAnswer"
+          :key="currentQuestion.id"
+        ></generalComponent>
+        <booleanComponent
+          v-else-if="currentQuestion.questionType === 'BOOLEAN'"
+          :question="currentQuestion"
+          :answers="currentAnswer"
+          :key="currentQuestion.question"
+        ></booleanComponent>
+        <checkboxComponent
+          v-else
+          :question="currentQuestion"
+          :choices="getChoices()"
+          :answers="currentAnswer"
+          :key="currentQuestion.questionType"
+        ></checkboxComponent>
+      </div>
     </div>
     <div
-      class="bottom-28 w-11/12 md:w-4/5 lg:w-3/4 absolute flex justify-between items-center px-4"
+      class="h-1/6 w-11/12 md:w-4/5 lg:w-3/4 flex justify-between items-start px-4"
     >
       <button
         @click="previousQuestion()"

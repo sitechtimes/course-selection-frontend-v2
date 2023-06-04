@@ -18,8 +18,8 @@ async function userClick(student: object) {
 </script>
 
 <template>
-    <div class="flex flex-col mt-10 justify-center items-center" id="table">
-        <table class="w-[100rem] border-2 border-black table-auto text-left">
+    <div class="flex flex-col mt-10 justify-center items-center w-5/6" id="table">
+        <table class="w-full border-2 border-black table-auto text-left">
             <thead class="fill-primary-g border-2 border-black">
                 <tr class="bg-primary-g">
                     <th class="p-4">Name</th>

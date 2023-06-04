@@ -1,13 +1,13 @@
 <template>
-  <section class="lg:text-left text-center">
-    <div class="flex flex-col lg:flex-row">
+  <section class="lg:text-left text-center h-full w-full">
+    <div class="flex flex-col lg:flex-row h-full">
       <div>
         <div
           class="flex items-center justify-center max-w-[40rem] overflow-hidden"
         >
           <fieldset class="flex items-center justify-start">
             <!-- I did this because I have no idea how to make it fill the rest of the page, so this will let the page decide how long it should be.  -->
-            <legend class="text-xl md:text-2xl">{{ question.question }}</legend>
+            <legend class="text-lg md:text-xl xl:text-3xl">{{ question.question }}</legend>
             <div class="flex flex-col flex-wrap justify-center items-start">
               <div
                 v-for="choice in choices"
@@ -25,7 +25,7 @@
                 />
                 <label
                   :for="choice.courseCode"
-                  class="text-lg md:text-xl ml-4"
+                  class="text-lg md:text-xl xl:text-2xl ml-4"
                   >{{ choice.name }}</label
                 >
               </div>
@@ -34,21 +34,16 @@
         </div>
       </div>
       <div
-        class="border-black border-[0.5px] border-solid rounded-xl lg:w-[35%] w-[90%] lg:ml-28 lg:h-[50-vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll"
+        class="border-black border border-solid rounded-xl lg:w-[45%] w-[90%] lg:ml-14 lg:h-[50vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll"
       >
         <div class="flex justify-center mt-[1%]">
-            <p class="text-[150%] text-black">Drag course(s) into order of preference:</p>
+            <p class="text-lg md:text-xl xl:text-2xl text-black">Drag course(s) into order of preference:</p>
           </div>
           <surveyDraggable
           :courses="surveyStore.currentResponse[index].answer[1].classPreference"
           :index="index"
           :numbered="true"
           :key="x"></surveyDraggable>
-          <div class="flex flex-row-reverse mt-6 ">
-            <button class="bg-[#6A9FD1] text-white w-[30%] h-[2.5rem] lg:h-[3.5rem] text-[1.5rem] md:text-[200%] mr-5 mb-5" >
-              Confirm
-            </button>
-          </div>
       </div>
     </div>
   </section>
@@ -63,36 +58,26 @@ const props = defineProps({
 
 import surveyDraggable from "./surveyDraggable.vue";
 import { useSurveyStore } from "../../../stores/survey";
-import { watch, onBeforeMount, ref, Ref } from "vue";
+import { watch, onBeforeMount, onbeforeC, ref, Ref } from "vue";
 
 const surveyStore = useSurveyStore();
 
-const x: Ref<string>= ref('o')
+const x: Ref<number>= ref(0)
 let index: number = surveyStore.currentResponse.findIndex((x) => x.id == props.question.id);
 
-onBeforeMount(() => {
-  if (index < 0) {
-    const questionAnswer = {
-      id: props.question.id,
-      question: props.question.question,
-      answer: [{ chosenClasses: [] }, { classPreference: [] }],
-    };
-    surveyStore.currentResponse.push(questionAnswer);
 
-    index = surveyStore.currentResponse.findIndex(
-      (x) => x.id == props.question.id
-    );
-  }
+if (index < 0) {
+  const questionAnswer = {
+    id: props.question.id,
+    question: props.question.question,
+    answer: [{ chosenClasses: [] }, { classPreference: [] }],
+  };
+  surveyStore.currentResponse.push(questionAnswer);
 
-  if(surveyStore.currentResponse.find(x => x.id === "allChosenCourses") === undefined) {
-    const allChosen = {
-      id: "allChosenCourses",
-      courses: [],
-      preference: []
-    }
-    surveyStore.currentResponse.push(allChosen)
-  }
-});
+  index = surveyStore.currentResponse.findIndex(
+    (x) => x.id == props.question.id
+  );
+}
 
 watch(
   () => props.question,
@@ -121,7 +106,7 @@ watch(
         name: newClass[0],
       };
 
-      const overallRank = newResponse.length;
+      const overallRank = surveyStore.currentResponse[totalIndex].courses.length + 1;
       const overallRankObject = {
         rank: overallRank,
         name: newClass[0],
@@ -142,6 +127,9 @@ watch(
 
       preference.forEach(x => {
         const index = preference.indexOf(x) 
+        preference.sort(function(a, b) {
+          return parseFloat(a.rank) - parseFloat(b.rank);
+        })
         if(index > classIndex) {
           preference[index].rank = preference[index].rank -1
         }
@@ -149,6 +137,9 @@ watch(
       
       surveyStore.currentResponse[totalIndex].preference.forEach(x => {
         const index = surveyStore.currentResponse[totalIndex].preference.indexOf(x) 
+        surveyStore.currentResponse[totalIndex].preference.sort(function(a, b) {
+          return parseFloat(a.rank) - parseFloat(b.rank);
+        })
         if(index > allPreferenceIndex) {
           surveyStore.currentResponse[totalIndex].preference[index].rank = surveyStore.currentResponse[totalIndex].preference[index].rank -1
         }
@@ -161,8 +152,8 @@ watch(
     surveyStore.currentResponse[index].answer[1].classPreference = preference;
   }
 );
-
+// console.log(surveyStore.currentResponse[14].preference)
 watch(() => surveyStore.currentResponse[index].answer[1].classPreference, (newResponse) => {
-  x.value = x.value+'o'
+  x.value = x.value+1
 }, { deep: true })
 </script>

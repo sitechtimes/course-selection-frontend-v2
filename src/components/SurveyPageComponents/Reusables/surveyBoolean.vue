@@ -1,9 +1,9 @@
 <template>
-  <div class="flex items-center justify-center">
+  <div class="flex items-center justify-center w-full">
     <fieldset class="flex items-center justify-start" ref="form">
-      <legend class="text-xl md:text-2xl">{{ question.question }}</legend>
-      <div class="flex flex-row">
-        <div class="flex justify-center items-center flex-wrap m-4">
+      <legend class="text-lg md:text-xl xl:text-3xl">{{ question.question }}</legend>
+      <div class="flex flex-row text-lg md:text-xl xl:text-2xl">
+        <div class="flex justify-center items-center flex-wrap my-4">
           <input
             type="radio"
             class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
@@ -13,7 +13,7 @@
           />
           <label :for="question.id + 'Yes'">Yes</label>
         </div>
-        <div class="flex justify-center items-center flex-wrap m-4">
+        <div class="flex justify-center items-center flex-wrap m-8">
           <input
             type="radio"
             class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"

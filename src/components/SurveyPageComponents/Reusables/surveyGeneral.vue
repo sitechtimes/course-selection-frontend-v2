@@ -1,14 +1,14 @@
 <template>
-  <div class="flex items-center justify-center w-3/4">
+  <div class="flex items-center justify-center w-full">
     <div class="flex items-center justify-center">
       <fieldset class="flex items-center justify-start space-y-6">
-        <legend class="text-xl md:text-2xl">{{ question.question }}</legend>
+        <legend class="text-lg md:text-xl xl:text-3xl">{{ question.question }}</legend>
         <input
-          class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base bg-transparent rounded-md border border-solid border-zinc-400 focus:outline-none focus:ring-0 focus:border-blue-400"
+          class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base md:text-lg xl:text-2xl bg-transparent rounded-md border border-solid border-zinc-400 focus:outline-none focus:ring-0 focus:border-blue-400"
           type="text"
           v-model="surveyStore.currentResponse[index].answer"
         />
-      </fieldset>
+      </fieldset> 
     </div>
   </div>
 </template>
