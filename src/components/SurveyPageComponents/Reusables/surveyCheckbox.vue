@@ -5,7 +5,7 @@
         <div class="flex items-center justify-center max-w-[40rem] overflow-hidden">
           <fieldset class="flex items-center justify-start">
             <!-- I did this because I have no idea how to make it fill the rest of the page, so this will let the page decide how long it should be.  -->
-            <legend class="text-lg md:text-xl xl:text-3xl">{{ question.question }}</legend>
+            <legend class="text-lg md:text-xl xl:text-3xl overflow-visible">{{ question.question }}</legend>
             <div class="flex flex-col flex-wrap justify-center items-start">
               <div
                 v-for="choice in choices"
