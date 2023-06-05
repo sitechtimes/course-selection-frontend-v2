@@ -1,6 +1,6 @@
 <template>
-  <div class="flex items-center justify-center w-full">
-    <fieldset class="flex items-center justify-start" ref="form">
+  <div class="w-full">
+    <fieldset ref="form">
       <legend class="text-lg md:text-xl xl:text-3xl">{{ question.question }}</legend>
       <div class="flex flex-row text-lg md:text-xl xl:text-2xl">
         <div class="flex justify-center items-center flex-wrap my-4">

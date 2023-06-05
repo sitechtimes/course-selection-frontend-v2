@@ -1,10 +1,8 @@
 <template>
   <section class="lg:text-left text-center h-full w-full">
     <div class="flex flex-col lg:flex-row h-full">
-      <div>
-        <div
-          class="flex items-center justify-center max-w-[40rem] overflow-hidden"
-        >
+      <div class="w-1/2">
+        <div class="flex items-center justify-center max-w-[40rem] overflow-hidden">
           <fieldset class="flex items-center justify-start">
             <!-- I did this because I have no idea how to make it fill the rest of the page, so this will let the page decide how long it should be.  -->
             <legend class="text-lg md:text-xl xl:text-3xl">{{ question.question }}</legend>
@@ -19,9 +17,7 @@
                   class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
                   :id="choice.courseCode"
                   :value="choice.name"
-                  v-model="
-                    surveyStore.currentResponse[index].answer[0].chosenClasses
-                  "
+                  v-model="surveyStore.currentResponse[index].answer[0].chosenClasses"
                 />
                 <label
                   :for="choice.courseCode"
@@ -33,9 +29,7 @@
           </fieldset>
         </div>
       </div>
-      <div
-        class="border-black border border-solid rounded-xl lg:w-[45%] w-[90%] lg:ml-14 lg:h-[50vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll"
-      >
+      <div class="border-black border border-solid rounded-xl lg:w-[45%] w-[90%] lg:ml-14 lg:h-[50vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll">
         <div class="flex justify-center mt-[1%]">
             <p class="text-lg md:text-xl xl:text-2xl text-black">Drag course(s) into order of preference:</p>
           </div>

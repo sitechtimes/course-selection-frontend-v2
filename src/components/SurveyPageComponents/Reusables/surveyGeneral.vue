@@ -1,6 +1,5 @@
 <template>
   <div class="flex items-center justify-center w-full">
-    <div class="flex items-center justify-center">
       <fieldset class="flex items-center justify-start space-y-6">
         <legend class="text-lg md:text-xl xl:text-3xl">{{ question.question }}</legend>
         <input
@@ -9,7 +8,6 @@
           v-model="surveyStore.currentResponse[index].answer"
         />
       </fieldset> 
-    </div>
   </div>
 </template>
 

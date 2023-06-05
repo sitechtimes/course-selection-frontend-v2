@@ -1,25 +1,22 @@
 <template>
   <div class="h-auto select-none">
-    <div class="p-4 flex justify-center text-center text-lg md:text-xl xl:text-2xl">
-     <div v-if="props.courses?.length > 0" class="flex flex-col mt-2">
-        <div class="my-1.5 flex flex-row items-center" v-for="n in computedHeight" :key="n" :id="n.toString()">
+     <div v-if="props.courses?.length > 0" class="flex flex-col mt-2 text-center text-base md:text-lg xl:text-xl">
+        <div class="my-1.5 flex flex-row items-center justify-center" v-for="n in computedHeight" :key="n" :id="n.toString()">
         <p>{{ n }}.</p>
         <div
-          class="h-12 mx-2 xl:h-16  placeholder flex items-center justify-center bg-[#D6EEFF] p-2 rounded-lg shadow-lg text-[#37394F] cursor-grab active:cursor-grabbing font-semibold course">
+          class="h-12 mx-2 xl:h-16 w-2/3 placeholder flex items-center justify-center bg-[#D6EEFF] p-2 rounded-lg shadow-lg text-[#37394F] cursor-grab active:cursor-grabbing font-semibold course">
           <p
-            class="h-full"
             draggable="true"
             @dragover.prevent="(e) => hoverBoxOver(e)"
             @dragstart="(e) => (dragElement = e.target)"
             @drop.prevent="(e) => hoverBox(e, n)"
           >
-            {{ currentResponse.find(x => x.rank == n).name }}
+            {{ props.courses.find(x => x.rank == n).name }}
           </p>
         </div>
       </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -34,13 +31,6 @@ const props = defineProps({
 
 const surveyStore = useSurveyStore()
 let dragElement: HTMLElement;
-let currentResponse: Array<object> = ref()
-
-if(props.index === surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses')) {
-  currentResponse = surveyStore.currentResponse[props.index].preference
-} else {
-  currentResponse = surveyStore.currentResponse[props.index].answer[1].classPreference
-}
 
 const computedHeight = computed(() => {
   return props.courses.length;
