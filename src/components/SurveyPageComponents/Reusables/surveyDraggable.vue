@@ -11,7 +11,7 @@
             class="w-full h-full flex items-center justify-center"
             :class="`bg-[#${color}]`"
             draggable="true"
-            @dragover.prevent="(e) => hoverBoxOver(e)"
+            @dragover.prevent
             @dragstart="(e) => (dragElement = e.target)"
             @drop.prevent="(e) => hoverBox(e, n)"
           >
