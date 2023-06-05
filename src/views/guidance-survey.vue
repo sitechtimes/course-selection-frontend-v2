@@ -113,7 +113,7 @@ watch(() => surveyStore.currentResponse[indexAll].preference, (newResponse) => {
       </div>
       <div class="flex justify-center mb-10 flex-col items-center">
         <p v-if="missing">Please fill in all questions before submitting.</p>
-        <button @click="completeSurvey()" class="bg-[#C5D4A4] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-36 h-12 text-2xl font-bold text-[#37394F]">Complete</button>
+        <button @click="completeSurvey()" class="bg-[#DEE9C8] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-36 h-12 text-2xl font-bold text-[#37394F]">Complete</button>
       </div>
     </div>
   </section>

@@ -9,6 +9,7 @@
           >
           <div
             class="w-full h-full flex items-center justify-center"
+            :class="`bg-[#${color}]`"
             draggable="true"
             @dragover.prevent="(e) => hoverBoxOver(e)"
             @dragstart="(e) => (dragElement = e.target)"
