@@ -79,6 +79,7 @@ const getChoices = () => {
           :choices="getChoices()"
           :answers="currentAnswer"
           :key="currentQuestion.questionType"
+          :color="'D6EEFF'"
         ></checkboxComponent>
       </div>
     </div>

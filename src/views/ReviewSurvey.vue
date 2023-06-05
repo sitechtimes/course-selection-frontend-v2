@@ -66,7 +66,9 @@ watch(() => surveyStore.currentResponse[indexAll].preference, (newResponse) => {
       <div v-for="question in userStore.data.survey.questions" :key="question.id" class="flex justify-center">
         <booleanComponent class="mb-2" v-if="question.questionType === 'BOOLEAN'" :question="question" ></booleanComponent>
         <generalComponent class="mb-6" v-else-if="question.questionType === 'GENERAL'" :question="question" ></generalComponent>
-        <checkboxComponent v-else class="mb-6" :question="question" :choices="getChoices(question)"></checkboxComponent>
+        <checkboxComponent v-else class="mb-6" :question="question" :choices="getChoices(question)"
+        :color="'D6EEFF'"
+        ></checkboxComponent>
       </div>
       <div class="my-6">
         <p class="text-lg md:text-xl xl:text-3xl my-4">For the final part of the survey, please drag your classes in the order of priority, with the first choice being your top priority.</p>
@@ -74,7 +76,9 @@ watch(() => surveyStore.currentResponse[indexAll].preference, (newResponse) => {
           :courses="surveyStore.currentResponse[indexAll].preference" 
           :index="indexAll"
           :numbered="true"
-          :key="x">
+          :key="x"
+          :color="'D6EEFF'"
+          >
         </surveyDraggable>
       </div>
       <div class="mt-14">

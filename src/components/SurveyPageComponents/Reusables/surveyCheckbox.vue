@@ -37,6 +37,7 @@
           :courses="surveyStore.currentResponse[index].answer[1].classPreference"
           :index="index"
           :numbered="true"
+          :color="color"
           :key="x"></surveyDraggable>
       </div>
     </div>
@@ -48,6 +49,7 @@ const props = defineProps({
   choices: Array,
   question: Object,
   answers: Array,
+  color: String,
 });
 
 import surveyDraggable from "./surveyDraggable.vue";

@@ -4,15 +4,18 @@
         <div class="my-1.5 flex flex-row items-center justify-center" v-for="n in computedHeight" :key="n" :id="n.toString()">
         <p>{{ n }}.</p>
         <div
-          class="h-12 mx-2 xl:h-16 w-2/3 placeholder flex items-center justify-center bg-[#D6EEFF] p-2 rounded-lg shadow-lg text-[#37394F] cursor-grab active:cursor-grabbing font-semibold course">
-          <p
+          class="h-12 mx-2 xl:h-16 w-2/3 placeholder flex items-center justify-center p-2 rounded-lg shadow-lg text-[#37394F] cursor-grab active:cursor-grabbing font-semibold course"
+          :class="`bg-[#${color}]`"
+          >
+          <div
+            class="w-full h-full flex items-center justify-center"
             draggable="true"
             @dragover.prevent="(e) => hoverBoxOver(e)"
             @dragstart="(e) => (dragElement = e.target)"
             @drop.prevent="(e) => hoverBox(e, n)"
           >
             {{ props.courses.find(x => x.rank == n).name }}
-          </p>
+          </div>
         </div>
       </div>
       </div>
@@ -27,6 +30,7 @@ const props = defineProps({
   courses: Array,
   numbered: Boolean,
   index: Number,
+  color: String
 });
 
 const surveyStore = useSurveyStore()

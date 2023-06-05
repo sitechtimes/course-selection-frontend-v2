@@ -14,13 +14,26 @@ function viewingSurvey() {
     return router.currentRoute.value.path.includes('survey')
 }
 
-const redirect = () => {
+const exitSurvey = () => {
     if (userStore.isLoggedIn === true) {
         if (userStore.userType === 'student') {
             router.push('/student/dashboard')
         } 
         if (userStore.userType === 'guidance') {
             router.push('/guidance/studentlist')
+        }
+    } else {
+        return router.push('/')
+    }
+}
+
+const redirect = () => {
+    if (userStore.isLoggedIn === true) {
+        if (userStore.userType === 'student') {
+            router.push('/student/dashboard')
+        } 
+        if (userStore.userType === 'guidance') {
+            router.push('/guidance/dashboard')
         }
     } else {
         return router.push('/')
@@ -70,7 +83,7 @@ const redirect = () => {
         </div>
         <div v-if="viewingSurvey()" class="flex flex-row w-1/6 justify-between">
             <p @click="userStore.saveSurvey('INCOMPLETE')" class="text-[#37394F] text-2xl cursor-pointer">Save</p>
-            <p @click="redirect()" class="text-[#37394F] text-2xl cursor-pointer">Exit</p>
+            <p @click="exitSurvey()" class="text-[#37394F] text-2xl cursor-pointer">Exit</p>
         </div>
     <MobileNav v-if="menuOpen" @e="toggleMenu" />
     </nav>
