@@ -42,7 +42,9 @@ export const useUserStore = defineStore("user", {
                                         lastName
                                         email
                                     }
+                                    homeroom
                                     osis
+                                    grade
                                     
                                 }
                             }

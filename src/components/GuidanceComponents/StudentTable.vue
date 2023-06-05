@@ -4,7 +4,7 @@ import { useUserStore } from '../../stores/user';
 import SearchBar from "./SearchBar.vue"
 import { useRouter } from 'vue-router'
 
-const props = defineProps(['newstudents'])
+const props = defineProps(['newstudents', 'status'])
 const userStore = useUserStore()
 const router = useRouter()
 
@@ -32,14 +32,11 @@ const router = useRouter()
                     <td class="p-4">{{ student.grade }}</td>
                     <td class="p-4">{{ student.osis }}</td>
                     <td class="p-4">{{ student.user.email }}</td>
-                    <td class="p-4" v-if="student.progress === 'Not Started'">
-                        <p class="text-[#461616] bg-[#EA9F9F] w-[8rem] font-semibold text-center p-1 rounded-2xl">{{ student.progress }}</p>
+                    <td class="p-4" v-if="status === 'INCOMPLETE'">
+                        <p class="text-[#461616] bg-[#EA9F9F] w-[8rem] font-semibold text-center p-1 rounded-2xl">{{ status }}</p>
                     </td>
-                    <td class="p-4" v-else-if="student.progress === 'In Progress'">
-                        <p class="text-[#461616] bg-[#F9D477] w-[8rem] font-semibold text-center p-1 rounded-2xl">{{ student.progress }}</p>
-                    </td>
-                    <td class="p-4" v-else-if="student.progress === 'Complete'">
-                        <p class="text-[#174616] bg-[#A8D480] w-[8rem] font-semibold text-center p-1 rounded-2xl">{{ student.progress }}</p>
+                    <td class="p-4" v-else-if="status === 'COMPLETE'">
+                        <p class="text-[#174616] bg-[#A8D480] w-[8rem] font-semibold text-center p-1 rounded-2xl">{{ status }}</p>
                     </td>
                 </tr>
             </tbody>
