@@ -366,6 +366,9 @@ h2 {
   }
 }
 @media only screen and (max-width: 900px) {
+  .events {
+    margin-top: 2rem;
+  }
   .item {
     margin-bottom: 0.2rem;
   }
