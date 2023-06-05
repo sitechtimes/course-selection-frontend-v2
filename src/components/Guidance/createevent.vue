@@ -17,7 +17,6 @@ function submit(date: String, people: String, time: String) {
   userStore.changeMeeting("123", date);
 
   console.log(json);
-  console.log(time);
 }
 
 // let time: String;
