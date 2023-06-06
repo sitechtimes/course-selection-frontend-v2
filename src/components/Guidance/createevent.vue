@@ -10,12 +10,13 @@ let people: String;
 let description: String;
 
 function submit(date: String, people: String, time: String) {
+  document.getElementById("save").innerHTML = "Saved";
   console.log(date);
   console.log(people);
+  console.log(time);
   document.getElementById("form").reset();
   let json = JSON.stringify(date, time);
   userStore.changeMeeting("123", date);
-
   console.log(json);
 }
 //2007-12-03T10:15:30Z
@@ -35,14 +36,6 @@ function submit(date: String, people: String, time: String) {
 //   date = SplitDate.join("/");
 // }
 
-// function hide() {
-//   const createevent = document.querySelector(".createevent");
-//   if (createevent.style.display === "block") {
-//     createevent.style.display === "none";
-//   } else {
-//     createevent.style.display === "none";
-//   }
-// }
 function show() {
   const createevent = document.querySelector(".createevent");
   if (createevent.style.display === "none") {
@@ -50,6 +43,10 @@ function show() {
   } else {
     createevent.style.display = "block";
   }
+}
+function hide() {
+  const createevent = document.querySelector(".createevent");
+  createevent.style.display = "none";
 }
 </script>
 
@@ -164,9 +161,10 @@ function show() {
           </div>
           <div class="item submit">
             <button
-              @click="submit(date, people)"
+              @click="submit(date, people, time)"
               type="submit"
               class="font-bold"
+              id="save"
             >
               Save
             </button>
@@ -230,7 +228,7 @@ function show() {
   color: rgb(0, 34, 84);
 }
 .test {
-  margin-bottom: 0rem;
+  margin-bottom: 5rem;
 }
 .event {
   display: flex;
@@ -306,7 +304,6 @@ svg {
   width: 65%;
   height: 35rem;
   border-radius: 1rem;
-  margin-top: 5rem;
   border: 1px black solid;
 }
 h2 {
@@ -324,8 +321,10 @@ h2 {
     width: 70%;
     height: 35rem;
     border-radius: 0.8rem;
-    margin-top: 3rem;
     border: 1px black solid;
+  }
+  .test {
+    margin-bottom: 3rem;
   }
   .times {
     flex-direction: column;
@@ -398,8 +397,11 @@ h2 {
     width: 65%;
     height: 22rem;
     border-radius: 0.8rem;
-    margin-top: 2rem;
+
     border: 1px black solid;
+  }
+  .test {
+    margin-bottom: 2rem;
   }
   .space {
     justify-content: center;
@@ -451,9 +453,11 @@ h2 {
     width: 65%;
     height: 17rem;
     border-radius: 0.5rem;
-    margin-top: 2rem;
     padding-bottom: 0;
     border: 1px black solid;
+  }
+  .test {
+    margin-bottom: 2rem;
   }
   .space {
     justify-content: center;
