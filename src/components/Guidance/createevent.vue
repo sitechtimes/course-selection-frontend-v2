@@ -18,10 +18,7 @@ function submit(date: String, people: String, time: String) {
 
   console.log(json);
 }
-
-// let time: String;
-// let date: String;
-
+//2007-12-03T10:15:30Z
 // if (
 //   userStore.data.student.meeting != undefined ||
 //   userStore.data.student.meeting != null
