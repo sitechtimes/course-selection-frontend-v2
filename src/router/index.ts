@@ -13,7 +13,6 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: () => import("../views/landing.vue"),
-      beforeEnter: guardRoute,
     },
     {
       path: "/guidance/dashboard",
@@ -56,7 +55,6 @@ const router = createRouter({
       path: "/student/dashboard",
       name: "studentDash",
       component: () => import("../views/dashboard.vue"),
-      beforeEnter: guardRoute,
     },
   ],
 });
@@ -68,8 +66,9 @@ router.beforeEach(async (to) => {
   const publicPages = ["/", "/login"];
   const authRequired = !publicPages.includes(to.path);
 
-  if (authRequired && loggedIn) {
-    console.log("you good");
+  if (authRequired && !loggedIn) {
+    console.log("go sign in");
+    return { name: "login" };
   }
 });
 
