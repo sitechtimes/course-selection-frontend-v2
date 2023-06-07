@@ -79,9 +79,9 @@ function show() {
 </script>
 
 <template>
-     <div class="w-[16.4rem]">
+     <div class="w-[16rem]">
      <div
-      class="h-10 mr-4 flex flex-row bg-primary-g text-black justify-evenly cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
+      class="h-10 flex flex-row bg-primary-g text-black justify-evenly cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
       id="sort"
       @click="isOpen = !isOpen"
     >

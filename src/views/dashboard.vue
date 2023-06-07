@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import BellIcon from "../components/icons/BellIcon.vue";
-import { useUserStore, useSurveyStore } from "../stores/user";
-import { useRouter } from 'vue-router'
+import { useUserStore } from "../stores/user";
+import { useSurveyStore } from "../stores/survey";
 
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
-const router = useRouter()
 
 let annoucement = "Surveys are closing next week on 03/12/2023.";
 
@@ -27,17 +26,11 @@ if (
   SplitDate.splice(0, 3, SplitDate[1], SplitDate[2], SplitDate[0]);
   date = SplitDate.join("/");
 }
-
-async function setSurvey() {
-  await userStore.setSurvey(userStore.data.student.osis, userStore.data.survey.questions)
-  router.push("/survey")
-}
-
 </script>
 
 <template>
-  <div class="h-[80vh] w-full flex flex-row justify-center items-center">
-    <div id="left" class="w-11/12 flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left md:w-3/4 lg:max-w-3xl lg:space-y-6 lg:ml-12">
+  <div class="h-[75vh] w-full flex flex-row justify-center items-center">
+    <div id="left" class="w-5/6 flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left md:w-3/4 lg:max-w-2xl xl:max-w-3xl lg:space-y-6 lg:ml-12">
       <h1 id="name" class="text-5xl font-bold">
         Welcome back,
         <span>{{ userStore.first_name }} {{ userStore.last_name }}</span>
@@ -53,9 +46,11 @@ async function setSurvey() {
           </button>
         </RouterLink>
         <!-- check if survey exists, if not create new and set current -->
-        <button @click="setSurvey()" class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
+        <RouterLink to="/survey">
+          <button class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
             Course Survey
-        </button>
+          </button>
+        </RouterLink>
       </div>
       <div>
         <p v-if="userStore.data.student.meeting != undefined || userStore.data.student.meeting != null">You have a scheduled meeting with your guidance councelor on {{ date }} at {{ time }}.</p>

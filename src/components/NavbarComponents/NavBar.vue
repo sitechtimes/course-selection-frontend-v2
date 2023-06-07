@@ -14,7 +14,7 @@ function viewingSurvey() {
     return router.currentRoute.value.path.includes('survey')
 }
 
-const redirect = () => {
+const exitSurvey = () => {
     if (userStore.isLoggedIn === true) {
         if (userStore.userType === 'student') {
             router.push('/student/dashboard')
@@ -27,11 +27,23 @@ const redirect = () => {
     }
 }
 
-// let page = redirect()
+const redirect = () => {
+    if (userStore.isLoggedIn === true) {
+        if (userStore.userType === 'student') {
+            router.push('/student/dashboard')
+        } 
+        if (userStore.userType === 'guidance') {
+            router.push('/guidance/dashboard')
+        }
+    } else {
+        return router.push('/')
+    }
+}
+
 </script>
 
 <template>
-    <nav id="navbar" class="absolute w-full top-0 h-24 flex justify-between items-center px-8 md:px-12 lg:px-16 overflow-visible">
+    <nav id="navbar" class="w-full top-0 h-[15vh] flex justify-between items-center px-8 md:px-12 lg:px-16 overflow-visible">
         <div @click="redirect()" class="cursor-pointer">
             <h1 class="text-3xl font-semibold z-50">Course Selection</h1>
         </div>
@@ -40,7 +52,7 @@ const redirect = () => {
                 <p class="text-base">Courses</p>
             </RouterLink>
             <RouterLink to="/survey">
-                <p @click="userStore.setSurvey(userStore.data.student.osis, userStore.data.survey.questions)" class="text-base">Survey</p>
+                <p class="text-base">Survey</p>
             </RouterLink>
             <RouterLink to="/">
                 <p @click="userStore.$reset" id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>
@@ -70,8 +82,8 @@ const redirect = () => {
             <CloseMenu @click="toggleMenu" v-else />
         </div>
         <div v-if="viewingSurvey()" class="flex flex-row w-1/6 justify-between">
-            <p @click="userStore.saveSurvey()" class="text-[#37394F] text-2xl cursor-pointer">Save</p>
-            <p @click="redirect()" class="text-[#37394F] text-2xl cursor-pointer">Exit</p>
+            <p @click="userStore.saveSurvey('INCOMPLETE')" class="text-[#37394F] text-2xl cursor-pointer">Save</p>
+            <p @click="exitSurvey()" class="text-[#37394F] text-2xl cursor-pointer">Exit</p>
         </div>
     <MobileNav v-if="menuOpen" @e="toggleMenu" />
     </nav>
