@@ -31,7 +31,7 @@ export const useUserStore = defineStore("user", {
         console.log("guidance logged");
         await axios
           .post(
-            "https://api.siths.dev/graphql/",
+            `${import.meta.env.VITE_URL}/graphql/`,
             {
               query: `query{
                             user{
@@ -100,7 +100,7 @@ export const useUserStore = defineStore("user", {
       } else {
         await axios
           .post(
-            "https://api.siths.dev/graphql/",
+            `${import.meta.env.VITE_URL}/graphql/`,
             {
               query: `query{
                         user{
@@ -161,7 +161,7 @@ export const useUserStore = defineStore("user", {
     async getUserType() {
       await axios
         .post(
-          "https://api.siths.dev/graphql/",
+          `${import.meta.env.VITE_URL}/graphql/`,
           {
             query: `query{
                             user{
@@ -189,7 +189,7 @@ export const useUserStore = defineStore("user", {
     async GoogleLogin(res: any) {
       this.loading = true;
       await axios
-        .post("https://api.siths.dev/social-login/google/", {
+        .post(`${import.meta.env.VITE_URL}/social-login/google/`, {
           access_token: res.access_token,
         })
         .then((response) => {
@@ -207,7 +207,7 @@ export const useUserStore = defineStore("user", {
     async changeMeeting(osis: string, newTime: string) {
       await axios
         .post(
-          "https://api.siths.dev/graphql/",
+          `${import.meta.env.VITE_URL}/graphql/`,
           {
             query: `mutation {
                             updateMeeting(osis: "${osis}", meeting:"${newTime}") {
@@ -237,7 +237,7 @@ export const useUserStore = defineStore("user", {
 
       await axios
         .post(
-          "https://api.siths.dev/graphql/",
+          `${import.meta.env.VITE_URL}/graphql/`,
           {
             query: `mutation updateSurvey($osis: String, $answers: JSONString, $status: String) {
                 updateSurvey(osis: $osis, answers: $answers, status: $status) {
@@ -297,7 +297,7 @@ export const useUserStore = defineStore("user", {
       const jsonString = JSON.stringify(answers);
       await axios
         .post(
-          "https://api.siths.dev/graphql/",
+          `${import.meta.env.VITE_URL}/graphql/`,
           {
             query: `mutation updateSurvey($osis: String, $answers: JSONString) {
               newSurvey(osis: $osis, answers: $answers) {
