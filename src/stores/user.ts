@@ -47,7 +47,18 @@ export const useUserStore = defineStore("user", {
                                     homeroom
                                     osis
                                     grade
-                                    
+                                    coursesTaken{
+                                        courseCode
+                                    }
+                                    coursesRequired{
+                                        courseCode
+                                    }
+                                    coursesAvailable{
+                                        courseCode
+                                        subject
+                                        name
+                                    }
+                                    meeting
                                 }
                             }
                             allSurveys {

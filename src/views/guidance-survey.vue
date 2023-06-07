@@ -15,7 +15,7 @@ const router = useRouter()
 
 const viewedStudent = userStore.data.guidance.students.filter(student => student.osis === window.location.pathname.substring(17))[0]
 // const color = "D6EEFF"
-
+console.log(viewedStudent)
 let currentSurvey = null
 const missing: Ref<boolean> = ref(false) 
 const x: Ref<number> = ref(0)
@@ -23,9 +23,7 @@ const indexAll = surveyStore.currentResponse.findIndex((x) => x.id === 'allChose
 const indexNote = surveyStore.currentResponse.findIndex((x) => x.id === 'noteToGuidance');
 const indexGuidance = surveyStore.currentResponse.findIndex((x) => x.id === 'guidanceFinalNote');
 
-console.log(userStore.data.allSurveys.edges)
-
-currentSurvey = userStore.data.allSurveys.edges.find(x => x.grade === viewedStudent.grade).node
+currentSurvey = userStore.data.allSurveys.edges.find(x => x.node.grade === viewedStudent.grade).node
 
 const getChoices = (question) => {
   const classes = viewedStudent.coursesAvailable

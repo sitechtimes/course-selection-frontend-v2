@@ -4,10 +4,14 @@ import { useUserStore } from '../../stores/user';
 import SearchBar from "./SearchBar.vue"
 import { useRouter } from 'vue-router'
 
-const props = defineProps(['newstudents', 'status'])
+const props = defineProps(['newstudents'])
 const userStore = useUserStore()
 const router = useRouter()
 
+async function userClick(student: object) {
+    await userStore.setSurvey(student.osis, userStore.data.allSurveys.edges.find(x => x.node.grade === student.grade).node.questions)
+    router.push(`/guidance/survey/${student.osis}`)
+}
 
 </script>
 
@@ -25,9 +29,11 @@ const router = useRouter()
                 </tr>
             </thead>
             <tbody v-for="student in newstudents" :key="student" class="border-2 border-black">
-                <tr @click="router.push(`/guidance/survey/${student.osis}`)">
+                <tr @click="userClick(student)">
                     <td class="p-4">{{ student.user.lastName }}, {{ student.user.firstName }}</td>
-                    <td class="p-4">{{ student.grade }}</td>
+                    <td class="p-4" v-if="student.grade === 'SOPHOMORE'">9</td>
+                    <td class="p-4" v-if="student.grade === 'JUNIOR'">10</td>
+                    <td class="p-4" v-if="student.grade === 'SENIOR'">11</td>
                     <td class="p-4">{{ student.osis }}</td>
                     <td class="p-4">{{ student.user.email }}</td>
                     <td class="p-4" v-if="userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === student.osis) === undefined">

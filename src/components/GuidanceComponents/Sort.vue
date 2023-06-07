@@ -42,15 +42,31 @@ const LastNameDec = computed(() => {
   }
   return (students.sort(compare));
 });
-const grade9 = computed(() => {
+const notstarted = computed(() => {
   function compare(a: { grade: any; }) {
-    if (a.grade === "FRESHMAN") return -1;
+    if (a.userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis) === undefined) return -1;
     else
     return null;
   }
   return (students.sort(compare));
 });
-const grade10 = computed(() => {
+const inprogress = computed(() => {
+  function compare(a: { grade: any; }) {
+    if (a.userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis).node.status === 'INCOMPLETE') return -1;
+    else
+    return null;
+  }
+  return (students.sort(compare));
+});
+const completed = computed(() => {
+  function compare(a: { grade: any; }) {
+    if (a.userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis).node.status === 'COMPLETE') return -1;
+    else
+    return null;
+  }
+  return (students.sort(compare));
+});
+const grade9 = computed(() => {
   function compare(a: { grade: any; }) {
     if (a.grade === "SOPHOMORE") return -1;
     else
@@ -58,9 +74,17 @@ const grade10 = computed(() => {
   }
   return (students.sort(compare));
 });
-const grade11 = computed(() => {
+const grade10 = computed(() => {
   function compare(a: { grade: any; }) {
     if (a.grade === "JUNIOR") return -1;
+    else
+    return null;
+  }
+  return (students.sort(compare));
+});
+const grade11 = computed(() => {
+  function compare(a: { grade: any; }) {
+    if (a.grade === "SENIOR") return -1;
     else
     return null;
   }
@@ -103,13 +127,13 @@ function show() {
           <button @click="LastNameDec()" class="ml-2">{{ lastnameza }}</button>
         </div>
         <div class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
-          <button @click="LastNameInc()" class="ml-2">{{ ns }}</button>
+          <button @click="notstarted()" class="ml-2">{{ ns }}</button>
         </div>
         <div class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
-          <button @click="LastNameInc()" class="ml-2">{{ ip }}</button>
+          <button @click="inprogress()" class="ml-2">{{ ip }}</button>
         </div>
         <div class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
-          <button @click="LastNameInc()" class="ml-2">{{ com }}</button>
+          <button @click="completed()" class="ml-2">{{ com }}</button>
         </div>
         <div class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
           <button @click="grade9()" class="ml-2">{{ nine }}</button>

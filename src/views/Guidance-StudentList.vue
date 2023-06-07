@@ -15,13 +15,11 @@ export default {
   data() {
     return {
       students: useUserStore().data.guidance.students,
-      status: useUserStore().data.allAnsweredSurveys.status,
       input: ref("")
     }
   },
   computed: {
     newstudents() {
-      console.log(useUserStore().data.allAnsweredSurveys.edges.node)
       return this.students.filter((student: { user: { firstName: string; lastName: string; }; osis: string|string[]; }) => {
         return (
           student.user.firstName.toLowerCase().indexOf(this.input.toLowerCase()) != -1 || student.user.lastName.toLowerCase().indexOf(this.input.toLowerCase()) != -1 || student.osis.indexOf(this.input) != -1
