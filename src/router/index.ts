@@ -15,7 +15,7 @@ const router = createRouter({
       component: () => import('../views/GuidanceHome.vue')
     },
     {
-      path: '/guidance-studentlist',
+      path: '/guidance/studentlist',
       name: 'Guidance-Studentlist',
       component: () => import('../views/Guidance-StudentList.vue')
     },
@@ -47,12 +47,17 @@ const router = createRouter({
       component: () => import('../views/SurveyPage.vue')
     },
     {
+      path: '/survey/review',
+      name: 'ReviewSurvey',
+      component: () => import('../views/ReviewSurvey.vue')
+    },
+    {
       path: '/student/dashboard',
       name: 'studentDash',
       component: () => import('../views/dashboard.vue')
     },
     {
-      path: '/guidance-survey/:osis',
+      path: '/guidance/survey/:osis',
       name: 'guidance-survey',
       component: () => import('../views/guidance-survey.vue')
     }
