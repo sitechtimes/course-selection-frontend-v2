@@ -18,10 +18,8 @@ console.log(userStore.data)
 
 <template>
     <div class="h-[75vh] w-full flex flex-row justify-center items-center">
-        <div id="left" class="w-5/6 flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left md:w-3/4 lg:max-w-2xl xl:max-w-3xl lg:space-y-6 lg:ml-12">
         <h1 id="name" class="text-5xl font-bold">
             The survey is currently closed. You will not be able to change your choices.
         </h1>
-        </div>
     </div>
 </template>
