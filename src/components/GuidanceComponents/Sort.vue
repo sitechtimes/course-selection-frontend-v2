@@ -1,12 +1,21 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
+import { useUserStore } from '../../stores/user';
 import DownArrow from '../icons/DownArrow.vue';
-import { students } from '../../mockdata';
+const students = useUserStore().data.guidance.students;
 const input = ref("");
 const props = ["title"];
 const selected = ref("Sort By");
 const isOpen = ref(false);
-const menuarray = ref([
+const lastnameaz = ref("Last Name (A-Z)")
+const lastnameza = ref("Last Name (Z-A)")
+const ns = ref("Not Started")
+const ip = ref("In Progress")
+const com = ref("Complete")
+const nine = ref("Grade 9")
+const ten = ref("Grade 10")
+const eleven = ref("Grade 11")
+/* const menuarray = ref([
   "Last Name (A-Z)",
   "Last Name (Z-A)",
   "Not Started",
@@ -15,7 +24,72 @@ const menuarray = ref([
   "Grade 9",
   "Grade 10",
   "Grade 11",
-])
+]) */
+
+const LastNameInc = computed(() => {
+  function compare(a: { user: { lastName: any; }; }, b: { user: { lastName: any; }; }) {
+    if (a.user.lastName < b.user.lastName) return -1;
+    if (a.user.lastName > b.user.lastName) return 1;
+    return 0;
+  }
+  return (students.sort(compare));
+});
+const LastNameDec = computed(() => {
+  function compare(a: { user: { lastName: any; }; }, b: { user: { lastName: any; }; }) {
+    if (a.user.lastName > b.user.lastName) return -1;
+    if (a.user.lastName < b.user.lastName) return 1;
+    return 0;
+  }
+  return (students.sort(compare));
+});
+const notstarted = computed(() => {
+  function compare(a: { grade: any; }) {
+    if (a.userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis) === undefined) return -1;
+    else
+    return null;
+  }
+  return (students.sort(compare));
+});
+const inprogress = computed(() => {
+  function compare(a: { grade: any; }) {
+    if (a.userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis).node.status === 'INCOMPLETE') return -1;
+    else
+    return null;
+  }
+  return (students.sort(compare));
+});
+const completed = computed(() => {
+  function compare(a: { grade: any; }) {
+    if (a.userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis).node.status === 'COMPLETE') return -1;
+    else
+    return null;
+  }
+  return (students.sort(compare));
+});
+const grade9 = computed(() => {
+  function compare(a: { grade: any; }) {
+    if (a.grade === "SOPHOMORE") return -1;
+    else
+    return null;
+  }
+  return (students.sort(compare));
+});
+const grade10 = computed(() => {
+  function compare(a: { grade: any; }) {
+    if (a.grade === "JUNIOR") return -1;
+    else
+    return null;
+  }
+  return (students.sort(compare));
+});
+const grade11 = computed(() => {
+  function compare(a: { grade: any; }) {
+    if (a.grade === "SENIOR") return -1;
+    else
+    return null;
+  }
+  return (students.sort(compare));
+});
 
 function show() {
   onMounted(() => {
@@ -43,8 +117,32 @@ function show() {
       <DownArrow class="mt-2.5"/>
       </div>
       <div class="sub-menu absolute shadow-[4px_3px_3px_rgba(0,0,0,0.25)]" v-if="isOpen" >
-        <div v-for="menu in menuarray" class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
-          <button class="ml-2">{{ menu }}</button>
+<!--         <div v-for="menu in menuarray" :key="menu" class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
+          <button @click="LastNameInc()" class="ml-2">{{ menu }}</button>
+        </div> -->
+        <div class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
+          <button @click="LastNameInc()" class="ml-2">{{ lastnameaz }}</button>
+        </div>
+        <div class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
+          <button @click="LastNameDec()" class="ml-2">{{ lastnameza }}</button>
+        </div>
+        <div class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
+          <button @click="notstarted()" class="ml-2">{{ ns }}</button>
+        </div>
+        <div class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
+          <button @click="inprogress()" class="ml-2">{{ ip }}</button>
+        </div>
+        <div class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
+          <button @click="completed()" class="ml-2">{{ com }}</button>
+        </div>
+        <div class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
+          <button @click="grade9()" class="ml-2">{{ nine }}</button>
+        </div>
+        <div class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
+          <button @click="grade10()" class="ml-2">{{ ten }}</button>
+        </div>
+        <div class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
+          <button @click="grade11()" class="ml-2">{{ eleven }}</button>
         </div>
       </div>
     </div>

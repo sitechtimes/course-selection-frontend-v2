@@ -15,7 +15,7 @@ const router = useRouter()
 
 const viewedStudent = userStore.data.guidance.students.filter(student => student.osis === window.location.pathname.substring(17))[0]
 // const color = "D6EEFF"
-
+console.log(viewedStudent)
 let currentSurvey = null
 const missing: Ref<boolean> = ref(false) 
 const x: Ref<number> = ref(0)

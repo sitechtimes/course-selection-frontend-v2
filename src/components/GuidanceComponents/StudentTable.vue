@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-/* import { students } from '../../mockdata'; */
 import { useUserStore } from '../../stores/user';
 import SearchBar from "./SearchBar.vue"
 import { useRouter } from 'vue-router'
 
+const props = defineProps(['newstudents'])
 const userStore = useUserStore()
-const newstudents = userStore.data.guidance.students;
-const input = ref("")
 const router = useRouter()
 
 async function userClick(student: object) {
@@ -31,13 +29,11 @@ async function userClick(student: object) {
                 </tr>
             </thead>
             <tbody v-for="student in newstudents" :key="student" class="border-2 border-black">
-                <tr @click="userClick(student)"> 
+                <tr @click="userClick(student)">
                     <td class="p-4">{{ student.user.lastName }}, {{ student.user.firstName }}</td>
-
                     <td class="p-4" v-if="student.grade === 'SOPHOMORE'">9</td>
                     <td class="p-4" v-if="student.grade === 'JUNIOR'">10</td>
                     <td class="p-4" v-if="student.grade === 'SENIOR'">11</td>
-
                     <td class="p-4">{{ student.osis }}</td>
                     <td class="p-4">{{ student.user.email }}</td>
                     <td class="p-4" v-if="userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === student.osis) === undefined">

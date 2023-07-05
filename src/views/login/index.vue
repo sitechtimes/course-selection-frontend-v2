@@ -22,16 +22,7 @@ watch(() => userStore.loading, (newResponse) => {
 
 <template>
     <div class="w-full h-[80vh] flex justify-center items-center bg-[#fdfdfd]">
-        <div v-if="userStore.loading" class="w-11/12 max-w-[32rem] max-h-[40rem] h-full border-primary-s border-[10px] rounded-xl flex justify-center items-center lg:max-w-[60rem] flex-col">
-          <p>Loading...</p>
-          <img
-                  id="loginpic"
-                  class="h-60"
-                  src="https://images.squarespace-cdn.com/content/v1/58334b19579fb3628a7146d2/1479920558610-HKJIOE92XN0I2KH6RDFU/Seagull_04.gif?format=1500w"
-                  alt="fillerpic"
-                />
-        </div>
-        <div v-if="!userStore.loading" id="book" class="w-11/12 max-w-[32rem] max-h-[40rem] h-full border-primary-s border-[10px] rounded-xl flex justify-between items-center lg:max-w-[60rem]">
+        <div id="book" class="w-11/12 max-w-[32rem] max-h-[40rem] h-full border-primary-s border-[10px] rounded-xl flex justify-between items-center lg:max-w-[60rem]">
             <div id="left" class="hidden w-1/2 h-full border-zinc-400 lg:border-r justify-center items-center lg:flex">
                 <img
                 id="loginPic"
