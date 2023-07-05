@@ -6,10 +6,27 @@ import { useSurveyStore } from "../stores/survey";
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
 
-let annoucement = "Surveys are closing next week on 03/12/2023.";
-
 let time: String;
 let date: String;
+
+const currentDate = new Date()
+
+const closeTime = userStore.data.survey.dueDate.substring(0,10).split("-")
+let openMeeting = false
+
+if (Number(closeTime[0]) > currentDate.getFullYear()) {
+  openMeeting = true
+} else if (Number(closeTime[0]) === currentDate.getFullYear()) {
+  if (Number(closeTime[1]) > currentDate.getMonth() + 1) { // Get month starts at 0, not 1
+    openMeeting = true
+  } else if (Number(closeTime[1]) === currentDate.getMonth() + 1) {
+    if (Number(closeTime[2]) > currentDate.getDate()) {
+      openMeeting = true
+    }
+  }
+}
+
+console.log(openMeeting)
 
 if (
   userStore.data.student.meeting != undefined ||
@@ -37,7 +54,8 @@ if (
       </h1>
       <div id="announcements" class="flex justify-center items-center ml-4 lg:ml-0 lg:justify-start">
         <BellIcon />
-        <h2 class="text-xl text-left flex ml-2">{{ annoucement }}</h2>
+        <h2 v-if="openMeeting" class="text-xl text-left flex ml-2">Surveys are closing on {{ closeTime.splice(0, 3, closeTime[1], closeTime[2], closeTime[0]).join("/") }}</h2>
+        <h2 v-else class="text-xl text-left flex ml-2">Surveys are closed</h2>
       </div>
       <div class="flex flex-col justify-start items-center space-y-4 lg:flex-row lg:space-y-0 lg:space-x-4">
         <RouterLink to="/schedule">
@@ -46,7 +64,12 @@ if (
           </button>
         </RouterLink>
         <!-- check if survey exists, if not create new and set current -->
-        <RouterLink to="/survey">
+        <RouterLink v-if="openMeeting" to="/survey">
+          <button class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
+            Course Survey
+          </button>
+        </RouterLink>
+        <RouterLink v-else to="/survey/closed">
           <button class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
             Course Survey
           </button>
