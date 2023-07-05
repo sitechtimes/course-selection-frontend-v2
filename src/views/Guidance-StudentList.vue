@@ -23,10 +23,10 @@ export default {
 </script>
 
 <template>
-    <div class="h-[80vh] w-full flex flex-col justify-center items-center">
-        <div class="ml-20 flex flex-row items-center">
-        <Sort :students="students"/>
-        <SearchBar class="" type="text" v-model="input" placeholder="Search Students..." />
+    <div class="h-auto w-full flex flex-col justify-center items-center mb-10">
+        <div class="flex flex-row items-center justify-center">
+          <Sort :students="students"/>
+          <SearchBar class="" type="text" v-model="input" placeholder="Search Students..." />
         </div>
         <StudentTable/>
     </div>

@@ -3,8 +3,8 @@
 </script>
 
 <template>
-  <div class="h-[80vh] w-full flex flex-row justify-center items-center">
-    <div id="left" class="w-11/12 flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left md:w-3/4 max-w-md lg:max-w-3xl lg:space-y-6 lg:ml-12">
+  <div class="h-[75vh] w-full flex flex-row justify-center items-center">
+    <div id="left" class="w-5/6 flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left md:w-3/4 max-w-md lg:max-w-2xl xl:max-w-3xl lg:space-y-6 lg:ml-12">
       <h1 id="heading" class="text-4xl font-bold lg:text-5xl">
         Lorem ipsum dolor sit amet, consectetur adipisicing elit.
 

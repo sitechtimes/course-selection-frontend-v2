@@ -27,11 +27,19 @@ export interface user {
     isLoggedIn: boolean
     access_token: string
     refresh_token: string
+    loading: boolean
 }
 
 export interface surveyQuestion {
-    question: string,
+    question: string
     questionType: string
+    id: string
+}
+
+export interface surveyAnswer {
+    id: string
+    question: string
+    answer: Array<string>
 }
 
 export type course_type = 'MATH' | 'ENGLISH' | 'LANG' | 'SS' | 'TECH' | 'PE' | 'CAREER' | 'SCIENCE' | 'ARTS' | 'OTHER'
