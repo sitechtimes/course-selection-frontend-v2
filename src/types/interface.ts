@@ -5,10 +5,18 @@ export interface courses{
 }
 
 export interface studentData { //this is for guidance use 
-    first_name?: string
-    last_name?: string
-    answers: object, 
-    counselor: string,
+    coursesAvailable: Array<courses>
+    coursesRequired: Array<courses>
+    coursesTaken: Array<courses>
+    grade: grade
+    homeroom: string
+    meeting: string
+    osis: string
+    user: object
+    // first_name?: string
+    // last_name?: string
+    // answers: object, 
+    // counselor: string,
 }
 
 export interface userData { 
