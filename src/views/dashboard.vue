@@ -2,14 +2,23 @@
 import BellIcon from "../components/icons/BellIcon.vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
+import { computed } from "vue";
 
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
 
-let annoucement = "Surveys are closing next week on 03/12/2023.";
-
 let time: String;
 let date: String;
+
+const annoucement = computed(() => {
+  if(userStore.data.answeredSurvey === null) {
+  return "Surveys are closing next week on 03/12/2023."
+} else if(userStore.data.answeredSurvey.status === 'COMPLETE') {
+  return "You have submitted your survey. Changes can be made before 00/00/0000."
+} else {
+  return "Your survey is in progress. Surveys are closing next week on 00/00/0000."
+}
+})
 
 if (
   userStore.data.student.meeting != undefined ||

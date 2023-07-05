@@ -244,6 +244,7 @@ export const useUserStore = defineStore("user", {
                     survey {
                         id
                         answers
+                        status
                     }
                 }
             }`,
@@ -261,13 +262,14 @@ export const useUserStore = defineStore("user", {
           }
         )
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           if (this.userType === "student") {
-            this.data.answeredSurvey.answers = jsonString;
+            this.data.answeredSurvey = res.data.data.updateSurvey.survey
           } else if (this.userType === "guidance") {
             const studentIndex = this.data.allAnsweredSurveys.edges.findIndex(
               (x) => x.node.osis == surveyStore.currentSurvey.osis
             );
+            // console.log(this.data.allAnsweredSurveys.edges)
             this.data.allAnsweredSurveys.edges[studentIndex].node.answers =
               jsonString;
           } else {
