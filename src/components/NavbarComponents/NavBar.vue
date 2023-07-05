@@ -59,10 +59,10 @@ const redirect = () => {
             </RouterLink>
         </div>
         <div v-if="userStore.isLoggedIn && userStore.userType === 'guidance' && viewingSurvey() === false" class="hidden justify-center items-center space-x-12 md:flex">
-            <RouterLink to="/courses">
+            <RouterLink to="/guidance/studentlist">
                 <p class="text-base">Students</p>
             </RouterLink>
-            <RouterLink to="/survey">
+            <RouterLink to="/guidance/calendar">
                 <p class="text-base">Calendar</p>
             </RouterLink>
             <RouterLink to="/">
