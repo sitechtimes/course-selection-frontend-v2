@@ -47,8 +47,8 @@ const router = createRouter({
       component: () => import('../views/SurveyPage.vue')
     },    {
       path: '/survey/closed',
-      name: 'ClosedSurvey',
-      component: () => import('../views/ClosedSurvey.vue')
+      name: 'closedSurvey',
+      component: () => import('../views/closedSurvey.vue')
     },
     {
       path: '/survey/review',
