@@ -264,7 +264,8 @@ export const useUserStore = defineStore("user", {
         .then((res) => {
           // console.log(res);
           if (this.userType === "student") {
-            this.data.answeredSurvey = res.data.data.updateSurvey.survey
+            this.data.answeredSurvey.answers = jsonString
+            this.data.answeredSurvey.status = 'COMPLETE'
           } else if (this.userType === "guidance") {
             const studentIndex = this.data.allAnsweredSurveys.edges.findIndex(
               (x) => x.node.osis == surveyStore.currentSurvey.osis
