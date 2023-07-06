@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, Ref } from "vue";
 import { useUserStore } from '../../stores/user';
 import DownArrow from '../icons/DownArrow.vue';
 
 const userStore = useUserStore()
 // const input = ref("");
 // const props = ["title"];
-const selected = ref("Sort By");
-const isOpen = ref(false);
+const selected: Ref<string> = ref("Sort By");
+const isOpen: Ref<boolean> = ref(false);
 
 const menuArray = [
   {
@@ -44,26 +44,26 @@ const menuArray = [
   },
 ]
 
-const sortBy = (sort: object) => {
-  function lastnameaz(a: { user: { lastName: any; }; }, b: { user: { lastName: any; }; }) {
+const sortBy = (sort: {sortBy:string, text:string}) => {
+  function lastnameaz(a: { user: { lastName: string; }; }, b: { user: { lastName: string; }; }) {
     if (a.user.lastName < b.user.lastName) return -1;
     if (a.user.lastName > b.user.lastName) return 1;
     return 0;
   }
 
-  function lastnameza(a: { user: { lastName: any; }; }, b: { user: { lastName: any; }; }) {
+  function lastnameza(a: { user: { lastName: string; }; }, b: { user: { lastName: string; }; }) {
     if (a.user.lastName > b.user.lastName) return -1;
     if (a.user.lastName < b.user.lastName) return 1;
     return 0;
   }
 
-  function ns(a: { grade: any; }) {
+  function ns(a: { grade: string; }) {
     if (userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === a.osis) === undefined) return -1;
     else
     return null;
   }
 
-  function ip(a: { grade: any; }) {
+  function ip(a: { grade: string; }) {
     if (userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === a.osis) === undefined){
       return null;
     } else if(userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === a.osis).node.status === 'INCOMPLETE'){
@@ -73,7 +73,7 @@ const sortBy = (sort: object) => {
     }
   }
 
-  function com(a: { grade: any; }) {
+  function com(a: { grade: string; }) {
     if (userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === a.osis) === undefined){
       return null;
     } else if(userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === a.osis).node.status === 'COMPLETE'){
@@ -83,19 +83,19 @@ const sortBy = (sort: object) => {
     }
   }
 
-  function nine(a: { grade: any; }) {
+  function nine(a: { grade: string; }) {
     if (a.grade === "SOPHOMORE") return -1;
     else
     return null;
   }
 
-  function ten(a: { grade: any; }) {
+  function ten(a: { grade: string; }) {
     if (a.grade === "JUNIOR") return -1;
     else
     return null;
   }
 
-  function eleven(a: { grade: any; }) {
+  function eleven(a: { grade: string; }) {
     if (a.grade === "SENIOR") return -1;
     else
     return null;
