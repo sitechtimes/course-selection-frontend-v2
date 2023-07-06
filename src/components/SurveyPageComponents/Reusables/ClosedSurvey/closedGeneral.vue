@@ -17,7 +17,7 @@ const props = defineProps({
   answers: Array,
 });
 
-import { useSurveyStore } from "../../../stores/survey";
+import { useSurveyStore } from "../../../../stores/survey";
 import { watch, onBeforeMount } from "vue";
 
 const surveyStore = useSurveyStore();

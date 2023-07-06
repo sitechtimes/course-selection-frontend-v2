@@ -52,8 +52,8 @@ const props = defineProps({
   color: String,
 });
 
-import surveyDraggable from "./surveyDraggable.vue";
-import { useSurveyStore } from "../../../stores/survey";
+import surveyDraggable from "./closedDraggable.vue";
+import { useSurveyStore } from "../../../../stores/survey";
 import { watch, onBeforeMount, onbeforeC, ref, Ref } from "vue";
 
 const surveyStore = useSurveyStore();

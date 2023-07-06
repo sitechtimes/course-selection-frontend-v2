@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, Ref, onBeforeMount } from "vue";
-import { useSurveyStore } from "../../../stores/survey";
+import { useSurveyStore } from "../../../../stores/survey";
 
 const props = defineProps({
   courses: Array,
