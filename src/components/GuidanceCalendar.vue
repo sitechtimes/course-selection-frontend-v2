@@ -83,7 +83,7 @@ const daysTag = document.querySelector(".days");
       <span class="arrow cursor-pointer" id="next">&#10095;</span>
     </div>
     <div class="calendar">
-      <ul class="weeks text-2xl font-bold">
+      <ul class="weeks text-2xl bg-primary-g">
         <li class="border-x-2">Sun</li>
         <li class="border-x-2">Mon</li>
         <li class="border-x-2">Tue</li>
@@ -180,7 +180,7 @@ const daysTag = document.querySelector(".days");
   width: 75%;
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.05);
   margin-bottom: 5rem;
-  border: #e5e7eb 2px solid;
+  border: grey 1px solid;
   border-top-left-radius: 7px;
   border-top-right-radius: 7px;
 }
@@ -204,7 +204,7 @@ const daysTag = document.querySelector(".days");
   padding-bottom: 0.3rem;
 }
 .calendar .weeks li {
-  font-weight: 500;
+  font-weight: 700;
   cursor: default;
   width: calc(100% / 7);
 }
@@ -212,13 +212,13 @@ const daysTag = document.querySelector(".days");
   z-index: 1;
   position: relative;
   padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  padding-right: 1rem;
+  padding-bottom: 4rem;
+  padding-right: 0.8rem;
+  text-align: end;
 }
 .days li {
-  border: #e5e7eb 2px solid;
+  border: grey 1px solid;
   font-size: 0.7rem;
-  padding-left: 11%;
 }
 .plusIcon {
   width: 0.5rem;
