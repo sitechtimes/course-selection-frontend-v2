@@ -2,19 +2,14 @@
 import { computed, onMounted, ref } from "vue";
 import { useUserStore } from '../../stores/user';
 import DownArrow from '../icons/DownArrow.vue';
+
+const userStore = useUserStore()
 const students = useUserStore().data.guidance.students;
-const input = ref("");
-const props = ["title"];
+// const input = ref("");
+// const props = ["title"];
 const selected = ref("Sort By");
 const isOpen = ref(false);
-// const lastnameaz = ref("Last Name (A-Z)")
-// const lastnameza = ref("Last Name (Z-A)")
-// const ns = ref("Not Started")
-// const ip = ref("In Progress")
-// const com = ref("Complete")
-// const nine = ref("Grade 9")
-// const ten = ref("Grade 10")
-// const eleven = ref("Grade 11")
+
 const menuArray = [
   {
     sortBy: "lastnameaz",
@@ -49,107 +44,76 @@ const menuArray = [
     text: "Grade 11"
   },
 ]
-/* const menuarray = ref([
-  "Last Name (A-Z)",
-  "Last Name (Z-A)",
-  "Not Started",
-  "In Progress",
-  "Complete",
-  "Grade 9",
-  "Grade 10",
-  "Grade 11",
-]) */
 
-const sortBy = (sort: string) => {
+const sortBy = (sort: object) => {
   function lastnameaz(a: { user: { lastName: any; }; }, b: { user: { lastName: any; }; }) {
     if (a.user.lastName < b.user.lastName) return -1;
     if (a.user.lastName > b.user.lastName) return 1;
     return 0;
   }
 
+  function lastnameza(a: { user: { lastName: any; }; }, b: { user: { lastName: any; }; }) {
+    if (a.user.lastName > b.user.lastName) return -1;
+    if (a.user.lastName < b.user.lastName) return 1;
+    return 0;
+  }
+
+  function ns(a: { grade: any; }) {
+    if (userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === a.osis) === undefined) return -1;
+    else
+    return null;
+  }
+
+  function ip(a: { grade: any; }) {
+    if (userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === a.osis) === undefined){
+      return null;
+    } else if(userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === a.osis).node.status === 'INCOMPLETE'){
+      return -1;
+    } else {
+      return null
+    }
+  }
+
+  function com(a: { grade: any; }) {
+    if (userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === a.osis) === undefined){
+      return null;
+    } else if(userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === a.osis).node.status === 'COMPLETE'){
+      return -1;
+    } else {
+      return null
+    }
+    // console.log(userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === a.osis).node.status === 'COMPLETE', a)
+  }
+
+  function nine(a: { grade: any; }) {
+    if (a.grade === "SOPHOMORE") return -1;
+    else
+    return null;
+  }
+
+  function ten(a: { grade: any; }) {
+    if (a.grade === "JUNIOR") return -1;
+    else
+    return null;
+  }
+
+  function eleven(a: { grade: any; }) {
+    if (a.grade === "SENIOR") return -1;
+    else
+    return null;
+  }
+
+  const sortBy = eval(sort.sortBy)
+  selected.value = sort.text
+  isOpen.value = false
   return (students.sort(sortBy))
-}
-
-// const LastNameInc = computed(() => {
-//   function compare(a: { user: { lastName: any; }; }, b: { user: { lastName: any; }; }) {
-//     if (a.user.lastName < b.user.lastName) return -1;
-//     if (a.user.lastName > b.user.lastName) return 1;
-//     return 0;
-//   }
-//   return (students.sort(compare));
-// });
-// const LastNameDec = computed(() => {
-//   function compare(a: { user: { lastName: any; }; }, b: { user: { lastName: any; }; }) {
-//     if (a.user.lastName > b.user.lastName) return -1;
-//     if (a.user.lastName < b.user.lastName) return 1;
-//     return 0;
-//   }
-//   return (students.sort(compare));
-// });
-// const notstarted = computed(() => {
-//   function compare(a: { grade: any; }) {
-//     if (a.userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis) === undefined) return -1;
-//     else
-//     return null;
-//   }
-//   return (students.sort(compare));
-// });
-// const inprogress = computed(() => {
-//   function compare(a: { grade: any; }) {
-//     if (a.userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis).node.status === 'INCOMPLETE') return -1;
-//     else
-//     return null;
-//   }
-//   return (students.sort(compare));
-// });
-// const completed = computed(() => {
-//   function compare(a: { grade: any; }) {
-//     if (a.userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis).node.status === 'COMPLETE') return -1;
-//     else
-//     return null;
-//   }
-//   return (students.sort(compare));
-// });
-// const grade9 = computed(() => {
-//   function compare(a: { grade: any; }) {
-//     if (a.grade === "SOPHOMORE") return -1;
-//     else
-//     return null;
-//   }
-//   return (students.sort(compare));
-// });
-// const grade10 = computed(() => {
-//   function compare(a: { grade: any; }) {
-//     if (a.grade === "JUNIOR") return -1;
-//     else
-//     return null;
-//   }
-//   return (students.sort(compare));
-// });
-// const grade11 = computed(() => {
-//   function compare(a: { grade: any; }) {
-//     if (a.grade === "SENIOR") return -1;
-//     else
-//     return null;
-//   }
-//   return (students.sort(compare));
-// });
-
-function show() {
-  onMounted(() => {
-    return {
-      input,
-      props,
-      isOpen,
-    };
-  });
 }
 </script>
 
 <template>
      <div class="w-[16rem]">
      <div
-      class="h-10 flex flex-row bg-primary-g text-black justify-evenly cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
+      class="h-10 w-44 flex flex-row bg-primary-g text-black justify-evenly cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
       id="sort"
       @click="isOpen = !isOpen"
     >
@@ -162,7 +126,7 @@ function show() {
       </div>
       <div class="sub-menu absolute shadow-[4px_3px_3px_rgba(0,0,0,0.25)]" v-if="isOpen" >
         <div v-for="x in menuArray" :key="x.sortBy" class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
-          <button @click="sortBy(x.sortBy)" class="ml-2">{{ x.text }}</button>
+          <button @click="sortBy(x)" class="ml-2">{{ x.text }}</button>
         </div>
         <!-- <div class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
           <button @click="LastNameInc()" class="ml-2">{{ lastnameaz }}</button>
