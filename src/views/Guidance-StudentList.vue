@@ -13,8 +13,9 @@ const input:Ref<string> = ref('')
 
 const newStudents = computed(() => {
   return students.filter((student: { user: { firstName: string; lastName: string; }; osis: string|string[]; }) => {
+        const studentName = student.user.firstName + ' ' + student.user.lastName
         return (
-          student.user.firstName.toLowerCase().indexOf(input.value.toLowerCase()) != -1 || student.user.lastName.toLowerCase().indexOf(input.value.toLowerCase()) != -1 || student.osis.indexOf(input.value) != -1
+          studentName.toLowerCase().indexOf(input.value.toLowerCase()) != -1 || student.osis.indexOf(input.value) != -1
         );
       })
 })
