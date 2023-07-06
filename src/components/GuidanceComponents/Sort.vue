@@ -4,7 +4,6 @@ import { useUserStore } from '../../stores/user';
 import DownArrow from '../icons/DownArrow.vue';
 
 const userStore = useUserStore()
-const students = useUserStore().data.guidance.students;
 // const input = ref("");
 // const props = ["title"];
 const selected = ref("Sort By");
@@ -82,7 +81,6 @@ const sortBy = (sort: object) => {
     } else {
       return null
     }
-    // console.log(userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === a.osis).node.status === 'COMPLETE', a)
   }
 
   function nine(a: { grade: any; }) {
@@ -106,7 +104,7 @@ const sortBy = (sort: object) => {
   const sortBy = eval(sort.sortBy)
   selected.value = sort.text
   isOpen.value = false
-  return (students.sort(sortBy))
+  return (userStore.data.guidance.students.sort(sortBy))
 }
 </script>
 
