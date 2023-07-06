@@ -1,10 +1,29 @@
 <script setup lang="ts">
 import BaseLogin from '../../components/LoginComponents/BaseLogin.vue';
+import { useUserStore } from '../../stores/user';
+import { useRouter } from 'vue-router'
+import { watch } from 'vue';
+
+const userStore = useUserStore()
+const router = useRouter()
+
+watch(() => userStore.loading, (newResponse) => {
+  if(!newResponse) {
+    if(userStore.userType === 'student') {
+      router.push('/student/dashboard')
+    } else if(userStore.userType === 'guidance') {
+      router.push('/guidance/dashboard') 
+    } else {
+      console.log('error?')
+    }
+  }
+})
 </script>
 
 <template>
-    <div id="student" class="w-full h-screen flex justify-center items-center bg-[#fff]">
-        <div id="book" class="mt-12 w-11/12 max-w-[32rem] max-h-[45rem] h-4/5 border-primary-s border-[10px] rounded-xl flex justify-between items-center lg:max-w-[60rem]">
+    <div id="student" class="w-full h-[80vh] flex justify-center items-center bg-[#fff]">
+        <p v-if="userStore.loading">Loading...</p>
+        <div v-if="!userStore.loading" id="book" class="mt-12 w-11/12 max-w-[32rem] max-h-[45rem] h-4/5 border-primary-s border-[10px] rounded-xl flex justify-between items-center lg:max-w-[60rem]">
           <div id="left" class="hidden w-1/2 h-full border-zinc-400 lg:border-r justify-center items-center flex-col space-y-6 lg:flex">
             <h1 class="text-4xl font-bold
               ">Student</h1>

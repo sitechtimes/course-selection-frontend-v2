@@ -10,12 +10,12 @@ const router = createRouter({
       component: () => import('../views/landing.vue')
     },
     {
-      path: '/guidance-home',
-      name: 'GuidanceHome',
+      path: '/guidance/dashboard',
+      name: 'guidanceDash',
       component: () => import('../views/GuidanceHome.vue')
     },
     {
-      path: '/guidance-studentlist',
+      path: '/guidance/studentlist',
       name: 'Guidance-Studentlist',
       component: () => import('../views/Guidance-StudentList.vue')
     },
@@ -51,10 +51,21 @@ const router = createRouter({
       component: () => import('../views/GuidanceCalendar.vue')
     },
     {
-      path: '/dashboard',
-      name: 'dashboard',
+
+      path: '/survey/review',
+      name: 'ReviewSurvey',
+      component: () => import('../views/ReviewSurvey.vue')
+    },
+    {
+      path: '/student/dashboard',
+      name: 'studentDash',
       component: () => import('../views/dashboard.vue')
     },
+    {
+      path: '/guidance/survey/:osis',
+      name: 'guidance-survey',
+      component: () => import('../views/guidance-survey.vue')
+    }
   ]
 })
 
