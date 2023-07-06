@@ -63,7 +63,7 @@ if (
       </div>
       <div>
         <p v-if="userStore.data.student.meeting != undefined || userStore.data.student.meeting != null">You have a scheduled meeting with your guidance councelor on {{ date }} at {{ time }}.</p>
-        <p v-else>Your guidance councelor has not yet set a meeting time.</p>
+        <p v-else>Your guidance councelor has not scheduled a meeting with you yet.</p>
       </div>
     </div>
     <div id="circles" class="-z-10 absolute h-96 w-112 sm:h-128 sm:w-128 lg:h-96 lg:w-112 xl:h-128 xl:w-128 hidden lg:flex justify-center items-center lg:relative lg:mx-8">
