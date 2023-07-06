@@ -126,30 +126,6 @@ const sortBy = (sort: object) => {
         <div v-for="x in menuArray" :key="x.sortBy" class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
           <button @click="sortBy(x)" class="ml-2">{{ x.text }}</button>
         </div>
-        <!-- <div class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
-          <button @click="LastNameInc()" class="ml-2">{{ lastnameaz }}</button>
-        </div>
-        <div class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
-          <button @click="LastNameDec()" class="ml-2">{{ lastnameza }}</button>
-        </div>
-        <div class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
-          <button @click="notstarted()" class="ml-2">{{ ns }}</button>
-        </div>
-        <div class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
-          <button @click="inprogress()" class="ml-2">{{ ip }}</button>
-        </div>
-        <div class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
-          <button @click="completed()" class="ml-2">{{ com }}</button>
-        </div>
-        <div class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
-          <button @click="grade9()" class="ml-2">{{ nine }}</button>
-        </div>
-        <div class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
-          <button @click="grade10()" class="ml-2">{{ ten }}</button>
-        </div>
-        <div class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
-          <button @click="grade11()" class="ml-2">{{ eleven }}</button>
-        </div> -->
       </div>
     </div>
 </template>
