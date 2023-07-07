@@ -38,7 +38,7 @@ const getChoices = (question:  surveyQuestion) => {
         ></surveyCheckbox>
       </div>
       <div class="my-6">
-        <p class="text-lg md:text-xl xl:text-3xl my-4">For the final part of the survey, please drag your classes in the order of priority, with the first choice being your top priority.</p>
+        <p class="text-lg md:text-xl xl:text-3xl my-4">For the final part of the survey, please drag your classes in the order of priority, with the first choice being your top priority.</p> <!-- Have to change what this says. surveyCheckbox probably also needs to be changed-->
         <surveyDraggable 
           :courses="surveyStore.currentResponse[indexAll].preference" 
           :index="indexAll"

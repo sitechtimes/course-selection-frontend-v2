@@ -5,7 +5,7 @@
         <div class="flex items-center justify-center max-w-[40rem] overflow-hidden">
           <fieldset class="flex items-center justify-start">
             <!-- I did this because I have no idea how to make it fill the rest of the page, so this will let the page decide how long it should be.  -->
-            <legend class="text-lg md:text-xl xl:text-3xl overflow-visible">{{ question.question }}</legend>
+            <legend class="text-lg md:text-xl xl:text-3xl overflow-visible">{{ question.question }}</legend> <!-- Change to only have class category and your rankings -->
             <div class="flex flex-col flex-wrap justify-center items-start">
               <div
                 v-for="choice in choices"
@@ -29,7 +29,7 @@
           </fieldset>
         </div>
       </div>
-      <div class="border-black border border-solid rounded-xl lg:w-[45%] w-[90%] lg:ml-14 lg:h-[50vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll">
+<!--       <div class="border-black border border-solid rounded-xl lg:w-[45%] w-[90%] lg:ml-14 lg:h-[50vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll"> 
         <div class="flex justify-center mt-[1%]">
             <p class="text-lg md:text-xl xl:text-2xl text-black">Drag course(s) into order of preference:</p>
           </div>
@@ -39,7 +39,7 @@
           :numbered="true"
           :color="color"
           :key="x"></surveyDraggable>
-      </div>
+      </div>  check what this looks like without it -->
     </div>
   </section>
 </template>
