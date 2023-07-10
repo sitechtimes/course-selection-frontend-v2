@@ -44,7 +44,7 @@ const completeSurvey = async () => {
     }
   })
   if(check.length === 0) {
-    userStore.saveSurvey('COMPLETE')
+    surveyStore.saveSurvey('COMPLETE')
     // move this to store once backend is updated
     userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === viewedStudent.osis).node.status = 'COMPLETE'
     router.push('/guidance/studentlist')
@@ -75,12 +75,6 @@ watch(() => surveyStore.currentResponse[indexAll].preference, (newResponse) => {
           <checkboxComponent v-else class="mb-6" :question="question" :choices="getChoices(question)"
           :color="'DEE9C8'"
           ></checkboxComponent>
-          <!-- <section v-else class="flex items-center justify-start w-3/4 overflow-x-visible mb-6">
-            <div class=" items-center space-y-6 w-full">
-              <h1 class="text-xl md:text-2xl lg:text-[180%]">{{ question.question }}</h1>
-              <input class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base bg-transparent rounded-md border border-solid border-zinc-400  focus:outline-none focus:ring-0 focus:border-blue-400 lg:text-[180%] " type="text">
-            </div>
-          </section> -->
         </div>
         <div class="my-6">
           <p class="text-lg md:text-xl xl:text-3xl my-4">Student's order of priority:</p>
@@ -96,7 +90,8 @@ watch(() => surveyStore.currentResponse[indexAll].preference, (newResponse) => {
         <div class="mt-14">
           <p class="text-lg md:text-xl xl:text-3xl">Note from the student:</p>
           <input
-              class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base bg-transparent rounded-md border border-solid border-zinc-400 focus:outline-none focus:ring-0 focus:border-blue-400"
+              disabled
+              class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base bg-transparent rounded-md border border-solid border-zinc-400 focus:outline-none focus:ring-0 focus:border-blue-400 disabled:bg-gray-100"
               type="text"
               v-model="surveyStore.currentResponse[indexNote].answer"
             />

@@ -17,7 +17,7 @@ let currentQuestion: surveyQuestion = reactive(
 const min: Ref<boolean> = ref(true);
 const max: Ref<boolean> = ref(false);
 
-userStore.setSurvey(
+surveyStore.setSurvey(
   userStore.data.student.osis,
   userStore.data.survey.questions
 );
