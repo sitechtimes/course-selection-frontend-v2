@@ -4,7 +4,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import createevent from "../components/Guidance/createevent.vue";
+import createevent from "../components/GuidanceComponents/createevent.vue";
 </script>
 
 <style scoped>

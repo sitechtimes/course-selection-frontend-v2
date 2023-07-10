@@ -207,7 +207,7 @@ export const useUserStore = defineStore("user", {
     async changeMeeting(osis: string, newTime: string) {
       await axios
         .post(
-          `${import.meta.env.VITE_URL}/graphql/`,
+          `${import.meta.env.VITE_URL}graphql/`,
           {
             query: `mutation {
                             updateMeeting(osis: "${osis}", meeting:"${newTime}") {
@@ -251,7 +251,7 @@ export const useUserStore = defineStore("user", {
             variables: {
               osis: osis,
               answers: jsonString,
-              status: status
+              status: status,
             },
           },
           {
@@ -264,8 +264,8 @@ export const useUserStore = defineStore("user", {
         .then((res) => {
           // console.log(res);
           if (this.userType === "student") {
-            this.data.answeredSurvey.answers = jsonString
-            this.data.answeredSurvey.status = 'COMPLETE'
+            this.data.answeredSurvey.answers = jsonString;
+            this.data.answeredSurvey.status = "COMPLETE";
           } else if (this.userType === "guidance") {
             const studentIndex = this.data.allAnsweredSurveys.edges.findIndex(
               (x) => x.node.osis == surveyStore.currentSurvey.osis
@@ -279,24 +279,24 @@ export const useUserStore = defineStore("user", {
         });
     },
     async startSurvey(osis: string, survey: Array<object>) {
-      const answers: Array<object> = []
+      const answers: Array<object> = [];
       const allChosen = {
         id: "allChosenCourses",
         courses: [],
-        preference: []
-      }
+        preference: [],
+      };
 
       const noteToGuidance = {
         id: "noteToGuidance",
-        answer: ''
-      }
+        answer: "",
+      };
 
       const guidanceFinalNote = {
-        id: 'guidanceFinalNote',
-        answer: ''
-      }
+        id: "guidanceFinalNote",
+        answer: "",
+      };
 
-      answers.push(noteToGuidance, allChosen, guidanceFinalNote)
+      answers.push(noteToGuidance, allChosen, guidanceFinalNote);
       const jsonString = JSON.stringify(answers);
       await axios
         .post(
@@ -314,7 +314,7 @@ export const useUserStore = defineStore("user", {
           }`,
             variables: {
               osis: osis,
-              answers: jsonString
+              answers: jsonString,
             },
           },
           {
