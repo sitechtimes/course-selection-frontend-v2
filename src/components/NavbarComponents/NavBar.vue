@@ -43,7 +43,7 @@ const redirect = () => {
 }
 
 const toggleMenu = () => {
-    menuOpen.value = menuOpen.value!
+    menuOpen.value = !menuOpen.value
 }
 
 </script>
@@ -51,7 +51,7 @@ const toggleMenu = () => {
 <template>
     <nav id="navbar" class="w-full top-0 h-[15vh] flex justify-between items-center px-8 md:px-12 lg:px-16 overflow-visible">
         <div @click="redirect()" class="cursor-pointer">
-            <h1 class="text-3xl font-semibold z-50">Course Selection</h1>
+            <p v-if="!viewingSurvey()" class="text-2xl md:text-3xl font-semibold z-50">Course Selection</p>
         </div>
         <div v-if="userStore.isLoggedIn && userStore.userType === 'student' && viewingSurvey()  === false" class="hidden justify-center items-center space-x-12 md:flex">
             <RouterLink to="/courses">
@@ -83,11 +83,11 @@ const toggleMenu = () => {
                 <p class="text-base">Login</p>
             </RouterLink>
         </div>
-        <div id="menu-icon" class="flex justify-center items-center cursor-pointer z-40 md:hidden">
+        <div v-if="!viewingSurvey()" id="menu-icon" class="flex justify-center items-center cursor-pointer z-40 md:hidden">
             <MenuIcon @click="toggleMenu" v-if="!menuOpen" />
             <CloseMenu @click="toggleMenu" v-else />
         </div>
-        <div v-if="viewingSurvey()" class="flex flex-row w-1/6 justify-between">
+        <div v-if="viewingSurvey()" class="flex flex-row w-full sm:w-1/4 md:1/6 justify-between">
             <p @click="surveyStore.saveSurvey('INCOMPLETE')" class="text-[#37394F] text-2xl cursor-pointer">Save</p>
             <p @click="exitSurvey()" class="text-[#37394F] text-2xl cursor-pointer">Exit</p>
         </div>
