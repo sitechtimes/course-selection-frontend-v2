@@ -57,7 +57,7 @@ const toggleMenu = () => {
             <RouterLink to="/courses">
                 <p class="text-base">Courses</p>
             </RouterLink>
-            <RouterLink to="/survey">
+            <RouterLink to="/student/survey">
                 <p class="text-base">Survey</p>
             </RouterLink>
             <RouterLink to="/">
