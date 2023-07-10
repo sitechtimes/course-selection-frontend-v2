@@ -14,10 +14,10 @@ const surveyStore = useSurveyStore()
 const router = useRouter()
 
 const message: Ref<string> = ref("Once you submit, you will still be able to make changes to your survey. However, please do so before the due date.")
-const indexAll = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');
-const indexNote = surveyStore.currentResponse.findIndex((x) => x.id === 'noteToGuidance');
+const indexAll: number = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');
+const indexNote: number = surveyStore.currentResponse.findIndex((x) => x.id === 'noteToGuidance');
 const x: Ref<number> = ref(0)
-// let error: Array<string> = []
+let error: Array<string> = []
 
 // surveyStore.currentResponse.forEach((x) => {
 //   console.log(x)
@@ -26,7 +26,7 @@ const x: Ref<number> = ref(0)
 const checkAnswers = () => {
   const check: Array<string> = []
   userStore.data.survey.questions.forEach((x: surveyQuestion) => {
-    const answer = surveyStore.currentResponse.find(y => y.id === x.id)
+    const answer: surveyAnswer | undefined = surveyStore.currentResponse.find(y => y.id === x.id)
     if(x.questionType === 'GENERAL' || x.questionType === 'BOOLEAN') {
       if(answer.answer.trim()[0] === undefined) {
         check.push(x.id)
@@ -37,12 +37,15 @@ const checkAnswers = () => {
       }
     }
   })
+  error = check
   if(check.length === 0) {
     surveyStore.saveSurvey('COMPLETE')
     router.push('/student/dashboard')
   } else {
     message.value = "Please fill out all questions before submitting."
   }
+  // const test = ["1234"]
+  // console.log(test.includes("1234"))
   // error = check
 }
 
@@ -64,6 +67,7 @@ watch(() => surveyStore.currentResponse[indexAll].preference, (newResponse) => {
   <section class="flex justify-center items-center flex-col">
     <div class="w-2/3">
       <div v-for="question in userStore.data.survey.questions" :key="question.id" class="flex justify-center">
+        <p v-if="error.includes(question.id)" class="text-red-600">!</p>
         <booleanComponent class="mb-2" v-if="question.questionType === 'BOOLEAN'" :question="question" ></booleanComponent>
         <generalComponent class="mb-6" v-else-if="question.questionType === 'GENERAL'" :question="question" ></generalComponent>
         <checkboxComponent v-else class="mb-6" :question="question" :choices="getChoices(question)"
