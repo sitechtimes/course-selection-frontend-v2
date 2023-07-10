@@ -3,8 +3,8 @@ import { useUserStore } from '../stores/user'
 import { useSurveyStore } from '../stores/survey';
 import surveyBoolean from '../components/SurveyPageComponents/Reusables/surveyBoolean.vue'
 import surveyGeneral from '../components/SurveyPageComponents/Reusables/surveyGeneral.vue'
-import surveyCheckbox from '../components/SurveyPageComponents/Reusables/surveyCheckbox.vue';
-import surveyDraggable from '../components/SurveyPageComponents/Reusables/surveyDraggable.vue';
+import closedCheckbox from '../components/SurveyPageComponents/Reusables/ClosedSurvey/closedCheckbox.vue';
+import closedDraggable from '../components/SurveyPageComponents/Reusables/ClosedSurvey/closedDraggable.vue';
 import { surveyQuestion, surveyAnswer } from '../types/interface';
 import { watch, ref, Ref } from 'vue';
 
@@ -33,20 +33,20 @@ const getChoices = (question:  surveyQuestion) => {
       <div v-for="question in userStore.data.survey.questions" :key="question.id" class="flex justify-center">
         <surveyBoolean class="mb-2" v-if="question.questionType === 'BOOLEAN'" :question="question" :isDisabled="true"></surveyBoolean>
         <surveyGeneral class="mb-6" v-else-if="question.questionType === 'GENERAL'" :question="question" :isDisabled="true"></surveyGeneral>
-        <surveyCheckbox v-else class="mb-6" :question="question" :choices="getChoices(question)"
+        <closedCheckbox v-else class="mb-6" :question="question" :choices="getChoices(question)"
         :color="'D6EEFF'"
-        ></surveyCheckbox>
+        ></closedCheckbox>
       </div>
       <div class="my-6">
         <p class="text-lg md:text-xl xl:text-3xl my-4">For the final part of the survey, please drag your classes in the order of priority, with the first choice being your top priority.</p> <!-- Have to change what this says. surveyCheckbox probably also needs to be changed-->
-        <surveyDraggable 
+        <closedDraggable 
           :courses="surveyStore.currentResponse[indexAll].preference" 
           :index="indexAll"
           :numbered="true"
           :key="x"
           :color="'D6EEFF'"
           >
-        </surveyDraggable>
+        </closedDraggable>
       </div>
       <div class="mt-14">
         <p class="text-lg md:text-xl xl:text-3xl">Final note to your guidance counselor:</p>
