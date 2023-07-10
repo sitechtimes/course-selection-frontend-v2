@@ -38,7 +38,7 @@ const checkAnswers = () => {
     }
   })
   if(check.length === 0) {
-    userStore.saveSurvey('COMPLETE')
+    surveyStore.saveSurvey('COMPLETE')
     router.push('/student/dashboard')
   } else {
     message.value = "Please fill out all questions before submitting."
