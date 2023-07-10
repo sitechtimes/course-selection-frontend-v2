@@ -40,7 +40,7 @@ onMounted(() => {
         <div id="overlay" class="absolute inset-0 w-full h-full bg-white opacity-100 -z-10"></div>
         <div v-if="userStore.isLoggedIn && userStore.userType === 'student'" class="h-full absolute top-40 left-16 flex flex-col justify-start items-start space-y-8 z-10">
             <RouterLink @click="$emit('e')" id="link" to="/"><p class="text-4xl" >Home</p></RouterLink>
-            <RouterLink @click="$emit('e')" id="link" to="/survey"><p class="text-4xl">Survey</p></RouterLink>
+            <RouterLink @click="$emit('e')" id="link" to="/student/survey"><p class="text-4xl">Survey</p></RouterLink>
             <RouterLink @click="$emit('e')" id="link" to="/"><p class="text-4xl">Courses</p></RouterLink>
             <p id="link" @click="$emit('e'), userStore.isLoggedIn = false" class="text-4xl text-red-500 cursor-pointer">Logout</p>
         </div>
