@@ -5,7 +5,8 @@
         <div class="flex items-center justify-center max-w-[40rem] overflow-hidden">
           <fieldset class="flex items-center justify-start">
             <!-- I did this because I have no idea how to make it fill the rest of the page, so this will let the page decide how long it should be.  -->
-            <legend class="text-lg md:text-xl xl:text-3xl overflow-visible">{{ question.question }}</legend> <!-- Change to only have class category and your rankings -->
+            <legend class="text-lg md:text-xl xl:text-3xl overflow-visible"> Ranked {{ question.question.replace("Select the", " ").replace("course(s) you are interested in:", " ")
+ }} course(s)</legend> <!-- Change to only have class category and your rankings -->
             <div class="flex flex-col flex-wrap justify-center items-start">
               <div
                 v-for="choice in choices"
