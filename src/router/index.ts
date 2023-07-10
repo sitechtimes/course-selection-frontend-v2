@@ -7,7 +7,7 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      component: () => import("../views/landing.vue"),
+      component: () => import("../views/LandingPage.vue"),
     },
     {
       path: "/guidance/dashboard",
@@ -24,7 +24,7 @@ const router = createRouter({
     {
       path: '/guidance/studentlist',
       name: 'guidanceStudentlist',
-      component: () => import('../views/Guidance-StudentList.vue'),
+      component: () => import('../views/GuidanceStudentList.vue'),
       beforeEnter: (to) => {
         const userStore = useUserStore();
 
@@ -39,7 +39,7 @@ const router = createRouter({
       component: () => import("../views/login/index.vue"),
     },
     {
-      path: "/survey",
+      path: "/student/survey",
       name: "survey",
       component: () => import("../views/SurveyPage.vue"),
       beforeEnter: (to) => {
@@ -51,7 +51,7 @@ const router = createRouter({
       }
     },
     {
-      path: '/survey/review',
+      path: '/student/survey/review',
       name: 'reviewSurvey',
       component: () => import('../views/ReviewSurvey.vue'),
       beforeEnter: (to) => {
@@ -65,7 +65,7 @@ const router = createRouter({
     {
       path: '/student/dashboard',
       name: 'studentDash',
-      component: () => import('../views/dashboard.vue'),
+      component: () => import('../views/StudentDashboard.vue'),
       beforeEnter: (to) => {
         const userStore = useUserStore();
 
@@ -77,7 +77,7 @@ const router = createRouter({
     {
       path: '/guidance/survey/:osis',
       name: 'guidanceSurvey',
-      component: () => import('../views/guidance-survey.vue'),
+      component: () => import('../views/GuidanceSurvey.vue'),
       beforeEnter: (to) => {
         const userStore = useUserStore();
 

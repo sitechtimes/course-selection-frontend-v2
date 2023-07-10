@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useUserStore } from '../stores/user'
 import { useSurveyStore } from '../stores/survey';
-import booleanComponent from '../components/SurveyPageComponents/Reusables/surveyBoolean.vue'
-import generalComponent from '../components/SurveyPageComponents/Reusables/surveyGeneral.vue'
-import checkboxComponent from '../components/SurveyPageComponents/Reusables/surveyCheckbox.vue'
+import booleanComponent from '../components/SurveyPageComponents/Reusables/SurveyBoolean.vue'
+import generalComponent from '../components/SurveyPageComponents/Reusables/SurveyGeneral.vue'
+import checkboxComponent from '../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue'
 import surveyDraggable from '../components/SurveyPageComponents/Reusables/surveyDraggable.vue';
 import { surveyQuestion, surveyAnswer } from '../types/interface';
 import { useRouter } from 'vue-router'
