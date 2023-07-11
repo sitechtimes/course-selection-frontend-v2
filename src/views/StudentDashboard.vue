@@ -2,6 +2,7 @@
 import BellIcon from "../components/icons/BellIcon.vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
+import { computed } from "vue";
 
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
@@ -27,6 +28,15 @@ if (Number(closeTime[0]) > currentDate.getFullYear()) {
 }
 
 console.log(openMeeting)
+// const annoucement = computed(() => {
+//   if(userStore.data.answeredSurvey === null) {
+//   return "Surveys are closing next week on 03/12/2023."
+// } else if(userStore.data.answeredSurvey.status === 'COMPLETE') {
+//   return "You have submitted your survey. Changes can be made before 00/00/0000."
+// } else {
+//   return "Your survey is in progress. Surveys are closing next week on 00/00/0000."
+// }
+// })
 
 if (
   userStore.data.student.meeting != undefined ||
@@ -64,7 +74,7 @@ if (
           </button>
         </RouterLink>
         <!-- check if survey exists, if not create new and set current -->
-        <RouterLink v-if="openMeeting" to="/survey">
+        <RouterLink v-if="openMeeting" to="/student/survey">
           <button class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
             Course Survey
           </button>
@@ -77,7 +87,7 @@ if (
       </div>
       <div>
         <p v-if="userStore.data.student.meeting != undefined || userStore.data.student.meeting != null">You have a scheduled meeting with your guidance councelor on {{ date }} at {{ time }}.</p>
-        <p v-else>Your guidance councelor has not yet set a meeting time.</p>
+        <p v-else>Your guidance councelor has not scheduled a meeting with you yet.</p>
       </div>
     </div>
     <div id="circles" class="-z-10 absolute h-96 w-112 sm:h-128 sm:w-128 lg:h-96 lg:w-112 xl:h-128 xl:w-128 hidden lg:flex justify-center items-center lg:relative lg:mx-8">

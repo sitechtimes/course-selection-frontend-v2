@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import checkboxComponent from "../components/SurveyPageComponents/Reusables/surveyCheckbox.vue";
-import booleanComponent from "../components/SurveyPageComponents/Reusables/surveyBoolean.vue";
-import generalComponent from "../components/SurveyPageComponents/Reusables/surveyGeneral.vue";
+import checkboxComponent from "../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue";
+import booleanComponent from "../components/SurveyPageComponents/Reusables/SurveyBoolean.vue";
+import generalComponent from "../components/SurveyPageComponents/Reusables/SurveyGeneral.vue";
 import { ref, reactive, Ref, onBeforeMount } from "vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
@@ -17,7 +17,7 @@ let currentQuestion: surveyQuestion = reactive(
 const min: Ref<boolean> = ref(true);
 const max: Ref<boolean> = ref(false);
 
-userStore.setSurvey(
+surveyStore.setSurvey(
   userStore.data.student.osis,
   userStore.data.survey.questions
 );
@@ -100,7 +100,7 @@ const getChoices = () => {
       >
         Next
       </button>
-      <RouterLink to="/survey/review" v-if="max">
+      <RouterLink to="/student/survey/review" v-if="max">
         <button
           class="bg-emerald-600 text-white w-auto px-3 h-10 rounded-md inline disabled:hidden"
           :disabled="!max"

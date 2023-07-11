@@ -1,37 +1,117 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, Ref } from "vue";
+import { useUserStore } from '../../stores/user';
 import DownArrow from '../icons/DownArrow.vue';
-import { students } from '../../mockdata';
-const input = ref("");
-const props = ["title"];
-const selected = ref("Sort By");
-const isOpen = ref(false);
-const menuarray = ref([
-  "Last Name (A-Z)",
-  "Last Name (Z-A)",
-  "Not Started",
-  "In Progress",
-  "Complete",
-  "Grade 9",
-  "Grade 10",
-  "Grade 11",
-])
 
-function show() {
-  onMounted(() => {
-    return {
-      input,
-      props,
-      isOpen,
-    };
-  });
+const userStore = useUserStore()
+// const input = ref("");
+// const props = ["title"];
+const selected: Ref<string> = ref("Sort By");
+const isOpen: Ref<boolean> = ref(false);
+
+const menuArray = [
+  {
+    sortBy: "lastnameaz",
+    text: "Last Name (A-Z)"
+  },
+  {
+    sortBy: "lastnameza",
+    text: "Last Name (Z-A)"
+  },
+  {
+    sortBy: "ns",
+    text: "Not Started"
+  },
+  {
+    sortBy: "ip",
+    text: "In Progress"
+  },
+  {
+    sortBy: "com",
+    text: "Completed"
+  },
+  {
+    sortBy: "nine",
+    text: "Grade 9"
+  },
+  {
+    sortBy: "ten",
+    text: "Grade 10"
+  },
+  {
+    sortBy: "eleven",
+    text: "Grade 11"
+  },
+]
+
+const sortBy = (sort: {sortBy:string, text:string}) => {
+  function lastnameaz(a: { user: { lastName: string; }; }, b: { user: { lastName: string; }; }) {
+    if (a.user.lastName < b.user.lastName) return -1;
+    if (a.user.lastName > b.user.lastName) return 1;
+    return 0;
+  }
+
+  function lastnameza(a: { user: { lastName: string; }; }, b: { user: { lastName: string; }; }) {
+    if (a.user.lastName > b.user.lastName) return -1;
+    if (a.user.lastName < b.user.lastName) return 1;
+    return 0;
+  }
+
+  function ns(a: { grade: string; }) {
+    if (userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === a.osis) === undefined) return -1;
+    else
+    return null;
+  }
+
+  function ip(a: { grade: string; }) {
+    if (userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === a.osis) === undefined){
+      return null;
+    } else if(userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === a.osis).node.status === 'INCOMPLETE'){
+      return -1;
+    } else {
+      return null
+    }
+  }
+
+  function com(a: { grade: string; }) {
+    if (userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === a.osis) === undefined){
+      return null;
+    } else if(userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === a.osis).node.status === 'COMPLETE'){
+      return -1;
+    } else {
+      return null
+    }
+  }
+
+  function nine(a: { grade: string; }) {
+    if (a.grade === "SOPHOMORE") return -1;
+    else
+    return null;
+  }
+
+  function ten(a: { grade: string; }) {
+    if (a.grade === "JUNIOR") return -1;
+    else
+    return null;
+  }
+
+  function eleven(a: { grade: string; }) {
+    if (a.grade === "SENIOR") return -1;
+    else
+    return null;
+  }
+
+  const sortBy = eval(sort.sortBy)
+  selected.value = sort.text
+  isOpen.value = false
+  return (userStore.data.guidance.students.sort(sortBy))
 }
 </script>
 
 <template>
      <div class="w-[16rem]">
      <div
-      class="h-10 flex flex-row bg-primary-g text-black justify-evenly cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
+      class="h-10 w-44 flex flex-row bg-primary-g text-black justify-evenly cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
       id="sort"
       @click="isOpen = !isOpen"
     >
@@ -43,8 +123,8 @@ function show() {
       <DownArrow class="mt-2.5"/>
       </div>
       <div class="sub-menu absolute shadow-[4px_3px_3px_rgba(0,0,0,0.25)]" v-if="isOpen" >
-        <div v-for="menu in menuarray" class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
-          <button class="ml-2">{{ menu }}</button>
+        <div v-for="x in menuArray" :key="x.sortBy" class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
+          <button @click="sortBy(x)" class="ml-2">{{ x.text }}</button>
         </div>
       </div>
     </div>
