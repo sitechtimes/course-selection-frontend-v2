@@ -101,7 +101,14 @@ const router = createRouter({
     {
       path: '/guidance/calendar',
       name: 'calendar',
-      component: () => import('../views/GuidanceCalendar.vue')
+      component: () => import('../views/GuidanceCalendar.vue'),
+      beforeEnter: (to) => {
+        const userStore = useUserStore();
+
+        if (userStore.userType === 'student') {
+          return { name: "studentDash" };
+        }
+      }
     },
   ]
 })
