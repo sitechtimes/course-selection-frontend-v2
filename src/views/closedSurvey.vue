@@ -3,8 +3,8 @@ import { useUserStore } from '../stores/user'
 import { useSurveyStore } from '../stores/survey';
 import surveyBoolean from '../components/SurveyPageComponents/Reusables/surveyBoolean.vue'
 import surveyGeneral from '../components/SurveyPageComponents/Reusables/surveyGeneral.vue'
-import closedCheckbox from '../components/SurveyPageComponents/Reusables/ClosedSurvey/closedCheckbox.vue';
-import closedDraggable from '../components/SurveyPageComponents/Reusables/ClosedSurvey/closedDraggable.vue';
+import closedRank from '../components/SurveyPageComponents/Reusables/ClosedSurvey/closedRank.vue';
+import closedFinalRank from '../components/SurveyPageComponents/Reusables/ClosedSurvey/closedFinalRank.vue';
 import { surveyQuestion, surveyAnswer } from '../types/interface';
 import { watch, ref, Ref } from 'vue';
 
@@ -33,25 +33,20 @@ const getChoices = (question:  surveyQuestion) => {
       <div v-for="question in userStore.data.survey.questions" :key="question.id" class="flex justify-center">
         <surveyBoolean class="mb-2" v-if="question.questionType === 'BOOLEAN'" :question="question" :isDisabled="true"></surveyBoolean>
         <surveyGeneral class="mb-6" v-else-if="question.questionType === 'GENERAL'" :question="question" :isDisabled="true"></surveyGeneral>
-        <closedCheckbox v-else class="mb-6" :question="question" :choices="getChoices(question)"
-        :color="'D6EEFF'"
-        ></closedCheckbox>
+        <closedRank v-else class="mb-6" :question="question" :choices="getChoices(question)"></closedRank>
       </div>
       <div class="my-6">
-        <p class="text-lg md:text-xl xl:text-3xl my-4">For the final part of the survey, please drag your classes in the order of priority, with the first choice being your top priority.</p> <!-- Have to change what this says. surveyCheckbox probably also needs to be changed-->
-        <closedDraggable 
+        <p class="text-lg md:text-xl xl:text-3xl my-4">Your final class priority:</p> <!-- Have to change what this says. surveyCheckbox probably also needs to be changed-->
+        <closedFinalRank 
           :courses="surveyStore.currentResponse[indexAll].preference" 
-          :index="indexAll"
-          :numbered="true"
-          :key="x"
-          :color="'D6EEFF'"
+
           >
-        </closedDraggable>
+        </closedFinalRank>
       </div>
       <div class="mt-14">
         <p class="text-lg md:text-xl xl:text-3xl">Final note to your guidance counselor:</p>
         <input
-            class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base bg-transparent rounded-md border border-solid border-zinc-400 focus:outline-none focus:ring-0 focus:border-blue-400"
+            class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base md:text-lg xl:text-2xl bg-transparent rounded-md border border-solid border-zinc-400 focus:outline-none focus:ring-0 focus:border-blue-400"
             type="text"
             disabled
             v-model="surveyStore.currentResponse[indexNote].answer"
