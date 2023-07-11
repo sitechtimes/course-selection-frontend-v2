@@ -42,24 +42,22 @@ const redirect = () => {
     }
 }
 
-let openMeeting = false
+let openMeeting: Ref<boolean> = ref(false)
 const currentDate = new Date()
-
-if (userStore.isLoggedIn && userStore.userType === 'student') {
-
 const closeTime = userStore.data.survey.dueDate.substring(0,10).split("-")
 
-if (Number(closeTime[0]) > currentDate.getFullYear()) {
-  openMeeting = true
-} else if (Number(closeTime[0]) === currentDate.getFullYear()) {
-  if (Number(closeTime[1]) > currentDate.getMonth() + 1) { // Get month starts at 0, not 1
-    openMeeting = true
-  } else if (Number(closeTime[1]) === currentDate.getMonth() + 1) {
-    if (Number(closeTime[2]) > currentDate.getDate()) {
-      openMeeting = true
+if (userStore.isLoggedIn && userStore.userType === 'student') {
+    if (Number(closeTime[0]) > currentDate.getFullYear()) {
+        openMeeting.value = true
+    } else if (Number(closeTime[0]) === currentDate.getFullYear()) {
+        if (Number(closeTime[1]) > currentDate.getMonth() + 1) { // Get month starts at 0, not 1
+            openMeeting.value = true
+        } else if (Number(closeTime[1]) === currentDate.getMonth() + 1) {
+            if (Number(closeTime[2]) > currentDate.getDate()) {
+                openMeeting.value = true
+            }
+        }
     }
-  }
-}
 
 }
 const toggleMenu = () => {
