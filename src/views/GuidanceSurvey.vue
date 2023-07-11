@@ -5,9 +5,10 @@ import booleanComponent from '../components/SurveyPageComponents/Reusables/Surve
 import generalComponent from '../components/SurveyPageComponents/Reusables/SurveyGeneral.vue'
 import checkboxComponent from '../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue'
 import surveyDraggable from '../components/SurveyPageComponents/Reusables/surveyDraggable.vue';
+import exclamationMark from '../components/icons/ExclamationMark.vue'
 import { surveyQuestion, surveyAnswer } from '../types/interface';
 import { useRouter } from 'vue-router'
-import { ref, Ref, watch } from 'vue';
+import { ref, Ref, watch, reactive } from 'vue';
 
 const userStore = useUserStore()
 const surveyStore = useSurveyStore()
@@ -17,6 +18,7 @@ const viewedStudent = userStore.data.guidance.students.filter(student => student
 
 let currentSurvey = null
 const missing: Ref<boolean> = ref(false) 
+let error: Array<string> = reactive([])
 const x: Ref<number> = ref(0)
 const indexAll = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');
 const indexNote = surveyStore.currentResponse.findIndex((x) => x.id === 'noteToGuidance');
@@ -43,6 +45,7 @@ const completeSurvey = async () => {
       }
     }
   })
+  error = check
   if(check.length === 0) {
     surveyStore.saveSurvey('COMPLETE')
     // move this to store once backend is updated
@@ -70,11 +73,17 @@ watch(() => surveyStore.currentResponse[indexAll].preference, (newResponse) => {
       <p v-if="surveyStore.loading">Setting things up...</p>
       <div v-else>
         <div v-for="question in currentSurvey.questions" :key="question" class="flex justify-center">
-          <booleanComponent class="mb-2" v-if="question.questionType === 'BOOLEAN'" :question="question" ></booleanComponent>
-          <generalComponent class="mb-6" v-else-if="question.questionType === 'GENERAL'" :question="question" ></generalComponent>
-          <checkboxComponent v-else class="mb-6" :question="question" :choices="getChoices(question)"
-          :color="'DEE9C8'"
-          ></checkboxComponent>
+          <div v-if="missing" class="w-1/12 flex justify-center items-center">
+            <exclamationMark v-if="error.includes(question.id)" class="text-red-500 h-8"></exclamationMark>
+          </div>
+          <div class="w-11/12">
+            <booleanComponent class="mb-2" v-if="question.questionType === 'BOOLEAN'" :question="question" ></booleanComponent>
+            <generalComponent class="mb-6" v-else-if="question.questionType === 'GENERAL'" :question="question" ></generalComponent>
+            <checkboxComponent v-else class="mb-6" :question="question" :choices="getChoices(question)"
+            :color="'DEE9C8'"
+            ></checkboxComponent>
+          </div>
+          
         </div>
         <div class="my-6">
           <p class="text-lg md:text-xl xl:text-3xl my-4">Student's order of priority:</p>
@@ -106,7 +115,7 @@ watch(() => surveyStore.currentResponse[indexAll].preference, (newResponse) => {
         </div>
       </div>
       <div class="flex justify-center mb-10 flex-col items-center">
-        <p v-if="missing">Please fill in all questions before submitting.</p>
+        <p v-if="missing" class="text-red-500 mb-4 text-center">Please fill in all questions before submitting.</p>
         <button @click="completeSurvey()" class="bg-[#DEE9C8] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-36 h-12 text-2xl font-bold text-[#37394F]">Complete</button>
       </div>
     </div>
