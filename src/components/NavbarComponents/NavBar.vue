@@ -77,10 +77,10 @@ const toggleMenu = () => {
             <RouterLink to="/courses">
                 <p class="text-base">Courses</p>
             </RouterLink>
-            <RouterLink v-if="openMeeting === true" to="/student/survey">
+            <RouterLink v-if="openMeeting" to="/student/survey">
                 <p class="text-base">Survey</p>
             </RouterLink>
-            <RouterLink v-else-if="openMeeting === false" to="/survey/closed">
+            <RouterLink v-else to="/survey/closed">
                 <p class="text-base">Survey</p>
             </RouterLink>
             <RouterLink to="/">
