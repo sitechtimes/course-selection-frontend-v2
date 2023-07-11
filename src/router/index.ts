@@ -51,6 +51,18 @@ const router = createRouter({
       }
     },
     {
+      path: '/survey/closed',
+      name: 'closedSurvey',
+      component: () => import('../views/ClosedSurvey.vue'),
+      beforeEnter: (to) => {
+        const userStore = useUserStore();
+
+        if (userStore.userType === 'guidance') {
+          return { name: "guidanceStudentlist" };
+        }
+      }
+    },
+    {
       path: '/student/survey/review',
       name: 'reviewSurvey',
       component: () => import('../views/ReviewSurvey.vue'),

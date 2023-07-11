@@ -6,6 +6,7 @@
         <div class="flex justify-center items-center flex-wrap my-4">
           <input
             type="radio"
+            :disabled="isDisabled"
             class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
             :id="question.id + 'Yes'"
             value="Yes"
@@ -16,6 +17,7 @@
         <div class="flex justify-center items-center flex-wrap m-8">
           <input
             type="radio"
+            :disabled="isDisabled"
             class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
             :id="question.id + 'No'"
             value="No"
@@ -32,6 +34,7 @@
 const props = defineProps({
   question: Object,
   answers: Array,
+  isDisabled: Boolean,
 });
 
 import { useSurveyStore } from "../../../stores/survey";

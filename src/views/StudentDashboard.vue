@@ -2,7 +2,7 @@
 import BellIcon from "../components/icons/BellIcon.vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
-import { computed } from "vue";
+import { computed, ref, Ref } from "vue";
 
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
@@ -10,15 +10,34 @@ const surveyStore = useSurveyStore();
 let time: String;
 let date: String;
 
-const annoucement = computed(() => {
-  if(userStore.data.answeredSurvey === null) {
-  return "Surveys are closing next week on 03/12/2023."
-} else if(userStore.data.answeredSurvey.status === 'COMPLETE') {
-  return "You have submitted your survey. Changes can be made before 00/00/0000."
-} else {
-  return "Your survey is in progress. Surveys are closing next week on 00/00/0000."
+const currentDate = new Date()
+
+const closeTime = userStore.data.survey.dueDate.substring(0,10).split("-")
+
+let openMeeting: Ref<boolean> = ref(false)
+
+if (Number(closeTime[0]) > currentDate.getFullYear()) {
+  openMeeting.value = true
+} else if (Number(closeTime[0]) === currentDate.getFullYear()) {
+  if (Number(closeTime[1]) > currentDate.getMonth() + 1) { // Get month starts at 0, not 1
+    openMeeting.value = true
+  } else if (Number(closeTime[1]) === currentDate.getMonth() + 1) {
+    if (Number(closeTime[2]) > currentDate.getDate()) {
+      openMeeting.value = true
+    }
+  }
 }
-})
+
+console.log(openMeeting)
+// const annoucement = computed(() => {
+//   if(userStore.data.answeredSurvey === null) {
+//   return "Surveys are closing next week on 03/12/2023."
+// } else if(userStore.data.answeredSurvey.status === 'COMPLETE') {
+//   return "You have submitted your survey. Changes can be made before 00/00/0000."
+// } else {
+//   return "Your survey is in progress. Surveys are closing next week on 00/00/0000."
+// }
+// })
 
 if (
   userStore.data.student.meeting != undefined ||
@@ -46,7 +65,8 @@ if (
       </h1>
       <div id="announcements" class="flex justify-center items-center ml-4 lg:ml-0 lg:justify-start">
         <BellIcon />
-        <h2 class="text-xl text-left flex ml-2">{{ annoucement }}</h2>
+        <h2 v-if="openMeeting" class="text-xl text-left flex ml-2">Surveys are closing on {{ closeTime[1] }}/{{ closeTime[2] }}/{{ closeTime[0] }}.</h2>
+        <h2 v-else class="text-xl text-left flex ml-2">Surveys are closed. Please contact your guidance counselor to request changes.</h2>
       </div>
       <div class="flex flex-col justify-start items-center space-y-4 lg:flex-row lg:space-y-0 lg:space-x-4">
         <RouterLink to="/schedule">
@@ -55,7 +75,12 @@ if (
           </button>
         </RouterLink>
         <!-- check if survey exists, if not create new and set current -->
-        <RouterLink to="/student/survey">
+        <RouterLink v-if="openMeeting" to="/student/survey">
+          <button class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
+            Course Survey
+          </button>
+        </RouterLink>
+        <RouterLink v-else to="/survey/closed">
           <button class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
             Course Survey
           </button>
