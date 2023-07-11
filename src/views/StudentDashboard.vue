@@ -13,6 +13,7 @@ let date: String;
 const currentDate = new Date()
 
 const closeTime = userStore.data.survey.dueDate.substring(0,10).split("-")
+console.log(closeTime, 'o')
 let openMeeting = false
 
 if (Number(closeTime[0]) > currentDate.getFullYear()) {
@@ -64,7 +65,7 @@ if (
       </h1>
       <div id="announcements" class="flex justify-center items-center ml-4 lg:ml-0 lg:justify-start">
         <BellIcon />
-        <h2 v-if="openMeeting" class="text-xl text-left flex ml-2">Surveys are closing on {{ closeTime.splice(0, 3, closeTime[2], closeTime[0], closeTime[1]).join("/") }}</h2>
+        <h2 v-if="openMeeting" class="text-xl text-left flex ml-2">Surveys are closing on {{ closeTime[1] }}/{{ closeTime[2] }}/{{ closeTime[0] }}.</h2>
         <h2 v-else class="text-xl text-left flex ml-2">Surveys are closed. Please contact your guidance counselor to request changes.</h2>
       </div>
       <div class="flex flex-col justify-start items-center space-y-4 lg:flex-row lg:space-y-0 lg:space-x-4">
