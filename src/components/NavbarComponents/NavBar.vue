@@ -11,7 +11,7 @@ const userStore = useUserStore();
 let menuOpen = ref(false);
 
 function viewingSurvey() {
-    return router.currentRoute.value.path.includes('survey')
+    return router.currentRoute.value.path.includes('survey') && router.currentRoute.value.path != '/survey/closed'
 }
 
 const exitSurvey = () => {
@@ -40,6 +40,27 @@ const redirect = () => {
     }
 }
 
+let openMeeting = false
+
+if (userStore.isLoggedIn && userStore.userType === 'student') {
+const currentDate = new Date()
+
+const closeTime = userStore.data.survey.dueDate.substring(0,10).split("-")
+
+if (Number(closeTime[0]) > currentDate.getFullYear()) {
+  openMeeting = true
+} else if (Number(closeTime[0]) === currentDate.getFullYear()) {
+  if (Number(closeTime[1]) > currentDate.getMonth() + 1) { // Get month starts at 0, not 1
+    openMeeting = true
+  } else if (Number(closeTime[1]) === currentDate.getMonth() + 1) {
+    if (Number(closeTime[2]) > currentDate.getDate()) {
+      openMeeting = true
+    }
+  }
+}
+console.log(openMeeting)
+
+}
 </script>
 
 <template>
@@ -51,7 +72,10 @@ const redirect = () => {
             <RouterLink to="/courses">
                 <p class="text-base">Courses</p>
             </RouterLink>
-            <RouterLink to="/survey">
+            <RouterLink v-if="openMeeting === true" to="/survey">
+                <p class="text-base">Survey</p>
+            </RouterLink>
+            <RouterLink v-else-if="openMeeting === false" to="/survey/closed">
                 <p class="text-base">Survey</p>
             </RouterLink>
             <RouterLink to="/">

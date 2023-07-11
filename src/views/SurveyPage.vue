@@ -5,11 +5,8 @@ import generalComponent from "../components/SurveyPageComponents/Reusables/surve
 import { ref, reactive, Ref, onBeforeMount } from "vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
-import { surveyQuestion, courses, surveyAnswer } from "../types/interface";
 
-const date = new Date();
-let openMeeting = false
-let usedSurvey = []
+import { surveyQuestion, courses, surveyAnswer } from "../types/interface";
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
 
@@ -44,24 +41,6 @@ const nextQuestion = () => {
     max.value = true;
   }
 };
-
-if (userStore.data.survey.dueDate != undefined && userStore.data.survey.dueDate != null) {
-const SplitDate = userStore.data.survey.dueDate.substring(0,10).split("-")
-console.log(SplitDate, 'o')
-  if (Number(SplitDate[0]) > date.getFullYear()) {
-    openMeeting = true
-  }
-  else if (Number(SplitDate[0]) === date.getFullYear()) {
-    if (Number(SplitDate[1]) > date.getMonth() + 1) { // Get month starts at 0, not 1
-      openMeeting = true
-    }
-    else if (Number(SplitDate[1]) === date.getMonth() + 1) {
-      if (Number(SplitDate[2]) > date.getDate()) {
-        openMeeting = true
-      }
-    }
-  }
-  }
 
 const getChoices = () => {
   const classes = userStore.data.student.coursesAvailable;
@@ -134,24 +113,6 @@ const getChoices = () => {
       {{ currentIndex + 1 }}
     </p>
   </div>
-  <section v-else>
-    <div class="text-3xl ml-32 mt-24 mb-4">
-      <h1 class="font-bold text-[#37394F] text-5xl  mb-6">Your Survey</h1>
-      <h2 v-if="userStore.data.survey.grade === 'SOPHOMORE'">Grade : 9</h2>
-      <h2 v-if="userStore.data.survey.grade === 'JUNIOR'">Grade : 10</h2>
-      <h2 v-if="userStore.data.survey.grade === 'SENIOR'">Grade : 11</h2>
-    </div>
-  <div v-for="question in userStore.data.survey.questions" class="flex justify-center">
-      <booleanComponent class="mb-6 " v-if="question.questionType === 'BOOLEAN'" :question="question" :usedSurvey="userStore.data.survey.questions"></booleanComponent>
-      <generalComponent class="mb-6" v-if="question.questionType === 'GENERAL'" :question="question" :usedSurvey="userStore.data.survey.questions"></generalComponent>
-      <section v-if="question.questionType != 'BOOLEAN' && question.questionType != 'GENERAL'" class="flex items-center justify-start w-3/4 overflow-x-visible mb-6">
-        <div class=" items-center space-y-6 w-full">
-          <h1 class="text-xl md:text-2xl lg:text-[180%]">{{ question.question }}</h1>
-          <input class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base bg-transparent rounded-md border border-solid border-zinc-400  focus:outline-none focus:ring-0 focus:border-blue-400 lg:text-[180%] " type="text">
-        </div>
-      </section>
-    </div>
-  </section>
 </template>
 
 <style scoped></style>
