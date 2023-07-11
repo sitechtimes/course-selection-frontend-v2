@@ -70,6 +70,7 @@ export const useUserStore = defineStore("user", {
                                             questionType
                                             id
                                         }
+                                        dueDate
                                     }
                                 }
                             }
@@ -135,6 +136,7 @@ export const useUserStore = defineStore("user", {
                                 question
                                 questionType
                             }
+                            dueDate
                         }
                         answeredSurvey{
                             osis
