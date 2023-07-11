@@ -39,7 +39,6 @@ function submit(date: String, name: String, time: String) {
   //submit and reset form
   document.getElementById("save").innerHTML = "Saved";
   document.getElementById("form").reset();
-  console.log(osis);
   userStore.changeMeeting(osis, newTime);
 }
 
