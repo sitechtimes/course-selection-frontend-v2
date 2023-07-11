@@ -10,15 +10,10 @@ import { watch, ref, Ref } from 'vue';
 
 const userStore = useUserStore()
 const surveyStore = useSurveyStore()
-console.log(userStore)
-console.log(surveyStore)
 
 const indexAll = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');
 const indexNote = surveyStore.currentResponse.findIndex((x) => x.id === 'noteToGuidance');
 const x: Ref<number> = ref(0)
-
-
-
 
 const getChoices = (question:  surveyQuestion) => {
   const classes = userStore.data.student.coursesAvailable                            

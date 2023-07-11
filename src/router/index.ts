@@ -53,7 +53,7 @@ const router = createRouter({
     {
       path: '/survey/closed',
       name: 'closedSurvey',
-      component: () => import('../views/closedSurvey.vue'),
+      component: () => import('../views/ClosedSurvey.vue'),
       beforeEnter: (to) => {
         const userStore = useUserStore();
 
