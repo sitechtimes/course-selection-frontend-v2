@@ -13,7 +13,7 @@ let date: String;
 const currentDate = new Date()
 
 const closeTime = userStore.data.survey.dueDate.substring(0,10).split("-")
-console.log(closeTime, 'o')
+
 let openMeeting = false
 
 if (Number(closeTime[0]) > currentDate.getFullYear()) {

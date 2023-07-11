@@ -42,21 +42,21 @@ const redirect = () => {
     }
 }
 
-const openMeeting: Ref<boolean> = ref(false)
+let openMeeting = false
+const currentDate = new Date()
 
 if (userStore.isLoggedIn && userStore.userType === 'student') {
-const currentDate = new Date()
 
 const closeTime = userStore.data.survey.dueDate.substring(0,10).split("-")
 
 if (Number(closeTime[0]) > currentDate.getFullYear()) {
-  openMeeting.value = true
+  openMeeting = true
 } else if (Number(closeTime[0]) === currentDate.getFullYear()) {
   if (Number(closeTime[1]) > currentDate.getMonth() + 1) { // Get month starts at 0, not 1
-    openMeeting.value = true
+    openMeeting = true
   } else if (Number(closeTime[1]) === currentDate.getMonth() + 1) {
     if (Number(closeTime[2]) > currentDate.getDate()) {
-      openMeeting.value = true
+      openMeeting = true
     }
   }
 }
