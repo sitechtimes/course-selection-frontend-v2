@@ -40,11 +40,12 @@ const redirect = () => {
     }
 }
 
+let openMeeting = false
+
 if (userStore.isLoggedIn && userStore.userType === 'student') {
 const currentDate = new Date()
 
 const closeTime = userStore.data.survey.dueDate.substring(0,10).split("-")
-let openMeeting = false
 
 if (Number(closeTime[0]) > currentDate.getFullYear()) {
   openMeeting = true
@@ -57,8 +58,9 @@ if (Number(closeTime[0]) > currentDate.getFullYear()) {
     }
   }
 }
-}
+console.log(openMeeting)
 
+}
 </script>
 
 <template>
@@ -70,10 +72,10 @@ if (Number(closeTime[0]) > currentDate.getFullYear()) {
             <RouterLink to="/courses">
                 <p class="text-base">Courses</p>
             </RouterLink>
-            <RouterLink v-if="openMeeting" to="/survey">
+            <RouterLink v-if="openMeeting === true" to="/survey">
                 <p class="text-base">Survey</p>
             </RouterLink>
-            <RouterLink v-else to="/survey/closed">
+            <RouterLink v-else-if="openMeeting === false" to="/survey/closed">
                 <p class="text-base">Survey</p>
             </RouterLink>
             <RouterLink to="/">
