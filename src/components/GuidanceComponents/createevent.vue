@@ -6,11 +6,12 @@ const hidee = true;
 let title: String;
 let date: String;
 let time: String;
-let people: String;
 let description: String;
-//const students = userStore.data.guidance.students;
+let name: String;
+let osis: String;
+const students = userStore.data.guidance.students;
 
-function submit(date: String, people: String, time: String) {
+function submit(date: String, name: String, time: String) {
   //date conversion
   const year = parseInt(date.slice(0, 4));
   const month = parseInt(date.slice(6, 8)) - 1;
@@ -20,11 +21,26 @@ function submit(date: String, people: String, time: String) {
   const dateTime = new Date(year, month, day, hour, min);
   const newTime = dateTime.toISOString();
   //person locater
-  console.log(userStore.data.guidance.students);
+  if (name != null || undefined) {
+    for (const student of students) {
+      const studentFullName =
+        student.user.lastName +
+        ", " +
+        student.user.firstName +
+        " | " +
+        student.osis;
+      if (studentFullName == name) {
+        osis = student.osis;
+      } else {
+      }
+    }
+  } else {
+  }
   //submit and reset form
   document.getElementById("save").innerHTML = "Saved";
   document.getElementById("form").reset();
-  userStore.changeMeeting("12304", newTime);
+  console.log(osis);
+  userStore.changeMeeting(osis, newTime);
 }
 
 //2007-12-03T10:15:30Z
@@ -145,10 +161,13 @@ function hide() {
             </label>
             <datalist id="suggestions">
               <div v-for="student in students" :key="student.osis">
-                <option>{{ student }}</option>
+                <option>
+                  {{ student.user.lastName }}, {{ student.user.firstName }} |
+                  {{ student.osis }}
+                </option>
               </div>
             </datalist>
-            <input autoComplete="on" list="suggestions" />
+            <input autoComplete="on" list="suggestions" v-model="name" />
           </div>
           <div class="item">
             <label class="formt" for="description"
@@ -173,7 +192,7 @@ function hide() {
           </div>
           <div class="item submit">
             <button
-              @click="submit(date, people, time)"
+              @click="submit(date, name, time)"
               type="submit"
               class="font-bold"
               id="save"
@@ -182,12 +201,12 @@ function hide() {
             </button>
           </div>
         </form>
-        <div class="events">
+        <!-- <div class="events">
           <p>Title : {{ title }}</p>
           <p>Date : {{ date }}</p>
           <p>People : {{ people }}</p>
           <p>Description : {{ description }}</p>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="tab freshman">Freshman meet</div>
