@@ -44,9 +44,9 @@ const redirect = () => {
 
 let openMeeting: Ref<boolean> = ref(false)
 const currentDate = new Date()
-const closeTime = userStore.data.survey.dueDate.substring(0,10).split("-")
 
 if (userStore.isLoggedIn && userStore.userType === 'student') {
+    const closeTime = userStore.data.survey.dueDate.substring(0,10).split("-")
     if (Number(closeTime[0]) > currentDate.getFullYear()) {
         openMeeting.value = true
     } else if (Number(closeTime[0]) === currentDate.getFullYear()) {
