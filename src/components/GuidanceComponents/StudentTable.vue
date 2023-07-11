@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useUserStore } from '../../stores/user';
+import { useSurveyStore } from '../../stores/survey';
 import SearchBar from "./SearchBar.vue"
 import { useRouter } from 'vue-router'
 
 const props = defineProps(['newstudents'])
 const userStore = useUserStore()
+const surveyStore = useSurveyStore()
 const router = useRouter()
 
 async function userClick(student: object) {
-    await userStore.setSurvey(student.osis, userStore.data.allSurveys.edges.find(x => x.node.grade === student.grade).node.questions)
+    await surveyStore.setSurvey(student.osis, userStore.data.allSurveys.edges.find(x => x.node.grade === student.grade).node.questions)
     router.push(`/guidance/survey/${student.osis}`)
 }
 

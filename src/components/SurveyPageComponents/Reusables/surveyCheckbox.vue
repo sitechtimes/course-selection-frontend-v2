@@ -3,14 +3,13 @@
     <div class="flex flex-col lg:flex-row h-full">
       <div class="w-1/2">
         <div class="flex items-center justify-center max-w-[40rem] overflow-hidden">
-          <fieldset class="flex items-center justify-start">
-            <!-- I did this because I have no idea how to make it fill the rest of the page, so this will let the page decide how long it should be.  -->
+          <fieldset class="flex items-center justify-start w-full">
             <legend class="text-lg md:text-xl xl:text-3xl overflow-visible">{{ question.question }}</legend>
             <div class="flex flex-col flex-wrap justify-center items-start">
               <div
                 v-for="choice in choices"
                 :key="choice.courseCode"
-                class="flex flex-wrap flex-column justify-center items-center m-4 w-max"
+                class="flex flex-wrap flex-column justify-center items-center m-2 w-max"
               >
                 <input
                   type="checkbox"
@@ -21,7 +20,7 @@
                 />
                 <label
                   :for="choice.courseCode"
-                  class="text-lg md:text-xl xl:text-2xl ml-4"
+                  class="text-lg xl:text-xl ml-4"
                   >{{ choice.name }}</label
                 >
               </div>
@@ -54,7 +53,7 @@ const props = defineProps({
 
 import surveyDraggable from "./surveyDraggable.vue";
 import { useSurveyStore } from "../../../stores/survey";
-import { watch, onBeforeMount, onbeforeC, ref, Ref } from "vue";
+import { watch, onBeforeMount, ref, Ref } from "vue";
 
 const surveyStore = useSurveyStore();
 
