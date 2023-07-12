@@ -228,6 +228,7 @@ export const useUserStore = defineStore("user", {
           }
         )
         .then((res) => {
+          console.log(res)
           console.log("meeting changed");
         });
     },
