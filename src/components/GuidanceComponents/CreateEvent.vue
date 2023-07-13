@@ -7,7 +7,7 @@ let date: String;
 let time: String;
 let description: String;
 let name: String;
-let osis: String;
+let email: String;
 const show : Ref<boolean> = ref(false)
 const save = ref(null)
 const form = ref(null)
@@ -36,15 +36,15 @@ function submit(date: String, name: String, time: String) {
         ", " +
         student.user.firstName +
         " | " +
-        student.osis;
+        student.user.email;
       if (studentFullName == name) {
-        osis = student.osis;
+        email = student.user.email;
       } 
     }
   } 
   save.value.innerHTML = "Saved";
   form.value.reset();
-  userStore.changeMeeting(osis, newTime);
+  userStore.changeMeeting(email, newTime);
 }
 
 const toggleEvent = () => {
@@ -135,10 +135,10 @@ const toggleEvent = () => {
               Student
             </label>
             <datalist id="suggestions">
-              <div v-for="student in students" :key="student.osis">
+              <div v-for="student in students" :key="student.user.email">
                 <option>
                   {{ student.user.lastName }}, {{ student.user.firstName }} |
-                  {{ student.osis }}
+                  {{ student.user.email }}
                 </option>
               </div>
             </datalist>
