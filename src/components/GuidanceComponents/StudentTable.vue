@@ -11,8 +11,8 @@ const surveyStore = useSurveyStore()
 const router = useRouter()
 
 async function userClick(student: object) {
-    await surveyStore.setSurvey(student.osis, userStore.data.allSurveys.edges.find(x => x.node.grade === student.grade).node.questions)
-    router.push(`/guidance/survey/${student.osis}`)
+    await surveyStore.setSurvey(student.user.email, userStore.data.allSurveys.edges.find(x => x.node.grade === student.grade).node.questions)
+    router.push(`/guidance/survey/${student.user.email}`)
 }
 
 </script>
@@ -24,7 +24,7 @@ async function userClick(student: object) {
                 <tr class="bg-primary-g">
                     <th class="p-4">Name</th>
                     <th class="p-4">Grade</th>
-                    <th class="p-4">OSIS</th>
+                    <!-- <th class="p-4">OSIS</th> -->
                     <th class="p-4">Email</th>
                     <th class="p-4">Progress</th>
                     <th class="p-4">Details</th>
@@ -36,15 +36,15 @@ async function userClick(student: object) {
                     <td class="p-4" v-if="student.grade === 'SOPHOMORE'">9</td>
                     <td class="p-4" v-if="student.grade === 'JUNIOR'">10</td>
                     <td class="p-4" v-if="student.grade === 'SENIOR'">11</td>
-                    <td class="p-4">{{ student.osis }}</td>
+                    <!-- <td class="p-4">{{ student.osis }}</td> -->
                     <td class="p-4">{{ student.user.email }}</td>
-                    <td class="p-4" v-if="userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === student.osis) === undefined">
+                    <td class="p-4" v-if="userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === student.user.email) === undefined">
                         <p class="text-[#461616] bg-[#EA9F9F] w-[8rem] font-semibold text-center p-1 rounded-2xl">Not Started</p>
                     </td>
-                    <td class="p-4" v-else-if="userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === student.osis).node.status === 'INCOMPLETE'">
+                    <td class="p-4" v-else-if="userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === student.user.email).node.status === 'INCOMPLETE'">
                         <p class="text-[#461616] bg-[#F9D477] w-[8rem] font-semibold text-center p-1 rounded-2xl">In Progress</p>
                     </td>
-                    <td class="p-4" v-else-if="userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === student.osis).node.status === 'COMPLETE'">
+                    <td class="p-4" v-else-if="userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === student.user.email).node.status === 'COMPLETE'">
                         <p class="text-[#174616] bg-[#A8D480] w-[8rem] font-semibold text-center p-1 rounded-2xl">Completed</p>
                     </td>
                     <td>View Survey</td>

@@ -18,7 +18,7 @@ const min: Ref<boolean> = ref(true);
 const max: Ref<boolean> = ref(false);
 
 surveyStore.setSurvey(
-  userStore.data.student.osis,
+  userStore.data.user.email,
   userStore.data.survey.questions
 );
 
