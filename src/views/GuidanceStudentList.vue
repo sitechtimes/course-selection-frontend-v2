@@ -12,7 +12,7 @@ const students = useUserStore().data.guidance.students
 const input:Ref<string> = ref('')
 
 const newStudents = computed(() => {
-  return students.filter((student: { user: { firstName: string; lastName: string; email:string };  }) => {
+  return students.filter((student: { user: { firstName: string; lastName: string; };  }) => {
         const studentName = student.user.firstName + ' ' + student.user.lastName
         return (
           studentName.toLowerCase().indexOf(input.value.toLowerCase()) != -1 || student.user.email.indexOf(input.value) != -1
