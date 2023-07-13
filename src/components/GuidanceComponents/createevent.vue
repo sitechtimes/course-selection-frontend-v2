@@ -1,15 +1,23 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, Ref, onMounted } from "vue";
 import { useUserStore } from "../../stores/user";
 const userStore = useUserStore();
-const hidee = true;
 let title: String;
 let date: String;
 let time: String;
 let description: String;
 let name: String;
 let osis: String;
+const show : Ref<boolean> = ref(false)
+const save = ref(null)
+const form = ref(null)
 const students = userStore.data.guidance.students;
+
+// onMounted(() => {
+//   console.log(save.value)
+//   return { save }
+// })
+
 
 function submit(date: String, name: String, time: String) {
   //date conversion
@@ -31,74 +39,42 @@ function submit(date: String, name: String, time: String) {
         student.osis;
       if (studentFullName == name) {
         osis = student.osis;
-      } else {
-      }
+      } 
     }
-  } else {
-  }
-  //submit and reset form
-  document.getElementById("save").innerHTML = "Saved";
-  document.getElementById("form").reset();
+  } 
+  save.value.innerHTML = "Saved";
+  form.value.reset();
   userStore.changeMeeting(osis, newTime);
 }
 
-//2007-12-03T10:15:30Z
-// if (
-//   userStore.data.student.meeting != undefined ||
-//   userStore.data.student.meeting != null
-// ) {
-//   const SplitTime = userStore.data.student.meeting.substring(11, 16).split(":"); // Substring is there to get only the time part (2023-05-01T16:09:54+00:00 was the value for meeting)
-//   if (SplitTime[0] > 12) {
-//     SplitTime[0] -= 12;
-//     time = SplitTime.join(":") + " PM";
-//   } else {
-//     time = SplitTime.join(":") + " AM";
-//   }
-//   const SplitDate = userStore.data.student.meeting.substring(0, 10).split("-");
-//   SplitDate.splice(0, 3, SplitDate[1], SplitDate[2], SplitDate[0]);
-//   date = SplitDate.join("/");
-// }
-
-function show() {
-  const createevent = document.querySelector(".createevent");
-  if (createevent.style.display === "none") {
-    createevent.style.display = "block";
-  } else {
-    createevent.style.display = "block";
-  }
-}
-function hide() {
-  const createevent = document.querySelector(".createevent");
-  createevent.style.display = "none";
+const toggleEvent = () => {
+  show.value = !show.value
 }
 </script>
 
 <template>
   <div class="event h-screen w-full flex flex-column mt-20">
-    <button class="test" @click="show">create event</button>
-    <div v-if="hidee" class="createevent h-screen flex flex-row m-auto mt-5">
+    <button class="test" @click="toggleEvent">create event</button>
+    <div v-if="show" class="createevent h-screen flex flex-row m-auto mt-5">
       <div class="event">
         <div class="top">
           <h2 class="h2 font-bold">Create Event</h2>
-          <button class="mt-5" @click="hide">
+          <button class="mt-5" @click="toggleEvent">
             <svg
               class="x"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 320 512"
             >
-              <!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
               <path
                 d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"
               />
             </svg>
           </button>
         </div>
-
-        <form id="form" @submit.prevent="createevent">
+        <form id="form" ref="form" @submit.prevent="submit(date, name, time)">
           <div class="item">
             <label class="formt" for="title">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                <!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                 <path
                   d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"
                 /></svg>
@@ -195,6 +171,7 @@ function hide() {
               type="submit"
               class="font-bold"
               id="save"
+              ref="save"
             >
               Save
             </button>
@@ -330,7 +307,6 @@ svg {
   font-weight: bold;
 }
 .createevent {
-  display: none;
   width: 65%;
   height: 35rem;
   border-radius: 1rem;

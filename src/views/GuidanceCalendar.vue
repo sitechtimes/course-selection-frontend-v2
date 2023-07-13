@@ -3,6 +3,7 @@
     <createevent />
   </div>
 </template>
+
 <script setup lang="ts">
 import createevent from "../components/GuidanceComponents/CreateEvent.vue";
 </script>
