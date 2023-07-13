@@ -97,7 +97,19 @@ const router = createRouter({
           return { name: "studentDash" };
         }
       }
-    }
+    },
+    {
+      path: '/guidance/calendar',
+      name: 'calendar',
+      component: () => import('../views/GuidanceCalendar.vue'),
+      beforeEnter: (to) => {
+        const userStore = useUserStore();
+
+        if (userStore.userType === 'student') {
+          return { name: "studentDash" };
+        }
+      }
+    },
   ]
 })
 

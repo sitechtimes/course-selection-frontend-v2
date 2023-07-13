@@ -2,7 +2,7 @@
 import { useUserStore } from '../../stores/user';
 import { useSurveyStore } from '../../stores/survey';
 import { RouterLink } from "vue-router";
-import MenuIcon from '../icons/MenuIcon.vue';
+import MenuIcon from "../icons/MenuIcon.vue";
 import CloseMenu from "../icons/CloseMenu.vue";
 import MobileNav from "./MobileNav.vue";
 import { ref, watch, Ref } from "vue";
@@ -17,17 +17,17 @@ function viewingSurvey() {
 }
 
 const exitSurvey = () => {
-    if (userStore.isLoggedIn === true) {
-        if (userStore.userType === 'student') {
-            router.push('/student/dashboard')
-        } 
-        if (userStore.userType === 'guidance') {
-            router.push('/guidance/studentlist')
-        }
-    } else {
-        return router.push('/')
+  if (userStore.isLoggedIn === true) {
+    if (userStore.userType === "student") {
+      router.push("/student/dashboard");
     }
-}
+    if (userStore.userType === "guidance") {
+      router.push("/guidance/studentlist");
+    }
+  } else {
+    return router.push("/");
+  }
+};
 
 const redirect = () => {
     if (userStore.isLoggedIn === true) {
