@@ -14,7 +14,7 @@ const userStore = useUserStore()
 const surveyStore = useSurveyStore()
 const router = useRouter()
 
-const viewedStudent = userStore.data.guidance.students.filter(student => student.osis === window.location.pathname.substring(17))[0]
+const viewedStudent = userStore.data.guidance.students.filter(student => student.user.email === window.location.pathname.substring(17))[0]
 
 let currentSurvey = null
 const missing: Ref<boolean> = ref(false) 
@@ -49,7 +49,7 @@ const completeSurvey = async () => {
   if(check.length === 0) {
     surveyStore.saveSurvey('COMPLETE')
     // move this to store once backend is updated
-    userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === viewedStudent.osis).node.status = 'COMPLETE'
+    userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === viewedStudent.user.email).node.status = 'COMPLETE'
     router.push('/guidance/studentlist')
   } else {
     missing.value = true

@@ -58,15 +58,15 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
   }
 
   function ns(a: { grade: string; }) {
-    if (userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === a.osis) === undefined) return -1;
+    if (userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined) return -1;
     else
     return null;
   }
 
   function ip(a: { grade: string; }) {
-    if (userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === a.osis) === undefined){
+    if (userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
       return null;
-    } else if(userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === a.osis).node.status === 'INCOMPLETE'){
+    } else if(userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email).node.status === 'INCOMPLETE'){
       return -1;
     } else {
       return null
@@ -74,9 +74,9 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
   }
 
   function com(a: { grade: string; }) {
-    if (userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === a.osis) === undefined){
+    if (userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
       return null;
-    } else if(userStore.data.allAnsweredSurveys.edges.find(x => x.node.osis === a.osis).node.status === 'COMPLETE'){
+    } else if(userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email).node.status === 'COMPLETE'){
       return -1;
     } else {
       return null

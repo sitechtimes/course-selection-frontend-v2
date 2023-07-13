@@ -87,7 +87,7 @@ const router = createRouter({
       }
     },
     {
-      path: '/guidance/survey/:osis',
+      path: '/guidance/survey/:email',
       name: 'guidanceSurvey',
       component: () => import('../views/GuidanceSurvey.vue'),
       beforeEnter: (to) => {

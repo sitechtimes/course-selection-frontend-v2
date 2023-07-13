@@ -16,7 +16,7 @@ export const useSurveyStore = defineStore("survey", {
     //
     async saveSurvey(status: String) {
       const userStore = useUserStore();
-      const osis = this.currentSurvey.osis;
+      const email = this.currentSurvey.email;
       const answers = this.currentResponse;
       const jsonString = JSON.stringify(answers);
 
@@ -24,8 +24,8 @@ export const useSurveyStore = defineStore("survey", {
         .post(
           `${import.meta.env.VITE_URL}/graphql/`,
           {
-            query: `mutation updateSurvey($osis: String, $answers: JSONString, $status: String) {
-                updateSurvey(osis: $osis, answers: $answers, status: $status) {
+            query: `mutation updateSurvey($email: String, $answers: JSONString, $status: String) {
+                updateSurvey(email: $email, answers: $answers, status: $status) {
                     survey {
                         id
                         answers
@@ -34,7 +34,7 @@ export const useSurveyStore = defineStore("survey", {
                 }
             }`,
             variables: {
-              osis: osis,
+              email: email,
               answers: jsonString,
               status: status
             },
@@ -53,7 +53,7 @@ export const useSurveyStore = defineStore("survey", {
             userStore.data.answeredSurvey.status = 'COMPLETE'
           } else if (userStore.userType === "guidance") {
             const studentIndex = userStore.data.allAnsweredSurveys.edges.findIndex(
-              (x) => x.node.osis == this.currentSurvey.osis
+              (x) => x.node.email == this.currentSurvey.email
             );
             // console.log(userStore.data.allAnsweredSurveys.edges)
             userStore.data.allAnsweredSurveys.edges[studentIndex].node.answers =
@@ -63,7 +63,7 @@ export const useSurveyStore = defineStore("survey", {
           }
         });
     },
-    async startSurvey(osis: string, survey: Array<object>) {
+    async startSurvey(email: string, survey: Array<object>) {
       const userStore = useUserStore()
       const answers: Array<object> = []
       const allChosen = {
@@ -88,18 +88,18 @@ export const useSurveyStore = defineStore("survey", {
         .post(
           `${import.meta.env.VITE_URL}/graphql/`,
           {
-            query: `mutation updateSurvey($osis: String, $answers: JSONString) {
-              newSurvey(osis: $osis, answers: $answers) {
+            query: `mutation updateSurvey($email: String, $answers: JSONString) {
+              newSurvey(email: $email, answers: $answers) {
                   survey {
                       id
-                      osis
+                      email
                       answers
                       status
                   }
               }
           }`,
             variables: {
-              osis: osis,
+              email: email,
               answers: jsonString
             },
           },
@@ -123,13 +123,13 @@ export const useSurveyStore = defineStore("survey", {
           }
         });
     },
-    async setSurvey(osis: string, survey: Array<object>) {
+    async setSurvey(email: string, survey: Array<object>) {
       const userStore = useUserStore();
       this.loading = true;
 
       if (userStore.userType === "student") {
         if (userStore.data.answeredSurvey === null) {
-          await this.startSurvey(osis, survey);
+          await this.startSurvey(email, survey);
         }
 
         this.currentSurvey = userStore.data.answeredSurvey;
@@ -140,13 +140,13 @@ export const useSurveyStore = defineStore("survey", {
         this.loading = false;
       } else if (userStore.userType === "guidance") {
         let studentIndex = userStore.data.allAnsweredSurveys.edges.findIndex(
-          (x) => x.node.osis === osis
+          (x) => x.node.email === email
         );
 
         if (studentIndex < 0) {
-          await this.startSurvey(osis, survey);
+          await this.startSurvey(email, survey);
           studentIndex = userStore.data.allAnsweredSurveys.edges.findIndex(
-            (x) => x.node.osis === osis
+            (x) => x.node.email === email
           );
         }
         this.currentSurvey =

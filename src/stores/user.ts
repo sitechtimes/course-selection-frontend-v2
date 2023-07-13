@@ -45,7 +45,7 @@ export const useUserStore = defineStore("user", {
                                         email
                                     }
                                     homeroom
-                                    osis
+                                 
                                     grade
                                     coursesTaken{
                                         courseCode
@@ -77,7 +77,7 @@ export const useUserStore = defineStore("user", {
                             allAnsweredSurveys {
                                 edges{
                                     node{
-                                        osis 
+                                       
                                         answers
                                         status
                                     }
@@ -114,7 +114,7 @@ export const useUserStore = defineStore("user", {
                         }
                         student{
                             homeroom
-                            osis
+                        
                             grade
                             coursesTaken{
                                 courseCode
@@ -139,7 +139,7 @@ export const useUserStore = defineStore("user", {
                             dueDate
                         }
                         answeredSurvey{
-                            osis
+                         
                             answers
                             status
                         }
@@ -206,15 +206,14 @@ export const useUserStore = defineStore("user", {
         });
     },
     //2007-12-03T10:15:30Z
-    async changeMeeting(osis: string, newTime: string) {
+    async changeMeeting(email: string, newTime: string) {
       await axios
         .post(
           `${import.meta.env.VITE_URL}/graphql/`,
           {
             query: `mutation {
-                            updateMeeting(osis: "${osis}", meeting:"${newTime}") {
+                            updateMeeting(email: "${email}", meeting:"${newTime}") {
                                 student{
-                                    osis
                                     meeting
                                 }
                             }

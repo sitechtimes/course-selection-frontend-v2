@@ -12,10 +12,10 @@ const students = useUserStore().data.guidance.students
 const input:Ref<string> = ref('')
 
 const newStudents = computed(() => {
-  return students.filter((student: { user: { firstName: string; lastName: string; }; osis: string|string[]; }) => {
+  return students.filter((student: { user: { firstName: string; lastName: string; email:string };  }) => {
         const studentName = student.user.firstName + ' ' + student.user.lastName
         return (
-          studentName.toLowerCase().indexOf(input.value.toLowerCase()) != -1 || student.osis.indexOf(input.value) != -1
+          studentName.toLowerCase().indexOf(input.value.toLowerCase()) != -1 || student.user.email.indexOf(input.value) != -1
         );
       })
 })

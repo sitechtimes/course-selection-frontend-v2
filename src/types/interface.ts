@@ -11,7 +11,7 @@ export interface studentData { //this is for guidance use
     grade: grade
     homeroom: string
     meeting: string
-    osis: string
+    // osis: string
     user: object
     // first_name?: string
     // last_name?: string
