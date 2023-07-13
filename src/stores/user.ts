@@ -77,7 +77,7 @@ export const useUserStore = defineStore("user", {
                             allAnsweredSurveys {
                                 edges{
                                     node{
-                                       
+                                        email
                                         answers
                                         status
                                     }
@@ -139,7 +139,7 @@ export const useUserStore = defineStore("user", {
                             dueDate
                         }
                         answeredSurvey{
-                         
+                            email
                             answers
                             status
                         }
