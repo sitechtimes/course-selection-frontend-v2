@@ -11,6 +11,9 @@ import router from '../../router';
 const userStore = useUserStore();
 const surveyStore = useSurveyStore()
 let menuOpen: Ref<boolean> = ref(false);
+let openMeeting: Ref<boolean> = ref(false)
+let saved: Ref<boolean> = ref(false)
+const currentDate = new Date()
 
 function viewingSurvey() {
     return router.currentRoute.value.path.includes('survey') && router.currentRoute.value.path != '/survey/closed'
@@ -42,9 +45,6 @@ const redirect = () => {
     }
 }
 
-let openMeeting: Ref<boolean> = ref(false)
-const currentDate = new Date()
-
 if (userStore.isLoggedIn && userStore.userType === 'student') {
     const closeTime = userStore.data.survey.dueDate.substring(0,10).split("-")
     if (Number(closeTime[0]) > currentDate.getFullYear()) {
@@ -62,6 +62,14 @@ if (userStore.isLoggedIn && userStore.userType === 'student') {
 }
 const toggleMenu = () => {
     menuOpen.value = !menuOpen.value
+}
+
+const toggleSave = () => {
+ saved.value = true
+
+  setTimeout(() => {
+    saved.value = false
+  }, 1500)
 }
 
 </script>
@@ -109,8 +117,10 @@ const toggleMenu = () => {
             <CloseMenu @click="toggleMenu" v-else />
         </div>
         <div v-if="viewingSurvey()" class="flex flex-row w-full sm:w-1/4 md:1/6 justify-between">
-            <p @click="surveyStore.saveSurvey('INCOMPLETE')" class="text-[#37394F] text-2xl cursor-pointer">Save</p>
-            <p @click="exitSurvey()" class="text-[#37394F] text-2xl cursor-pointer">Exit</p>
+            <!-- (needs change) => pass in incomplete only when survey hasn't been submitted before  -->
+            <p v-if="!saved" @click="surveyStore.saveSurvey('INCOMPLETE'); toggleSave()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500">Save</p>
+            <p v-else @click="surveyStore.saveSurvey('INCOMPLETE')" class="text-gray-500 text-2xl cursor-pointer">Saved</p>
+            <p @click="exitSurvey()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500">Exit</p>
         </div>
     <MobileNav v-if="menuOpen" @e="toggleMenu"/>
     </nav>
