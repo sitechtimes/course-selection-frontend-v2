@@ -13,6 +13,7 @@ const surveyStore = useSurveyStore()
 let menuOpen: Ref<boolean> = ref(false);
 let openMeeting: Ref<boolean> = ref(false)
 let saved: Ref<boolean> = ref(false)
+const save = ref(null)
 const currentDate = new Date()
 
 function viewingSurvey() {
@@ -73,10 +74,10 @@ const toggleMenu = () => {
 }
 
 const toggleSave = () => {
- saved.value = true
-
+//  saved.value = true
+save.value.innerHTML = "Saved"
   setTimeout(() => {
-    saved.value = false
+    save.value.innerHTML = "Save"
   }, 1500)
 }
 
@@ -121,8 +122,8 @@ const toggleSave = () => {
         </div>
         <div v-if="viewingSurvey()" class="flex flex-row w-full sm:w-1/4 md:1/6 justify-between">
             <!-- (needs change) => pass in incomplete only when survey hasn't been submitted before  -->
-            <p v-if="!saved" @click="surveyStore.saveSurvey('INCOMPLETE'); toggleSave()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500">Save</p>
-            <p v-else @click="surveyStore.saveSurvey('INCOMPLETE')" class="text-gray-500 text-2xl cursor-pointer">Saved</p>
+            <p @click="surveyStore.saveSurvey('INCOMPLETE'); toggleSave()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500" ref="save">Save</p>
+            <!-- <p v-else @click="surveyStore.saveSurvey('INCOMPLETE')" class="text-gray-500 text-2xl cursor-pointer">Saved</p> -->
             <p @click="exitSurvey()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500">Exit</p>
         </div>
     <MobileNav v-if="menuOpen" @e="toggleMenu"/>
