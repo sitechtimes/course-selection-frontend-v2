@@ -85,40 +85,34 @@ const toggleSave = () => {
 <template>
     <nav id="navbar" class="w-full top-0 h-[15vh] flex justify-between items-center px-8 md:px-12 lg:px-16 overflow-visible">
         <div @click="redirect()" class="cursor-pointer">
-            <p v-if="!viewingSurvey()" class="text-2xl md:text-3xl font-semibold z-50">Course Selection</p>
+            <p v-if="!viewingSurvey()" class="text-2xl md:text-3xl font-semibold z-50 hover:text-gray-600">Course Selection</p>
         </div>
         <div v-if="userStore.isLoggedIn && userStore.userType === 'student' && viewingSurvey()  === false" class="hidden justify-center items-center space-x-12 md:flex">
             <RouterLink to="/courses">
-                <p class="text-base">Courses</p>
+                <p class="text-base hover:text-gray-500">Courses</p>
             </RouterLink>
-            <!-- <RouterLink v-if="openMeeting" to="/student/survey">
-                <p class="text-base">Survey</p>
-            </RouterLink>
-            <RouterLink v-else to="/survey/closed">
-                <p class="text-base">Survey</p>
-            </RouterLink> -->
-            <p @click="surveyNav()">Survey</p>
+            <p @click="surveyNav()" class="cursor-pointer hover:text-gray-500">Survey</p>
             <RouterLink to="/">
-                <p @click="userStore.$reset" id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>
+                <p @click="userStore.$reset" id="name-link" class="text-base text-red-500 cursor-pointer hover:text-red-400">Logout</p>
             </RouterLink>
         </div>
         <div v-if="userStore.isLoggedIn && userStore.userType === 'guidance' && viewingSurvey() === false" class="hidden justify-center items-center space-x-12 md:flex">
             <RouterLink to="/guidance/studentlist">
-                <p class="text-base">Students</p>
+                <p class="text-base hover:text-gray-500">Students</p>
             </RouterLink>
             <RouterLink to="/guidance/calendar">
-                <p class="text-base">Calendar</p>
+                <p class="text-base hover:text-gray-500">Calendar</p>
             </RouterLink>
             <RouterLink to="/">
-                <p @click="userStore.$reset" id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>
+                <p @click="userStore.$reset" id="name-link" class="text-base text-red-500 cursor-pointer hover:text-red-400">Logout</p>
             </RouterLink>
         </div>
         <div v-if="!userStore.isLoggedIn && viewingSurvey() === false" class="hidden justify-center items-center space-x-12 md:flex">
             <RouterLink to="/courses">
-                <p class="text-base">Courses</p>
+                <p class="text-base hover:text-gray-500">Courses</p>
             </RouterLink>
             <RouterLink to="/login">
-                <p class="text-base">Login</p>
+                <p class="text-base hover:text-gray-500">Login</p>
             </RouterLink>
         </div>
         <div v-if="!viewingSurvey()" id="menu-icon" class="flex justify-center items-center cursor-pointer z-40 md:hidden">
