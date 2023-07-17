@@ -80,6 +80,7 @@ export const useUserStore = defineStore("user", {
                                         email
                                         answers
                                         status
+                                        grade
                                     }
                                 }
                             }                       
@@ -142,6 +143,7 @@ export const useUserStore = defineStore("user", {
                             email
                             answers
                             status
+                            grade
                         }
                         
                         }`,
