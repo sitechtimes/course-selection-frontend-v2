@@ -11,6 +11,12 @@ import { ref, Ref } from 'vue';
 const userStore = useUserStore()
 const surveyStore = useSurveyStore()
 
+surveyStore.setSurvey(
+  userStore.data.user.email,
+  userStore.data.survey.questions,
+  userStore.data.student.grade
+);
+
 const indexAll = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');
 const indexNote = surveyStore.currentResponse.findIndex((x) => x.id === 'noteToGuidance');
 const x: Ref<number> = ref(0)
