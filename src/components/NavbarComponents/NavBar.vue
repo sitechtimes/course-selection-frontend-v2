@@ -45,7 +45,8 @@ const redirect = () => {
     }
 }
 
-if (userStore.isLoggedIn && userStore.userType === 'student') {
+const surveyNav = () => {
+    // if (userStore.isLoggedIn && userStore.userType === 'student') {
     const closeTime = userStore.data.survey.dueDate.substring(0,10).split("-")
     if (Number(closeTime[0]) > currentDate.getFullYear()) {
         openMeeting.value = true
@@ -59,7 +60,14 @@ if (userStore.isLoggedIn && userStore.userType === 'student') {
         }
     }
 
+    if(openMeeting) {
+        router.push("/student/survey")
+    } else if(!openMeeting) {
+        router.push("/survey/closed")
+    }
+// }
 }
+
 const toggleMenu = () => {
     menuOpen.value = !menuOpen.value
 }
@@ -83,12 +91,13 @@ const toggleSave = () => {
             <RouterLink to="/courses">
                 <p class="text-base">Courses</p>
             </RouterLink>
-            <RouterLink v-if="openMeeting" to="/student/survey">
+            <!-- <RouterLink v-if="openMeeting" to="/student/survey">
                 <p class="text-base">Survey</p>
             </RouterLink>
             <RouterLink v-else to="/survey/closed">
                 <p class="text-base">Survey</p>
-            </RouterLink>
+            </RouterLink> -->
+            <p @click="surveyNav()">Survey</p>
             <RouterLink to="/">
                 <p @click="userStore.$reset" id="name-link" class="text-base text-red-500 cursor-pointer">Logout</p>
             </RouterLink>
