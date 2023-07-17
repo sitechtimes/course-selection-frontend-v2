@@ -115,7 +115,6 @@ export const useUserStore = defineStore("user", {
                         }
                         student{
                             homeroom
-                        
                             grade
                             coursesTaken{
                                 courseCode

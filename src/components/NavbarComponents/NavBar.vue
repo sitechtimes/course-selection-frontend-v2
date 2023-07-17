@@ -47,7 +47,7 @@ const redirect = () => {
 }
 
 const surveyNav = () => {
-    // if (userStore.isLoggedIn && userStore.userType === 'student') {
+    
     const closeTime = userStore.data.survey.dueDate.substring(0,10).split("-")
     if (Number(closeTime[0]) > currentDate.getFullYear()) {
         openMeeting.value = true
@@ -66,7 +66,6 @@ const surveyNav = () => {
     } else if(!openMeeting) {
         router.push("/survey/closed")
     }
-// }
 }
 
 const toggleMenu = () => {

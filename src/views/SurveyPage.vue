@@ -19,7 +19,8 @@ const max: Ref<boolean> = ref(false);
 
 surveyStore.setSurvey(
   userStore.data.user.email,
-  userStore.data.survey.questions
+  userStore.data.survey.questions,
+  userStore.data.student.grade
 );
 
 const previousQuestion = () => {

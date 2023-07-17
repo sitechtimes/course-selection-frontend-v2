@@ -30,15 +30,15 @@ if (Number(closeTime[0]) > currentDate.getFullYear()) {
 }
 
 console.log(openMeeting)
-// const annoucement = computed(() => {
-//   if(userStore.data.answeredSurvey === null) {
-//   return "Surveys are closing next week on 03/12/2023."
-// } else if(userStore.data.answeredSurvey.status === 'COMPLETE') {
-//   return "You have submitted your survey. Changes can be made before 00/00/0000."
-// } else {
-//   return "Your survey is in progress. Surveys are closing next week on 00/00/0000."
-// }
-// })
+const announcement = computed(() => {
+  if(userStore.data.answeredSurvey === null) {
+  return "Your survey had not been started. Please complete it before the due date."
+} else if(userStore.data.answeredSurvey.status === 'COMPLETE') {
+  return "You have submitted your survey. Changes can be made before the due date."
+} else{
+  return "Your survey is in progress. Please complete it before the due date."
+}
+})
 
 if (
   userStore.data.student.meeting != undefined ||
@@ -66,8 +66,9 @@ if (
       >
         <BellIcon />
         <h2 v-if="openMeeting" class="text-xl text-left flex ml-2">Surveys are closing on {{ closeTime[1] }}/{{ closeTime[2] }}/{{ closeTime[0] }}.</h2>
-        <h2 v-else class="text-xl text-left flex ml-2">Surveys are closed. Please contact your guidance counselor to request changes.</h2>
+        <h2 v-else class="text-xl text-left flex ml-2">The due date for completion has passed. Please contact your guidance counselor to request changes.</h2>
       </div>
+      <!-- <h2 v-if="openMeeting">{{ announcement }}</h2> -->
       <div
         class="flex flex-col justify-start items-center space-y-4 lg:flex-row lg:space-y-0 lg:space-x-4"
       >

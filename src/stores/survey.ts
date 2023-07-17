@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { useUserStore } from "./user";
+import { grade } from "../types/interface";
 import axios from "axios";
 
 export const useSurveyStore = defineStore("survey", {
@@ -63,7 +64,7 @@ export const useSurveyStore = defineStore("survey", {
           }
         });
     },
-    async startSurvey(email: string, survey: Array<object>) {
+    async startSurvey(email: string, survey: Array<object>, grade: grade) {
       const userStore = useUserStore()
       const answers: Array<object> = []
       const allChosen = {
@@ -88,19 +89,21 @@ export const useSurveyStore = defineStore("survey", {
         .post(
           `${import.meta.env.VITE_URL}/graphql/`,
           {
-            query: `mutation updateSurvey($email: String, $answers: JSONString) {
-              newSurvey(email: $email, answers: $answers) {
+            query: `mutation updateSurvey($email: String, $answers: JSONString, $grade: String) {
+              newSurvey(email: $email, answers: $answers, grade: $grade) {
                   survey {
                       id
                       email
                       answers
                       status
+                      grade
                   }
               }
           }`,
             variables: {
               email: email,
-              answers: jsonString
+              answers: jsonString,
+              grade: grade
             },
           },
           {
@@ -123,13 +126,13 @@ export const useSurveyStore = defineStore("survey", {
           }
         });
     },
-    async setSurvey(email: string, survey: Array<object>) {
+    async setSurvey(email: string, survey: Array<object>, grade: grade) {
       const userStore = useUserStore();
       this.loading = true;
 
       if (userStore.userType === "student") {
         if (userStore.data.answeredSurvey === null) {
-          await this.startSurvey(email, survey);
+          await this.startSurvey(email, survey, grade);
         }
 
         this.currentSurvey = userStore.data.answeredSurvey;
@@ -144,7 +147,7 @@ export const useSurveyStore = defineStore("survey", {
         );
 
         if (studentIndex < 0) {
-          await this.startSurvey(email, survey);
+          await this.startSurvey(email, survey, grade);
           studentIndex = userStore.data.allAnsweredSurveys.edges.findIndex(
             (x) => x.node.email === email
           );
