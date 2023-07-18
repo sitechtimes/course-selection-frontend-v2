@@ -38,7 +38,7 @@ export const useSurveyStore = defineStore("survey", {
             variables: {
               email: email,
               answers: jsonString,
-              status: status
+              status: status,
             },
           },
           {
@@ -51,12 +51,13 @@ export const useSurveyStore = defineStore("survey", {
         .then((res) => {
           // console.log(res);
           if (userStore.userType === "student") {
-            userStore.data.answeredSurvey.answers = jsonString
-            userStore.data.answeredSurvey.status = 'COMPLETE'
+            userStore.data.answeredSurvey.answers = jsonString;
+            userStore.data.answeredSurvey.status = "COMPLETE";
           } else if (userStore.userType === "guidance") {
-            const studentIndex = userStore.data.allAnsweredSurveys.edges.findIndex(
-              (x) => x.node.email == this.currentSurvey.email
-            );
+            const studentIndex =
+              userStore.data.allAnsweredSurveys.edges.findIndex(
+                (x) => x.node.email == this.currentSurvey.email
+              );
             // console.log(userStore.data.allAnsweredSurveys.edges)
             userStore.data.allAnsweredSurveys.edges[studentIndex].node.answers =
               jsonString;
@@ -66,25 +67,25 @@ export const useSurveyStore = defineStore("survey", {
         });
     },
     async startSurvey(email: string, survey: Array<object>, grade: grade) {
-      const userStore = useUserStore()
-      const answers: Array<object> = []
+      const userStore = useUserStore();
+      const answers: Array<object> = [];
       const allChosen = {
         id: "allChosenCourses",
         courses: [],
-        preference: []
-      }
+        preference: [],
+      };
 
       const noteToGuidance = {
         id: "noteToGuidance",
-        answer: ''
-      }
+        answer: "",
+      };
 
       const guidanceFinalNote = {
-        id: 'guidanceFinalNote',
-        answer: ''
-      }
+        id: "guidanceFinalNote",
+        answer: "",
+      };
 
-      answers.push(noteToGuidance, allChosen, guidanceFinalNote)
+      answers.push(noteToGuidance, allChosen, guidanceFinalNote);
       const jsonString = JSON.stringify(answers);
       await axios
         .post(
@@ -104,7 +105,7 @@ export const useSurveyStore = defineStore("survey", {
             variables: {
               email: email,
               answers: jsonString,
-              grade: grade
+              grade: grade,
             },
           },
           {
@@ -138,7 +139,7 @@ export const useSurveyStore = defineStore("survey", {
 
         this.currentSurvey = userStore.data.answeredSurvey;
         this.currentResponse = JSON.parse(
-          userStore.data.answeredSurvey.answers
+          userStore.data.answeredSurvey[0].answers
         );
 
         this.loading = false;
@@ -155,9 +156,7 @@ export const useSurveyStore = defineStore("survey", {
         }
         this.currentSurvey =
           userStore.data.allAnsweredSurveys.edges[studentIndex].node;
-        this.currentResponse = JSON.parse(
-          this.currentSurvey.answers
-        );
+        this.currentResponse = JSON.parse(this.currentSurvey.answers);
 
         this.loading = false;
       } else {
