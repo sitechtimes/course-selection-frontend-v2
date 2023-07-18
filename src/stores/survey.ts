@@ -9,6 +9,7 @@ export const useSurveyStore = defineStore("survey", {
     currentResponse: [],
     currentQuestion: [],
     loading: false,
+    open: false,
   }),
   getters: {
     //

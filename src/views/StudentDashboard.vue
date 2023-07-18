@@ -10,26 +10,8 @@ const surveyStore = useSurveyStore();
 
 let time: String;
 let date: String;
-
-const currentDate = new Date()
-
 const closeTime = userStore.data.survey.dueDate.substring(0,10).split("-")
 
-let openMeeting: Ref<boolean> = ref(false)
-
-if (Number(closeTime[0]) > currentDate.getFullYear()) {
-  openMeeting.value = true
-} else if (Number(closeTime[0]) === currentDate.getFullYear()) {
-  if (Number(closeTime[1]) > currentDate.getMonth() + 1) { // Get month starts at 0, not 1
-    openMeeting.value = true
-  } else if (Number(closeTime[1]) === currentDate.getMonth() + 1) {
-    if (Number(closeTime[2]) > currentDate.getDate()) {
-      openMeeting.value = true
-    }
-  }
-}
-
-console.log(openMeeting)
 const announcement = computed(() => {
   if(userStore.data.answeredSurvey === null) {
   return "Your survey had not been started. Please complete it before the due date."
@@ -65,10 +47,10 @@ if (
         class="flex justify-center items-center ml-4 lg:ml-0 lg:justify-start"
       >
         <BellIcon />
-        <h2 v-if="openMeeting" class="text-xl text-left flex ml-2">Surveys are closing on {{ closeTime[1] }}/{{ closeTime[2] }}/{{ closeTime[0] }}.</h2>
+        <h2 v-if="surveyStore.open" class="text-xl text-left flex ml-2">Surveys are closing on {{ closeTime[1] }}/{{ closeTime[2] }}/{{ closeTime[0] }}.</h2>
         <h2 v-else class="text-xl text-left flex ml-2">The due date for completion has passed. Please contact your guidance counselor to request changes.</h2>
       </div>
-      <!-- <h2 v-if="openMeeting">{{ announcement }}</h2> -->
+      <!-- <h2 v-if="surveyStore.open">{{ announcement }}</h2> -->
       <div
         class="flex flex-col justify-start items-center space-y-4 lg:flex-row lg:space-y-0 lg:space-x-4"
       >
@@ -80,14 +62,14 @@ if (
           </button>
         </RouterLink>
         <!-- check if survey exists, if not create new and set current -->
-        <RouterLink v-if="openMeeting" to="/student/survey">
+        <RouterLink v-if="surveyStore.open" to="/student/survey">
           <button class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
             Course Survey
           </button>
         </RouterLink>
         <RouterLink v-else to="/survey/closed">
           <button class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
-            Course Survey
+            View Survey
           </button>
         </RouterLink>
       </div>

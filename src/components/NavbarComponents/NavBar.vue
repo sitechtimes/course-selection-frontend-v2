@@ -11,10 +11,7 @@ import router from '../../router';
 const userStore = useUserStore();
 const surveyStore = useSurveyStore()
 let menuOpen: Ref<boolean> = ref(false);
-let openMeeting: Ref<boolean> = ref(false)
-let saved: Ref<boolean> = ref(false)
 const save = ref(null)
-const currentDate = new Date()
 
 function viewingSurvey() {
     return router.currentRoute.value.path.includes('survey') && router.currentRoute.value.path != '/survey/closed'
@@ -47,26 +44,13 @@ const redirect = () => {
 }
 
 const surveyNav = () => {
-    
-    const closeTime = userStore.data.survey.dueDate.substring(0,10).split("-")
-    if (Number(closeTime[0]) > currentDate.getFullYear()) {
-        openMeeting.value = true
-    } else if (Number(closeTime[0]) === currentDate.getFullYear()) {
-        if (Number(closeTime[1]) > currentDate.getMonth() + 1) { // Get month starts at 0, not 1
-            openMeeting.value = true
-        } else if (Number(closeTime[1]) === currentDate.getMonth() + 1) {
-            if (Number(closeTime[2]) > currentDate.getDate()) {
-                openMeeting.value = true
-            }
-        }
-    }
-
-    if(openMeeting) {
+    if(surveyStore.open) {
         router.push("/student/survey")
-    } else if(!openMeeting) {
+    } else if(!surveyStore.open) {
         router.push("/survey/closed")
     }
 }
+
 
 const toggleMenu = () => {
     menuOpen.value = !menuOpen.value

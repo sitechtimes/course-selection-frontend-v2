@@ -156,6 +156,21 @@ export const useUserStore = defineStore("user", {
           )
           .then((res: any) => {
             this.data = res.data.data; // data needs to be filtered properly
+            const surveyStore = useSurveyStore() 
+            const currentDate = new Date()
+            const closeTime = this.data.survey.dueDate.substring(0,10).split("-")
+
+            if (Number(closeTime[0]) > currentDate.getFullYear()) {
+              surveyStore.open = true
+            } else if (Number(closeTime[0]) === currentDate.getFullYear()) {
+              if (Number(closeTime[1]) > currentDate.getMonth() + 1) { // Get month starts at 0, not 1
+                surveyStore.open = true
+              } else if (Number(closeTime[1]) === currentDate.getMonth() + 1) {
+                if (Number(closeTime[2]) > currentDate.getDate()) {
+                  surveyStore.open = true
+                }
+              }
+            }
             this.loading = false;
             console.log(this.data, this.access_token);
           });
