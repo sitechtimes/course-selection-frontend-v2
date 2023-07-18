@@ -133,7 +133,7 @@ export const useSurveyStore = defineStore("survey", {
       this.loading = true;
 
       if (userStore.userType === "student") {
-        if (userStore.data.answeredSurvey[0] === null) {
+        if (userStore.data.answeredSurvey[0] === undefined) {
           await this.startSurvey(email, survey, grade);
         }
 
