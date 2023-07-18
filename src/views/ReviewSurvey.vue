@@ -20,6 +20,12 @@ const indexNote: number = surveyStore.currentResponse.findIndex((x) => x.id === 
 const x: Ref<number> = ref(0)
 let error: Array<string> = reactive([])
 
+surveyStore.setSurvey(
+  userStore.data.user.email,
+  userStore.data.survey.questions,
+  userStore.data.student.grade
+);
+
 const checkAnswers = () => {
   const check: Array<string> = []
   userStore.data.survey.questions.forEach((x: surveyQuestion) => {

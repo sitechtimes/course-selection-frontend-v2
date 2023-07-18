@@ -16,7 +16,6 @@ const router = useRouter()
 
 const viewedStudent = userStore.data.guidance.students.filter(student => student.user.email === window.location.pathname.substring(17))[0]
 
-let currentSurvey = null
 const missing: Ref<boolean> = ref(false) 
 let error: Array<string> = reactive([])
 const x: Ref<number> = ref(0)
@@ -24,7 +23,7 @@ const indexAll = surveyStore.currentResponse.findIndex((x) => x.id === 'allChose
 const indexNote = surveyStore.currentResponse.findIndex((x) => x.id === 'noteToGuidance');
 const indexGuidance = surveyStore.currentResponse.findIndex((x) => x.id === 'guidanceFinalNote');
 
-currentSurvey = userStore.data.allSurveys.edges.find(x => x.node.grade === viewedStudent.grade).node
+surveyStore.currentSurvey = userStore.data.allSurveys.edges.find(x => x.node.grade === viewedStudent.grade).node
 
 const getChoices = (question) => {
   const classes = viewedStudent.coursesAvailable
@@ -33,7 +32,7 @@ const getChoices = (question) => {
 
 const completeSurvey = async () => {
   const check: Array<string> = []
-  currentSurvey.questions.forEach((x: surveyQuestion) => {
+  surveyStore.currentSurvey.questions.forEach((x: surveyQuestion) => {
     const answer = surveyStore.currentResponse.find(y => y.id === x.id)
     if(x.questionType === 'GENERAL' || x.questionType === 'BOOLEAN') {
       if(answer.answer.trim()[0] === undefined) {
@@ -72,7 +71,7 @@ watch(() => surveyStore.currentResponse[indexAll].preference, (newResponse) => {
       </div>
       <p v-if="surveyStore.loading">Setting things up...</p>
       <div v-else>
-        <div v-for="question in currentSurvey.questions" :key="question" class="flex justify-center">
+        <div v-for="question in surveyStore.currentSurvey.questions" :key="question" class="flex justify-center">
           <div v-if="missing" class="w-1/12 flex justify-center items-center">
             <exclamationMark v-if="error.includes(question.id)" class="text-red-500 h-8"></exclamationMark>
           </div>

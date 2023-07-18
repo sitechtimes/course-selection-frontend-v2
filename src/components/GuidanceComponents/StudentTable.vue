@@ -38,13 +38,13 @@ async function userClick(student: object) {
                     <td class="p-4" v-if="student.grade === 'SENIOR'">11</td>
                     <!-- <td class="p-4">{{ student.osis }}</td> -->
                     <td class="p-4">{{ student.user.email }}</td>
-                    <td class="p-4" v-if="userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === student.user.email) === undefined">
+                    <td class="p-4" v-if="userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === student.user.email && x.node.grade === student.grade) === undefined">
                         <p class="text-[#461616] bg-[#EA9F9F] w-[8rem] font-semibold text-center p-1 rounded-2xl">Not Started</p>
                     </td>
-                    <td class="p-4" v-else-if="userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === student.user.email).node.status === 'INCOMPLETE'">
+                    <td class="p-4" v-else-if="userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === student.user.email && x.node.grade === student.grade).node.status === 'INCOMPLETE'">
                         <p class="text-[#461616] bg-[#F9D477] w-[8rem] font-semibold text-center p-1 rounded-2xl">In Progress</p>
                     </td>
-                    <td class="p-4" v-else-if="userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === student.user.email).node.status === 'COMPLETE'">
+                    <td class="p-4" v-else-if="userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === student.user.email && x.node.grade === student.grade).node.status === 'COMPLETE'">
                         <p class="text-[#174616] bg-[#A8D480] w-[8rem] font-semibold text-center p-1 rounded-2xl">Completed</p>
                     </td>
                     <td>View Survey</td>

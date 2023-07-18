@@ -6,7 +6,7 @@ import { RouterLink } from "vue-router";
 import MenuIcon from "../icons/MenuIcon.vue";
 import CloseMenu from "../icons/CloseMenu.vue";
 import MobileNav from "./MobileNav.vue";
-import { ref, watch, Ref } from "vue";
+import { ref, watch, Ref, computed } from "vue";
 import router from '../../router';
 
 const userStore = useUserStore();
@@ -15,7 +15,16 @@ const resetStore = useResetStore()
 let menuOpen: Ref<boolean> = ref(false);
 const save = ref(null)
 
-function viewingSurvey() {
+// const status = computed(() => {
+//     if(surveyStore.currentResponse.status === "COMPLETE"){
+//         return "COMPLETE"
+//     } else {
+//         console.log(surveyStore.currentResponse.status)
+//         return "INCOMPLETE"
+//     }
+// })
+
+const viewingSurvey = () => {
     return router.currentRoute.value.path.includes('survey')
 }
 
@@ -31,6 +40,7 @@ const exitSurvey = () => {
     return router.push("/");
   }
 };
+
 
 const redirect = () => {
     if (userStore.isLoggedIn === true) {
@@ -114,7 +124,7 @@ const logout = async () => {
             <!-- <p v-else @click="surveyStore.saveSurvey('INCOMPLETE')" class="text-gray-500 text-2xl cursor-pointer">Saved</p> -->
             <p @click="exitSurvey()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500">Exit</p>
             <!-- (needs change) => pass in incomplete only when survey hasn't been submitted before  -->
-            <p v-if="surveyStore.open" @click="surveyStore.saveSurvey('INCOMPLETE'); toggleSave()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500" ref="save">Save</p>
+            <p v-if="(surveyStore.open && surveyStore.currentAnsweredSurvey.status != 'COMPLETE') || userStore.userType === 'guidance'" @click="surveyStore.saveSurvey('INCOMPLETE'); toggleSave()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500" ref="save">Save</p>
         </div>
     <MobileNav v-if="menuOpen" @e="toggleMenu"/>
     </nav>
