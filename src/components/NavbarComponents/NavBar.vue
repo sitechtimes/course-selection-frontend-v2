@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useUserStore } from '../../stores/user';
 import { useSurveyStore } from '../../stores/survey';
+import { useResetStore } from '../../stores/reset'
 import { RouterLink } from "vue-router";
 import MenuIcon from "../icons/MenuIcon.vue";
 import CloseMenu from "../icons/CloseMenu.vue";
@@ -9,12 +10,13 @@ import { ref, watch, Ref } from "vue";
 import router from '../../router';
 
 const userStore = useUserStore();
-const surveyStore = useSurveyStore()
+const surveyStore = useSurveyStore();
+const resetStore = useResetStore()
 let menuOpen: Ref<boolean> = ref(false);
 const save = ref(null)
 
 function viewingSurvey() {
-    return router.currentRoute.value.path.includes('survey') && router.currentRoute.value.path != '/survey/closed'
+    return router.currentRoute.value.path.includes('survey')
 }
 
 const exitSurvey = () => {
@@ -64,12 +66,17 @@ save.value.innerHTML = "Saved"
   }, 1500)
 }
 
+const logout = async () => {
+    await resetStore.all()
+    router.push('/')
+}
+
 </script>
 
 <template>
     <nav id="navbar" class="w-full top-0 h-[15vh] flex justify-between items-center px-8 md:px-12 lg:px-16 overflow-visible">
         <div @click="redirect()" class="cursor-pointer">
-            <p v-if="!viewingSurvey()" class="text-2xl md:text-3xl font-semibold z-50 hover:text-gray-600">Course Selection</p>
+            <p class="text-2xl md:text-3xl font-semibold z-50 hover:text-gray-600 hidden sm:flex">Course Selection</p>
         </div>
         <div v-if="userStore.isLoggedIn && userStore.userType === 'student' && viewingSurvey()  === false" class="hidden justify-center items-center space-x-12 md:flex">
             <RouterLink to="/courses">
@@ -77,7 +84,7 @@ save.value.innerHTML = "Saved"
             </RouterLink>
             <p @click="surveyNav()" class="cursor-pointer hover:text-gray-500">Survey</p>
             <RouterLink to="/">
-                <p @click="userStore.$reset" id="name-link" class="text-base text-red-500 cursor-pointer hover:text-red-400">Logout</p>
+                <p @click="logout()" id="name-link" class="text-base text-red-500 cursor-pointer hover:text-red-400">Logout</p>
             </RouterLink>
         </div>
         <div v-if="userStore.isLoggedIn && userStore.userType === 'guidance' && viewingSurvey() === false" class="hidden justify-center items-center space-x-12 md:flex">
@@ -105,7 +112,7 @@ save.value.innerHTML = "Saved"
         </div>
         <div v-if="viewingSurvey()" class="flex flex-row w-full sm:w-1/4 md:1/6 justify-between">
             <!-- (needs change) => pass in incomplete only when survey hasn't been submitted before  -->
-            <p @click="surveyStore.saveSurvey('INCOMPLETE'); toggleSave()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500" ref="save">Save</p>
+            <p v-if="surveyStore.open" @click="surveyStore.saveSurvey('INCOMPLETE'); toggleSave()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500" ref="save">Save</p>
             <!-- <p v-else @click="surveyStore.saveSurvey('INCOMPLETE')" class="text-gray-500 text-2xl cursor-pointer">Saved</p> -->
             <p @click="exitSurvey()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500">Exit</p>
         </div>

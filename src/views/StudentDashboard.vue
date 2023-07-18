@@ -67,7 +67,7 @@ if (
             Course Survey
           </button>
         </RouterLink>
-        <RouterLink v-else to="/survey/closed">
+        <RouterLink v-else to="/student/survey/closed">
           <button class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
             View Survey
           </button>
