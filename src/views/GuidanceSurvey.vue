@@ -46,7 +46,7 @@ const completeSurvey = async () => {
   })
   error = check
   if(check.length === 0) {
-    surveyStore.saveSurvey('COMPLETE')
+    surveyStore.saveSurvey('COMPLETE', surveyStore.currentAnsweredSurvey.grade)
     // move this to store once backend is updated
     userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === viewedStudent.user.email).node.status = 'COMPLETE'
     router.push('/guidance/studentlist')

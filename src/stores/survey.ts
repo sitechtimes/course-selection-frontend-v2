@@ -16,7 +16,7 @@ export const useSurveyStore = defineStore("survey", {
   },
   actions: {
     //
-    async saveSurvey(status: String) {
+    async saveSurvey(status: String, grade: String) {
       const userStore = useUserStore();
       const email = this.currentAnsweredSurvey.email;
       const answers = this.currentResponse;
@@ -26,8 +26,8 @@ export const useSurveyStore = defineStore("survey", {
         .post(
           `${import.meta.env.VITE_URL}/graphql/`,
           {
-            query: `mutation updateSurvey($email: String, $answers: JSONString, $status: String) {
-                updateSurvey(email: $email, answers: $answers, status: $status) {
+            query: `mutation updateSurvey($email: String, $answers: JSONString, $status: String, $grade: String) {
+                updateSurvey(email: $email, answers: $answers, status: $status, grade: $grade) {
                     survey {
                         id
                         answers
@@ -39,6 +39,7 @@ export const useSurveyStore = defineStore("survey", {
               email: email,
               answers: jsonString,
               status: status,
+              grade: grade,
             },
           },
           {

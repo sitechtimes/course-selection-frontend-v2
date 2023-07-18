@@ -42,7 +42,7 @@ const checkAnswers = () => {
   })
   error = check
   if(check.length === 0) {
-    surveyStore.saveSurvey('COMPLETE')
+    surveyStore.saveSurvey('COMPLETE', surveyStore.currentAnsweredSurvey.grade)
     router.push('/student/dashboard')
   } else {
     message.value = "Please fill out all questions before submitting."
