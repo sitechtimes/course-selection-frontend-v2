@@ -60,6 +60,10 @@ const router = createRouter({
           return { name: "guidanceStudentlist" };
         }
 
+        if (userStore.userType === 'student' && userStore.data.answeredSurvey[0].status === "COMPLETE") {
+          return { name: "reviewSurvey" };
+        }
+
         if(!surveyStore.open) {
           return { name: "closedSurvey" }
         }
