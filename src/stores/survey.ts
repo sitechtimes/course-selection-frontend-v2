@@ -51,8 +51,8 @@ export const useSurveyStore = defineStore("survey", {
         .then((res) => {
           // console.log(res);
           if (userStore.userType === "student") {
-            userStore.data.answeredSurvey.answers = jsonString;
-            userStore.data.answeredSurvey.status = "COMPLETE";
+            userStore.data.answeredSurvey[0].answers = jsonString;
+            userStore.data.answeredSurvey[0].status = "COMPLETE";
           } else if (userStore.userType === "guidance") {
             const studentIndex =
               userStore.data.allAnsweredSurveys.edges.findIndex(
@@ -117,7 +117,7 @@ export const useSurveyStore = defineStore("survey", {
         )
         .then((res) => {
           if (userStore.userType === "student") {
-            userStore.data.answeredSurvey = res.data.data.newSurvey.survey;
+            userStore.data.answeredSurvey[0] = res.data.data.newSurvey.survey;
           } else if (userStore.userType === "guidance") {
             const newStudentSurvey = {
               node: res.data.data.newSurvey.survey,
@@ -133,11 +133,11 @@ export const useSurveyStore = defineStore("survey", {
       this.loading = true;
 
       if (userStore.userType === "student") {
-        if (userStore.data.answeredSurvey === null) {
+        if (userStore.data.answeredSurvey[0] === null) {
           await this.startSurvey(email, survey, grade);
         }
 
-        this.currentSurvey = userStore.data.answeredSurvey;
+        this.currentSurvey = userStore.data.answeredSurvey[0];
         this.currentResponse = JSON.parse(
           userStore.data.answeredSurvey[0].answers
         );

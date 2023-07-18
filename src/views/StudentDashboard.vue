@@ -13,9 +13,9 @@ let date: String;
 const closeTime = userStore.data.survey.dueDate.substring(0,10).split("-")
 
 const announcement = computed(() => {
-  if(userStore.data.answeredSurvey === null) {
+  if(userStore.data.answeredSurvey[0] === null) {
   return "Your survey had not been started. Please complete it before the due date."
-} else if(userStore.data.answeredSurvey.status === 'COMPLETE') {
+} else if(userStore.data.answeredSurvey[0].status === 'COMPLETE') {
   return "You have submitted your survey. Changes can be made before the due date."
 } else{
   return "Your survey is in progress. Please complete it before the due date."
