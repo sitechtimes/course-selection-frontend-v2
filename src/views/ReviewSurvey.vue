@@ -14,7 +14,7 @@ const userStore = useUserStore()
 const surveyStore = useSurveyStore()
 const router = useRouter()
 
-if(userStore.data.answeredSurvey.status === 'COMPLETED') {
+if(userStore.data.answeredSurvey[0].status === 'COMPLETE') {
   surveyStore.setSurvey(
     userStore.data.user.email,
     userStore.data.survey.questions,
