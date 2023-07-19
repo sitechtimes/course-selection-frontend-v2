@@ -16,7 +16,7 @@ let menuOpen: Ref<boolean> = ref(false);
 const save = ref(null)
 
 const status = computed(() => {
-    if(surveyStore.currentResponse.status === "COMPLETE"){
+    if(surveyStore.currentAnsweredSurvey.status === "COMPLETE"){
         return "COMPLETE"
     } else {
         console.log(surveyStore.currentResponse.status)
@@ -69,7 +69,6 @@ const toggleMenu = () => {
 }
 
 const toggleSave = () => {
-//  saved.value = true
 save.value.innerHTML = "Saved"
   setTimeout(() => {
     save.value.innerHTML = "Save"

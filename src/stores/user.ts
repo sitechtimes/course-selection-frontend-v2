@@ -206,14 +206,10 @@ export const useUserStore = defineStore("user", {
           }
         )
         .then((res3: any) => {
-
-          // const router = useRouter()
           if (res3.data.data.user.isGuidance) {
             this.userType = "guidance";
-            // router.push('/guidance/dashboard')
           } else {
             this.userType = "student";
-            // router.push('student/dashboard')
           }
           this.init(this.userType);
         });
