@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { useUserStore } from "./user";
-import { grade } from "../types/interface";
+import { useRouter } from "vue-router";
+import { grade, surveyAnswer, surveyQuestion } from "../types/interface";
 import axios from "axios";
 
 export const useSurveyStore = defineStore("survey", {
@@ -10,6 +11,7 @@ export const useSurveyStore = defineStore("survey", {
     currentSurvey: [],
     loading: false,
     open: false,
+    missingAnswers: [],
   }),
   getters: {
     //
@@ -59,8 +61,8 @@ export const useSurveyStore = defineStore("survey", {
             let survey = userStore.data.allAnsweredSurveys.edges.filter(x => x.node.email === this.currentAnsweredSurvey.email && x.node.grade === this.currentAnsweredSurvey.grade)
             let studentIndex = userStore.data.allAnsweredSurveys.edges.indexOf(survey[0])
             // console.log(userStore.data.allAnsweredSurveys.edges)
-            userStore.data.allAnsweredSurveys.edges[studentIndex].node.answers =
-              jsonString;
+            userStore.data.allAnsweredSurveys.edges[studentIndex].node.answers = jsonString;
+            userStore.data.allAnsweredSurveys.edges[studentIndex].node.status = status;
           } else {
             console.log("not logged in??");
           }
@@ -144,9 +146,6 @@ export const useSurveyStore = defineStore("survey", {
 
         this.loading = false;
       } else if (userStore.userType === "guidance") {
-        // let studentIndex = userStore.data.allAnsweredSurveys.edges.findIndex(
-        //   (x) => x.node.email === email
-        // );
         let survey = userStore.data.allAnsweredSurveys.edges.filter(x => x.node.email === email && x.node.grade === grade)
         let studentIndex = userStore.data.allAnsweredSurveys.edges.indexOf(survey[0])
 
@@ -164,6 +163,33 @@ export const useSurveyStore = defineStore("survey", {
       } else {
         console.log("not logged in??");
       }
+    },
+    checkAnswers() {
+      const check: Array<string> = []
+      const userStore = useUserStore()
+      const router = useRouter()
+      this.currentSurvey.questions.forEach((x: surveyQuestion) => {
+        const answer: surveyAnswer | undefined = this.currentResponse.find(y => y.id === x.id)
+        if(x.questionType === 'GENERAL' || x.questionType === 'BOOLEAN') {
+          if(answer.answer.trim()[0] === undefined) {
+            check.push(x.id)
+          } 
+        } else {
+          if(answer.answer[0].chosenClasses.length === 0){
+            check.push(x.id)
+          }
+        }
+      })
+      this.missingAnswers = check
+      if(check.length === 0) {
+        if(userStore.userType === "student") {
+          this.saveSurvey('COMPLETE', this.currentAnsweredSurvey.grade)
+          router.push('/student/dashboard')
+        } else if(userStore.userType === "guidance") {
+          this.saveSurvey('COMPLETE', this.currentAnsweredSurvey.grade)
+          router.push('/guidance/studentlist')
+        }
+      } 
     },
   },
   persist: true,

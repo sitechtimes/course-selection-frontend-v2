@@ -121,9 +121,8 @@ const logout = async () => {
         </div>
         <div v-if="viewingSurvey()" class="flex flex-row-reverse w-full sm:w-1/4 md:1/6 justify-between">
             <p @click="exitSurvey()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500">Exit</p>
-            <!-- (needs change) => pass in incomplete only when survey hasn't been submitted before  -->
-            <p @click="surveyStore.saveSurvey(status, surveyStore.currentAnsweredSurvey.grade); toggleSave()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500" ref="save">Save</p>
-            <p @click="$emit('submit')" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500">Submit</p>
+            <p v-if="surveyStore.currentAnsweredSurvey.status === 'COMPLETE'" @click="surveyStore.checkAnswers()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500">Submit</p>
+            <p v-else @click="surveyStore.saveSurvey(status, surveyStore.currentAnsweredSurvey.grade); toggleSave()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500" ref="save">Save</p>
         </div>
     <MobileNav v-if="menuOpen" @e="toggleMenu"/>
     </nav>

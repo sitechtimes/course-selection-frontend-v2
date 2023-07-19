@@ -179,6 +179,7 @@ export const useUserStore = defineStore("user", {
                 }
               }
             }
+            surveyStore.currentSurvey = this.data.survey
             }
             this.loading = false;
             router.push('student/dashboard')

@@ -7,7 +7,7 @@ import checkboxComponent from '../components/SurveyPageComponents/Reusables/Surv
 import surveyDraggable from '../components/SurveyPageComponents/Reusables/surveyDraggable.vue';
 import exclamationMark from '../components/icons/ExclamationMark.vue'
 import { surveyQuestion, surveyAnswer } from '../types/interface';
-import { watch, ref, Ref, reactive } from 'vue';
+import { watch, ref, Ref, reactive, defineExpose } from 'vue';
 import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
@@ -22,35 +22,9 @@ if(userStore.data.answeredSurvey[0].status === 'COMPLETE') {
   );
 }
 
-const message: Ref<string> = ref("Once you submit, you will still be able to make changes to your survey. However, please do so before the due date.")
 const indexAll: number = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');
 const indexNote: number = surveyStore.currentResponse.findIndex((x) => x.id === 'noteToGuidance');
 const x: Ref<number> = ref(0)
-let error: Array<string> = reactive([])
-
-
-const checkAnswers = () => {
-  const check: Array<string> = []
-  userStore.data.survey.questions.forEach((x: surveyQuestion) => {
-    const answer: surveyAnswer | undefined = surveyStore.currentResponse.find(y => y.id === x.id)
-    if(x.questionType === 'GENERAL' || x.questionType === 'BOOLEAN') {
-      if(answer.answer.trim()[0] === undefined) {
-        check.push(x.id)
-      } 
-    } else {
-      if(answer.answer[0].chosenClasses.length === 0){
-        check.push(x.id)
-      }
-    }
-  })
-  error = check
-  if(check.length === 0) {
-    surveyStore.saveSurvey('COMPLETE', surveyStore.currentAnsweredSurvey.grade)
-    router.push('/student/dashboard')
-  } else {
-    message.value = "Please fill out all questions before submitting."
-  }
-}
 
 const getChoices = (question:  surveyQuestion) => {
   const classes = userStore.data.student.coursesAvailable                            
@@ -60,14 +34,15 @@ const getChoices = (question:  surveyQuestion) => {
 watch(() => surveyStore.currentResponse[indexAll].preference, (newResponse) => {
   x.value = x.value+1
 }, { deep: true })
+
 </script>
 
 <template>
   <section class="flex justify-center items-center flex-col">
     <div class="w-2/3">
       <div v-for="question in userStore.data.survey.questions" :key="question.id" class="flex justify-center">
-        <div v-if="error.length > 0" class="w-1/12 flex justify-center items-center">
-          <exclamationMark v-if="error.includes(question.id)" class="text-red-500 h-8"></exclamationMark>
+        <div v-if="surveyStore.missingAnswers.length > 0" class="w-1/12 flex justify-center items-center">
+          <exclamationMark v-if="surveyStore.missingAnswers.includes(question.id)" class="text-red-500 h-8"></exclamationMark>
         </div>
         <div class="w-11/12">
           <booleanComponent class="mb-2" v-if="question.questionType === 'BOOLEAN'" :question="question" ></booleanComponent>
@@ -97,8 +72,9 @@ watch(() => surveyStore.currentResponse[indexAll].preference, (newResponse) => {
           />
       </div>
       <div class="flex justify-center my-10 flex-col items-center">
-        <p :class="{'text-red-500': error.length > 0}" class="mb-4 text-center">{{ message }}</p>
-        <button @click="checkAnswers()" class="bg-[#D6EEFF] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-36 h-12 text-2xl font-bold text-[#37394F]">Submit</button>
+        <p v-if="surveyStore.missingAnswers.length === 0" class="mb-4 text-center">Once you submit, you will still be able to make changes to your survey. However, please do so before the due date.</p>
+        <p v-else class="mb-4 text-center text-red-500">Please answer all questions before submitting.</p>
+        <button @click="surveyStore.checkAnswers()" class="bg-[#D6EEFF] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-36 h-12 text-2xl font-bold text-[#37394F]">Submit</button>
       </div>
     </div>
   </section>

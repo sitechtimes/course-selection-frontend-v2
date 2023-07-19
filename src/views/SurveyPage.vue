@@ -12,20 +12,20 @@ const surveyStore = useSurveyStore();
 
 const currentIndex: Ref<number> = ref(0);
 let currentQuestion: surveyQuestion = reactive(
-  userStore.data.survey.questions[currentIndex.value]
+  surveyStore.currentSurvey.questions[currentIndex.value]
 );
 const min: Ref<boolean> = ref(true);
 const max: Ref<boolean> = ref(false);
 
 surveyStore.setSurvey(
   userStore.data.user.email,
-  userStore.data.survey.questions,
+  surveyStore.currentSurvey.questions,
   userStore.data.student.grade
 );
 
 const previousQuestion = () => {
   currentIndex.value--;
-  currentQuestion = userStore.data.survey.questions[currentIndex.value];
+  currentQuestion = surveyStore.currentSurvey.questions[currentIndex.value];
 
   max.value = false;
   if (currentIndex.value === 0) {
@@ -35,10 +35,10 @@ const previousQuestion = () => {
 
 const nextQuestion = () => {
   currentIndex.value++;
-  currentQuestion = userStore.data.survey.questions[currentIndex.value];
+  currentQuestion = surveyStore.currentSurvey.questions[currentIndex.value];
 
   min.value = false;
-  if (currentIndex.value === userStore.data.survey.questions.length - 1) {
+  if (currentIndex.value === surveyStore.currentSurvey.questions.length - 1) {
     max.value = true;
   }
 };
@@ -58,7 +58,7 @@ const getChoices = () => {
     >
       <div class="mt-5">
         <h1 class="text-4xl font-semibold">
-        {{ userStore.data.survey.grade }} Year Survey
+        {{ surveyStore.currentSurvey.grade }} Year Survey
         </h1>
       </div>
       <div class="h-5/6 flex items-center">

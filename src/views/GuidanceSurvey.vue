@@ -16,8 +16,6 @@ const router = useRouter()
 
 const viewedStudent = userStore.data.guidance.students.filter(student => student.user.email === window.location.pathname.substring(17))[0]
 
-const missing: Ref<boolean> = ref(false) 
-let error: Array<string> = reactive([])
 const x: Ref<number> = ref(0)
 const indexAll = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');
 const indexNote = surveyStore.currentResponse.findIndex((x) => x.id === 'noteToGuidance');
@@ -28,31 +26,6 @@ surveyStore.currentSurvey = userStore.data.allSurveys.edges.find(x => x.node.gra
 const getChoices = (question) => {
   const classes = viewedStudent.coursesAvailable
   return classes.filter(x => x.subject === question.questionType)
-}
-
-const completeSurvey = async () => {
-  const check: Array<string> = []
-  surveyStore.currentSurvey.questions.forEach((x: surveyQuestion) => {
-    const answer = surveyStore.currentResponse.find(y => y.id === x.id)
-    if(x.questionType === 'GENERAL' || x.questionType === 'BOOLEAN') {
-      if(answer.answer.trim()[0] === undefined) {
-        check.push(x.id)
-      } 
-    } else {
-      if(answer.answer[0].chosenClasses.length === 0){
-        check.push(x.id)
-      }
-    }
-  })
-  error = check
-  if(check.length === 0) {
-    surveyStore.saveSurvey('COMPLETE', surveyStore.currentAnsweredSurvey.grade)
-    // move this to store once backend is updated
-    userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === viewedStudent.user.email).node.status = 'COMPLETE'
-    router.push('/guidance/studentlist')
-  } else {
-    missing.value = true
-  }
 }
 
 watch(() => surveyStore.currentResponse[indexAll].preference, (newResponse) => {
@@ -72,8 +45,8 @@ watch(() => surveyStore.currentResponse[indexAll].preference, (newResponse) => {
       <p v-if="surveyStore.loading">Setting things up...</p>
       <div v-else>
         <div v-for="question in surveyStore.currentSurvey.questions" :key="question" class="flex justify-center">
-          <div v-if="missing" class="w-1/12 flex justify-center items-center">
-            <exclamationMark v-if="error.includes(question.id)" class="text-red-500 h-8"></exclamationMark>
+          <div v-if="surveyStore.missingAnswers.length > 0" class="w-1/12 flex justify-center items-center">
+            <exclamationMark v-if="surveyStore.missingAnswers.includes(question.id)" class="text-red-500 h-8"></exclamationMark>
           </div>
           <div class="w-11/12">
             <booleanComponent class="mb-2" v-if="question.questionType === 'BOOLEAN'" :question="question" ></booleanComponent>
@@ -114,8 +87,8 @@ watch(() => surveyStore.currentResponse[indexAll].preference, (newResponse) => {
         </div>
       </div>
       <div class="flex justify-center mb-10 flex-col items-center">
-        <p v-if="missing" class="text-red-500 mb-4 text-center">Please fill in all questions before submitting.</p>
-        <button @click="completeSurvey()" class="bg-[#DEE9C8] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-36 h-12 text-2xl font-bold text-[#37394F]">Complete</button>
+        <p v-if="surveyStore.missingAnswers.length > 0" class="text-red-500 mb-4 text-center">Please fill in all questions before submitting.</p>
+        <button @click="surveyStore.checkAnswers()" class="bg-[#DEE9C8] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-36 h-12 text-2xl font-bold text-[#37394F]">Complete</button>
       </div>
     </div>
   </section>
