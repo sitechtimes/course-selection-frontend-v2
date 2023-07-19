@@ -12,12 +12,6 @@ let time: String;
 let date: String;
 let closeTime: String 
 
-surveyStore.setSurvey(
-  userStore.data.user.email,
-  userStore.data.survey.questions,
-  userStore.data.student.grade
-);
-
 if(userStore.data.student.homeroom === '') {
   console.log('o')
 } else {

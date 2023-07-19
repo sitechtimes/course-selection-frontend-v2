@@ -14,6 +14,14 @@ const userStore = useUserStore()
 const surveyStore = useSurveyStore()
 const router = useRouter()
 
+if(userStore.data.answeredSurvey.status === 'COMPLETED') {
+  surveyStore.setSurvey(
+    userStore.data.user.email,
+    userStore.data.survey.questions,
+    userStore.data.student.grade
+  );
+}
+
 const message: Ref<string> = ref("Once you submit, you will still be able to make changes to your survey. However, please do so before the due date.")
 const indexAll: number = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');
 const indexNote: number = surveyStore.currentResponse.findIndex((x) => x.id === 'noteToGuidance');
