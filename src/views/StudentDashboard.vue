@@ -10,7 +10,13 @@ const surveyStore = useSurveyStore();
 
 let time: String;
 let date: String;
-const closeTime = userStore.data.survey.dueDate.substring(0,10).split("-")
+let closeTime: String 
+
+if(userStore.data.student.homeroom === '') {
+  console.log('o')
+} else {
+  closeTime = userStore.data.survey.dueDate.substring(0,10).split("-")
+}
 
 const announcement = computed(() => {
   if(userStore.data.answeredSurvey[0] === null) {
@@ -34,7 +40,7 @@ if (
 
 <template>
   <div class="h-[75vh] w-full flex flex-row justify-center items-center">
-    <div v-if="userStore.data.survey.dueDate === null">hi</div>
+    <div v-if="userStore.data.student.homeroom === ''">Thanks for signing up, come back later :)</div>
     <div
       v-else
       id="left"

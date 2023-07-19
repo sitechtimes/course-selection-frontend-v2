@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { useSurveyStore } from "./survey";
+import { useRouter } from "vue-router";
 import axios from "axios";
 import { user, account_type, userData } from "../types/interface";
 
@@ -97,6 +98,8 @@ export const useUserStore = defineStore("user", {
           .then((res) => {
             this.data = res.data.data;
             this.loading = false;
+            const router = useRouter()
+            router.push('guidance/dashboard')
             console.log(res.data);
           });
       } else {
@@ -157,7 +160,12 @@ export const useUserStore = defineStore("user", {
           .then((res: any) => {
             this.data = res.data.data; // data needs to be filtered properly
             const surveyStore = useSurveyStore() 
-            const currentDate = new Date()
+            const router = useRouter()
+            if(this.data.student.homeroom === "") {
+              console.log("o")
+            } else {
+              console.log(this.data.student.homeroom)
+              const currentDate = new Date()
             const closeTime = this.data.survey.dueDate.substring(0,10).split("-")
 
             if (Number(closeTime[0]) > currentDate.getFullYear()) {
@@ -171,7 +179,9 @@ export const useUserStore = defineStore("user", {
                 }
               }
             }
+            }
             this.loading = false;
+            router.push('student/dashboard')
             console.log(this.data, this.access_token);
           });
       }
@@ -196,10 +206,14 @@ export const useUserStore = defineStore("user", {
           }
         )
         .then((res3: any) => {
+
+          // const router = useRouter()
           if (res3.data.data.user.isGuidance) {
             this.userType = "guidance";
+            // router.push('/guidance/dashboard')
           } else {
             this.userType = "student";
+            // router.push('student/dashboard')
           }
           this.init(this.userType);
         });
