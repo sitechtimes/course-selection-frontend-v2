@@ -13,11 +13,6 @@ const save = ref(null)
 const form = ref(null)
 const students = userStore.data.guidance.students;
 
-// onMounted(() => {
-//   console.log(save.value)
-//   return { save }
-// })
-
 
 function submit(date: String, name: String, time: String) {
   //date conversion
