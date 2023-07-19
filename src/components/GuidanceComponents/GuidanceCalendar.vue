@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import PlusIcon from "../components/icons/PlusIcon.vue";
+import PlusIcon from "../icons/PlusIcon.vue";
 const daysTag = document.querySelector(".days");
 // const currentMonth = document.querySelector(".month");
 // const currentYear = document.querySelector(".year");
@@ -77,20 +77,20 @@ const daysTag = document.querySelector(".days");
     <div class="select text-4xl font-bold">
       <span class="arrow cursor-pointer" id="prev">&#10094;</span>
       <div class="mY">
-        <h2 class="month mr-1">April</h2>
-        <h2 class="year ml-1">2023</h2>
+        <h2 class="month mr-1 font-extrabold">April</h2>
+        <h2 class="year ml-1 font-extrabold">2023</h2>
       </div>
       <span class="arrow cursor-pointer" id="next">&#10095;</span>
     </div>
     <div class="calendar">
-      <ul class="weeks text-2xl bg-primary-g">
-        <li class="border-x-2">Sun</li>
-        <li class="border-x-2">Mon</li>
-        <li class="border-x-2">Tue</li>
-        <li class="border-x-2">Wed</li>
-        <li class="border-x-2">Thu</li>
-        <li class="border-x-2">Fri</li>
-        <li class="border-x-2">Sat</li>
+      <ul class="weeks bg-primary-g">
+        <li class="">Sun</li>
+        <li class="">Mon</li>
+        <li class="">Tue</li>
+        <li class="">Wed</li>
+        <li class="">Thu</li>
+        <li class="">Fri</li>
+        <li class="">Sat</li>
       </ul>
       <ul class="days">
         <li class="">26<PlusIcon class="plusIcon" /></li>
@@ -177,12 +177,8 @@ const daysTag = document.querySelector(".days");
   justify-content: space-between;
 } */
 .calendar {
-  width: 75%;
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.05);
-  margin-bottom: 5rem;
   border: grey 1px solid;
-  border-top-left-radius: 7px;
-  border-top-right-radius: 7px;
 }
 .calendar ul {
   display: flex;
@@ -202,17 +198,18 @@ const daysTag = document.querySelector(".days");
   text-align: center;
   padding-top: 0.3rem;
   padding-bottom: 0.3rem;
+  border: 1px solid grey;
 }
 .calendar .weeks li {
-  font-weight: 700;
+  font-weight: 800;
+  font-size: 1.2rem;
   cursor: default;
-  width: calc(100% / 7);
 }
 .calendar .days li {
   z-index: 1;
   position: relative;
   padding-top: 0.5rem;
-  padding-bottom: 4rem;
+  padding-bottom: 5.8rem;
   padding-right: 0.8rem;
   text-align: end;
 }
