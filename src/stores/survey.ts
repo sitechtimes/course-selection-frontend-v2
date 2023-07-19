@@ -21,6 +21,7 @@ export const useSurveyStore = defineStore("survey", {
       const email = this.currentAnsweredSurvey.email;
       const answers = this.currentResponse;
       const jsonString = JSON.stringify(answers);
+      console.log(status)
 
       await axios
         .post(
