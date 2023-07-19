@@ -34,8 +34,9 @@ if (
 
 <template>
   <div class="h-[75vh] w-full flex flex-row justify-center items-center">
+    <div v-if="userStore.data.survey.dueDate === null">hi</div>
     <div
-      v-if="userStore.data.survey.dueDate"
+      v-else
       id="left"
       class="w-5/6 flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left md:w-3/4 lg:max-w-2xl xl:max-w-3xl lg:space-y-6 lg:ml-12"
     >
@@ -79,7 +80,6 @@ if (
         <p v-else>Your guidance councelor has not scheduled a meeting with you yet.</p>
       </div>
     </div>
-    <div v-else>hi</div>
     <div
       id="circles"
       class="-z-10 absolute h-96 w-112 sm:h-128 sm:w-128 lg:h-96 lg:w-112 xl:h-128 xl:w-128 hidden lg:flex justify-center items-center lg:relative lg:mx-8"
