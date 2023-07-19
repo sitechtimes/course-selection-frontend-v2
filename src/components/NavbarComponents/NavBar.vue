@@ -123,7 +123,7 @@ const logout = async () => {
             <p @click="exitSurvey()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500">Exit</p>
             <!-- (needs change) => pass in incomplete only when survey hasn't been submitted before  -->
             <p @click="surveyStore.saveSurvey(status, surveyStore.currentAnsweredSurvey.grade); toggleSave()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500" ref="save">Save</p>
-            <p @click="$emit('submit'); toggleSave()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500" ref="save">Submit</p>
+            <p @click="$emit('submit')" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500">Submit</p>
         </div>
     <MobileNav v-if="menuOpen" @e="toggleMenu"/>
     </nav>
