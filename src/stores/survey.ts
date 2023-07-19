@@ -53,7 +53,7 @@ export const useSurveyStore = defineStore("survey", {
           console.log(res);
           if (userStore.userType === "student") {
             userStore.data.answeredSurvey[0].answers = jsonString;
-            userStore.data.answeredSurvey[0].status = "COMPLETE";
+            userStore.data.answeredSurvey[0].status = status;
           } else if (userStore.userType === "guidance") {
             let survey = userStore.data.allAnsweredSurveys.edges.filter(x => x.node.email === this.currentAnsweredSurvey.email && x.node.grade === this.currentAnsweredSurvey.grade)
             let studentIndex = userStore.data.allAnsweredSurveys.edges.indexOf(survey[0])

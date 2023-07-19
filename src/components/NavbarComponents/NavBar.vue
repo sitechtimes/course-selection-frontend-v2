@@ -15,14 +15,14 @@ const resetStore = useResetStore()
 let menuOpen: Ref<boolean> = ref(false);
 const save = ref(null)
 
-// const status = computed(() => {
-//     if(surveyStore.currentResponse.status === "COMPLETE"){
-//         return "COMPLETE"
-//     } else {
-//         console.log(surveyStore.currentResponse.status)
-//         return "INCOMPLETE"
-//     }
-// })
+const status = computed(() => {
+    if(surveyStore.currentResponse.status === "COMPLETE"){
+        return "COMPLETE"
+    } else {
+        console.log(surveyStore.currentResponse.status)
+        return "INCOMPLETE"
+    }
+})
 
 const viewingSurvey = () => {
     return router.currentRoute.value.path.includes('survey')
@@ -105,7 +105,7 @@ const logout = async () => {
                 <p class="text-base hover:text-gray-500">Calendar</p>
             </RouterLink>
             <RouterLink to="/">
-                <p @click="userStore.$reset" id="name-link" class="text-base text-red-500 cursor-pointer hover:text-red-400">Logout</p>
+                <p @click="logout()" id="name-link" class="text-base text-red-500 cursor-pointer hover:text-red-400">Logout</p>
             </RouterLink>
         </div>
         <div v-if="!userStore.isLoggedIn && viewingSurvey() === false" class="hidden justify-center items-center space-x-12 md:flex">
@@ -121,10 +121,9 @@ const logout = async () => {
             <CloseMenu @click="toggleMenu" v-else />
         </div>
         <div v-if="viewingSurvey()" class="flex flex-row-reverse w-full sm:w-1/4 md:1/6 justify-between">
-            <!-- <p v-else @click="surveyStore.saveSurvey('INCOMPLETE')" class="text-gray-500 text-2xl cursor-pointer">Saved</p> -->
             <p @click="exitSurvey()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500">Exit</p>
             <!-- (needs change) => pass in incomplete only when survey hasn't been submitted before  -->
-            <p @click="surveyStore.saveSurvey('INCOMPLETE', surveyStore.currentAnsweredSurvey.grade); toggleSave()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500" ref="save">Save</p>
+            <p @click="surveyStore.saveSurvey(status, surveyStore.currentAnsweredSurvey.grade); toggleSave()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500" ref="save">Save</p>
         </div>
     <MobileNav v-if="menuOpen" @e="toggleMenu"/>
     </nav>
