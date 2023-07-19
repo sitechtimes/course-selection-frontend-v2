@@ -5,9 +5,9 @@ import axios from "axios";
 
 export const useSurveyStore = defineStore("survey", {
   state: () => ({
-    currentSurvey: [],
+    currentAnsweredSurvey: [],
     currentResponse: [],
-    currentQuestion: [],
+    currentSurvey: [],
     loading: false,
     open: false,
   }),
@@ -16,9 +16,9 @@ export const useSurveyStore = defineStore("survey", {
   },
   actions: {
     //
-    async saveSurvey(status: String) {
+    async saveSurvey(status: String, grade: String) {
       const userStore = useUserStore();
-      const email = this.currentSurvey.email;
+      const email = this.currentAnsweredSurvey.email;
       const answers = this.currentResponse;
       const jsonString = JSON.stringify(answers);
 
@@ -26,8 +26,8 @@ export const useSurveyStore = defineStore("survey", {
         .post(
           `${import.meta.env.VITE_URL}/graphql/`,
           {
-            query: `mutation updateSurvey($email: String, $answers: JSONString, $status: String) {
-                updateSurvey(email: $email, answers: $answers, status: $status) {
+            query: `mutation updateSurvey($email: String, $answers: JSONString, $status: String, $grade: String) {
+                updateSurvey(email: $email, answers: $answers, status: $status, grade: $grade) {
                     survey {
                         id
                         answers
@@ -39,6 +39,7 @@ export const useSurveyStore = defineStore("survey", {
               email: email,
               answers: jsonString,
               status: status,
+              grade: grade,
             },
           },
           {
@@ -49,15 +50,13 @@ export const useSurveyStore = defineStore("survey", {
           }
         )
         .then((res) => {
-          // console.log(res);
+          console.log(res);
           if (userStore.userType === "student") {
             userStore.data.answeredSurvey[0].answers = jsonString;
             userStore.data.answeredSurvey[0].status = "COMPLETE";
           } else if (userStore.userType === "guidance") {
-            const studentIndex =
-              userStore.data.allAnsweredSurveys.edges.findIndex(
-                (x) => x.node.email == this.currentSurvey.email
-              );
+            let survey = userStore.data.allAnsweredSurveys.edges.filter(x => x.node.email === this.currentAnsweredSurvey.email && x.node.grade === this.currentAnsweredSurvey.grade)
+            let studentIndex = userStore.data.allAnsweredSurveys.edges.indexOf(survey[0])
             // console.log(userStore.data.allAnsweredSurveys.edges)
             userStore.data.allAnsweredSurveys.edges[studentIndex].node.answers =
               jsonString;
@@ -137,26 +136,28 @@ export const useSurveyStore = defineStore("survey", {
           await this.startSurvey(email, survey, grade);
         }
 
-        this.currentSurvey = userStore.data.answeredSurvey[0];
+        this.currentAnsweredSurvey = userStore.data.answeredSurvey[0];
         this.currentResponse = JSON.parse(
           userStore.data.answeredSurvey[0].answers
         );
 
         this.loading = false;
       } else if (userStore.userType === "guidance") {
-        let studentIndex = userStore.data.allAnsweredSurveys.edges.findIndex(
-          (x) => x.node.email === email
-        );
+        // let studentIndex = userStore.data.allAnsweredSurveys.edges.findIndex(
+        //   (x) => x.node.email === email
+        // );
+        let survey = userStore.data.allAnsweredSurveys.edges.filter(x => x.node.email === email && x.node.grade === grade)
+        let studentIndex = userStore.data.allAnsweredSurveys.edges.indexOf(survey[0])
 
         if (studentIndex < 0) {
           await this.startSurvey(email, survey, grade);
-          studentIndex = userStore.data.allAnsweredSurveys.edges.findIndex(
-            (x) => x.node.email === email
-          );
+          survey = userStore.data.allAnsweredSurveys.edges.filter(x => x.node.email === email && x.node.grade === grade)
+          studentIndex = userStore.data.allAnsweredSurveys.edges.indexOf(survey[0])
+          
         }
-        this.currentSurvey =
-          userStore.data.allAnsweredSurveys.edges[studentIndex].node;
-        this.currentResponse = JSON.parse(this.currentSurvey.answers);
+        console.log(survey)
+        this.currentAnsweredSurvey = userStore.data.allAnsweredSurveys.edges[studentIndex].node;
+        this.currentResponse = JSON.parse(this.currentAnsweredSurvey.answers);
 
         this.loading = false;
       } else {

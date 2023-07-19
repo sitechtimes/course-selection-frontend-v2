@@ -18,7 +18,6 @@ const props = defineProps({
   answers: Array,
   isDisabled: Boolean
 });
-console.log(props.isDisabled)
 
 import { useSurveyStore } from "../../../stores/survey";
 import { watch, onBeforeMount } from "vue";

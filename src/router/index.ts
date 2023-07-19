@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useUserStore } from "../../src/stores/user";
+import { useSurveyStore } from "../stores/survey";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,6 +9,15 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: () => import("../views/LandingPage.vue"),
+      beforeEnter: (to) => {
+        const userStore = useUserStore();
+
+        if (userStore.isLoggedIn && userStore.userType === 'student') {
+          return { name: "studentDash" }
+        } else if(userStore.isLoggedIn && userStore.userType === 'guidance') {
+          return { name: "guidanceDash" }
+        } 
+      }
     },
     {
       path: "/guidance/dashboard",
@@ -40,25 +50,39 @@ const router = createRouter({
     },
     {
       path: "/student/survey",
-      name: "survey",
+      name: "studentSurvey",
       component: () => import("../views/SurveyPage.vue"),
       beforeEnter: (to) => {
         const userStore = useUserStore();
+        const surveyStore = useSurveyStore()
 
         if (userStore.userType === 'guidance') {
           return { name: "guidanceStudentlist" };
         }
+
+        if (userStore.userType === 'student' && userStore.data.answeredSurvey[0].status === "COMPLETE") {
+          return { name: "reviewSurvey" };
+        }
+
+        if(!surveyStore.open) {
+          return { name: "closedSurvey" }
+        }
       }
     },
     {
-      path: '/survey/closed',
+      path: '/student/survey/closed',
       name: 'closedSurvey',
       component: () => import('../views/ClosedSurvey.vue'),
       beforeEnter: (to) => {
         const userStore = useUserStore();
+        const surveyStore = useSurveyStore()
 
         if (userStore.userType === 'guidance') {
           return { name: "guidanceStudentlist" };
+        }
+
+        if (surveyStore.open === true) {
+          return { name: "studentSurvey" };
         }
       }
     },
@@ -68,9 +92,14 @@ const router = createRouter({
       component: () => import('../views/ReviewSurvey.vue'),
       beforeEnter: (to) => {
         const userStore = useUserStore();
+        const surveyStore = useSurveyStore()
 
         if (userStore.userType === 'guidance') {
           return { name: "guidanceStudentlist" };
+        }
+
+        if(!surveyStore.open) {
+          return { name: "closedSurvey" }
         }
       }
     },
