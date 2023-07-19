@@ -52,22 +52,22 @@ const router = createRouter({
       path: "/student/survey",
       name: "studentSurvey",
       component: () => import("../views/SurveyPage.vue"),
-      // beforeEnter: (to) => {
-      //   const userStore = useUserStore();
-      //   const surveyStore = useSurveyStore()
+      beforeEnter: (to) => {
+        const userStore = useUserStore();
+        const surveyStore = useSurveyStore()
 
-      //   if (userStore.userType === 'guidance') {
-      //     return { name: "guidanceStudentlist" };
-      //   }
+        if (userStore.userType === 'guidance') {
+          return { name: "guidanceStudentlist" };
+        }
 
-      //   if (userStore.userType === 'student' && userStore.data.answeredSurvey[0].status === "COMPLETE") {
-      //     return { name: "reviewSurvey" };
-      //   }
+        if (userStore.userType === 'student' && userStore.data.answeredSurvey[0].status === "COMPLETE") {
+          return { name: "reviewSurvey" };
+        }
 
-      //   if(!surveyStore.open) {
-      //     return { name: "closedSurvey" }
-      //   }
-      // }
+        if(!surveyStore.open) {
+          return { name: "closedSurvey" }
+        }
+      }
     },
     {
       path: '/student/survey/closed',
