@@ -124,8 +124,10 @@ export const useUserStore = defineStore("user", {
           .then((res) => {
             this.data = res.data.data;
             this.loading = false;
+            const surveyStore = useSurveyStore()
             const router = useRouter()
             router.push('guidance/dashboard')
+            surveyStore.open = true
             console.log(res.data);
           });
       } else {

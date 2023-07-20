@@ -123,7 +123,6 @@ const submit = async () => {
         </div>
         <div v-if="viewingSurvey()" class="flex flex-row-reverse w-full sm:w-1/4 md:1/6 justify-between">
             <p @click="exitSurvey()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500">Exit</p>
-            <!-- doesn't show up on guidance side, need change -->
             <p v-if="surveyStore.currentAnsweredSurvey.status === 'COMPLETE' && surveyStore.open === true" @click="submit()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500">Submit</p>
             <p v-if="surveyStore.currentAnsweredSurvey.status != 'COMPLETE' && surveyStore.open === true" @click="surveyStore.saveSurvey(surveyStore.currentAnsweredSurvey.status, surveyStore.currentAnsweredSurvey.grade); toggleSave()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500" ref="save">Save</p>
         </div>
