@@ -84,6 +84,32 @@ export const useUserStore = defineStore("user", {
                                         grade
                                     }
                                 }
+                            }
+                            allStudents {
+                              edges{
+                                node{
+                                  user{
+                                    firstName
+                                    lastName
+                                    email
+                                  }
+                                  homeroom
+                             
+                                  grade
+                                  coursesTaken{
+                                    courseCode
+                                  }
+                                  coursesRequired{
+                                    courseCode
+                                  }
+                                  coursesAvailable{
+                                    courseCode
+                                    subject
+                                    name
+                                  }
+                                  meeting
+                                }
+                              }
                             }                       
 
                     }`,
