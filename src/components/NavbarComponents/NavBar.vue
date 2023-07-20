@@ -89,6 +89,8 @@ const submit = async () => {
         <div @click="redirect()" class="cursor-pointer">
             <p class="text-2xl md:text-3xl font-semibold z-50 hover:text-gray-600 hidden sm:flex">Course Selection</p>
         </div>
+        <div v-if="router.currentRoute.value.path === '/student/dashboard' && userStore.data.answeredSurvey != undefined && userStore.data.answeredSurvey[0].status === 'INCOMPLETE'" class="text-[#461616] bg-[#EA9F9F] font-semibold text-center p-3 lg:px-6 text-xl rounded-2xl">Your survey is incomplete</div>
+        <div v-if="router.currentRoute.value.path === '/student/dashboard' && userStore.data.answeredSurvey != undefined && userStore.data.answeredSurvey[0].status === 'COMPLETE'" class="text-[#174616] bg-[#A8D480]  font-semibold text-center p-3 lg:px-6 text-xl rounded-2xl">Your survey is complete</div>
         <div v-if="userStore.isLoggedIn && userStore.userType === 'student' && viewingSurvey()  === false" class="hidden justify-center items-center space-x-12 md:flex">
             <RouterLink to="/courses">
                 <p class="text-base hover:text-gray-500">Courses</p>
