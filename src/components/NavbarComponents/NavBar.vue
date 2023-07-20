@@ -102,7 +102,7 @@ const submit = async () => {
             <RouterLink to="/courses">
                 <p class="text-base hover:text-gray-500">Courses</p>
             </RouterLink>
-            <p @click="surveyNav()" class="cursor-pointer hover:text-gray-500">Survey</p>
+            <p v-if="userStore.data.student.homeroom != ''" @click="surveyNav()" class="cursor-pointer hover:text-gray-500">Survey</p>
             <RouterLink to="/">
                 <p @click="logout()" id="name-link" class="text-base text-red-500 cursor-pointer hover:text-red-400">Logout</p>
             </RouterLink>
