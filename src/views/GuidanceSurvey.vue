@@ -28,6 +28,17 @@ const getChoices = (question) => {
   return classes.filter(x => x.subject === question.questionType)
 }
 
+const submit = async () => {
+    await surveyStore.checkAnswers()
+    if(surveyStore.missingAnswers.length === 0) {
+        if(userStore.userType === "student") {
+          router.push('/student/dashboard')
+        } else if(userStore.userType === "guidance") {
+          router.push('/guidance/studentlist')
+        }
+    }
+}
+
 watch(() => surveyStore.currentResponse[indexAll].preference, (newResponse) => {
   x.value = x.value+1
 }, { deep: true })
@@ -88,7 +99,7 @@ watch(() => surveyStore.currentResponse[indexAll].preference, (newResponse) => {
       </div>
       <div class="flex justify-center mb-10 flex-col items-center">
         <p v-if="surveyStore.missingAnswers.length > 0" class="text-red-500 mb-4 text-center">Please fill in all questions before submitting.</p>
-        <button @click="surveyStore.checkAnswers()" class="bg-[#DEE9C8] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-36 h-12 text-2xl font-bold text-[#37394F]">Complete</button>
+        <button @click="submit()" class="bg-[#DEE9C8] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-36 h-12 text-2xl font-bold text-[#37394F]">Complete</button>
       </div>
     </div>
   </section>
