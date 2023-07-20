@@ -167,7 +167,7 @@ export const useSurveyStore = defineStore("survey", {
     checkAnswers() {
       const check: Array<string> = []
       const userStore = useUserStore()
-      const router = useRouter()
+      // const router = useRouter()
       this.currentSurvey.questions.forEach((x: surveyQuestion) => {
         const answer: surveyAnswer | undefined = this.currentResponse.find(y => y.id === x.id)
         if(x.questionType === 'GENERAL' || x.questionType === 'BOOLEAN') {
@@ -184,10 +184,10 @@ export const useSurveyStore = defineStore("survey", {
       if(check.length === 0) {
         if(userStore.userType === "student") {
           this.saveSurvey('COMPLETE', this.currentAnsweredSurvey.grade)
-          router.push('/student/dashboard')
+          // router.push('/student/dashboard')
         } else if(userStore.userType === "guidance") {
           this.saveSurvey('COMPLETE', this.currentAnsweredSurvey.grade)
-          router.push('/guidance/studentlist')
+          // router.push('/guidance/studentlist')
         }
       } 
     },
