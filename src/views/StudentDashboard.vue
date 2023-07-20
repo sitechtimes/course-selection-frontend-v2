@@ -43,8 +43,8 @@ if (
     <div v-if="userStore.data.student.homeroom === ''" id="left"
       class="w-5/6 flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left md:w-3/4 lg:max-w-2xl xl:max-w-3xl lg:space-y-6 lg:ml-12">
       <h2 id="name" class="text-5xl font-bold">Welcome, {{ userStore.first_name }}.</h2>
-      <div>Thank you for signing up. Your account information is in the process of being updated. Please come back later.</div>
-      <div>In the meantime, you can check out the courses offered.</div>
+      <div id="announcements"
+        class="flex justify-center items-center ml-4 lg:ml-0 lg:justify-start">Thank you for signing up. Your account information is in the process of being updated. Please come back later.In the meantime, you can check out the courses offered.</div>
       <RouterLink to="/schedule">
           <button
             class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s"
