@@ -31,6 +31,9 @@
 .events {
   margin: 1rem 1.5rem 0rem 1.5rem;
 }
+.eventContainer {
+  margin-top: 1rem;
+}
 .date {
   font-weight: bold;
   font-size: 1.2rem;
