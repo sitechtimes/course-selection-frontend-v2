@@ -11,7 +11,8 @@ import router from '../../router';
 
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
-const resetStore = useResetStore()
+const resetStore = useResetStore();
+
 let menuOpen: Ref<boolean> = ref(false);
 const save = ref(null)
 
@@ -19,27 +20,13 @@ const viewingSurvey = () => {
     return router.currentRoute.value.path.includes('survey')
 }
 
-const exitSurvey = () => {
-  if (userStore.isLoggedIn === true) {
-    if (userStore.userType === "student") {
-      router.push("/student/dashboard");
-    }
-    if (userStore.userType === "guidance") {
-      router.push("/guidance/studentlist");
-    }
-  } else {
-    return router.push("/");
-  }
-};
-
-
 const redirect = () => {
     if (userStore.isLoggedIn === true) {
         if (userStore.userType === 'student') {
             router.push('/student/dashboard')
         } 
         if (userStore.userType === 'guidance') {
-            router.push('/guidance/dashboard')
+            router.push('/guidance/studentlist')
         }
     } else {
         return router.push('/')
@@ -122,7 +109,7 @@ const submit = async () => {
             <CloseMenu @click="toggleMenu" v-else />
         </div>
         <div v-if="viewingSurvey()" class="flex flex-row-reverse w-full sm:w-1/4 md:1/6 justify-between">
-            <p @click="exitSurvey()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500">Exit</p>
+            <p @click="redirect()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500">Exit</p>
             <p v-if="surveyStore.currentAnsweredSurvey.status === 'COMPLETE' && surveyStore.open === true" @click="submit()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500">Submit</p>
             <p v-if="surveyStore.currentAnsweredSurvey.status != 'COMPLETE' && surveyStore.open === true" @click="surveyStore.saveSurvey(surveyStore.currentAnsweredSurvey.status, surveyStore.currentAnsweredSurvey.grade); toggleSave()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500" ref="save">Save</p>
         </div>

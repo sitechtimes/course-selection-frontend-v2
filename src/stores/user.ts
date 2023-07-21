@@ -127,7 +127,6 @@ export const useUserStore = defineStore("user", {
             const surveyStore = useSurveyStore()
             const router = useRouter()
             router.push('guidance/dashboard')
-            surveyStore.open = true
             console.log(res.data);
           });
       } else {
@@ -196,14 +195,14 @@ export const useUserStore = defineStore("user", {
               const currentDate = new Date()
             const closeTime = this.data.survey.dueDate.substring(0,10).split("-")
 
-            if (Number(closeTime[0]) > currentDate.getFullYear()) {
-              surveyStore.open = true
+            if (Number(closeTime[0]) < currentDate.getFullYear()) {
+              surveyStore.open = false
             } else if (Number(closeTime[0]) === currentDate.getFullYear()) {
-              if (Number(closeTime[1]) > currentDate.getMonth() + 1) { // Get month starts at 0, not 1
-                surveyStore.open = true
+              if (Number(closeTime[1]) < currentDate.getMonth() + 1) { // Get month starts at 0, not 1
+                surveyStore.open = false
               } else if (Number(closeTime[1]) === currentDate.getMonth() + 1) {
-                if (Number(closeTime[2]) > currentDate.getDate()) {
-                  surveyStore.open = true
+                if (Number(closeTime[2]) < currentDate.getDate()) {
+                  surveyStore.open = false
                 }
               }
             }
