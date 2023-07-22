@@ -35,7 +35,9 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, Ref, ref } from 'vue';
+import { reactive, Ref, ref, onBeforeUnmount  } from 'vue';
+import { onBeforeRouteLeave } from 'vue-router';
+
 const currentDate = ref(null)
 // const prev = ref(null)
 // const next = ref(null)
@@ -57,6 +59,45 @@ let wo = ref(0)
 // storing full name of all months in array
 const months = ["January", "February", "March", "April", "May", "June", "July",
               "August", "September", "October", "November", "December"];
+
+
+              const beforeWindowUnload = () => {
+    if (confirmStayInDirtyForm()) {
+      // Cancel the event
+    //   e.preventDefault()
+    //   // Chrome requires returnValue to be set
+    //   e.returnValue = ''
+    console.log('o')
+    }   
+  }
+
+  const confirmLeave = () => {
+    return window.confirm('Do you really want to leave? you have unsaved changes!')
+  }
+
+  const confirmStayInDirtyForm = () => {
+    return confirmLeave()
+  }
+
+
+onBeforeRouteLeave ((to, from, next) => {
+  // If the form is dirty and the user did not confirm leave,
+  // prevent losing unsaved changes by canceling navigation
+  if (confirmStayInDirtyForm()){
+    console.log('stay')
+  } else {
+    // Navigate to next view
+    console.log('leave')
+  }
+})
+
+
+  window.addEventListener('beforeunload', beforeWindowUnload())
+
+
+onBeforeUnmount(() => {
+  window.removeEventListener('beforeunload', beforeWindowUnload())
+})
 
 
 
