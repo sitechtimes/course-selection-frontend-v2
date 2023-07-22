@@ -5,11 +5,19 @@
         <div class="icons">
             <div id="prev" ref="prev" @click="test"> back </div>
             <div id="next" ref="next" @click="test"> next </div>
-          <!-- <span id="prev" ref="prev" class="material-symbols-rounded">chevron_left</span>
-          <span id="next" ref="next" class="material-symbols-rounded">chevron_right</span> -->
         </div>
       </header>
-      <div class="calendar">
+      <ul class="grid grid-cols-7 calendar">
+        <li class="weeks">Sun</li>
+          <li class="weeks">Mon</li>
+          <li class="weeks">Tue</li>
+          <li class="weeks">Wed</li>
+          <li class="weeks">Thu</li>
+          <li class="weeks">Fri</li>
+          <li class="weeks">Sat</li>
+          <li class="days" v-for="h in hmm.wow" :key="h.id">{{ h.date }}</li>
+    </ul>
+      <!-- <div class="calendar">
         <ul class="weeks">
           <li>Sun</li>
           <li>Mon</li>
@@ -19,11 +27,10 @@
           <li>Fri</li>
           <li>Sat</li>
         </ul>
-        <!-- <ul ref="daysTag"></ul> -->
         <ul class="days" v-for="h in hmm.wow" :key="h.id">
             <p>{{ h.date }}</p>
         </ul>
-      </div>
+      </div> -->
     </div>
 </template>
 
