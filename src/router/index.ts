@@ -139,6 +139,12 @@ const router = createRouter({
         }
       }
     },
+    {
+      path: '/test',
+      name: 'test',
+      component: () => import('../views/CalTest.vue')
+      
+    }
   ]
 })
 
@@ -146,7 +152,7 @@ router.beforeEach(async (to) => {
   const userStore = useUserStore();
   const loggedIn = userStore.isLoggedIn;
 
-  const publicPages = ["/", "/login"];
+  const publicPages = ["/", "/login", '/test'];
   const authRequired = !publicPages.includes(to.path);
 
   if (authRequired && !loggedIn) {
