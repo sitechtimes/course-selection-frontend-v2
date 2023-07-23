@@ -1,10 +1,10 @@
 <template>
    <div class="wrapper">
       <header>
-        <p ref="currentDate"></p>
+        <p ref="currentDate">{{ months[currMonth] }}, {{ currYear }}</p>
         <div class="icons">
-            <div id="prev" ref="prev" @click="test"> back </div>
-            <div id="next" ref="next" @click="test"> next </div>
+            <div id="prev" ref="prev" class="mx-2" @click="changeMonth(false)"> back </div>
+            <div id="next" ref="next" @click="changeMonth(true)"> next </div>
         </div>
       </header>
       <ul class="grid grid-cols-7 calendar">
@@ -149,8 +149,12 @@ renderCalendar();
 //     // });
 // }
 
-const test = () => {
-    currMonth = currMonth + 1;
+const changeMonth = (next: boolean) => {
+    if(next) {
+      currMonth = currMonth + 1;
+    } else {
+      currMonth = currMonth - 1;
+    }
         if(currMonth < 0 || currMonth > 11) { // if current month is less than 0 or greater than 11
             // creating a new date of current year & month and pass it as date value
             date = new Date(currYear, currMonth, new Date().getDate());

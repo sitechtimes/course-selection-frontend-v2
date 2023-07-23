@@ -141,8 +141,14 @@ const router = createRouter({
     },
     {
       path: '/test',
-      name: 'test',
+      name: 'testCal',
       component: () => import('../views/CalTest.vue')
+      
+    },
+    {
+      path: '/test2',
+      name: 'testExit',
+      component: () => import('../views/ExitReminderTest.vue')
       
     }
   ]
@@ -152,7 +158,7 @@ router.beforeEach(async (to) => {
   const userStore = useUserStore();
   const loggedIn = userStore.isLoggedIn;
 
-  const publicPages = ["/", "/login", '/test'];
+  const publicPages = ["/", "/login", '/test', '/test2'];
   const authRequired = !publicPages.includes(to.path);
 
   if (authRequired && !loggedIn) {
