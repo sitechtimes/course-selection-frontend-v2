@@ -1,11 +1,16 @@
-<script setup lang="ts">
-import GuidanceCalendar from "../components/GuidanceComponents/GuidanceCalendar.vue";
-import Upcoming from "../components/GuidanceComponents/Upcoming.vue";
-</script>
 <template>
-  <div class="flex flex-row mb-20">
-    <GuidanceCalendar />
-    <Upcoming />
+  <div class="event h-screen w-full flex flex-row justify-center items-center">
+    <createevent />
   </div>
 </template>
-<style scoped></style>
+
+<script setup lang="ts">
+import createevent from "../components/GuidanceComponents/CreateEvent.vue";
+</script>
+
+<style scoped>
+.event {
+  display: flex;
+  flex-direction: column;
+}
+</style>
