@@ -73,8 +73,10 @@ export const useSurveyStore = defineStore("survey", {
       const answers: Array<object> = [];
       const allChosen = {
         id: "allChosenCourses",
-        courses: [],
-        preference: [],
+        answer: {
+          courses: [],
+          preference: [],
+        }
       };
 
       const noteToGuidance = {

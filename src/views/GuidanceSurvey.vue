@@ -39,7 +39,7 @@ const submit = async () => {
     }
 }
 
-watch(() => surveyStore.currentResponse[indexAll].preference, (newResponse) => {
+watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newResponse) => {
   x.value = x.value+1
 }, { deep: true })
 </script>
@@ -71,7 +71,7 @@ watch(() => surveyStore.currentResponse[indexAll].preference, (newResponse) => {
         <div class="my-6">
           <p class="text-lg md:text-xl xl:text-3xl my-4">Student's order of priority:</p>
           <surveyDraggable 
-            :courses="surveyStore.currentResponse[indexAll].preference" 
+            :courses="surveyStore.currentResponse[indexAll].answer.preference" 
             :index="indexAll"
             :numbered="true"
             :key="x"

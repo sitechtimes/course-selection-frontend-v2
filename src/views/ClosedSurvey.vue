@@ -39,7 +39,7 @@ const getChoices = (question:  surveyQuestion) => {
       <div class="my-6">
         <p class="text-lg md:text-xl xl:text-3xl my-4">Your final class priority:</p> <!-- Have to change what this says. surveyCheckbox probably also needs to be changed-->
         <closedFinalRank 
-          :courses="surveyStore.currentResponse[indexAll].preference" 
+          :courses="surveyStore.currentResponse[indexAll].answer.preference" 
 
           >
         </closedFinalRank>
