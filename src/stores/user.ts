@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { useSurveyStore } from "./survey";
+import { useStudentStore } from "./student";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import { user, account_type, userData } from "../types/interface";
@@ -138,9 +139,6 @@ export const useUserStore = defineStore("user", {
                             firstName
                             lastName
                             email
-                            isActive
-                            isStudent
-                            isGuidance
                         }
                         student{
                             homeroom
@@ -185,6 +183,13 @@ export const useUserStore = defineStore("user", {
           )
           .then((res: any) => {
             this.data = res.data.data; // data needs to be filtered properly
+            console.log(res.data.data, 'ooo')
+            const studentStore = useStudentStore()
+            studentStore.answeredSurvey = res.data.data.answeredSurvey
+            studentStore.student = res.data.data.student
+            studentStore.survey = res.data.data.survey
+            studentStore.user = res.data.data.user
+
             const surveyStore = useSurveyStore() 
             const router = useRouter()
             if(this.data.student.homeroom === "") {
