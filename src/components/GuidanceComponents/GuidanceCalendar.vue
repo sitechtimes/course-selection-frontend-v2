@@ -1,4 +1,6 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Upcoming from "../GuidanceComponents/Upcoming.vue";
+</script>
 <template>
   <div class="container">
     <div class="select text-4xl font-bold">
@@ -10,67 +12,69 @@
       </div>
       <span class="arrow cursor-pointer" id="next">&#10095;</span>
     </div>
-
-    <div class="calendar">
-      <ul class="weeks bg-primary-g">
-        <li class="">Sun</li>
-        <li class="">Mon</li>
-        <li class="">Tue</li>
-        <li class="">Wed</li>
-        <li class="">Thu</li>
-        <li class="">Fri</li>
-        <li class="">Sat</li>
-      </ul>
-      <ul class="days">
-        <li class="">26<PlusIcon class="plusIcon" /></li>
-        <li class="">27<PlusIcon class="plusIcon" /></li>
-        <li class="">28<PlusIcon class="plusIcon" /></li>
-        <li class=" ">29<PlusIcon class="plusIcon" /></li>
-        <li class=" ">30<PlusIcon class="plusIcon" /></li>
-        <li class=" ">31<PlusIcon class="plusIcon" /></li>
-        <li class=" ">1<PlusIcon class="plusIcon" /></li>
-        <li class=" ">2<PlusIcon class="plusIcon" /></li>
-        <li class=" ">3<PlusIcon class="plusIcon" /></li>
-        <li class=" ">4<PlusIcon class="plusIcon" /></li>
-        <li class=" ">5<PlusIcon class="plusIcon" /></li>
-        <li class=" ">6<PlusIcon class="plusIcon" /></li>
-        <li class=" ">7<PlusIcon class="plusIcon" /></li>
-        <li class=" ">8<PlusIcon class="plusIcon" /></li>
-        <li class=" ">9<PlusIcon class="plusIcon" /></li>
-        <li class=" ">10<PlusIcon class="plusIcon" /></li>
-        <li class=" ">11<PlusIcon class="plusIcon" /></li>
-        <li class=" ">12<PlusIcon class="plusIcon" /></li>
-        <li class=" ">13<PlusIcon class="plusIcon" /></li>
-        <li class=" ">14<PlusIcon class="plusIcon" /></li>
-        <li class=" ">15<PlusIcon class="plusIcon" /></li>
-        <li class=" ">16<PlusIcon class="plusIcon" /></li>
-        <li class=" ">17<PlusIcon class="plusIcon" /></li>
-        <li class=" ">18<PlusIcon class="plusIcon" /></li>
-        <li class=" ">19<PlusIcon class="plusIcon" /></li>
-        <li class=" ">20<PlusIcon class="plusIcon" /></li>
-        <li class=" ">21<PlusIcon class="plusIcon" /></li>
-        <li class=" ">22<PlusIcon class="plusIcon" /></li>
-        <li class=" ">23<PlusIcon class="plusIcon" /></li>
-        <li class=" ">24<PlusIcon class="plusIcon" /></li>
-        <li class=" ">25<PlusIcon class="plusIcon" /></li>
-        <li class=" ">26<PlusIcon class="plusIcon" /></li>
-        <li class=" ">27<PlusIcon class="plusIcon" /></li>
-        <li class=" ">28<PlusIcon class="plusIcon" /></li>
-        <li class=" ">29<PlusIcon class="plusIcon" /></li>
-        <li class=" ">30<PlusIcon class="plusIcon" /></li>
-        <li class=" ">1<PlusIcon class="plusIcon" /></li>
-        <li class=" ">2<PlusIcon class="plusIcon" /></li>
-        <li class=" ">3<PlusIcon class="plusIcon" /></li>
-        <li class=" ">4<PlusIcon class="plusIcon" /></li>
-        <li class=" ">5<PlusIcon class="plusIcon" /></li>
-        <li class=" ">6<PlusIcon class="plusIcon" /></li>
-      </ul>
+    <div class="flex flex-row">
+      <div class="calendar">
+        <ul class="weeks bg-primary-g">
+          <li class="">Sun</li>
+          <li class="">Mon</li>
+          <li class="">Tue</li>
+          <li class="">Wed</li>
+          <li class="">Thu</li>
+          <li class="">Fri</li>
+          <li class="">Sat</li>
+        </ul>
+        <ul class="days">
+          <li class="">26<PlusIcon class="plusIcon" /></li>
+          <li class="">27<PlusIcon class="plusIcon" /></li>
+          <li class="">28<PlusIcon class="plusIcon" /></li>
+          <li class=" ">29<PlusIcon class="plusIcon" /></li>
+          <li class=" ">30<PlusIcon class="plusIcon" /></li>
+          <li class=" ">31<PlusIcon class="plusIcon" /></li>
+          <li class=" ">1<PlusIcon class="plusIcon" /></li>
+          <li class=" ">2<PlusIcon class="plusIcon" /></li>
+          <li class=" ">3<PlusIcon class="plusIcon" /></li>
+          <li class=" ">4<PlusIcon class="plusIcon" /></li>
+          <li class=" ">5<PlusIcon class="plusIcon" /></li>
+          <li class=" ">6<PlusIcon class="plusIcon" /></li>
+          <li class=" ">7<PlusIcon class="plusIcon" /></li>
+          <li class=" ">8<PlusIcon class="plusIcon" /></li>
+          <li class=" ">9<PlusIcon class="plusIcon" /></li>
+          <li class=" ">10<PlusIcon class="plusIcon" /></li>
+          <li class=" ">11<PlusIcon class="plusIcon" /></li>
+          <li class=" ">12<PlusIcon class="plusIcon" /></li>
+          <li class=" ">13<PlusIcon class="plusIcon" /></li>
+          <li class=" ">14<PlusIcon class="plusIcon" /></li>
+          <li class=" ">15<PlusIcon class="plusIcon" /></li>
+          <li class=" ">16<PlusIcon class="plusIcon" /></li>
+          <li class=" ">17<PlusIcon class="plusIcon" /></li>
+          <li class=" ">18<PlusIcon class="plusIcon" /></li>
+          <li class=" ">19<PlusIcon class="plusIcon" /></li>
+          <li class=" ">20<PlusIcon class="plusIcon" /></li>
+          <li class=" ">21<PlusIcon class="plusIcon" /></li>
+          <li class=" ">22<PlusIcon class="plusIcon" /></li>
+          <li class=" ">23<PlusIcon class="plusIcon" /></li>
+          <li class=" ">24<PlusIcon class="plusIcon" /></li>
+          <li class=" ">25<PlusIcon class="plusIcon" /></li>
+          <li class=" ">26<PlusIcon class="plusIcon" /></li>
+          <li class=" ">27<PlusIcon class="plusIcon" /></li>
+          <li class=" ">28<PlusIcon class="plusIcon" /></li>
+          <li class=" ">29<PlusIcon class="plusIcon" /></li>
+          <li class=" ">30<PlusIcon class="plusIcon" /></li>
+          <li class=" ">1<PlusIcon class="plusIcon" /></li>
+          <li class=" ">2<PlusIcon class="plusIcon" /></li>
+          <li class=" ">3<PlusIcon class="plusIcon" /></li>
+          <li class=" ">4<PlusIcon class="plusIcon" /></li>
+          <li class=" ">5<PlusIcon class="plusIcon" /></li>
+          <li class=" ">6<PlusIcon class="plusIcon" /></li>
+        </ul>
+      </div>
+      <Upcoming />
     </div>
   </div>
 </template>
 <style scoped>
 .container {
-  margin-top: 8rem;
+  margin-top: 2rem;
   margin-left: 4rem;
 }
 .select {

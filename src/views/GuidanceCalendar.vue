@@ -2,7 +2,6 @@
   <div class="">
     <div class="flex flex-row">
       <GuidanceCalendar />
-      <Upcoming />
     </div>
     <createevent />
   </div>
@@ -11,7 +10,6 @@
 <script setup lang="ts">
 import createevent from "../components/GuidanceComponents/CreateEvent.vue";
 import GuidanceCalendar from "../components/GuidanceComponents/GuidanceCalendar.vue";
-import Upcoming from "../components/GuidanceComponents/Upcoming.vue";
 </script>
 
 <style scoped>

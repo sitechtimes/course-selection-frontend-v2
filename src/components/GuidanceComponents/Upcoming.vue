@@ -18,9 +18,7 @@
 <style scoped>
 .upcoming {
   width: 25%;
-  margin-top: 12.8rem;
   margin-left: 6rem;
-  margin-right: 4rem;
   border: solid grey 2px;
   border-radius: 0.5rem;
 }
