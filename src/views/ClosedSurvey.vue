@@ -8,6 +8,8 @@ import closedFinalRank from '../components/SurveyPageComponents/Reusables/Closed
 import { surveyQuestion, surveyAnswer } from '../types/interface';
 import { ref, Ref } from 'vue';
 
+document.title = 'Survey | SITHS Course Selection'
+
 const userStore = useUserStore()
 const surveyStore = useSurveyStore()
 

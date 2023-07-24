@@ -5,8 +5,10 @@ import generalComponent from "../components/SurveyPageComponents/Reusables/Surve
 import { ref, reactive, Ref, onBeforeMount } from "vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
-
 import { surveyQuestion, courses, surveyAnswer } from "../types/interface";
+
+document.title = 'Survey | SITHS Course Selection'
+
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
 

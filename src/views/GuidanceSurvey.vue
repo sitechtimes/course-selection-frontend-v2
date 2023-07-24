@@ -10,6 +10,8 @@ import { surveyQuestion, surveyAnswer } from '../types/interface';
 import { useRouter } from 'vue-router'
 import { ref, Ref, watch, reactive } from 'vue';
 
+document.title = 'Survey | SITHS Course Selection'
+
 const userStore = useUserStore()
 const surveyStore = useSurveyStore()
 const router = useRouter()
