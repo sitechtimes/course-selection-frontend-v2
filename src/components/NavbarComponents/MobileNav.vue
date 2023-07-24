@@ -1,23 +1,18 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import gsap from 'gsap'
-import { ref, onMounted } from 'vue'
+import { ref, Ref, onMounted } from 'vue'
 import { useUserStore } from '../../stores/user';
+import { useSurveyStore } from '../../stores/survey';
+import { useResetStore } from '../../stores/reset';
+import router from '../../router';
 
-const userStore = useUserStore()
+const userStore = useUserStore();
+const surveyStore = useSurveyStore();
+const resetStore = useResetStore();
 
-// const redirect = () => {
-//     if (userStore.isLoggedIn === true) {
-//         if (userStore.userType === 'student') {
-//             return '/student/dashboard'
-//         } 
-//         if (userStore.userType === 'guidance') {
-//             return '/guidance/dashboard'
-//         }
-//     } else {
-//         return '/'
-//     }
-// }
+let menuOpen: Ref<boolean> = ref(false);
+const save = ref(null)
 
 onMounted(() => {
     const tl = gsap.timeline({
@@ -33,6 +28,61 @@ onMounted(() => {
             stagger: 0.2,
         }, '-=0.2')
 })
+
+
+const viewingSurvey = () => {
+    return router.currentRoute.value.path.includes('survey')
+}
+
+const redirect = () => {
+    if (userStore.isLoggedIn === true) {
+        if (userStore.userType === 'student') {
+            router.push('/student/dashboard')
+        } 
+        if (userStore.userType === 'guidance') {
+            router.push('/guidance/dashboard')
+        }
+    } else {
+        return router.push('/')
+    }
+}
+
+const surveyNav = () => {
+    if(surveyStore.open) {
+        router.push("/student/survey")
+    } else if(!surveyStore.open) {
+        router.push("/student/survey/closed")
+    }
+}
+
+
+const toggleMenu = () => {
+    menuOpen.value = !menuOpen.value
+}
+
+const toggleSave = () => {
+    save.value.innerHTML = "Saved"
+    setTimeout(() => {
+        save.value.innerHTML = "Save"
+    }, 1500)
+}
+
+const logout = async () => {
+    await resetStore.all()
+    router.push('/')
+}
+
+const submit = async () => {
+    await surveyStore.checkAnswers()
+    if(surveyStore.missingAnswers.length === 0) {
+        if(userStore.userType === "student") {
+          router.push('/student/dashboard')
+        } else if(userStore.userType === "guidance") {
+          router.push('/guidance/studentlist')
+        }
+    }
+}
+
 </script>
 
 <template>
@@ -41,9 +91,9 @@ onMounted(() => {
         <div v-if="userStore.isLoggedIn && userStore.userType === 'student'" class="h-full absolute top-40 left-16 flex flex-col justify-start items-start space-y-8 z-10">
             <RouterLink @click="$emit('e')" id="link" to="/student/dashboard"><p class="text-4xl" >Home</p></RouterLink>
             <RouterLink @click="$emit('e')" id="link" to="/student/survey"><p class="text-4xl">Survey</p></RouterLink>
-            <RouterLink @click="$emit('e')" id="link" to="/"><p class="text-4xl">Courses</p></RouterLink>
+            <RouterLink  v-if="userStore.data.student.homeroom != ''" @click="$emit('e'); surveyNav()" id="link" to="/"><p class="text-4xl">Courses</p></RouterLink>
             <RouterLink to="/" @click="$emit('e')">
-                <p @click="userStore.$reset" id="link" class="text-4xl text-red-500 cursor-pointer">Logout</p>
+                <p @click="logout()" id="link" class="text-4xl text-red-500 cursor-pointer">Logout</p>
             </RouterLink>
         </div>
         <div v-if="userStore.isLoggedIn && userStore.userType === 'guidance'" class="h-full absolute top-40 left-16 flex flex-col justify-start items-start space-y-8 z-10">
@@ -51,7 +101,7 @@ onMounted(() => {
             <RouterLink @click="$emit('e')" id="link" to="/guidance/studentlist"><p class="text-4xl">Students</p></RouterLink>
             <RouterLink @click="$emit('e')" id="link" to="/guidance/calendar"><p class="text-4xl">Calendar</p></RouterLink>
             <RouterLink to="/" @click="$emit('e')">
-                <p @click="userStore.$reset" id="link" class="text-4xl text-red-500 cursor-pointer">Logout</p>
+                <p @click="logout()" id="link" class="text-4xl text-red-500 cursor-pointer">Logout</p>
             </RouterLink>
         </div>
         <div v-if="!userStore.isLoggedIn" class="h-full absolute top-56 left-16 flex flex-col justify-start items-start space-y-8 z-10">
