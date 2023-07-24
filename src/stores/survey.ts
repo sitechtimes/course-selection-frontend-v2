@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { useUserStore } from "./user";
 import { useStudentStore } from "./student";
+import { useGuidanceStore } from "./guidance";
 import { useRouter } from "vue-router";
 import { grade, status, surveyAnswer, surveyQuestion } from "../types/interface";
 import axios from "axios";
@@ -56,15 +57,16 @@ export const useSurveyStore = defineStore("survey", {
         .then((res) => {
           console.log(res);
           const studentStore = useStudentStore()
+          const guidanceStore = useGuidanceStore()
           if (userStore.userType === "student") {
             studentStore.answeredSurvey[0].answers = jsonString;
             studentStore.answeredSurvey[0].status = status;
           } else if (userStore.userType === "guidance") {
-            let survey = userStore.data.allAnsweredSurveys.edges.filter(x => x.node.email === this.currentAnsweredSurvey.email && x.node.grade === this.currentAnsweredSurvey.grade)
-            let studentIndex = userStore.data.allAnsweredSurveys.edges.indexOf(survey[0])
-            // console.log(userStore.data.allAnsweredSurveys.edges)
-            userStore.data.allAnsweredSurveys.edges[studentIndex].node.answers = jsonString;
-            userStore.data.allAnsweredSurveys.edges[studentIndex].node.status = status;
+            let survey = guidanceStore.allAnsweredSurveys.edges.filter(x => x.node.email === this.currentAnsweredSurvey.email && x.node.grade === this.currentAnsweredSurvey.grade)
+            let studentIndex = guidanceStore.allAnsweredSurveys.edges.indexOf(survey[0])
+            // console.log(guidanceStore.allAnsweredSurveys.edges)
+            guidanceStore.allAnsweredSurveys.edges[studentIndex].node.answers = jsonString;
+            guidanceStore.allAnsweredSurveys.edges[studentIndex].node.status = status;
           } else {
             console.log("not logged in??");
           }
@@ -123,13 +125,14 @@ export const useSurveyStore = defineStore("survey", {
         )
         .then((res) => {
           const studentStore = useStudentStore()
+          const guidanceStore = useGuidanceStore()
           if (userStore.userType === "student") {
             studentStore.answeredSurvey[0] = res.data.data.newSurvey.survey;
           } else if (userStore.userType === "guidance") {
             const newStudentSurvey = {
               node: res.data.data.newSurvey.survey,
             };
-            userStore.data.allAnsweredSurveys.edges.push(newStudentSurvey);
+            guidanceStore.allAnsweredSurveys.edges.push(newStudentSurvey);
           } else {
             console.log("not logged in??");
           }
@@ -138,6 +141,7 @@ export const useSurveyStore = defineStore("survey", {
     async setSurvey(email: string, survey: Array<object>, grade: grade) {
       const userStore = useUserStore();
       const studentStore = useStudentStore();
+      const guidanceStore = useGuidanceStore()
       this.loading = true;
 
       if (userStore.userType === "student") {
@@ -145,24 +149,24 @@ export const useSurveyStore = defineStore("survey", {
           await this.startSurvey(email, survey, grade);
         }
 
-        this.currentAnsweredSurvey = userStore.data.answeredSurvey[0];
+        this.currentAnsweredSurvey = studentStore.answeredSurvey[0];
         this.currentResponse = JSON.parse(
           studentStore.answeredSurvey[0].answers
         );
 
         this.loading = false;
       } else if (userStore.userType === "guidance") {
-        let survey = userStore.data.allAnsweredSurveys.edges.filter(x => x.node.email === email && x.node.grade === grade)
-        let studentIndex = userStore.data.allAnsweredSurveys.edges.indexOf(survey[0])
+        let survey = guidanceStore.allAnsweredSurveys.edges.filter(x => x.node.email === email && x.node.grade === grade)
+        let studentIndex = guidanceStore.allAnsweredSurveys.edges.indexOf(survey[0])
 
         if (studentIndex < 0) {
           await this.startSurvey(email, survey, grade);
-          survey = userStore.data.allAnsweredSurveys.edges.filter(x => x.node.email === email && x.node.grade === grade)
-          studentIndex = userStore.data.allAnsweredSurveys.edges.indexOf(survey[0])
+          survey = guidanceStore.allAnsweredSurveys.edges.filter(x => x.node.email === email && x.node.grade === grade)
+          studentIndex = guidanceStore.allAnsweredSurveys.edges.indexOf(survey[0])
           
         }
         console.log(survey)
-        this.currentAnsweredSurvey = userStore.data.allAnsweredSurveys.edges[studentIndex].node;
+        this.currentAnsweredSurvey = guidanceStore.allAnsweredSurveys.edges[studentIndex].node;
         this.currentResponse = JSON.parse(this.currentAnsweredSurvey.answers);
 
         this.loading = false;

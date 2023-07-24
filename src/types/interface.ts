@@ -39,10 +39,42 @@ export interface studentData {
     user?: userData
 }
 
-// export interface userData { 
-//     survey?: object //should be empty for guidance, object for students
-//     students: studentData[] // should be one object for students, filled with all students for guidance
-// }
+export interface guidanceData {
+    allAnsweredSurveys: allAnsweredSurveys
+    allStudents: allStudents
+    allSurveys: allSurveys
+    guidance: guidanceStudentData
+    user: userData
+}
+
+// guidance edges and nodes interfaces
+export interface guidanceStudentData { 
+    students: studentData[]
+}
+
+export interface allAnsweredSurveys {
+    edges: answeredSurveyNodes[]
+}
+
+export interface answeredSurveyNodes {
+    node: answeredSurvey
+}
+
+export interface allStudents {
+    edges: allStudentNodes[]
+}
+
+export interface allStudentNodes {
+    node: studentData
+}
+
+export interface allSurveys {
+    edges: allSurveysNodes[]
+}
+
+export interface allSurveysNodes {
+    node: survey
+}
 
 // survey interfaces
 export interface answeredSurvey {

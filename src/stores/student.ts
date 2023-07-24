@@ -6,7 +6,7 @@ import axios from "axios";
 export const useStudentStore = defineStore("student", {
     state: (): studentUser => ({
         answeredSurvey: [{answers: "[{}]", email: "", grade: "FRESHMAN", status: "INCOMPLETE"}],
-        student: {coursesAvailable: [{courseCode: "", subject: "OTHER", name: ""}], coursesRequired: [{courseCode: "", subject: "OTHER", name: ""}], coursesTaken: [{courseCode: "", subject: "OTHER", name: ""}], grade: "FRESHMAN", homeroom: "", meeting: null},
+        student: {coursesAvailable: [], coursesRequired: [], coursesTaken: [], grade: "FRESHMAN", homeroom: "", meeting: null},
         survey: {dueDate: "", grade: "FRESHMAN", questions: [{id: "", questionType: "OTHER"}]},
         user: {email: "", firstName: "", lastName: ""},
     }),
