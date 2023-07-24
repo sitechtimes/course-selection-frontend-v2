@@ -11,9 +11,6 @@ const userStore = useUserStore();
 const surveyStore = useSurveyStore();
 const resetStore = useResetStore();
 
-let menuOpen: Ref<boolean> = ref(false);
-const save = ref(null)
-
 onMounted(() => {
     const tl = gsap.timeline({
         defaults: {
@@ -29,24 +26,6 @@ onMounted(() => {
         }, '-=0.2')
 })
 
-
-const viewingSurvey = () => {
-    return router.currentRoute.value.path.includes('survey')
-}
-
-const redirect = () => {
-    if (userStore.isLoggedIn === true) {
-        if (userStore.userType === 'student') {
-            router.push('/student/dashboard')
-        } 
-        if (userStore.userType === 'guidance') {
-            router.push('/guidance/dashboard')
-        }
-    } else {
-        return router.push('/')
-    }
-}
-
 const surveyNav = () => {
     if(surveyStore.open) {
         router.push("/student/survey")
@@ -55,32 +34,9 @@ const surveyNav = () => {
     }
 }
 
-
-const toggleMenu = () => {
-    menuOpen.value = !menuOpen.value
-}
-
-const toggleSave = () => {
-    save.value.innerHTML = "Saved"
-    setTimeout(() => {
-        save.value.innerHTML = "Save"
-    }, 1500)
-}
-
 const logout = async () => {
     await resetStore.all()
     router.push('/')
-}
-
-const submit = async () => {
-    await surveyStore.checkAnswers()
-    if(surveyStore.missingAnswers.length === 0) {
-        if(userStore.userType === "student") {
-          router.push('/student/dashboard')
-        } else if(userStore.userType === "guidance") {
-          router.push('/guidance/studentlist')
-        }
-    }
 }
 
 </script>

@@ -177,7 +177,7 @@ export const useSurveyStore = defineStore("survey", {
             check.push(x.id)
           } 
         } else {
-          if(answer.answer[0].chosenClasses.length === 0){
+          if(answer.answer.courses.length === 0){
             check.push(x.id)
           }
         }
