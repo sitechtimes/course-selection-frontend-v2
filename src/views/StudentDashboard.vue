@@ -2,7 +2,7 @@
 import BellIcon from "../components/icons/BellIcon.vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
-import { dateFormat, masks } from "dateformat";
+import dateFormat, { masks } from "dateformat";
 import { computed, ref, Ref } from "vue";
 
 const userStore = useUserStore();
