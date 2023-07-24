@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useUserStore } from '../stores/user'
 import { useSurveyStore } from '../stores/survey';
+import { useStudentStore } from '../stores/student';
 import booleanComponent from '../components/SurveyPageComponents/Reusables/SurveyBoolean.vue'
 import generalComponent from '../components/SurveyPageComponents/Reusables/SurveyGeneral.vue'
 import checkboxComponent from '../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue';
@@ -14,13 +15,14 @@ document.title = 'Survey | SITHS Course Selection'
 
 const userStore = useUserStore()
 const surveyStore = useSurveyStore()
+const studentStore = useStudentStore()
 const router = useRouter()
 
-if(userStore.data.answeredSurvey[0].status === 'COMPLETE') {
+if(studentStore.answeredSurvey[0].status === 'COMPLETE') {
   surveyStore.setSurvey(
-    userStore.data.user.email,
-    userStore.data.survey.questions,
-    userStore.data.student.grade
+    studentStore.user.email,
+    studentStore.survey.questions,
+    studentStore.student.grade
   );
 }
 
@@ -29,7 +31,7 @@ const indexNote: number = surveyStore.currentResponse.findIndex((x) => x.id === 
 const x: Ref<number> = ref(0)
 
 const getChoices = (question:  surveyQuestion) => {
-  const classes = userStore.data.student.coursesAvailable                            
+  const classes = studentStore.student.coursesAvailable                            
   return classes.filter(x => x.subject === question.questionType)
 }
 
@@ -53,7 +55,7 @@ watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newRespons
 <template>
   <section class="flex justify-center items-center flex-col">
     <div class="w-2/3">
-      <div v-for="question in userStore.data.survey.questions" :key="question.id" class="flex justify-center">
+      <div v-for="question in surveyStore.currentSurvey.questions" :key="question.id" class="flex justify-center">
         <div v-if="surveyStore.missingAnswers.length > 0" class="w-1/12 flex justify-center items-center">
           <exclamationMark v-if="surveyStore.missingAnswers.includes(question.id)" class="text-red-500 h-8"></exclamationMark>
         </div>

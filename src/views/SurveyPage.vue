@@ -5,12 +5,14 @@ import generalComponent from "../components/SurveyPageComponents/Reusables/Surve
 import { ref, reactive, Ref, onBeforeMount } from "vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
+import { useStudentStore } from "../stores/student";
 import { surveyQuestion, courses, surveyAnswer } from "../types/interface";
 
 document.title = 'Survey | SITHS Course Selection'
 
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
+const studentStore = useStudentStore();
 
 const currentIndex: Ref<number> = ref(0);
 let currentQuestion: surveyQuestion = reactive(
@@ -20,9 +22,9 @@ const min: Ref<boolean> = ref(true);
 const max: Ref<boolean> = ref(false);
 
 surveyStore.setSurvey(
-  userStore.data.user.email,
+  studentStore.user.email,
   surveyStore.currentSurvey.questions,
-  userStore.data.student.grade
+  studentStore.student.grade
 );
 
 const previousQuestion = () => {
@@ -46,7 +48,7 @@ const nextQuestion = () => {
 };
 
 const getChoices = () => {
-  const classes = userStore.data.student.coursesAvailable;
+  const classes = studentStore.student.coursesAvailable;
   return classes.filter((x) => x.subject === currentQuestion.questionType);
 };
 </script>

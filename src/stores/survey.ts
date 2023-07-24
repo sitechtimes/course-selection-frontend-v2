@@ -1,7 +1,8 @@
 import { defineStore } from "pinia";
 import { useUserStore } from "./user";
+import { useStudentStore } from "./student";
 import { useRouter } from "vue-router";
-import { grade, surveyAnswer, surveyQuestion } from "../types/interface";
+import { grade, status, surveyAnswer, surveyQuestion } from "../types/interface";
 import axios from "axios";
 
 export const useSurveyStore = defineStore("survey", {
@@ -18,7 +19,7 @@ export const useSurveyStore = defineStore("survey", {
   },
   actions: {
     //
-    async saveSurvey(status: String, grade: String) {
+    async saveSurvey(status: status, grade: String) {
       const userStore = useUserStore();
       const email = this.currentAnsweredSurvey.email;
       const answers = this.currentResponse;
@@ -54,9 +55,10 @@ export const useSurveyStore = defineStore("survey", {
         )
         .then((res) => {
           console.log(res);
+          const studentStore = useStudentStore()
           if (userStore.userType === "student") {
-            userStore.data.answeredSurvey[0].answers = jsonString;
-            userStore.data.answeredSurvey[0].status = status;
+            studentStore.answeredSurvey[0].answers = jsonString;
+            studentStore.answeredSurvey[0].status = status;
           } else if (userStore.userType === "guidance") {
             let survey = userStore.data.allAnsweredSurveys.edges.filter(x => x.node.email === this.currentAnsweredSurvey.email && x.node.grade === this.currentAnsweredSurvey.grade)
             let studentIndex = userStore.data.allAnsweredSurveys.edges.indexOf(survey[0])
@@ -120,8 +122,9 @@ export const useSurveyStore = defineStore("survey", {
           }
         )
         .then((res) => {
+          const studentStore = useStudentStore()
           if (userStore.userType === "student") {
-            userStore.data.answeredSurvey[0] = res.data.data.newSurvey.survey;
+            studentStore.answeredSurvey[0] = res.data.data.newSurvey.survey;
           } else if (userStore.userType === "guidance") {
             const newStudentSurvey = {
               node: res.data.data.newSurvey.survey,
@@ -134,16 +137,17 @@ export const useSurveyStore = defineStore("survey", {
     },
     async setSurvey(email: string, survey: Array<object>, grade: grade) {
       const userStore = useUserStore();
+      const studentStore = useStudentStore();
       this.loading = true;
 
       if (userStore.userType === "student") {
-        if (userStore.data.answeredSurvey[0] === undefined) {
+        if (studentStore.answeredSurvey[0] === undefined) {
           await this.startSurvey(email, survey, grade);
         }
 
         this.currentAnsweredSurvey = userStore.data.answeredSurvey[0];
         this.currentResponse = JSON.parse(
-          userStore.data.answeredSurvey[0].answers
+          studentStore.answeredSurvey[0].answers
         );
 
         this.loading = false;

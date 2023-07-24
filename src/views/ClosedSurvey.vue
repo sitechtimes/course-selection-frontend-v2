@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useUserStore } from '../stores/user'
 import { useSurveyStore } from '../stores/survey';
+import { useStudentStore } from '../stores/student';
 import surveyBoolean from '../components/SurveyPageComponents/Reusables/surveyBoolean.vue'
 import surveyGeneral from '../components/SurveyPageComponents/Reusables/surveyGeneral.vue'
 import closedRank from '../components/SurveyPageComponents/Reusables/ClosedSurvey/closedRank.vue';
@@ -12,11 +13,12 @@ document.title = 'Survey | SITHS Course Selection'
 
 const userStore = useUserStore()
 const surveyStore = useSurveyStore()
+const studentStore = useStudentStore()
 
 surveyStore.setSurvey(
-  userStore.data.user.email,
-  userStore.data.survey.questions,
-  userStore.data.student.grade
+  studentStore.user.email,
+  studentStore.survey.questions,
+  studentStore.student.grade
 );
 
 const indexAll = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');
@@ -24,7 +26,7 @@ const indexNote = surveyStore.currentResponse.findIndex((x) => x.id === 'noteToG
 const x: Ref<number> = ref(0)
 
 const getChoices = (question:  surveyQuestion) => {
-  const classes = userStore.data.student.coursesAvailable                            
+  const classes = studentStore.student.coursesAvailable                            
   return classes.filter(x => x.subject === question.questionType)
 }
 
@@ -33,7 +35,7 @@ const getChoices = (question:  surveyQuestion) => {
 <template>
   <section class="flex justify-center items-center flex-col">
     <div class="w-2/3">
-      <div v-for="question in userStore.data.survey.questions" :key="question.id" class="flex justify-center">
+      <div v-for="question in surveyStore.currentSurvey.questions" :key="question.id" class="flex justify-center">
         <surveyBoolean class="mb-2" v-if="question.questionType === 'BOOLEAN'" :question="question" :isDisabled="true"></surveyBoolean>
         <surveyGeneral class="mb-6" v-else-if="question.questionType === 'GENERAL'" :question="question" :isDisabled="true"></surveyGeneral>
         <closedRank v-else class="mb-6" :question="question" :choices="getChoices(question)"></closedRank>
