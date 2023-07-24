@@ -13,7 +13,7 @@ const save = ref(null)
 const form = ref(null)
 const students = userStore.data.guidance.students;
 
-
+//
 function submit(date: String, name: String, time: String) {
   //date conversion
   const year = parseInt(date.slice(0, 4));
