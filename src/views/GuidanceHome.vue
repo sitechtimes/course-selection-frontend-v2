@@ -1,5 +1,5 @@
 <script setup lang="ts">
-
+document.title = 'Home | SITHS Course Selection'
 </script>
 
 <template>

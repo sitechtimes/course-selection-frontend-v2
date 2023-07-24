@@ -7,14 +7,18 @@ import checkboxComponent from '../components/SurveyPageComponents/Reusables/Surv
 import surveyDraggable from '../components/SurveyPageComponents/Reusables/surveyDraggable.vue';
 import exclamationMark from '../components/icons/ExclamationMark.vue'
 import { surveyQuestion, surveyAnswer } from '../types/interface';
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { ref, Ref, watch, reactive } from 'vue';
+
+document.title = 'Survey | SITHS Course Selection'
 
 const userStore = useUserStore()
 const surveyStore = useSurveyStore()
 const router = useRouter()
+const route = useRoute()
 
-const viewedStudent = userStore.data.guidance.students.filter(student => student.user.email === window.location.pathname.substring(17))[0]
+const viewedStudent = userStore.data.guidance.students.filter(student => student.user.email === route.params.email)[0]
+
 
 const x: Ref<number> = ref(0)
 const indexAll = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');

@@ -16,7 +16,7 @@
                   class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
                   :id="choice.courseCode"
                   :value="choice.name"
-                  v-model="surveyStore.currentResponse[index].answer[0].chosenClasses"
+                  v-model="surveyStore.currentResponse[index].answer.courses"
                 />
                 <label
                   :for="choice.courseCode"
@@ -33,7 +33,7 @@
             <p class="text-lg md:text-xl xl:text-2xl text-black">Drag course(s) into order of preference:</p>
           </div>
           <surveyDraggable
-          :courses="surveyStore.currentResponse[index].answer[1].classPreference"
+          :courses="surveyStore.currentResponse[index].answer.preference"
           :index="index"
           :numbered="true"
           :color="color"
@@ -65,7 +65,10 @@ if (index < 0) {
   const questionAnswer = {
     id: props.question.id,
     question: props.question.question,
-    answer: [{ chosenClasses: [] }, { classPreference: [] }],
+    answer: {
+      courses: [], 
+      preference: []
+    },
   };
   surveyStore.currentResponse.push(questionAnswer);
 
@@ -84,9 +87,9 @@ watch(
 );
 
 watch(
-  () => surveyStore.currentResponse[index].answer[0].chosenClasses,
+  () => surveyStore.currentResponse[index].answer.courses,
   (newResponse, oldResponse) => {
-    const preference = surveyStore.currentResponse[index].answer[1].classPreference;
+    const preference = surveyStore.currentResponse[index].answer.preference;
     const totalIndex = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');
   
     if (newResponse.length > oldResponse.length) {
@@ -107,7 +110,7 @@ watch(
         name: newClass[0],
       };
 
-      surveyStore.currentResponse[index].answer[1].classPreference.push(rankObject);
+      surveyStore.currentResponse[index].answer.preference.push(rankObject);
       surveyStore.currentResponse[totalIndex].answer.courses.push(newClass[0])
       surveyStore.currentResponse[totalIndex].answer.preference.push(overallRankObject)
 
@@ -116,7 +119,7 @@ watch(
       const removeClass = spreaded.filter((x) => {
         return !(newResponse.includes(x) && oldResponse.includes(x));
       });
-      const classIndex = surveyStore.currentResponse[index].answer[1].classPreference.findIndex(x => x.name === removeClass[0])
+      const classIndex = surveyStore.currentResponse[index].answer.preference.findIndex(x => x.name === removeClass[0])
       const allClassIndex = surveyStore.currentResponse[totalIndex].answer.courses.findIndex(x => x === removeClass[0])
       const allPreferenceIndex = surveyStore.currentResponse[totalIndex].answer.preference.findIndex(x => x.name === removeClass[0])
 
@@ -140,15 +143,15 @@ watch(
         }
       })
 
-      surveyStore.currentResponse[index].answer[1].classPreference.splice(classIndex, 1)
+      surveyStore.currentResponse[index].answer.preference.splice(classIndex, 1)
       surveyStore.currentResponse[totalIndex].answer.courses.splice(allClassIndex, 1)
       surveyStore.currentResponse[totalIndex].answer.preference.splice(allPreferenceIndex, 1)
     }
-    surveyStore.currentResponse[index].answer[1].classPreference = preference;
+    surveyStore.currentResponse[index].answer.preference = preference;
   }
 );
 // console.log(surveyStore.currentResponse[14].preference)
-watch(() => surveyStore.currentResponse[index].answer[1].classPreference, (newResponse) => {
+watch(() => surveyStore.currentResponse[index].answer.preference, (newResponse) => {
   x.value = x.value+1
 }, { deep: true })
 </script>

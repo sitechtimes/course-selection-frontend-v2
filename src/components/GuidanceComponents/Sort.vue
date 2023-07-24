@@ -60,50 +60,51 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
   function ns(a: { grade: string; }) {
     if (userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined) return -1;
     else
-    return null;
+    return 1;
   }
 
   function ip(a: { grade: string; }) {
     if (userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
-      return null;
+      return 1;
     } else if(userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email).node.status === 'INCOMPLETE'){
       return -1;
     } else {
-      return null
+      return 1
     }
   }
 
   function com(a: { grade: string; }) {
     if (userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
-      return null;
+      return 1;
     } else if(userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email).node.status === 'COMPLETE'){
       return -1;
     } else {
-      return null
+      return 1
     }
   }
 
   function nine(a: { grade: string; }) {
     if (a.grade === "SOPHOMORE") return -1;
     else
-    return null;
+    return 1;
   }
 
   function ten(a: { grade: string; }) {
     if (a.grade === "JUNIOR") return -1;
     else
-    return null;
+    return 1;
   }
 
   function eleven(a: { grade: string; }) {
     if (a.grade === "SENIOR") return -1;
     else
-    return null;
+    return 1;
   }
 
   const sortBy = eval(sort.sortBy)
   selected.value = sort.text
   isOpen.value = false
+  console.log(userStore.data.guidance.students)
   return (userStore.data.guidance.students.sort(sortBy))
 }
 </script>

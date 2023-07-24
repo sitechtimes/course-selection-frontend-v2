@@ -5,6 +5,8 @@ import { useSurveyStore } from "../stores/survey";
 import dateFormat, { masks } from "dateformat";
 import { computed, ref, Ref } from "vue";
 
+document.title = 'Dashboard | SITHS Course Selection'
+
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
 
