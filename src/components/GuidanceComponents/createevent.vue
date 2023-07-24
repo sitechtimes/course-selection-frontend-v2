@@ -52,10 +52,10 @@ const toggleEvent = () => {
     <button class="test mb-12" @click="toggleEvent">create event</button>
     <div v-if="show" class="createevent flex flex-row m-auto mt-5 w-fit h-fit rounded-[1rem] border border-black">
       <div class="event flex flex-col">
-        <div class="top flex-row flex items-center">
+        <div class="top flex-row flex items-center justify-between">
           <h2 class="h2 font-bold text-[2rem] m-8 mb-4">Create Event</h2>
-          <button class="mt-5" @click="toggleEvent">
-            <svg class="x ml-144 fill-current text-37394f transition duration-300 mt-4 hover:opacity-80 cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+          <button class="mt-5 mr-12" @click="toggleEvent">
+            <svg class="x fill-current text-37394f transition duration-300 mt-4 hover:opacity-80 cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
               <path
                 d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z" />
             </svg>
@@ -72,7 +72,7 @@ const toggleEvent = () => {
             </label>
             <input class="space rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80" type="text" v-model="title" placeholder="Title" />
           </div>
-          <div class="times flex flex-row">
+          <div class="times flex flex-col lg:flex-row">
             <div class="item mb-6">
               <label class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold" for="date">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -91,7 +91,7 @@ const toggleEvent = () => {
                     d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
                 </svg>
                 Time</label>
-              <input class="space d rounded-md border border-solid border-zinc-400 w-80 h-10 p-2 ml-6 mt-1" type="time" v-model="time" placeholder="Time" />
+              <input class="space d mr-8 rounded-md border border-solid border-zinc-400 w-80 h-10 p-2 ml-6 mt-1" type="time" v-model="time" placeholder="Time" />
             </div>
           </div>
 
@@ -112,7 +112,7 @@ const toggleEvent = () => {
                 </option>
               </div>
             </datalist>
-            <input class="rounded-md border border-solid border-zinc-400 w-112 h-10 p-2 ml-6 mt-1" placeholder="Select Student" autoComplete="on" list="suggestions"
+            <input class="space rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80" placeholder="Select Student" autoComplete="on" list="suggestions"
               v-model="name" />
           </div>
           <div class="item mb-6">
@@ -125,12 +125,12 @@ const toggleEvent = () => {
             </label>
             <input class="space rounded-md border border-solid border-zinc-400 w-80 h-10 p-2 ml-6 mt-1" type="text" v-model="description" placeholder="Memo" />
           </div>
-          <div class="flex flex-row items-center ml-6">  
-            <input type="checkbox" id="notify" name="notify" />
+          <div class="flex flex-row items-center ml-6 mb-6">  
+            <input type="checkbox" class="ml-2" id="notify" name="notify"/>
             <label class="ml-2" for="notify">Notify Student via Email</label>
           </div>
-          <div class="item submit ml-6 mt-6 mb-6 xl:text-2xl transition duration-300">
-            <button @click="submit(date, name, time)" type="submit" class="font-bold bg-primary-g p-2 rounded-2xl w-24"
+          <div class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer">
+            <button @click="submit(date, name, time)" type="submit" class="font-bold bg-primary-g px-4 py-2 rounded-2xl w-fit h-fit"
               id="save" ref="save">
               Save
             </button>
@@ -152,7 +152,6 @@ const toggleEvent = () => {
 </template>
 
 <style scoped>
-
 button {
   font-size: 1.5rem;
   margin-bottom: 2rem;
@@ -163,317 +162,10 @@ button:hover {
   opacity: 0.5;
 }
 
-
 svg {
   width: 1.2rem;
   margin-right: 10px;
   fill: #717494;
 }
-
-.submit:hover {
-  opacity: 0.5;
-  cursor: pointer;
-}
-
-@media only screen and (max-width: 1380px) {
-  .x {
-    margin-left: 28rem;
-  }
-}
-
-@media only screen and (max-width: 1180px) {
-  .createevent {
-    width: 70%;
-    height: 35rem;
-    border-radius: 0.8rem;
-    border: 1px black solid;
-  }
-
-  .test {
-    margin-bottom: 3rem;
-  }
-
-  .times {
-    flex-direction: column;
-  }
-
-  .space {
-    justify-content: center;
-    padding: 1rem;
-    margin-left: 2rem;
-    display: block;
-    width: 20rem;
-    border-radius: 0.4rem;
-    font-size: 1.2rem;
-    padding-left: 0.7rem;
-    height: 0rem;
-  }
-
-  .x {
-    margin-left: 25rem;
-  }
-
-  svg {
-    width: 1rem;
-  }
-
-  h2 {
-    font-size: 1.5rem;
-  }
-
-  .formt {
-    font-size: 1.3rem;
-  }
-
-  button {
-    font-size: 1.3rem;
-  }
-
-  .item {
-    margin-top: 0rem;
-    margin-bottom: 0.7rem;
-  }
-}
-
-@media only screen and (max-width: 900px) {
-  .events {
-    margin-top: 2rem;
-  }
-
-  .item {
-    margin-bottom: 0.2rem;
-  }
-
-  .createevent {
-    height: 32rem;
-  }
-
-  .top {
-    margin: 0rem;
-    padding: 0rem;
-  }
-
-  .h2 {
-    margin: 2rem;
-    padding-bottom: 0rem;
-  }
-
-  .x {
-    margin-left: 20rem;
-  }
-
-  .times {
-    flex-direction: column;
-  }
-
-  .top {
-    padding-top: 0;
-  }
-
-  button {
-    margin-top: 1rem;
-    margin-bottom: 0;
-  }
-}
-
-@media only screen and (max-width: 800px) {
-  .createevent {
-    width: 65%;
-    height: 22rem;
-    border-radius: 0.8rem;
-
-    border: 1px black solid;
-  }
-
-  .test {
-    margin-bottom: 2rem;
-  }
-
-  .space {
-    justify-content: center;
-    padding: 0.7rem;
-    margin-left: 1rem;
-    display: block;
-    width: 20rem;
-    border-radius: 0.4rem;
-    font-size: 0.8rem;
-    padding-left: 0.5rem;
-    height: 0rem;
-  }
-
-  .x {
-    margin-left: 20rem;
-    width: 0.8rem;
-  }
-
-  svg {
-    width: 1rem;
-  }
-
-  h2 {
-    font-size: 1.2rem;
-    padding: 0;
-    margin: 1rem;
-    margin-bottom: 0rem;
-  }
-
-  .formt {
-    font-size: 1rem;
-    margin-left: 1rem;
-  }
-
-  .space {
-    margin-left: 1rem;
-  }
-
-  button {
-    font-size: 1rem;
-    margin: 0;
-    margin-left: 1rem;
-  }
-
-  .item {
-    margin-top: 0.5rem;
-    margin-left: 0rem;
-  }
-
-  form {
-    margin-top: 0.5rem;
-    margin-left: 0rem;
-  }
-}
-
-@media only screen and (max-width: 670px) {
-  .createevent {
-    width: 65%;
-    height: 17rem;
-    border-radius: 0.5rem;
-    padding-bottom: 0;
-    border: 1px black solid;
-  }
-
-  .test {
-    margin-bottom: 2rem;
-  }
-
-  .space {
-    justify-content: center;
-    padding: 0.5rem;
-    margin-left: 1rem;
-    display: block;
-    width: 10rem;
-    border-radius: 0.2rem;
-    font-size: 0.8rem;
-    padding-left: 0.5rem;
-    margin-top: 2.5px;
-    height: 0rem;
-  }
-
-  .x {
-    margin-left: 4rem;
-    width: 0.8rem;
-  }
-
-  svg {
-    width: 0.6rem;
-  }
-
-  h2 {
-    width: 80%;
-    font-size: 1rem;
-    padding: 0;
-    margin: 1rem;
-    margin-bottom: 0rem;
-  }
-
-  .formt {
-    font-size: 0.8rem;
-    margin-left: 1rem;
-    margin-top: 0.5rem;
-  }
-
-  .item {
-    margin-top: 0.6rem;
-    margin-left: 0rem;
-  }
-
-  button {
-    font-size: 0.8rem;
-    padding: 0rem;
-    margin: 0rem;
-    margin-top: 0.5rem;
-    height: 0.5rem;
-    margin-left: 1rem;
-  }
-
-  form {
-    margin-top: 0.5rem;
-    margin-left: 0rem;
-  }
-
-  .submit {
-    margin-top: 0rem;
-  }
-}
-
-@media only screen and (max-width: 604px) {
-  .x {
-    margin-left: 12rem;
-    width: 1rem;
-  }
-
-  .space {
-    font-size: 0.6rem;
-  }
-}
-
-@media only screen and (max-width: 404px) {
-  .h2 {
-    margin-bottom: 0rem;
-    padding: 0;
-  }
-
-  .createevent {
-    height: 20rem;
-  }
-
-  #form {
-    margin-top: 0;
-  }
-
-  svg {
-    width: 0.5rem;
-    margin-left: 0px;
-  }
-
-  .times {
-    margin: 0rem;
-  }
-
-  .h2 {
-    margin: 10px;
-  }
-
-  .x {
-    margin-left: 0rem;
-    width: 0.5rem;
-    margin-top: 0.5rem;
-  }
-
-  .formt {
-    font-size: 15px;
-    margin-left: 10px;
-  }
-
-  .space {
-    margin-left: 10px;
-  }
-
-  .item {
-    margin: 0;
-  }
-
-  label {
-    font-size: 5px;
-  }
-}</style>
+</style>
+ 
