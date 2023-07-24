@@ -1,8 +1,6 @@
 <template>
   <div class="">
-    <div class="flex flex-row">
-      <GuidanceCalendar />
-    </div>
+    <GuidanceCalendar />
     <createevent />
   </div>
 </template>
