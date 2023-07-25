@@ -31,7 +31,7 @@
           </ul>
           <ul class="days">
             <li class="dayCon" v-for="h in hmm.wow" :key="h.id">
-              <p class="mt-2 text-end mr-2 mb-16">{{ h.date }}</p>
+              <p class="mt-2 text-end mr-2 mb-16">{{ h.calDate }}</p>
               <PlusIcon
                 class="plusIcon w-3 ml-2 cursor-pointer invisible"
                 @click="toggleEvent"
@@ -214,7 +214,7 @@ import { reactive, Ref, ref } from "vue";
 import { useUserStore } from "../../stores/user";
 const userStore = useUserStore();
 let title: String;
-let setdate: String;
+let date: String;
 let time: String;
 let description: String;
 let name: String;
@@ -224,11 +224,11 @@ const save = ref(null);
 const form = ref(null);
 const students = userStore.data.guidance.students;
 
-function submit(setdate: String, name: String, time: String) {
+function submit(date: String, name: String, time: String) {
   //date conversion
-  const year = parseInt(setdate.slice(0, 4));
-  const month = parseInt(setdate.slice(6, 8)) - 1;
-  const day = parseInt(setdate.slice(9, 11));
+  const year = parseInt(date.slice(0, 4));
+  const month = parseInt(date.slice(6, 8)) - 1;
+  const day = parseInt(date.slice(9, 11));
   const hour = parseInt(time.slice(0, 2));
   const min = parseInt(time.slice(3, 5));
   const dateTime = new Date(year, month, day, hour, min);
@@ -259,9 +259,9 @@ const currentDate = ref(null);
 const daysTag = ref(null);
 
 // getting new date, current year and month
-let date = new Date();
-let currYear = date.getFullYear();
-let currMonth = date.getMonth();
+let calDate = new Date();
+let currYear = calDate.getFullYear();
+let currMonth = calDate.getMonth();
 let hmm = reactive([]);
 let wo = ref(0);
 
@@ -294,7 +294,7 @@ const renderCalendar = () => {
     liTag += `<li class="inactive">${lastDateofLastMonth - i + 1}</li>`;
     const ehe = {
       type: "inactive",
-      date: lastDateofLastMonth - i + 1,
+      calDate: lastDateofLastMonth - i + 1,
     };
     wow.push(ehe);
   }
@@ -303,7 +303,7 @@ const renderCalendar = () => {
     // creating li of all days of current month
     // adding active class to li if the current day, month, and year matched
     let isToday =
-      i === date.getDate() &&
+      i === calDate.getDate() &&
       currMonth === new Date().getMonth() &&
       currYear === new Date().getFullYear()
         ? "active"
@@ -311,7 +311,7 @@ const renderCalendar = () => {
     liTag += `<li class="${isToday}">${i}</li>`;
     const ehe = {
       type: "active",
-      date: i,
+      calDate: i,
       id: i + "p",
     };
     wow.push(ehe);
@@ -322,7 +322,7 @@ const renderCalendar = () => {
     liTag += `<li class="inactive">${i - lastDayofMonth + 1}</li>`;
     const ehe = {
       type: "inactive",
-      date: i - lastDayofMonth + 1,
+      calDate: i - lastDayofMonth + 1,
       id: i + "o",
     };
     wow.push(ehe);
@@ -347,11 +347,11 @@ const changeMonth = (next: boolean) => {
   if (currMonth < 0 || currMonth > 11) {
     // if current month is less than 0 or greater than 11
     // creating a new date of current year & month and pass it as date value
-    date = new Date(currYear, currMonth, new Date().getDate());
-    currYear = date.getFullYear(); // updating current year with new date year
-    currMonth = date.getMonth(); // updating current month with new date month
+    calDate = new Date(currYear, currMonth, new Date().getDate());
+    currYear = calDate.getFullYear(); // updating current year with new date year
+    currMonth = calDate.getMonth(); // updating current month with new date month
   } else {
-    date = new Date(); // pass the current date as date value
+    calDate = new Date(); // pass the current date as date value
   }
   renderCalendar();
 };
