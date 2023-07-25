@@ -206,7 +206,21 @@ export const useUserStore = defineStore("user", {
                 }
               }
             }
+            
+            // testing purposes only
+            this.data.survey.question.forEach((question, index) => {
+              if(question.questionType === 'BOOLEAN') {
+                question.status = 'CLASS'
+                question.class = 'comp sci' + index
+              } else if (question.questionType === 'GENERAL') {
+                console.log(question.questionType)
+              } else {
+                question.status = 'OPTIONAL'
+              }
+              // array.push(question)
+            })
             surveyStore.currentSurvey = this.data.survey
+            // console.log(surveyStore.currentSurvey.question, 'ookkk')
             }
             this.loading = false;
             router.push('student/dashboard')
