@@ -170,7 +170,7 @@ export const useSurveyStore = defineStore("survey", {
       const check: Array<string> = []
       const userStore = useUserStore()
       // const router = useRouter()
-      this.currentSurvey.questions.forEach((x: surveyQuestion) => {
+      this.currentSurvey.question.forEach((x: surveyQuestion) => {
         const answer: surveyAnswer | undefined = this.currentResponse.find(y => y.id === x.id)
         if(x.questionType === 'GENERAL' || x.questionType === 'BOOLEAN') {
           if(answer.answer.trim()[0] === undefined) {

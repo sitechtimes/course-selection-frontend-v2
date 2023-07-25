@@ -162,9 +162,9 @@ export const useUserStore = defineStore("user", {
                         survey{
                             grade
                             question{
-                                id
                                 question
                                 questionType
+                                id
                             }
                             dueDate
                         }
