@@ -66,7 +66,7 @@ export const useUserStore = defineStore("user", {
                                 edges{
                                     node{
                                         grade
-                                        questions{
+                                        question{
                                             question
                                             questionType
                                             id
@@ -161,7 +161,7 @@ export const useUserStore = defineStore("user", {
                         }
                         survey{
                             grade
-                            questions{
+                            question{
                                 id
                                 question
                                 questionType
