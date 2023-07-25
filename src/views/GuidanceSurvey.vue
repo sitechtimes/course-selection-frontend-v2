@@ -17,8 +17,7 @@ const surveyStore = useSurveyStore()
 const router = useRouter()
 const route = useRoute()
 
-const viewedStudent = userStore.data.guidance.students.filter(student => student.user.email === route.params.email)[0]
-
+const viewedStudent = userStore.data.guidance.students.filter(student => student.user.email === `${route.params.email}@nycstudents.net`)[0]
 
 const x: Ref<number> = ref(0)
 const indexAll = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');
@@ -46,6 +45,9 @@ const submit = async () => {
 watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newResponse) => {
   x.value = x.value+1
 }, { deep: true })
+
+
+
 </script>
 
 <template>
@@ -59,7 +61,7 @@ watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newRespons
       </div>
       <p v-if="surveyStore.loading">Setting things up...</p>
       <div v-else>
-        <div v-for="question in surveyStore.currentSurvey.questions" :key="question" class="flex justify-center">
+        <div v-for="question in surveyStore.currentSurvey.question" :key="question" class="flex justify-center">
           <div v-if="surveyStore.missingAnswers.length > 0" class="w-1/12 flex justify-center items-center">
             <exclamationMark v-if="surveyStore.missingAnswers.includes(question.id)" class="text-red-500 h-8"></exclamationMark>
           </div>
