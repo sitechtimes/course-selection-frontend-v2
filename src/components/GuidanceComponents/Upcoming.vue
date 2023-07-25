@@ -17,7 +17,7 @@
 </template>
 <style scoped>
 .upcoming {
-  width: 25%;
+  width: 35%;
   border: solid grey 2px;
   border-radius: 0.5rem;
 }

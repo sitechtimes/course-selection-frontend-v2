@@ -1,44 +1,46 @@
 <template>
-  <div class="container">
-    <div class="select text-4xl font-bold">
-      <span
-        class="arrow cursor-pointer"
-        id="prev"
-        ref="prev"
-        @click="changeMonth(false)"
-        >&#10094;</span
-      >
-      <div class="mY">{{ months[currMonth] }} {{ currYear }}</div>
-      <span
-        class="arrow cursor-pointer"
-        id="next"
-        ref="next"
-        @click="changeMonth(true)"
-        >&#10095;</span
-      >
-    </div>
-    <div class="flex flex-row justify-between">
-      <div class="calendar">
-        <ul class="weeks bg-primary-g">
-          <li class="">Sun</li>
-          <li class="">Mon</li>
-          <li class="">Tue</li>
-          <li class="">Wed</li>
-          <li class="">Thu</li>
-          <li class="">Fri</li>
-          <li class="">Sat</li>
-        </ul>
-        <ul class="days">
-          <li class="dayCon" v-for="h in hmm.wow" :key="h.id">
-            <p class="mt-2 text-end mr-2 mb-16">{{ h.date }}</p>
-            <PlusIcon
-              class="plusIcon w-3 ml-2 cursor-pointer invisible"
-              @click="toggleEvent"
-            />
-          </li>
-        </ul>
+  <div class="grid content-center justify-between">
+    <div class="container">
+      <div class="select text-4xl font-bold">
+        <span
+          class="arrow cursor-pointer"
+          id="prev"
+          ref="prev"
+          @click="changeMonth(false)"
+          >&#10094;</span
+        >
+        <div class="mY">{{ months[currMonth] }} {{ currYear }}</div>
+        <span
+          class="arrow cursor-pointer"
+          id="next"
+          ref="next"
+          @click="changeMonth(true)"
+          >&#10095;</span
+        >
       </div>
-      <Upcoming />
+      <div class="flex flex-row justify-between space-x-28">
+        <div class="calendar">
+          <ul class="weeks bg-primary-g">
+            <li class="">Sun</li>
+            <li class="">Mon</li>
+            <li class="">Tue</li>
+            <li class="">Wed</li>
+            <li class="">Thu</li>
+            <li class="">Fri</li>
+            <li class="">Sat</li>
+          </ul>
+          <ul class="days">
+            <li class="dayCon" v-for="h in hmm.wow" :key="h.id">
+              <p class="mt-2 text-end mr-2 mb-16">{{ h.date }}</p>
+              <PlusIcon
+                class="plusIcon w-3 ml-2 cursor-pointer invisible"
+                @click="toggleEvent"
+              />
+            </li>
+          </ul>
+        </div>
+        <Upcoming />
+      </div>
     </div>
     <div class="event h-screen w-full flex flex-col mt-20">
       <PlusIcon
@@ -50,7 +52,7 @@
         class="createevent flex flex-row m-auto mt-5 w-fit h-fit rounded-[1rem] border border-black"
       >
         <div class="event flex flex-col">
-          <div class="top flex-row flex items-center justify-between">
+          <div class="top flex-row flex items-center">
             <h2 class="h2 font-bold text-[2rem] m-8 mb-4">Create Event</h2>
             <button class="mt-5 mr-12" @click="toggleEvent">
               <svg
@@ -370,8 +372,6 @@ const changeMonth = (next: boolean) => {
   flex-direction: row;
 }
 .calendar {
-  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.05);
-  border: grey 1px solid;
 }
 .calendar ul {
   display: flex;
@@ -555,7 +555,6 @@ svg {
   font-weight: bold;
 }
 .createevent {
-  width: 50%;
   height: 35rem;
   border-radius: 1rem;
   position: absolute;
