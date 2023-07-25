@@ -36,7 +36,6 @@ const props = defineProps({
   answers: Array,
   isDisabled: Boolean,
 });
-// console.log(props.question.status)
 
 import { useSurveyStore } from "../../../stores/survey";
 import { watch, onBeforeMount } from "vue";
@@ -70,11 +69,9 @@ watch(
   }
 );
 
-// console.log(surveyStore.currentResponse[index].answer)
 watch(
   () => surveyStore.currentResponse[index].answer,
   (newResponse, oldResponse) => {
-    console.log(newResponse)
     if(props.question.status === 'CLASS') {
       const totalIndex = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');
 

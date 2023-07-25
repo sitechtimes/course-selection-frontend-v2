@@ -221,11 +221,11 @@ export const useUserStore = defineStore("user", {
               if(index === 4 || index === 7 || index === 5) {
                 question.status = 'STANDARD'
               }
-              // array.push(question)
+             
             })
 
             surveyStore.currentSurvey = this.data.survey
-            // console.log(surveyStore.currentSurvey.question, 'ookkk')
+  
             }
             this.loading = false;
             router.push('student/dashboard')
