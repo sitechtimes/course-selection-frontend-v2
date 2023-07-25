@@ -126,7 +126,7 @@ export const useUserStore = defineStore("user", {
             }
           )
           .then((res) => {
-            this.data = res.data.data;
+            // this.data = res.data.data;
             const guidanceStore = useGuidanceStore()
             guidanceStore.allAnsweredSurveys = res.data.data.allAnsweredSurveys
             guidanceStore.allStudents = res.data.data.allStudents
