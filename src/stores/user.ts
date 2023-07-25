@@ -211,7 +211,7 @@ export const useUserStore = defineStore("user", {
             this.data.survey.question.forEach((question, index) => {
               if(question.questionType === 'BOOLEAN') {
                 question.status = 'CLASS'
-                question.class = 'comp sci' + index
+                question.className = 'comp sci' + index
               } else if (question.questionType === 'GENERAL') {
                 console.log(question.questionType)
               } else {
@@ -223,7 +223,7 @@ export const useUserStore = defineStore("user", {
               }
               // array.push(question)
             })
-            
+
             surveyStore.currentSurvey = this.data.survey
             // console.log(surveyStore.currentSurvey.question, 'ookkk')
             }
