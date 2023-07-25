@@ -218,7 +218,7 @@ export const useUserStore = defineStore("user", {
                 question.status = 'OPTIONAL'
               }
 
-              if(index === 4 || index === 7) {
+              if(index === 4 || index === 7 || index === 5) {
                 question.status = 'STANDARD'
               }
               // array.push(question)

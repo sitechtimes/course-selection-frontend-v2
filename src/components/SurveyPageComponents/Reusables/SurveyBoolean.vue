@@ -90,7 +90,7 @@ watch(
       }
 
       if (newResponse === "No") {
-        if(surveyStore.currentReponse[totalIndex.answer.course.includes(props.question.className)]) {
+        if(surveyStore.currentResponse[totalIndex].answer.courses.includes(props.question.className)) {
           const allClassIndex = surveyStore.currentResponse[totalIndex].answer.courses.findIndex(x => x === props.question.className)
           const allPreferenceIndex = surveyStore.currentResponse[totalIndex].answer.preference.findIndex(x => x.name === props.question.className)
 
@@ -108,6 +108,7 @@ watch(
           surveyStore.currentResponse[totalIndex].answer.preference.splice(allPreferenceIndex, 1)
         }
       }
+      
     }
     
   }
