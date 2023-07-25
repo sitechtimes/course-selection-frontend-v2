@@ -9,7 +9,7 @@ const userStore = useUserStore();
 <template>
   <div
     id="studentLogin"
-    class="w-full h-full flex flex-col justify-center items-center space-y-7 relative"
+    class="w-full h-full flex flex-col justify-center items-center"
   >
     <button
       @click="$router.go(-1)"
@@ -18,7 +18,7 @@ const userStore = useUserStore();
       <BackArrow />
       <p class="text-base text-zinc-600 font-semibold">Back</p>
     </button>
-    <h1 class="text-4xl font-bold">Login</h1>
+    <h1 class="text-4xl m-4 font-bold">Login</h1>
     <GoogleLogin :callback="userStore.GoogleLogin" popup-type="TOKEN">
       <button
         class="flex justify-center items-center space-x-3 bg-zinc-300 w-60 h-14 rounded-md text-xl font-semibold hover:bg-zinc-200"
@@ -27,7 +27,7 @@ const userStore = useUserStore();
         <p class="font-bold text-lg">Sign in with Google</p>
       </button>
     </GoogleLogin>
-    <div class="flex flex-col w-11/12 max-w-[21rem] space-y-5">
+    <!-- <div class="flex flex-col w-11/12 max-w-[21rem] space-y-5">
       <LoginInput id="email" label="email" name="email" type="email" required
         >Email</LoginInput
       >
@@ -44,6 +44,6 @@ const userStore = useUserStore();
       class="bg-zinc-300 w-32 h-12 rounded-md text-lg font-semibold hover:bg-zinc-200"
     >
       Login
-    </button>
+    </button> -->
   </div>
 </template>
