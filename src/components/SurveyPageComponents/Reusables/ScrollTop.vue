@@ -1,6 +1,5 @@
 <template>
   <div @click="scroll" class="scrollTop none-topArrow bg-[#DEE9C8] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-fit flex flex-col p-4">
-    <img src="src/components/icons/TopArrow.vue" alt="scroll to top button"/>
     <p>back to top</p>
   </div>
 </template>
