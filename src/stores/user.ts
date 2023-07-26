@@ -70,6 +70,8 @@ export const useUserStore = defineStore("user", {
                                             question
                                             questionType
                                             id
+                                            status
+                                            className
                                         }
                                         dueDate
                                     }
