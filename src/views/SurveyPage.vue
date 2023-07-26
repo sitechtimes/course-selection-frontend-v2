@@ -2,10 +2,11 @@
 import checkboxComponent from "../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue";
 import booleanComponent from "../components/SurveyPageComponents/Reusables/SurveyBoolean.vue";
 import generalComponent from "../components/SurveyPageComponents/Reusables/SurveyGeneral.vue";
-import { ref, reactive, Ref, onBeforeMount } from "vue";
+import { ref, reactive, Ref, onBeforeMount, watch } from "vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
 import { surveyQuestion, courses, surveyAnswer } from "../types/interface";
+import { onBeforeRouteLeave } from "vue-router";
 
 document.title = 'Survey | SITHS Course Selection'
 
@@ -14,20 +15,20 @@ const surveyStore = useSurveyStore();
 
 const currentIndex: Ref<number> = ref(0);
 let currentQuestion: surveyQuestion = reactive(
-  surveyStore.currentSurvey.questions[currentIndex.value]
+  surveyStore.currentSurvey.question[currentIndex.value]
 );
 const min: Ref<boolean> = ref(true);
 const max: Ref<boolean> = ref(false);
 
 surveyStore.setSurvey(
   userStore.data.user.email,
-  surveyStore.currentSurvey.questions,
+  surveyStore.currentSurvey.question,
   userStore.data.student.grade
 );
 
 const previousQuestion = () => {
   currentIndex.value--;
-  currentQuestion = surveyStore.currentSurvey.questions[currentIndex.value];
+  currentQuestion = surveyStore.currentSurvey.question[currentIndex.value];
 
   max.value = false;
   if (currentIndex.value === 0) {
@@ -37,10 +38,10 @@ const previousQuestion = () => {
 
 const nextQuestion = () => {
   currentIndex.value++;
-  currentQuestion = surveyStore.currentSurvey.questions[currentIndex.value];
+  currentQuestion = surveyStore.currentSurvey.question[currentIndex.value];
 
   min.value = false;
-  if (currentIndex.value === surveyStore.currentSurvey.questions.length - 1) {
+  if (currentIndex.value === surveyStore.currentSurvey.question.length - 1) {
     max.value = true;
   }
 };
@@ -49,6 +50,35 @@ const getChoices = () => {
   const classes = userStore.data.student.coursesAvailable;
   return classes.filter((x) => x.subject === currentQuestion.questionType);
 };
+
+onBeforeRouteLeave((to, from, next) => {
+    if(JSON.stringify(surveyStore.currentResponse) === userStore.data.answeredSurvey[0].answers || to.path === '/student/survey/review') {
+      next()
+    } else {
+      const answer = window.confirm('Changes you made might not be saved.')
+      if (answer) {
+        next()
+      } else {
+        next(false)
+    }
+    }
+})
+
+const reminder  =  (e) => {
+    e.preventDefault(); 
+    e.returnValue = '';
+};
+
+watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
+  if(JSON.stringify(newResponse) === userStore.data.answeredSurvey[0].answers) {
+    window.addEventListener('beforeunload', reminder);
+    window.removeEventListener('beforeunload', reminder)
+    console.log('remove')
+  } else {
+    window.addEventListener('beforeunload', reminder);
+    console.log('add');
+  }
+}, { deep:true })
 </script>
 
 <template>

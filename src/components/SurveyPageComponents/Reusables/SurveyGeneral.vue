@@ -27,7 +27,6 @@ let index: number = surveyStore.currentResponse.findIndex(
   (x) => x.id == props.question.id
 );
 
-onBeforeMount(() => {
   if (index < 0) {
     const questionAnswer = {
       id: props.question.id,
@@ -40,7 +39,7 @@ onBeforeMount(() => {
       (x) => x.id == props.question.id
     );
   }
-});
+
 
 watch(
   () => props.question,

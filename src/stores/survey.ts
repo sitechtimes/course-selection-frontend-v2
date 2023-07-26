@@ -166,11 +166,11 @@ export const useSurveyStore = defineStore("survey", {
         console.log("not logged in??");
       }
     },
-    checkAnswers() {
+    async checkAnswers() {
       const check: Array<string> = []
       const userStore = useUserStore()
       // const router = useRouter()
-      this.currentSurvey.questions.forEach((x: surveyQuestion) => {
+      this.currentSurvey.question.forEach((x: surveyQuestion) => {
         const answer: surveyAnswer | undefined = this.currentResponse.find(y => y.id === x.id)
         if(x.questionType === 'GENERAL' || x.questionType === 'BOOLEAN') {
           if(answer.answer.trim()[0] === undefined) {
@@ -185,10 +185,12 @@ export const useSurveyStore = defineStore("survey", {
       this.missingAnswers = check
       if(check.length === 0) {
         if(userStore.userType === "student") {
-          this.saveSurvey('COMPLETE', this.currentAnsweredSurvey.grade)
+          // const router = useRouter()
+          await this.saveSurvey('COMPLETE', this.currentAnsweredSurvey.grade)
           // router.push('/student/dashboard')
         } else if(userStore.userType === "guidance") {
-          this.saveSurvey('COMPLETE', this.currentAnsweredSurvey.grade)
+          // const router = useRouter()
+          await this.saveSurvey('COMPLETE', this.currentAnsweredSurvey.grade)
           // router.push('/guidance/studentlist')
         }
       } 
