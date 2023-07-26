@@ -5,7 +5,9 @@ import booleanComponent from '../components/SurveyPageComponents/Reusables/Surve
 import generalComponent from '../components/SurveyPageComponents/Reusables/SurveyGeneral.vue'
 import checkboxComponent from '../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue'
 import surveyDraggable from '../components/SurveyPageComponents/Reusables/surveyDraggable.vue';
-import exclamationMark from '../components/icons/ExclamationMark.vue'
+import exclamationMark from '../components/icons/ExclamationMark.vue';
+import ScrollTop from '/src/components/SurveyPageComponents/Reusables/ScrollTop.vue';
+
 import { surveyQuestion, surveyAnswer } from '../types/interface';
 import { useRouter, useRoute } from 'vue-router'
 import { ref, Ref, watch, reactive } from 'vue';
@@ -107,4 +109,5 @@ watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newRespons
       </div>
     </div>
   </section>
+<ScrollTop />
 </template>
