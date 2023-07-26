@@ -12,7 +12,38 @@ const show: Ref<boolean> = ref(false)
 const save = ref(null)
 const form = ref(null)
 const students = userStore.data.guidance.students;
+const dateError = ref(false);
+const timeError = ref(false);
+const nameError = ref(false);
 
+function empty(date: String, name: String, time: String) {
+  //checks if require fields are empty; if so, error msg pops up on respective field
+  if (date.value === '') {
+    dateError.value = true;
+    console.log("no date provided");
+  } else {
+    dateError.value = false;
+  }
+  if (time.value === '') {
+    timeError.value = true;
+    console.log("no time provided");
+  } else {
+    timeError.value = false;
+  }
+  if (!name) {
+    nameError.value = true;
+    console.log("no student provided");
+  } else {
+    nameError.value = false;
+  }
+
+  //if all required fields are filled out, proceed with submission
+  if (!dateError.value && !timeError.value && !nameError.value) {
+    submit(date, name, time);
+    //console log required fields information
+    console.log("Date: " + date.value + " | Time: " + time.value + " | Student: " + name.value);
+  }
+}
 
 function submit(date: String, name: String, time: String) {
   //date conversion
@@ -36,22 +67,18 @@ function submit(date: String, name: String, time: String) {
         email = student.user.email;
       }
     }
-  }  
-  
-  if (!date||!time){
-    alert("fill out required fields")
   }
 
   save.value.innerHTML = "Saved";
   form.value.reset();
+  name.value.reset(); //student name is outside of form, so separate reset function is used
   userStore.changeMeeting(email, newTime);
+  console.log("Form submitted!");
 }
 
 const toggleEvent = () => {
   show.value = !show.value
 }
-
-
 </script>
 
 <template>
@@ -69,7 +96,7 @@ const toggleEvent = () => {
             </svg>
           </button>
         </div>
-        <form id="form" ref="form" @submit.prevent="submit(date, name, time)">
+        <form id="form" ref="form" @submit.prevent="empty(date, name, time)">
           <div class="item mb-6">
             <label class="formt mt-2 flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold" for="title">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -91,7 +118,8 @@ const toggleEvent = () => {
                 </svg>
                 Date</label>
               <input class="space d rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80" type="date"
-                v-model="date" placeholder="Date" ref="date" required />
+                v-model="date" placeholder="Date" ref="date" />
+              <p v-if="dateError" class="error text-red-600 ml-6 mt-1">Field empty/invalid</p>
             </div>
             <div class="item mb-6">
               <label class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold" for="time">
@@ -102,10 +130,10 @@ const toggleEvent = () => {
                 </svg>
                 Time</label>
               <input class="space d mr-8 rounded-md border border-solid border-zinc-400 w-80 h-10 p-2 ml-6 mt-1"
-                type="time" v-model="time" placeholder="Time" ref="time" required/>
+                type="time" v-model="time" placeholder="Time" ref="time" />
+              <p v-if="timeError" class="error text-red-600 ml-6 mt-1">Field empty/invalid</p>
             </div>
           </div>
-
           <div class="item mb-6">
             <label class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold" for="emails">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -116,16 +144,14 @@ const toggleEvent = () => {
               Student
             </label>
             <datalist id="suggestions">
-              <div v-for="student in students" :key="student.user.email">
-                <option>
-                  {{ student.user.lastName }}, {{ student.user.firstName }} |
-                  {{ student.user.email }}
-                </option>
-              </div>
+              <option v-for="student in students" :key="student.user.email">
+                {{ student.user.lastName }}, {{ student.user.firstName }} |
+                {{ student.user.email }}
+              </option>
             </datalist>
             <input class="space rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80"
-              placeholder="Select Student" autoComplete="on" list="suggestions" v-model="name" id="student"
-              required />
+              placeholder="Select Student From List" autoComplete="on" list="suggestions" v-model="name" id="student" />
+            <p v-if="nameError" class="error text-red-600 ml-6 mt-1">Field empty/invalid</p>
           </div>
           <div class="item mb-6">
             <label class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold" for="description"><svg
@@ -136,16 +162,15 @@ const toggleEvent = () => {
               </svg>
               Memo
             </label>
-            <input class="space rounded-md border border-solid border-zinc-400 w-80 h-10 p-2 ml-6 mt-1" type="text"
+            <input class="space rounded-md border border-solid border-zinc-4a00 w-80 h-10 p-2 ml-6 mt-1" type="text"
               v-model="description" placeholder="Memo" />
           </div>
           <div class="flex flex-row items-center ml-6 mb-6">
             <input type="checkbox" class="ml-2" id="notify" name="notify" />
             <label class="ml-2" for="notify">Notify Student via Email</label>
           </div>
-          <div class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer">
-            <button @click="submit(date, name, time)" type="submit"
-              class="font-bold bg-primary-g px-4 py-2 rounded-2xl w-fit h-fit" id="save" ref="save">
+          <div class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit">
+            <button type="submit" class="font-bold bg-primary-g px-4 py-2 rounded-2xl w-fit h-fit" id="save" ref="save">
               Save
             </button>
           </div>
@@ -188,6 +213,10 @@ svg {
   width: 1.2rem;
   margin-right: 10px;
   fill: #717494;
+}
+
+input:invalid {
+  border-color: red;
 }
 </style>
  
