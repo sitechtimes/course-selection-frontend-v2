@@ -17,7 +17,7 @@ const studentStore = useStudentStore()
 
 surveyStore.setSurvey(
   studentStore.user.email,
-  studentStore.survey.questions,
+  studentStore.survey.question,
   studentStore.student.grade
 );
 
@@ -35,7 +35,7 @@ const getChoices = (question:  surveyQuestion) => {
 <template>
   <section class="flex justify-center items-center flex-col">
     <div class="w-2/3">
-      <div v-for="question in surveyStore.currentSurvey.questions" :key="question.id" class="flex justify-center">
+      <div v-for="question in surveyStore.currentSurvey.question" :key="question.id" class="flex justify-center">
         <surveyBoolean class="mb-2" v-if="question.questionType === 'BOOLEAN'" :question="question" :isDisabled="true"></surveyBoolean>
         <surveyGeneral class="mb-6" v-else-if="question.questionType === 'GENERAL'" :question="question" :isDisabled="true"></surveyGeneral>
         <closedRank v-else class="mb-6" :question="question" :choices="getChoices(question)"></closedRank>

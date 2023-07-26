@@ -24,7 +24,7 @@ const max: Ref<boolean> = ref(false);
 
 surveyStore.setSurvey(
   studentStore.user.email,
-  surveyStore.currentSurvey.questions,
+  surveyStore.currentSurvey.question,
   studentStore.student.grade
 );
 
@@ -54,7 +54,7 @@ const getChoices = () => {
 };
 
 onBeforeRouteLeave((to, from, next) => {
-    if(JSON.stringify(surveyStore.currentResponse) === userStore.data.answeredSurvey[0].answers || to.path === '/student/survey/review') {
+    if(JSON.stringify(surveyStore.currentResponse) === studentStore.answeredSurvey[0].answers || to.path === '/student/survey/review') {
       next()
     } else {
       const answer = window.confirm('Changes you made might not be saved.')
@@ -72,7 +72,7 @@ const reminder  =  (e) => {
 };
 
 watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
-  if(JSON.stringify(newResponse) === userStore.data.answeredSurvey[0].answers) {
+  if(JSON.stringify(newResponse) === studentStore.answeredSurvey[0].answers) {
     window.addEventListener('beforeunload', reminder);
     window.removeEventListener('beforeunload', reminder)
     console.log('remove')

@@ -21,7 +21,7 @@ const router = useRouter()
 if(studentStore.answeredSurvey[0].status === 'COMPLETE') {
   surveyStore.setSurvey(
     studentStore.user.email,
-    studentStore.survey.questions,
+    studentStore.survey.question,
     studentStore.student.grade
   );
 }
@@ -48,7 +48,7 @@ const submit = async () => {
 
 
 onBeforeRouteLeave((to, from, next) => {
-    if(JSON.stringify(surveyStore.currentResponse) === userStore.data.answeredSurvey[0].answers || to.path === '/student/survey/review') {
+    if(JSON.stringify(surveyStore.currentResponse) === studentStore.answeredSurvey[0].answers || to.path === '/student/survey/review') {
       next()
     } else {
       const answer = window.confirm('Changes you made might not be saved.')
@@ -66,7 +66,7 @@ const reminder  =  (e) => {
 };
 
 watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
-  if(JSON.stringify(newResponse) === userStore.data.answeredSurvey[0].answers) {
+  if(JSON.stringify(newResponse) === studentStore.answeredSurvey[0].answers) {
     window.removeEventListener('beforeunload', reminder)
     console.log('remove')
   } else {
@@ -83,7 +83,7 @@ watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newRespons
 <template>
   <section class="flex justify-center items-center flex-col">
     <div class="w-2/3">
-      <div v-for="question in surveyStore.currentSurvey.questions" :key="question.id" class="flex justify-center">
+      <div v-for="question in surveyStore.currentSurvey.question" :key="question.id" class="flex justify-center">
         <div v-if="surveyStore.missingAnswers.length > 0" class="w-1/12 flex justify-center items-center">
           <exclamationMark v-if="surveyStore.missingAnswers.includes(question.id)" class="text-red-500 h-8"></exclamationMark>
         </div>

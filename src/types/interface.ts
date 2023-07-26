@@ -88,7 +88,7 @@ export interface answeredSurvey {
 export interface survey {
     dueDate: string
     grade: grade
-    questions: surveyQuestion[]
+    question: surveyQuestion[]
 }
 
 export interface surveyQuestion {
