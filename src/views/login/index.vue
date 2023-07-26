@@ -4,6 +4,8 @@ import { useUserStore } from '../../stores/user';
 import { useRouter } from 'vue-router'
 import { watch } from 'vue';
 
+document.title = 'Login | SITHS Course Selection'
+
 const userStore = useUserStore()
 const router = useRouter()
 

@@ -11,7 +11,7 @@ const surveyStore = useSurveyStore()
 const router = useRouter()
 
 async function userClick(student: object) {
-    await surveyStore.setSurvey(student.user.email, userStore.data.allSurveys.edges.find(x => x.node.grade === student.grade).node.questions, student.grade)
+    await surveyStore.setSurvey(student.user.email, userStore.data.allSurveys.edges.find(x => x.node.grade === student.grade).node.question, student.grade)
     router.push(`/guidance/survey/${student.user.email}`)
 }
 

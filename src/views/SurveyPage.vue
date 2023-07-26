@@ -5,27 +5,29 @@ import generalComponent from "../components/SurveyPageComponents/Reusables/Surve
 import { ref, reactive, Ref, onBeforeMount } from "vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
-
 import { surveyQuestion, courses, surveyAnswer } from "../types/interface";
+
+document.title = 'Survey | SITHS Course Selection'
+
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
 
 const currentIndex: Ref<number> = ref(0);
 let currentQuestion: surveyQuestion = reactive(
-  surveyStore.currentSurvey.questions[currentIndex.value]
+  surveyStore.currentSurvey.question[currentIndex.value]
 );
 const min: Ref<boolean> = ref(true);
 const max: Ref<boolean> = ref(false);
 
 surveyStore.setSurvey(
   userStore.data.user.email,
-  surveyStore.currentSurvey.questions,
+  surveyStore.currentSurvey.question,
   userStore.data.student.grade
 );
 
 const previousQuestion = () => {
   currentIndex.value--;
-  currentQuestion = surveyStore.currentSurvey.questions[currentIndex.value];
+  currentQuestion = surveyStore.currentSurvey.question[currentIndex.value];
 
   max.value = false;
   if (currentIndex.value === 0) {
@@ -35,10 +37,10 @@ const previousQuestion = () => {
 
 const nextQuestion = () => {
   currentIndex.value++;
-  currentQuestion = surveyStore.currentSurvey.questions[currentIndex.value];
+  currentQuestion = surveyStore.currentSurvey.question[currentIndex.value];
 
   min.value = false;
-  if (currentIndex.value === surveyStore.currentSurvey.questions.length - 1) {
+  if (currentIndex.value === surveyStore.currentSurvey.question.length - 1) {
     max.value = true;
   }
 };

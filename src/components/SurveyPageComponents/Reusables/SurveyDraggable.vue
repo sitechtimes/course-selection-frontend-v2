@@ -83,9 +83,9 @@ function updateRank(n, dragIndex) {
     return parseFloat(a.rank) - parseFloat(b.rank);
   })
   if(props.index === surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses')) {
-    surveyStore.currentResponse[props.index].preference = ref_courses.value
+    surveyStore.currentResponse[props.index].answer.preference = ref_courses.value
   } else {
-    surveyStore.currentResponse[props.index].answer[1].classPreference = ref_courses.value
+    surveyStore.currentResponse[props.index].answer.preference = ref_courses.value
   }
   
 }

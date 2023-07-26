@@ -7,6 +7,8 @@ import { useUserStore } from '../stores/user';
 import { studentData } from '../types/interface'
 import { ref, Ref, computed } from 'vue'
 
+document.title = 'Student List | SITHS Course Selection'
+
 // const students:Array<studentData> = useUserStore().data.guidance.students
 const students = useUserStore().data.guidance.students
 const input:Ref<string> = ref('')

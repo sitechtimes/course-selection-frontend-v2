@@ -8,6 +8,8 @@
 <script setup lang="ts">
 import createevent from "../components/GuidanceComponents/CreateEvent.vue";
 import GuidanceCalendar from "../components/GuidanceComponents/GuidanceCalendar.vue";
+
+document.title = "Calendar & Events | SITHS Course Selection";
 </script>
 
 <style scoped>
