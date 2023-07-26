@@ -65,7 +65,6 @@ const reminder  =  (e) => {
 
 watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
   if(JSON.stringify(newResponse) === userStore.data.answeredSurvey[0].answers) {
-    window.addEventListener('beforeunload', reminder);
     window.removeEventListener('beforeunload', reminder)
     console.log('remove')
   } else {
