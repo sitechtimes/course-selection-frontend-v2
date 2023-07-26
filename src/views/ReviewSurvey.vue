@@ -18,6 +18,8 @@ const surveyStore = useSurveyStore()
 const studentStore = useStudentStore()
 const router = useRouter()
 
+surveyStore.missingAnswers = []
+
 if(studentStore.answeredSurvey[0].status === 'COMPLETE') {
   surveyStore.setSurvey(
     studentStore.user.email,
