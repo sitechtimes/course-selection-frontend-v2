@@ -7,7 +7,7 @@
           <input
             type="radio"
             :disabled="isDisabled"
-            class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
+            class="w-4 h-4 mx-2 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
             :id="question.id + 'Yes'"
             value="Yes"
             v-model="surveyStore.currentResponse[index].answer"
@@ -18,7 +18,7 @@
           <input
             type="radio"
             :disabled="isDisabled"
-            class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
+            class="w-4 h-4 mx-2 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
             :id="question.id + 'No'"
             value="No"
             v-model="surveyStore.currentResponse[index].answer"
