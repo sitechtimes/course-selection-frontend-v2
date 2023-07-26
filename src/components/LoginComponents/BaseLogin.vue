@@ -9,7 +9,7 @@ const userStore = useUserStore();
 <template>
   <div
     id="studentLogin"
-    class="w-full h-full flex flex-col justify-center items-center"
+    class="w-full h-full flex flex-col justify-center relative items-center"
   >
     <button
       @click="$router.go(-1)"
