@@ -165,6 +165,8 @@ export const useUserStore = defineStore("user", {
                                 question
                                 questionType
                                 id
+                                status
+                                className
                             }
                             dueDate
                         }
@@ -206,23 +208,6 @@ export const useUserStore = defineStore("user", {
                 }
               }
             }
-            
-            // testing purposes only delete after backend updates 
-            this.data.survey.question.forEach((question, index) => {
-              if(question.questionType === 'BOOLEAN') {
-                question.status = 'CLASS'
-                question.className = 'comp sci' + index
-              } else if (question.questionType === 'GENERAL') {
-                console.log(question.questionType)
-              } else {
-                question.status = 'OPTIONAL'
-              }
-
-              if(index === 4 || index === 7 || index === 5) {
-                question.status = 'STANDARD'
-              }
-             
-            })
 
             surveyStore.currentSurvey = this.data.survey
   
