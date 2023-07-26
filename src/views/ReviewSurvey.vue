@@ -8,7 +8,7 @@ import surveyDraggable from '../components/SurveyPageComponents/Reusables/survey
 import exclamationMark from '../components/icons/ExclamationMark.vue'
 import { surveyQuestion, surveyAnswer } from '../types/interface';
 import { watch, ref, Ref, reactive, defineExpose } from 'vue';
-import { useRouter } from 'vue-router'
+import { useRouter, onBeforeRouteLeave } from 'vue-router'
 
 document.title = 'Survey | SITHS Course Selection'
 
@@ -44,10 +44,39 @@ const submit = async () => {
     }
 }
 
+
+onBeforeRouteLeave((to, from, next) => {
+    if(JSON.stringify(surveyStore.currentResponse) === userStore.data.answeredSurvey[0].answers || to.path === '/student/survey/review') {
+      next()
+    } else {
+      const answer = window.confirm('Changes you made might not be saved.')
+      if (answer) {
+        next()
+      } else {
+        next(false)
+    }
+    }
+})
+
+const reminder  =  (e) => {
+    e.preventDefault(); 
+    e.returnValue = '';
+};
+
+watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
+  if(JSON.stringify(newResponse) === userStore.data.answeredSurvey[0].answers) {
+    window.addEventListener('beforeunload', reminder);
+    window.removeEventListener('beforeunload', reminder)
+    console.log('remove')
+  } else {
+    window.addEventListener('beforeunload', reminder);
+    console.log('add');
+  }
+}, { deep:true })
+
 watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newResponse) => {
   x.value = x.value+1
 }, { deep: true })
-
 </script>
 
 <template>
