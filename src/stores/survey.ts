@@ -25,7 +25,6 @@ export const useSurveyStore = defineStore("survey", {
       const email = this.currentAnsweredSurvey.email;
       const answers = this.currentResponse;
       const jsonString = JSON.stringify(answers);
-      console.log(status)
 
       await axios
         .post(
@@ -55,7 +54,6 @@ export const useSurveyStore = defineStore("survey", {
           }
         )
         .then((res) => {
-          console.log(res);
           const studentStore = useStudentStore()
           const guidanceStore = useGuidanceStore()
           if (userStore.userType === "student") {
@@ -64,12 +62,9 @@ export const useSurveyStore = defineStore("survey", {
           } else if (userStore.userType === "guidance") {
             let survey = guidanceStore.allAnsweredSurveys.edges.filter(x => x.node.email === this.currentAnsweredSurvey.email && x.node.grade === this.currentAnsweredSurvey.grade)
             let studentIndex = guidanceStore.allAnsweredSurveys.edges.indexOf(survey[0])
-            // console.log(guidanceStore.allAnsweredSurveys.edges)
             guidanceStore.allAnsweredSurveys.edges[studentIndex].node.answers = jsonString;
             guidanceStore.allAnsweredSurveys.edges[studentIndex].node.status = status;
-          } else {
-            console.log("not logged in??");
-          }
+          } 
         });
     },
     async startSurvey(email: string, survey: Array<object>, grade: grade) {
@@ -133,8 +128,6 @@ export const useSurveyStore = defineStore("survey", {
               node: res.data.data.newSurvey.survey,
             };
             guidanceStore.allAnsweredSurveys.edges.push(newStudentSurvey);
-          } else {
-            console.log("not logged in??");
           }
         });
     },
@@ -165,14 +158,11 @@ export const useSurveyStore = defineStore("survey", {
           studentIndex = guidanceStore.allAnsweredSurveys.edges.indexOf(survey[0])
           
         }
-        console.log(survey)
         this.currentAnsweredSurvey = guidanceStore.allAnsweredSurveys.edges[studentIndex].node;
         this.currentResponse = JSON.parse(this.currentAnsweredSurvey.answers);
 
         this.loading = false;
-      } else {
-        console.log("not logged in??");
-      }
+      } 
     },
     async checkAnswers() {
       const check: Array<string> = []

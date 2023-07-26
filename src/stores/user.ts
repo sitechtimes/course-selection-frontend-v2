@@ -31,7 +31,6 @@ export const useUserStore = defineStore("user", {
     async init(type: account_type) {
       this.userType = type;
       if (type === "guidance") {
-        console.log("guidance logged");
         await axios
           .post(
             `${import.meta.env.VITE_URL}/graphql/`,
@@ -138,7 +137,6 @@ export const useUserStore = defineStore("user", {
             const surveyStore = useSurveyStore()
             const router = useRouter()
             router.push('guidance/dashboard')
-            console.log(res.data);
           });
       } else {
         await axios
@@ -206,9 +204,8 @@ export const useUserStore = defineStore("user", {
             const surveyStore = useSurveyStore() 
             const router = useRouter()
             if(studentStore.student.homeroom === "") {
-              console.log("o")
+              console.log("profile not updated")
             } else {
-              console.log(studentStore.student.homeroom)
               const currentDate = new Date()
             const closeTime = studentStore.survey.dueDate.substring(0,10).split("-")
 
