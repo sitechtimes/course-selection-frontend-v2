@@ -61,7 +61,7 @@ watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newRespons
       </div>
       <p v-if="surveyStore.loading">Setting things up...</p>
       <div v-else>
-        <div v-for="question in surveyStore.currentSurvey.questions" :key="question" class="flex justify-center">
+        <div v-for="question in surveyStore.currentSurvey.question" :key="question" class="flex justify-center">
           <div v-if="surveyStore.missingAnswers.length > 0" class="w-1/12 flex justify-center items-center">
             <exclamationMark v-if="surveyStore.missingAnswers.includes(question.id)" class="text-red-500 h-8"></exclamationMark>
           </div>

@@ -48,14 +48,14 @@ if (
       class="w-5/6 flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left md:w-3/4 lg:max-w-2xl xl:max-w-3xl lg:space-y-6 lg:ml-12">
       <h2 id="name" class="text-5xl font-bold">Welcome, {{ userStore.first_name }}.</h2>
       <div id="announcements"
-      class="text-xl text-center flex ml-2 md:text-left">Thank you for signing up. Your account information is in the process of being updated. Please come back later. In the meantime, you can check out the courses offered.</div>
-      <RouterLink to="/schedule">
+      class="text-xl text-center flex ml-2 md:text-left">Thank you for signing up. Your account information is in the process of being updated. Please come back later.</div>
+      <!-- <RouterLink to="/schedule">
           <button
             class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s"
           >
             Courses
           </button>
-        </RouterLink>
+        </RouterLink> -->
     </div>
     <div
       v-else
