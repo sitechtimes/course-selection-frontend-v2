@@ -19,8 +19,7 @@ const guidanceStore = useGuidanceStore()
 const router = useRouter()
 const route = useRoute()
 
-const viewedStudent = guidanceStore.guidance.students.filter(student => student.user.email === route.params.email)[0]
-
+const viewedStudent = guidanceStore.guidance.students.filter(student => student.user.email === `${route.params.email}@nycstudents.net`)[0]
 
 const x: Ref<number> = ref(0)
 const indexAll = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');
@@ -48,6 +47,9 @@ const submit = async () => {
 watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newResponse) => {
   x.value = x.value+1
 }, { deep: true })
+
+
+
 </script>
 
 <template>

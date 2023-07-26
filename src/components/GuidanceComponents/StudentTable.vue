@@ -13,9 +13,11 @@ const surveyStore = useSurveyStore()
 const guidanceStore = useGuidanceStore()
 const router = useRouter()
 
-async function userClick(student: studentData) {
+async function userClick(student: object) {
     await surveyStore.setSurvey(student.user.email, guidanceStore.allSurveys.edges.find(x => x.node.grade === student.grade).node.questions, student.grade)
-    router.push(`/guidance/survey/${student.user.email}`)
+    await router.push(`/guidance/survey/${student.user.email.replace('@nycstudents.net', ' ')}`)
+    location.reload()
+
 }
 
 </script>
