@@ -66,7 +66,7 @@ export const useUserStore = defineStore("user", {
                                 edges{
                                     node{
                                         grade
-                                        questions{
+                                        question{
                                             question
                                             questionType
                                             id
@@ -124,6 +124,7 @@ export const useUserStore = defineStore("user", {
           .then((res) => {
             this.data = res.data.data;
             this.loading = false;
+            const surveyStore = useSurveyStore()
             const router = useRouter()
             router.push('guidance/dashboard')
             console.log(res.data);
@@ -160,10 +161,10 @@ export const useUserStore = defineStore("user", {
                         }
                         survey{
                             grade
-                            questions{
-                                id
+                            question{
                                 question
                                 questionType
+                                id
                             }
                             dueDate
                         }
@@ -194,14 +195,14 @@ export const useUserStore = defineStore("user", {
               const currentDate = new Date()
             const closeTime = this.data.survey.dueDate.substring(0,10).split("-")
 
-            if (Number(closeTime[0]) > currentDate.getFullYear()) {
-              surveyStore.open = true
+            if (Number(closeTime[0]) < currentDate.getFullYear()) {
+              surveyStore.open = false
             } else if (Number(closeTime[0]) === currentDate.getFullYear()) {
-              if (Number(closeTime[1]) > currentDate.getMonth() + 1) { // Get month starts at 0, not 1
-                surveyStore.open = true
+              if (Number(closeTime[1]) < currentDate.getMonth() + 1) { // Get month starts at 0, not 1
+                surveyStore.open = false
               } else if (Number(closeTime[1]) === currentDate.getMonth() + 1) {
-                if (Number(closeTime[2]) > currentDate.getDate()) {
-                  surveyStore.open = true
+                if (Number(closeTime[2]) < currentDate.getDate()) {
+                  surveyStore.open = false
                 }
               }
             }

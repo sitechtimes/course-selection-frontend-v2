@@ -10,7 +10,7 @@ export const useSurveyStore = defineStore("survey", {
     currentResponse: [],
     currentSurvey: [],
     loading: false,
-    open: false,
+    open: true,
     missingAnswers: [],
   }),
   getters: {
@@ -73,8 +73,10 @@ export const useSurveyStore = defineStore("survey", {
       const answers: Array<object> = [];
       const allChosen = {
         id: "allChosenCourses",
-        courses: [],
-        preference: [],
+        answer: {
+          courses: [],
+          preference: [],
+        }
       };
 
       const noteToGuidance = {
@@ -168,14 +170,14 @@ export const useSurveyStore = defineStore("survey", {
       const check: Array<string> = []
       const userStore = useUserStore()
       // const router = useRouter()
-      this.currentSurvey.questions.forEach((x: surveyQuestion) => {
+      this.currentSurvey.question.forEach((x: surveyQuestion) => {
         const answer: surveyAnswer | undefined = this.currentResponse.find(y => y.id === x.id)
         if(x.questionType === 'GENERAL' || x.questionType === 'BOOLEAN') {
           if(answer.answer.trim()[0] === undefined) {
             check.push(x.id)
           } 
         } else {
-          if(answer.answer[0].chosenClasses.length === 0){
+          if(answer.answer.courses.length === 0){
             check.push(x.id)
           }
         }

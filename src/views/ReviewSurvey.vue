@@ -10,6 +10,8 @@ import { surveyQuestion, surveyAnswer } from '../types/interface';
 import { watch, ref, Ref, reactive, defineExpose } from 'vue';
 import { useRouter } from 'vue-router'
 
+document.title = 'Survey | SITHS Course Selection'
+
 const userStore = useUserStore()
 const surveyStore = useSurveyStore()
 const router = useRouter()
@@ -17,7 +19,7 @@ const router = useRouter()
 if(userStore.data.answeredSurvey[0].status === 'COMPLETE') {
   surveyStore.setSurvey(
     userStore.data.user.email,
-    userStore.data.survey.questions,
+    userStore.data.survey.question,
     userStore.data.student.grade
   );
 }
@@ -46,7 +48,7 @@ const submit = async () => {
     }
 }
 
-watch(() => surveyStore.currentResponse[indexAll].preference, (newResponse) => {
+watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newResponse) => {
   x.value = x.value+1
 }, { deep: true })
 
@@ -55,7 +57,7 @@ watch(() => surveyStore.currentResponse[indexAll].preference, (newResponse) => {
 <template>
   <section class="flex justify-center items-center flex-col">
     <div class="w-2/3">
-      <div v-for="question in userStore.data.survey.questions" :key="question.id" class="flex justify-center">
+      <div v-for="question in userStore.data.survey.question" :key="question.id" class="flex justify-center">
         <div v-if="surveyStore.missingAnswers.length > 0" class="w-1/12 flex justify-center items-center">
           <exclamationMark v-if="surveyStore.missingAnswers.includes(question.id)" class="text-red-500 h-8"></exclamationMark>
         </div>
@@ -70,7 +72,7 @@ watch(() => surveyStore.currentResponse[indexAll].preference, (newResponse) => {
       <div class="my-6">
         <p class="text-lg md:text-xl xl:text-3xl my-4">For the final part of the survey, please drag your classes in the order of priority, with the first choice being your top priority.</p>
         <surveyDraggable 
-          :courses="surveyStore.currentResponse[indexAll].preference" 
+          :courses="surveyStore.currentResponse[indexAll].answer.preference" 
           :index="indexAll"
           :numbered="true"
           :key="x"
