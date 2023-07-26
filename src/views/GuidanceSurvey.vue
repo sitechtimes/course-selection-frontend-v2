@@ -19,6 +19,8 @@ const guidanceStore = useGuidanceStore()
 const router = useRouter()
 const route = useRoute()
 
+surveyStore.missingAnswers = []
+
 const viewedStudent = guidanceStore.guidance.students.filter(student => student.user.email === `${route.params.email}@nycstudents.net`)[0]
 
 const x: Ref<number> = ref(0)
