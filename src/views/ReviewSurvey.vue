@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useUserStore } from '../stores/user'
 import { useSurveyStore } from '../stores/survey';
+import { useStudentStore } from '../stores/student';
 import booleanComponent from '../components/SurveyPageComponents/Reusables/SurveyBoolean.vue'
 import generalComponent from '../components/SurveyPageComponents/Reusables/SurveyGeneral.vue'
 import checkboxComponent from '../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue';
@@ -15,13 +16,16 @@ document.title = 'Survey | SITHS Course Selection'
 
 const userStore = useUserStore()
 const surveyStore = useSurveyStore()
+const studentStore = useStudentStore()
 const router = useRouter()
 
-if(userStore.data.answeredSurvey[0].status === 'COMPLETE') {
+surveyStore.missingAnswers = []
+
+if(studentStore.answeredSurvey[0].status === 'COMPLETE') {
   surveyStore.setSurvey(
-    userStore.data.user.email,
-    userStore.data.survey.question,
-    userStore.data.student.grade
+    studentStore.user.email,
+    studentStore.survey.question,
+    studentStore.student.grade
   );
 }
 
@@ -30,7 +34,7 @@ const indexNote: number = surveyStore.currentResponse.findIndex((x) => x.id === 
 const x: Ref<number> = ref(0)
 
 const getChoices = (question:  surveyQuestion) => {
-  const classes = userStore.data.student.coursesAvailable                            
+  const classes = studentStore.student.coursesAvailable                            
   return classes.filter(x => x.subject === question.questionType)
 }
 
@@ -47,7 +51,7 @@ const submit = async () => {
 
 
 onBeforeRouteLeave((to, from, next) => {
-    if(JSON.stringify(surveyStore.currentResponse) === userStore.data.answeredSurvey[0].answers || to.path === '/student/survey/review') {
+    if(JSON.stringify(surveyStore.currentResponse) === studentStore.answeredSurvey[0].answers || to.path === '/student/survey/review') {
       next()
     } else {
       const answer = window.confirm('Changes you made might not be saved.')
@@ -65,7 +69,7 @@ const reminder  =  (e) => {
 };
 
 watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
-  if(JSON.stringify(newResponse) === userStore.data.answeredSurvey[0].answers) {
+  if(JSON.stringify(newResponse) === studentStore.answeredSurvey[0].answers) {
     window.removeEventListener('beforeunload', reminder)
     console.log('remove')
   } else {
@@ -82,7 +86,7 @@ watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newRespons
 <template>
   <section class="flex justify-center items-center flex-col">
     <div class="w-2/3">
-      <div v-for="question in userStore.data.survey.question" :key="question.id" class="flex justify-center">
+      <div v-for="question in surveyStore.currentSurvey.question" :key="question.id" class="flex justify-center">
         <div v-if="surveyStore.missingAnswers.length > 0" class="w-1/12 flex justify-center items-center">
           <exclamationMark v-if="surveyStore.missingAnswers.includes(question.id)" class="text-red-500 h-8"></exclamationMark>
         </div>

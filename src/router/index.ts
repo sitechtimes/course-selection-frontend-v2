@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useUserStore } from "../../src/stores/user";
 import { useSurveyStore } from "../stores/survey";
+import { useStudentStore } from "../stores/student";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -54,13 +55,14 @@ const router = createRouter({
       component: () => import("../views/SurveyPage.vue"),
       beforeEnter: (to) => {
         const userStore = useUserStore();
-        const surveyStore = useSurveyStore()
+        const surveyStore = useSurveyStore();
+        const studentStore = useStudentStore();
 
         if (userStore.userType === 'guidance') {
           return { name: "guidanceStudentlist" };
         }
 
-        if (userStore.data.answeredSurvey[0] != undefined && userStore.userType === 'student' && userStore.data.answeredSurvey[0].status === "COMPLETE") {
+        if (studentStore.answeredSurvey[0] != undefined && userStore.userType === 'student' && studentStore.answeredSurvey[0].status === "COMPLETE") {
           return { name: "reviewSurvey" };
         }
 

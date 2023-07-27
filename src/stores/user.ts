@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
 import { useSurveyStore } from "./survey";
+import { useStudentStore } from "./student";
+import { useGuidanceStore } from "./guidance";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import { user, account_type, userData } from "../types/interface";
@@ -29,7 +31,6 @@ export const useUserStore = defineStore("user", {
     async init(type: account_type) {
       this.userType = type;
       if (type === "guidance") {
-        console.log("guidance logged");
         await axios
           .post(
             `${import.meta.env.VITE_URL}/graphql/`,
@@ -37,6 +38,8 @@ export const useUserStore = defineStore("user", {
               query: `query{
                             user{
                                 firstName
+                                lastName
+                                email
                             }
                             guidance{
                                 students{
@@ -70,6 +73,8 @@ export const useUserStore = defineStore("user", {
                                             question
                                             questionType
                                             id
+                                            status
+                                            className
                                         }
                                         dueDate
                                     }
@@ -122,12 +127,18 @@ export const useUserStore = defineStore("user", {
             }
           )
           .then((res) => {
-            this.data = res.data.data;
+            // this.data = res.data.data;
+            const guidanceStore = useGuidanceStore()
+            guidanceStore.allAnsweredSurveys = res.data.data.allAnsweredSurveys
+            guidanceStore.allStudents = res.data.data.allStudents
+            guidanceStore.allSurveys = res.data.data.allSurveys
+            guidanceStore.guidance = res.data.data.guidance
+            guidanceStore.user = res.data.data.user
+
             this.loading = false;
             const surveyStore = useSurveyStore()
             const router = useRouter()
             router.push('guidance/dashboard')
-            console.log(res.data);
           });
       } else {
         await axios
@@ -139,9 +150,6 @@ export const useUserStore = defineStore("user", {
                             firstName
                             lastName
                             email
-                            isActive
-                            isStudent
-                            isGuidance
                         }
                         student{
                             homeroom
@@ -187,15 +195,21 @@ export const useUserStore = defineStore("user", {
             }
           )
           .then((res: any) => {
-            this.data = res.data.data; // data needs to be filtered properly
+            // this.data = res.data.data; 
+  
+            const studentStore = useStudentStore()
+            studentStore.answeredSurvey = res.data.data.answeredSurvey
+            studentStore.student = res.data.data.student
+            studentStore.survey = res.data.data.survey
+            studentStore.user = res.data.data.user
+
             const surveyStore = useSurveyStore() 
             const router = useRouter()
-            if(this.data.student.homeroom === "") {
-              console.log("o")
+            if(studentStore.student.homeroom === "") {
+              console.log("profile not updated")
             } else {
-              console.log(this.data.student.homeroom)
               const currentDate = new Date()
-            const closeTime = this.data.survey.dueDate.substring(0,10).split("-")
+            const closeTime = studentStore.survey.dueDate.substring(0,10).split("-")
 
             if (Number(closeTime[0]) < currentDate.getFullYear()) {
               surveyStore.open = false
@@ -208,9 +222,7 @@ export const useUserStore = defineStore("user", {
                 }
               }
             }
-
-            surveyStore.currentSurvey = this.data.survey
-  
+            surveyStore.currentSurvey = studentStore.survey
             }
             this.loading = false;
             router.push('student/dashboard')

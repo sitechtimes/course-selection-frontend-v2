@@ -5,6 +5,7 @@ import generalComponent from "../components/SurveyPageComponents/Reusables/Surve
 import { ref, reactive, Ref, onBeforeMount, watch } from "vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
+import { useStudentStore } from "../stores/student";
 import { surveyQuestion, courses, surveyAnswer } from "../types/interface";
 import { onBeforeRouteLeave } from "vue-router";
 
@@ -12,6 +13,7 @@ document.title = 'Survey | SITHS Course Selection'
 
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
+const studentStore = useStudentStore();
 
 const currentIndex: Ref<number> = ref(0);
 let currentQuestion: surveyQuestion = reactive(
@@ -21,9 +23,9 @@ const min: Ref<boolean> = ref(true);
 const max: Ref<boolean> = ref(false);
 
 surveyStore.setSurvey(
-  userStore.data.user.email,
+  studentStore.user.email,
   surveyStore.currentSurvey.question,
-  userStore.data.student.grade
+  studentStore.student.grade
 );
 
 const previousQuestion = () => {
@@ -47,12 +49,12 @@ const nextQuestion = () => {
 };
 
 const getChoices = () => {
-  const classes = userStore.data.student.coursesAvailable;
+  const classes = studentStore.student.coursesAvailable;
   return classes.filter((x) => x.subject === currentQuestion.questionType);
 };
 
 onBeforeRouteLeave((to, from, next) => {
-    if(JSON.stringify(surveyStore.currentResponse) === userStore.data.answeredSurvey[0].answers || to.path === '/student/survey/review') {
+    if(JSON.stringify(surveyStore.currentResponse) === studentStore.answeredSurvey[0].answers || to.path === '/student/survey/review') {
       next()
     } else {
       const answer = window.confirm('Changes you made might not be saved.')
@@ -70,7 +72,7 @@ const reminder  =  (e) => {
 };
 
 watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
-  if(JSON.stringify(newResponse) === userStore.data.answeredSurvey[0].answers) {
+  if(JSON.stringify(newResponse) === studentStore.answeredSurvey[0].answers) {
     window.addEventListener('beforeunload', reminder);
     window.removeEventListener('beforeunload', reminder)
     console.log('remove')
