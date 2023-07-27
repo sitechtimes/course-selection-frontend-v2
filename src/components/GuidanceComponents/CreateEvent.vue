@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { ref, Ref, onMounted } from "vue";
 import { useUserStore } from "../../stores/user";
+import { useGuidanceStore } from "../../stores/guidance";
+
+const guidanceStore = useGuidanceStore()
 const userStore = useUserStore();
+
 let title: String;
 let date: String;
 let time: String;
@@ -11,7 +15,7 @@ let email: String;
 const show: Ref<boolean> = ref(false)
 const save = ref(null)
 const form = ref(null)
-const students = userStore.data.guidance.students;
+const studentList = guidanceStore.guidance.students;
 const dateError = ref(false);
 const timeError = ref(false);
 const nameError = ref(false);
@@ -56,7 +60,7 @@ function submit(date: String, name: String, time: String) {
   const newTime = dateTime.toISOString();
   //person locater
   if (name != null || undefined) {
-    for (const student of students) {
+    for (const student of studentList) {
       const studentFullName =
         student.user.lastName +
         ", " +
@@ -144,10 +148,12 @@ const toggleEvent = () => {
               Student
             </label>
             <datalist id="suggestions">
-              <option v-for="student in students" :key="student.user.email">
-                {{ student.user.lastName }}, {{ student.user.firstName }} |
-                {{ student.user.email }}
-              </option>
+              <div v-for="student in studentList" :key="student.user.email">
+                <option>
+                  {{ student.user.lastName }}, {{ student.user.firstName }} |
+                  {{ student.user.email }}
+                </option>
+              </div>
             </datalist>
             <input class="space rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80"
               placeholder="Select Student From List" autoComplete="on" list="suggestions" v-model="name" id="student" />

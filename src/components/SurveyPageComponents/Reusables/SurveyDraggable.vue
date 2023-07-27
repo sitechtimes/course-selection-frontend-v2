@@ -76,9 +76,7 @@ function updateRank(n, dragIndex) {
     })
     ref_courses.value[startObject].rank = +dragIndex
 
-  } else {
-    console.log('no change')
-  }
+  } 
   ref_courses.value.sort(function(a, b) {
     return parseFloat(a.rank) - parseFloat(b.rank);
   })
