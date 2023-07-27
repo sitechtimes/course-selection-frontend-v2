@@ -26,30 +26,30 @@ function scrolledEnough() {
   const scrollTop = document.querySelector(".scrollTop");
   const scrollBottom = document.querySelector(".scrollBottom");
 
-  //scroll top
-  if (window.scrollY > 2000) { //more than 2000 scrolled, scroll to top
-    scrollTop.style.display = "flex";
-    scrollTop.classList.remove('pop-out')
-    scrollTop.classList.add('pop-in')
-  } else {
-    scrollTop.style.display = "none";
-    scrollTop.classList.add('pop-out')
-    scrollTop.classList.remove('pop-in')
-  }
-
-  //scroll bottom 
-  if (window.scrollY < 2000) { //less than 2000 scrolled, scroll to bottom 
-    scrollBottom.style.display = "flex";
-    scrollBottom.classList.remove('pop-out')
-    scrollBottom.classList.add('pop-in')
-  } else {
-    scrollBottom.style.display = "none";
-    scrollBottom.classList.add('pop-out')
-    scrollBottom.classList.remove('pop-in')
-  }
+  /*   //scroll top
+    if (window.scrollY > 2000) { //more than 2000 scrolled, scroll to top
+      scrollTop.style.display = "flex";
+      scrollTop.classList.remove('pop-out')
+      scrollTop.classList.add('pop-in')
+    } else {
+      scrollTop.style.display = "none";
+      scrollTop.classList.add('pop-out')
+      scrollTop.classList.remove('pop-in')
+    }
+  
+    //scroll bottom 
+    if (window.scrollY < 2000) { //less than 2000 scrolled, scroll to bottom 
+      scrollBottom.style.display = "flex";
+      scrollBottom.classList.remove('pop-out')
+      scrollBottom.classList.add('pop-in')
+    } else {
+      scrollBottom.style.display = "none";
+      scrollBottom.classList.add('pop-out')
+      scrollBottom.classList.remove('pop-in')
+    } */
 
   //both buttons
- if (window.scrollY >= 2001 || window.scrollY >= 1999 ) { //more or equal to 2001 scrolled, but less than or equal to 1999, display both scroll buttons 
+  if (window.scrollY > 0) { //more or equal to 2001 scrolled, but less than or equal to 1999, display both scroll buttons 
     scrollTop.style.display = "flex";
     scrollTop.classList.remove('pop-out')
     scrollTop.classList.add('pop-in')
