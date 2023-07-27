@@ -11,7 +11,9 @@ export interface user {
     refresh_token: string
     loading: boolean
 }
-
+export interface student {
+    user: userData
+}
 export interface studentUser {
     answeredSurvey: answeredSurvey[]
     student: studentData
@@ -36,7 +38,8 @@ export interface studentData {
     grade: grade
     homeroom: string
     meeting: string | null
-    user?: userData
+    // user?: userData
+    user: userData
 }
 
 export interface guidanceData {

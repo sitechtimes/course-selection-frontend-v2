@@ -143,7 +143,7 @@
                 Student
               </label>
               <datalist id="suggestions">
-                <div v-for="student in students" :key="student.user.email">
+                <div v-for="student in studentList" :key="student.user.email">
                   <option>
                     {{ student.user.lastName }}, {{ student.user.firstName }} |
                     {{ student.user.email }}
@@ -209,9 +209,11 @@
 <script setup lang="ts">
 import Upcoming from "../GuidanceComponents/Upcoming.vue";
 import PlusIcon from "../icons/PlusIcon.vue";
-import createevent from "../GuidanceComponents/createevent.vue";
+import createevent from "./CreateEvent.vue";
+import { useGuidanceStore } from "../../stores/guidance";
 import { reactive, Ref, ref } from "vue";
 import { useUserStore } from "../../stores/user";
+const guidanceStore = useGuidanceStore();
 const userStore = useUserStore();
 let title: String;
 let date: String;
@@ -222,7 +224,7 @@ let email: String;
 const show: Ref<boolean> = ref(false);
 const save = ref(null);
 const form = ref(null);
-const students = userStore.data.guidance.students;
+const studentList = guidanceStore.guidance.students;
 // const condition = false;
 
 function submit(date: String, name: String, time: String) {
@@ -236,7 +238,7 @@ function submit(date: String, name: String, time: String) {
   const newTime = dateTime.toISOString();
   //person locater
   if (name != null || undefined) {
-    for (const student of students) {
+    for (const student of studentList) {
       const studentFullName =
         student.user.lastName +
         ", " +
