@@ -3,7 +3,7 @@ import BellIcon from "../components/icons/BellIcon.vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
 import { useStudentStore } from "../stores/student";
-import dateFormat, { masks } from "dateformat";
+import dateFormat from "dateformat";
 import { computed, ref, Ref } from "vue";
 
 document.title = 'Dashboard | SITHS Course Selection'
@@ -21,16 +21,6 @@ if(studentStore.student.homeroom === '') {
 } else {
   closeTime = studentStore.survey.dueDate.substring(0,10).split("-")
 }
-
-const announcement = computed(() => {
-  if(studentStore.answeredSurvey[0] === null) {
-  return "Your survey had not been started. Please complete it before the due date."
-} else if(studentStore.answeredSurvey[0].status === 'COMPLETE') {
-  return "You have submitted your survey. Changes can be made before the due date."
-} else{
-  return "Your survey is in progress. Please complete it before the due date."
-}
-})
 
 if (
   studentStore.student.meeting != undefined ||

@@ -104,7 +104,7 @@ export interface allSurveysNodes {
 // survey interfaces
 export interface answeredSurvey {
     id?: string
-    answers: string
+    answers: surveyAnswer[] 
     email: string
     grade: grade
     status: status
