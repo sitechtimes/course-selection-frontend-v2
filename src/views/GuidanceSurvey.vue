@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useUserStore } from '../stores/user'
 import { useSurveyStore } from '../stores/survey';
+import { useGuidanceStore } from '../stores/guidance';
 import booleanComponent from '../components/SurveyPageComponents/Reusables/SurveyBoolean.vue'
 import generalComponent from '../components/SurveyPageComponents/Reusables/SurveyGeneral.vue'
 import checkboxComponent from '../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue'
@@ -14,18 +15,20 @@ document.title = 'Survey | SITHS Course Selection'
 
 const userStore = useUserStore()
 const surveyStore = useSurveyStore()
+const guidanceStore = useGuidanceStore()
 const router = useRouter()
 const route = useRoute()
 
-const viewedStudent = userStore.data.guidance.students.filter(student => student.user.email === route.params.email)[0]
+surveyStore.missingAnswers = []
 
+const viewedStudent = guidanceStore.guidance.students.filter(student => student.user.email === `${route.params.email}@nycstudents.net`)[0]
 
 const x: Ref<number> = ref(0)
 const indexAll = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');
 const indexNote = surveyStore.currentResponse.findIndex((x) => x.id === 'noteToGuidance');
 const indexGuidance = surveyStore.currentResponse.findIndex((x) => x.id === 'guidanceFinalNote');
 
-surveyStore.currentSurvey = userStore.data.allSurveys.edges.find(x => x.node.grade === viewedStudent.grade).node
+surveyStore.currentSurvey = guidanceStore.allSurveys.edges.find(x => x.node.grade === viewedStudent.grade)?.node
 
 const getChoices = (question) => {
   const classes = viewedStudent.coursesAvailable
@@ -46,6 +49,9 @@ const submit = async () => {
 watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newResponse) => {
   x.value = x.value+1
 }, { deep: true })
+
+
+
 </script>
 
 <template>

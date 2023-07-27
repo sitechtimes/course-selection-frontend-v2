@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, Ref } from "vue";
 import { useUserStore } from '../../stores/user';
+import { useGuidanceStore } from "../../stores/guidance";
 import DownArrow from '../icons/DownArrow.vue';
 
 const userStore = useUserStore()
+const guidanceStore = useGuidanceStore()
 // const input = ref("");
 // const props = ["title"];
 const selected: Ref<string> = ref("Sort By");
@@ -58,15 +60,15 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
   }
 
   function ns(a: { grade: string; }) {
-    if (userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined) return -1;
+    if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined) return -1;
     else
     return 1;
   }
 
   function ip(a: { grade: string; }) {
-    if (userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
+    if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
       return 1;
-    } else if(userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email).node.status === 'INCOMPLETE'){
+    } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email).node.status === 'INCOMPLETE'){
       return -1;
     } else {
       return 1
@@ -74,9 +76,9 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
   }
 
   function com(a: { grade: string; }) {
-    if (userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
+    if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
       return 1;
-    } else if(userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email).node.status === 'COMPLETE'){
+    } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email).node.status === 'COMPLETE'){
       return -1;
     } else {
       return 1
@@ -104,8 +106,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
   const sortBy = eval(sort.sortBy)
   selected.value = sort.text
   isOpen.value = false
-  console.log(userStore.data.guidance.students)
-  return (userStore.data.guidance.students.sort(sortBy))
+  return (guidanceStore.guidance.students.sort(sortBy))
 }
 </script>
 
