@@ -210,11 +210,13 @@
 import Upcoming from "../GuidanceComponents/Upcoming.vue";
 import PlusIcon from "../icons/PlusIcon.vue";
 import createevent from "./CreateEvent.vue";
-import { useGuidanceStore } from "../../stores/guidance";
-import { reactive, Ref, ref } from "vue";
+import { ref, Ref, reactive, onMounted } from "vue";
 import { useUserStore } from "../../stores/user";
+import { useGuidanceStore } from "../../stores/guidance";
+
 const guidanceStore = useGuidanceStore();
 const userStore = useUserStore();
+
 let title: String;
 let date: String;
 let time: String;
@@ -224,8 +226,8 @@ let email: String;
 const show: Ref<boolean> = ref(false);
 const save = ref(null);
 const form = ref(null);
+
 const studentList = guidanceStore.guidance.students;
-// const condition = false;
 
 function submit(date: String, name: String, time: String) {
   //date conversion
