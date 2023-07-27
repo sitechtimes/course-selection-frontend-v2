@@ -30,7 +30,7 @@ const indexGuidance = surveyStore.currentResponse.findIndex((x) => x.id === 'gui
 
 surveyStore.currentSurvey = guidanceStore.allSurveys.edges.find(x => x.node.grade === viewedStudent.grade)?.node
 
-const getChoices = (question) => {
+const getChoices = (question: surveyQuestion) => {
   const classes = viewedStudent.coursesAvailable
   return classes.filter(x => x.subject === question.questionType)
 }

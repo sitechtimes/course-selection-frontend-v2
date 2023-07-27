@@ -12,6 +12,7 @@
       </div>
     </div>
   </template>
+  
   <script lang="ts" setup>
   import SearchButton from "../icons/SearchButton.vue";
   
@@ -20,8 +21,3 @@
   })   
   
   </script>
-  <style scoped>
-  #search-input {
-    border-radius: 0.5rem;
-  }
-  </style>

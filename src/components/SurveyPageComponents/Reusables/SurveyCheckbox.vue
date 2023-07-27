@@ -60,7 +60,7 @@
   </section>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts"> 
 import surveyDraggable from "./SurveyDraggable.vue";
 import { useSurveyStore } from "../../../stores/survey";
 import { watch, onBeforeMount, ref, Ref, computed, PropType } from "vue";

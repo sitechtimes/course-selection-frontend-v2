@@ -3,7 +3,6 @@ import { ref, computed } from 'vue';
 import { useUserStore } from '../../stores/user';
 import { useSurveyStore } from '../../stores/survey';
 import { useGuidanceStore } from '../../stores/guidance';
-import SearchBar from "./SearchBar.vue"
 import { useRouter } from 'vue-router'
 import { studentGuidance } from '../../types/interface';
 
@@ -17,7 +16,6 @@ async function userClick(student: studentGuidance) {
     await surveyStore.setSurvey(student.user.email, guidanceStore.allSurveys.edges.find(x => x.node.grade === student.grade).node.question, student.grade)
     await router.push(`/guidance/survey/${student.user.email.replace('@nycstudents.net', ' ')}`)
     location.reload()
-
 }
 
 </script>
@@ -29,7 +27,6 @@ async function userClick(student: studentGuidance) {
                 <tr class="bg-primary-g">
                     <th class="p-4">Name</th>
                     <th class="p-4">Grade</th>
-                    <!-- <th class="p-4">OSIS</th> -->
                     <th class="p-4">Email</th>
                     <th class="p-4">Progress</th>
                     <th class="p-4">Details</th>
@@ -41,7 +38,6 @@ async function userClick(student: studentGuidance) {
                     <td class="p-4" v-if="student.grade === 'SOPHOMORE'">9</td>
                     <td class="p-4" v-if="student.grade === 'JUNIOR'">10</td>
                     <td class="p-4" v-if="student.grade === 'SENIOR'">11</td>
-                    <!-- <td class="p-4">{{ student.osis }}</td> -->
                     <td class="p-4">{{ student.user.email }}</td>
                     <td class="p-4" v-if="guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === student.user.email && x.node.grade === student.grade) === undefined">
                         <p class="text-[#461616] bg-[#EA9F9F] w-[8rem] font-semibold text-center p-1 rounded-2xl">Not Started</p>

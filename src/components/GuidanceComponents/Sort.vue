@@ -7,8 +7,6 @@ import { userData } from "../../types/interface";
 
 const userStore = useUserStore()
 const guidanceStore = useGuidanceStore()
-// const input = ref("");
-// const props = ["title"];
 const selected: Ref<string> = ref("Sort By");
 const isOpen: Ref<boolean> = ref(false);
 

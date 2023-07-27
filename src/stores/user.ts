@@ -9,7 +9,6 @@ import { user, account_type, userData } from "../types/interface";
 export const useUserStore = defineStore("user", {
   state: (): user => ({
     first_name: "",
-    data: {},
     last_name: "",
     email: "",
     userType: null,
@@ -127,7 +126,6 @@ export const useUserStore = defineStore("user", {
             }
           )
           .then((res) => {
-            // this.data = res.data.data;
             const guidanceStore = useGuidanceStore()
             guidanceStore.allAnsweredSurveys = res.data.data.allAnsweredSurveys
             guidanceStore.allStudents = res.data.data.allStudents
@@ -136,9 +134,6 @@ export const useUserStore = defineStore("user", {
             guidanceStore.user = res.data.data.user
 
             this.loading = false;
-            const surveyStore = useSurveyStore()
-            const router = useRouter()
-            router.push('guidance/dashboard')
           });
       } else {
         await axios
@@ -195,8 +190,6 @@ export const useUserStore = defineStore("user", {
             }
           )
           .then((res: any) => {
-            // this.data = res.data.data; 
-  
             const studentStore = useStudentStore()
             studentStore.answeredSurvey = res.data.data.answeredSurvey
             studentStore.student = res.data.data.student
@@ -224,9 +217,7 @@ export const useUserStore = defineStore("user", {
               }
               surveyStore.currentSurvey = studentStore.survey
               }
-              this.loading = false;
-              router.push('student/dashboard')
-              console.log(this.data, this.access_token);
+              this.loading = false;              
           });
       }
     },
@@ -275,7 +266,6 @@ export const useUserStore = defineStore("user", {
           this.getUserType(); //make dj rest auth return user type (backend) to remove this function
         });
     },
-    //2007-12-03T10:15:30Z
     async changeMeeting(email: string, newTime: string) {
       await axios
         .post(
@@ -297,7 +287,6 @@ export const useUserStore = defineStore("user", {
           }
         )
         .then((res) => {
-          console.log(res)
           console.log("meeting changed");
         });
     },

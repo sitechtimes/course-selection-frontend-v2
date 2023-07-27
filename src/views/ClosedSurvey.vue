@@ -2,8 +2,8 @@
 import { useUserStore } from '../stores/user'
 import { useSurveyStore } from '../stores/survey';
 import { useStudentStore } from '../stores/student';
-import surveyBoolean from '../components/SurveyPageComponents/Reusables/surveyBoolean.vue'
-import surveyGeneral from '../components/SurveyPageComponents/Reusables/surveyGeneral.vue'
+import surveyBoolean from '../components/SurveyPageComponents/Reusables/SurveyBoolean.vue'
+import surveyGeneral from '../components/SurveyPageComponents/Reusables/SurveyGeneral.vue'
 import closedRank from '../components/SurveyPageComponents/Reusables/ClosedSurvey/closedRank.vue';
 import closedFinalRank from '../components/SurveyPageComponents/Reusables/ClosedSurvey/closedFinalRank.vue';
 import { surveyQuestion, surveyAnswer } from '../types/interface';
