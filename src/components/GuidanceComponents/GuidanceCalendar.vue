@@ -223,6 +223,7 @@ const show: Ref<boolean> = ref(false);
 const save = ref(null);
 const form = ref(null);
 const students = userStore.data.guidance.students;
+// const condition = false;
 
 function submit(date: String, name: String, time: String) {
   //date conversion
