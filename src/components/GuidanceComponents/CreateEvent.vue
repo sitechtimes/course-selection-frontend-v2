@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref, Ref, onMounted } from "vue";
 import { useGuidanceStore } from "../../stores/guidance";
+import { useUserStore } from "../../stores/user";
 
 const guidanceStore = useGuidanceStore()
+const userStore = useUserStore()
 
 let title: String;
 let date: String;
@@ -14,11 +16,11 @@ const show: Ref<boolean> = ref(false)
 const save = ref(null)
 const form = ref(null)
 const studentList = guidanceStore.guidance.students;
-const dateError = ref(false);
-const timeError = ref(false);
-const nameError = ref(false);
+const dateError: Ref<boolean> = ref(false);
+const timeError: Ref<boolean> = ref(false);
+const nameError: Ref<boolean> = ref(false);
 
-function empty(date: String, name: String, time: String) {
+function empty() {
   //checks if require fields are empty; if so, error msg pops up on respective field
   if (date.value === '') {
     dateError.value = true;
@@ -98,7 +100,7 @@ const toggleEvent = () => {
             </svg>
           </button>
         </div>
-        <form id="form" ref="form" @submit.prevent="empty(date, name, time)">
+        <form id="form" ref="form" @submit.prevent="empty()">
           <div class="item mb-6">
             <label class="formt mt-2 flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold" for="title">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
