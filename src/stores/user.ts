@@ -209,24 +209,24 @@ export const useUserStore = defineStore("user", {
               console.log("profile not updated")
             } else {
               const currentDate = new Date()
-            const closeTime = studentStore.survey.dueDate.substring(0,10).split("-")
+              const closeTime = studentStore.survey.dueDate.substring(0,10).split("-")
 
-            if (Number(closeTime[0]) < currentDate.getFullYear()) {
-              surveyStore.open = false
-            } else if (Number(closeTime[0]) === currentDate.getFullYear()) {
-              if (Number(closeTime[1]) < currentDate.getMonth() + 1) { // Get month starts at 0, not 1
+              if (Number(closeTime[0]) < currentDate.getFullYear()) {
                 surveyStore.open = false
-              } else if (Number(closeTime[1]) === currentDate.getMonth() + 1) {
-                if (Number(closeTime[2]) < currentDate.getDate()) {
+              } else if (Number(closeTime[0]) === currentDate.getFullYear()) {
+                if (Number(closeTime[1]) < currentDate.getMonth() + 1) { // Get month starts at 0, not 1
                   surveyStore.open = false
+                } else if (Number(closeTime[1]) === currentDate.getMonth() + 1) {
+                  if (Number(closeTime[2]) < currentDate.getDate()) {
+                    surveyStore.open = false
+                  }
                 }
               }
-            }
-            surveyStore.currentSurvey = studentStore.survey
-            }
-            this.loading = false;
-            router.push('student/dashboard')
-            console.log(this.data, this.access_token);
+              surveyStore.currentSurvey = studentStore.survey
+              }
+              this.loading = false;
+              router.push('student/dashboard')
+              console.log(this.data, this.access_token);
           });
       }
     },

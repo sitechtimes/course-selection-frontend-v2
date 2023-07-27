@@ -5,7 +5,7 @@ import { useStudentStore } from '../stores/student';
 import booleanComponent from '../components/SurveyPageComponents/Reusables/SurveyBoolean.vue'
 import generalComponent from '../components/SurveyPageComponents/Reusables/SurveyGeneral.vue'
 import checkboxComponent from '../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue';
-import surveyDraggable from '../components/SurveyPageComponents/Reusables/surveyDraggable.vue';
+import surveyDraggable from '../components/SurveyPageComponents/Reusables/SurveyDraggable.vue';
 import exclamationMark from '../components/icons/ExclamationMark.vue'
 import { surveyQuestion, surveyAnswer } from '../types/interface';
 import { watch, ref, Ref, reactive, defineExpose } from 'vue';
@@ -70,10 +70,8 @@ const reminder  =  (e) => {
 watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
   if(JSON.stringify(newResponse) === studentStore.answeredSurvey[0].answers) {
     window.removeEventListener('beforeunload', reminder)
-    console.log('remove')
   } else {
     window.addEventListener('beforeunload', reminder);
-    console.log('add');
   }
 }, { deep:true })
 

@@ -3,6 +3,7 @@ import { computed, onMounted, ref, Ref } from "vue";
 import { useUserStore } from '../../stores/user';
 import { useGuidanceStore } from "../../stores/guidance";
 import DownArrow from '../icons/DownArrow.vue';
+import { userData } from "../../types/interface";
 
 const userStore = useUserStore()
 const guidanceStore = useGuidanceStore()
@@ -59,26 +60,26 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
     return 0;
   }
 
-  function ns(a: { grade: string; }) {
+  function ns(a: { grade: string, user: userData }) {
     if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined) return -1;
     else
     return 1;
   }
 
-  function ip(a: { grade: string; }) {
+  function ip(a: { grade: string, user: userData }) {
     if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
       return 1;
-    } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email).node.status === 'INCOMPLETE'){
+    } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'INCOMPLETE'){
       return -1;
     } else {
       return 1
     }
   }
 
-  function com(a: { grade: string; }) {
+  function com(a: { grade: string, user: userData }) {
     if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
       return 1;
-    } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email).node.status === 'COMPLETE'){
+    } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'COMPLETE'){
       return -1;
     } else {
       return 1

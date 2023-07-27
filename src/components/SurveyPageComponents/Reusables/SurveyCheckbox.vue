@@ -61,21 +61,22 @@
 </template>
 
 <script setup lang="ts">
+import surveyDraggable from "./SurveyDraggable.vue";
+import { useSurveyStore } from "../../../stores/survey";
+import { watch, onBeforeMount, ref, Ref, computed, PropType } from "vue";
+import { surveyQuestion } from "../../../types/interface";
+
 const props = defineProps({
   choices: Array,
-  question: Object,
+  question: Object as PropType<surveyQuestion>,
   answers: Array,
   color: String,
 });
 
-import surveyDraggable from "./surveyDraggable.vue";
-import { useSurveyStore } from "../../../stores/survey";
-import { watch, onBeforeMount, ref, Ref, computed } from "vue";
-
 const surveyStore = useSurveyStore();
 
 const x: Ref<number>= ref(0)
-let index: number = surveyStore.currentResponse.findIndex((x) => x.id == props.question.id); 
+let index: number = surveyStore.currentResponse.findIndex((x) => x.id == props.question?.id); 
 
 const notInterested = computed(() =>{
   return surveyStore.currentResponse[index].answer.courses.includes('Not Interested')
@@ -83,8 +84,8 @@ const notInterested = computed(() =>{
 
 if (index < 0) {
   const questionAnswer = {
-    id: props.question.id,
-    question: props.question.question,
+    id: props.question?.id,
+    question: props.question?.question,
     answer: {
       courses: [], 
       preference: []
@@ -93,7 +94,7 @@ if (index < 0) {
   surveyStore.currentResponse.push(questionAnswer);
 
   index = surveyStore.currentResponse.findIndex(
-    (x) => x.id == props.question.id
+    (x) => x.id == props.question?.id
   );
 }
 
@@ -130,7 +131,7 @@ watch(
   () => props.question,
   (newResponse) => {
     index = surveyStore.currentResponse.findIndex(
-      (x) => x.id == newResponse.id
+      (x) => x.id == newResponse?.id
     );
   }
 );

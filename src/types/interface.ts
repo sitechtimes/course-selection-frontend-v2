@@ -1,4 +1,4 @@
-// general user store interfaces
+// user store interfaces
 export interface user {
     first_name: string
     last_name: string
@@ -12,6 +12,18 @@ export interface user {
     loading: boolean
 }
 
+// guidance store interface
+
+export interface guidanceData {
+    allAnsweredSurveys: allAnsweredSurveys
+    allStudents: allStudents
+    allSurveys: allSurveys
+    guidance: guidanceStudentData
+    user: userData
+}
+
+// student store interface
+
 export interface studentUser {
     answeredSurvey: answeredSurvey[]
     student: studentData
@@ -19,7 +31,17 @@ export interface studentUser {
     user: userData
 }
 
-// user related interfaces
+// survey store interface
+export interface surveyStore {
+    currentAnsweredSurvey: answeredSurvey
+    currentResponse: surveyAnswer[]
+    currentSurvey: survey
+    loading: boolean
+    open: boolean
+    missingAnswers: string[]
+}
+
+// user object
 export interface userData {
     email: string
     firstName: string
@@ -29,6 +51,7 @@ export interface userData {
     isStudent?: boolean
 }
 
+// student object (student side)
 export interface studentData { 
     coursesAvailable: courses[]
     coursesRequired: courses[]
@@ -39,11 +62,14 @@ export interface studentData {
     user?: userData
 }
 
-export interface guidanceData {
-    allAnsweredSurveys: allAnsweredSurveys
-    allStudents: allStudents
-    allSurveys: allSurveys
-    guidance: guidanceStudentData
+// student object (guidance side)
+export interface studentGuidance { 
+    coursesAvailable: courses[]
+    coursesRequired: courses[]
+    coursesTaken: courses[]
+    grade: grade
+    homeroom: string
+    meeting: string | null
     user: userData
 }
 
@@ -95,6 +121,8 @@ export interface surveyQuestion {
     question?: string
     questionType: question_type
     id: string
+    status: question_status
+    className: string
 }
 
 export interface surveyAnswer {
@@ -114,7 +142,7 @@ export interface preference {
 }
 
 // course interfaces
-export interface courses{
+export interface courses {
     courseCode: string
     subject: course_type
     name: string
@@ -125,3 +153,4 @@ export type account_type = 'student' | 'guidance' | null;
 export type grade = 'FRESHMAN' | 'SOPHOMORE' | 'JUNIOR' | 'SENIOR';
 export type status= 'COMPLETE' | 'INCOMPLETE' | null | undefined
 export type question_type = 'BOOLEAN' | 'GENERAL' | 'MATH' | 'ENGLISH' | 'LANG' | 'SS' | 'TECH' | 'PE' | 'CAREER' | 'SCIENCE' | 'ARTS' | 'OTHER'
+export type question_status = 'STANDARD' | 'CLASS' | 'OPTIONAL'

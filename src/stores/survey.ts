@@ -3,14 +3,14 @@ import { useUserStore } from "./user";
 import { useStudentStore } from "./student";
 import { useGuidanceStore } from "./guidance";
 import { useRouter } from "vue-router";
-import { grade, status, surveyAnswer, surveyQuestion } from "../types/interface";
+import { grade, status, surveyAnswer, surveyQuestion, surveyStore } from "../types/interface";
 import axios from "axios";
 
 export const useSurveyStore = defineStore("survey", {
-  state: () => ({
-    currentAnsweredSurvey: [],
-    currentResponse: [],
-    currentSurvey: [],
+  state: (): surveyStore => ({
+    currentAnsweredSurvey: {answers: "[{}]", email: "", grade: "FRESHMAN", status: "INCOMPLETE"},
+    currentResponse: [{id: '', question: '', answer:''}],
+    currentSurvey: {dueDate: "", grade: "FRESHMAN", question: [{id: "", questionType: "OTHER", status: 'STANDARD', className: ''}]},
     loading: false,
     open: true,
     missingAnswers: [],

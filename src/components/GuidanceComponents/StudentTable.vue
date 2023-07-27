@@ -5,7 +5,7 @@ import { useSurveyStore } from '../../stores/survey';
 import { useGuidanceStore } from '../../stores/guidance';
 import SearchBar from "./SearchBar.vue"
 import { useRouter } from 'vue-router'
-import { studentData } from '../../types/interface';
+import { studentGuidance } from '../../types/interface';
 
 const props = defineProps(['newstudents'])
 const userStore = useUserStore()
@@ -13,7 +13,7 @@ const surveyStore = useSurveyStore()
 const guidanceStore = useGuidanceStore()
 const router = useRouter()
 
-async function userClick(student: studentData) {
+async function userClick(student: studentGuidance) {
     await surveyStore.setSurvey(student.user.email, guidanceStore.allSurveys.edges.find(x => x.node.grade === student.grade).node.question, student.grade)
     await router.push(`/guidance/survey/${student.user.email.replace('@nycstudents.net', ' ')}`)
     location.reload()

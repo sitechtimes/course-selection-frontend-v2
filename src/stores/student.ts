@@ -7,7 +7,7 @@ export const useStudentStore = defineStore("student", {
     state: (): studentUser => ({
         answeredSurvey: [{answers: "[{}]", email: "", grade: "FRESHMAN", status: "INCOMPLETE"}],
         student: {coursesAvailable: [], coursesRequired: [], coursesTaken: [], grade: "FRESHMAN", homeroom: "", meeting: null},
-        survey: {dueDate: "", grade: "FRESHMAN", questions: [{id: "", questionType: "OTHER"}]},
+        survey: {dueDate: "", grade: "FRESHMAN", question: [{id: "", questionType: "OTHER", status: 'STANDARD', className: ''}]},
         user: {email: "", firstName: "", lastName: ""},
     }),
     getters: {

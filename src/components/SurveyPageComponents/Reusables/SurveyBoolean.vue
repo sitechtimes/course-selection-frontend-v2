@@ -31,31 +31,32 @@
 </template>
 
 <script setup lang="ts">
+import { useSurveyStore } from "../../../stores/survey";
+import { watch, onBeforeMount, PropType } from "vue";
+import { surveyQuestion } from "../../../types/interface";
+
 const props = defineProps({
-  question: Object,
+  question: Object as PropType<surveyQuestion>,
   answers: Array,
   isDisabled: Boolean,
 });
 
-import { useSurveyStore } from "../../../stores/survey";
-import { watch, onBeforeMount } from "vue";
-
 const surveyStore = useSurveyStore();
 let index: number = surveyStore.currentResponse.findIndex(
-  (x) => x.id == props.question.id
+  (x) => x.id == props.question?.id
 );
 
 
   if (index < 0) {
     const questionAnswer = {
-      id: props.question.id,
-      question: props.question.question,
+      id: props.question?.id,
+      question: props.question?.question,
       answer: "",
     };
     surveyStore.currentResponse.push(questionAnswer);
 
     index = surveyStore.currentResponse.findIndex(
-      (x) => x.id == props.question.id
+      (x) => x.id == props.question?.id
     );
   }
 
@@ -72,7 +73,7 @@ watch(
 watch(
   () => surveyStore.currentResponse[index].answer,
   (newResponse, oldResponse) => {
-    if(props.question.status === 'CLASS') {
+    if(props.question?.status === 'CLASS') {
       const totalIndex = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');
 
       if (newResponse === "Yes") {

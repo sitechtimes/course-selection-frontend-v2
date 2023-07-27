@@ -5,7 +5,7 @@ import { useGuidanceStore } from '../stores/guidance';
 import booleanComponent from '../components/SurveyPageComponents/Reusables/SurveyBoolean.vue'
 import generalComponent from '../components/SurveyPageComponents/Reusables/SurveyGeneral.vue'
 import checkboxComponent from '../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue'
-import surveyDraggable from '../components/SurveyPageComponents/Reusables/surveyDraggable.vue';
+import surveyDraggable from '../components/SurveyPageComponents/Reusables/SurveyDraggable.vue';
 import exclamationMark from '../components/icons/ExclamationMark.vue'
 import { surveyQuestion, surveyAnswer } from '../types/interface';
 import { useRouter, useRoute } from 'vue-router'
