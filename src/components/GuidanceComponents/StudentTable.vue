@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, PropType } from 'vue';
 import { useUserStore } from '../../stores/user';
 import { useSurveyStore } from '../../stores/survey';
 import { useGuidanceStore } from '../../stores/guidance';
@@ -7,7 +7,9 @@ import SearchBar from "./SearchBar.vue"
 import { useRouter } from 'vue-router'
 import { studentData } from '../../types/interface';
 
-const props = defineProps(['newstudents'])
+const props = defineProps({
+    newstudents: Array
+})
 const userStore = useUserStore()
 const surveyStore = useSurveyStore()
 const guidanceStore = useGuidanceStore()
@@ -20,6 +22,7 @@ async function userClick(student: studentData) {
 
 }
 
+console.log(props.newstudents)
 </script>
 
 <template>
@@ -33,6 +36,7 @@ async function userClick(student: studentData) {
                     <th class="p-4">Email</th>
                     <th class="p-4">Progress</th>
                     <th class="p-4">Details</th>
+                    <th class="p-4">Flags</th>
                 </tr>
             </thead>
             <tbody v-for="student in newstudents" :key="student" class="border-2 border-black">
@@ -53,6 +57,12 @@ async function userClick(student: studentData) {
                         <p class="text-[#174616] bg-[#A8D480] w-[8rem] font-semibold text-center p-1 rounded-2xl">Completed</p>
                     </td>
                     <td>View Survey</td>
+                    <td class="p-4">
+                        <div v-if="student.flag.includes('Transfer')">Transfer</div>
+                        <div v-if="student.flag.includes('Regents')">Regents</div>
+                        <div v-if="student.flag.includes('Team')">Team</div>
+                        <div v-if="student.flag.includes('ENL')">ENL</div>
+                    </td>
                 </tr>
             </tbody>
         </table>
