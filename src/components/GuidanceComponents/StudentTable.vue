@@ -22,8 +22,6 @@ async function userClick(student: studentGuidance) {
     await router.push(`/guidance/survey/${student.user.email.replace('@nycstudents.net', ' ')}`)
     location.reload()
 }
-
-console.log(props.newstudents)
 </script>
 
 <template>
