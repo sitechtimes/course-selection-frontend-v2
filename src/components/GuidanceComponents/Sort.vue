@@ -44,6 +44,22 @@ const menuArray = [
     sortBy: "eleven",
     text: "Grade 11"
   },
+  {
+    sortBy: "transfer",
+    text: "Transfer"
+  },
+  {
+    sortBy: "regents",
+    text: "Missing Regents"
+  },
+  {
+    sortBy: "sports",
+    text: "Sports Team"
+  },
+  {
+    sortBy: "enl",
+    text: "ENL"
+  },
 ]
 
 const sortBy = (sort: {sortBy:string, text:string}) => {
@@ -99,6 +115,30 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
 
   function eleven(a: { grade: string; }) {
     if (a.grade === "SENIOR") return -1;
+    else
+    return 1;
+  }
+
+  function transfer(a: { flag: string; }) {
+    if (a.flag.includes('Transfer')) return -1;
+    else
+    return 1;
+  }
+
+  function regents(a: { flag: string; }) {
+    if (a.flag.includes('Regents')) return -1;
+    else
+    return 1;
+  }
+
+  function sports(a: { flag: string; }) {
+    if (a.flag.includes('Team')) return -1;
+    else
+    return 1;
+  }
+
+  function enl(a: { flag: string; }) {
+    if (a.flag.includes('ENL')) return -1;
     else
     return 1;
   }
