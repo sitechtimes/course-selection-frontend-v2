@@ -6,15 +6,15 @@ import { useUserStore } from "../../stores/user";
 const guidanceStore = useGuidanceStore()
 const userStore = useUserStore()
 
-let title: String;
-let date: String;
-let time: String;
-let description: String;
-let name: String;
-let email: String;
+let title: string;
+let date: string;
+let time: string;
+let description: string;
+let name: string;
+let email: string;
 const show: Ref<boolean> = ref(false)
-const save = ref(null)
-const form = ref(null)
+const save = ref()
+const form = ref()
 const studentList = guidanceStore.guidance.students;
 const dateError: Ref<boolean> = ref(false);
 const timeError: Ref<boolean> = ref(false);
@@ -22,21 +22,18 @@ const nameError: Ref<boolean> = ref(false);
 
 function empty() {
   //checks if require fields are empty; if so, error msg pops up on respective field
-  if (date.value === '') {
+  if (date === '') {
     dateError.value = true;
-    console.log("no date provided");
   } else {
     dateError.value = false;
   }
-  if (time.value === '') {
+  if (time === '') {
     timeError.value = true;
-    console.log("no time provided");
   } else {
     timeError.value = false;
   }
   if (!name) {
     nameError.value = true;
-    console.log("no student provided");
   } else {
     nameError.value = false;
   }
@@ -44,22 +41,20 @@ function empty() {
   //if all required fields are filled out, proceed with submission
   if (!dateError.value && !timeError.value && !nameError.value) {
     submit(date, name, time);
-    //console log required fields information
-    console.log("Date: " + date.value + " | Time: " + time.value + " | Student: " + name.value);
   }
 }
 
-function submit(date: String, name: String, time: String) {
+function submit(meetingDate: string, studentName: string, meetingTime: string) {
   //date conversion
-  const year = parseInt(date.slice(0, 4));
-  const month = parseInt(date.slice(6, 8)) - 1;
-  const day = parseInt(date.slice(9, 11));
-  const hour = parseInt(time.slice(0, 2));
-  const min = parseInt(time.slice(3, 5));
+  const year = parseInt(meetingDate.slice(0, 4));
+  const month = parseInt(meetingDate.slice(6, 8)) - 1;
+  const day = parseInt(meetingDate.slice(9, 11));
+  const hour = parseInt(meetingTime.slice(0, 2));
+  const min = parseInt(meetingTime.slice(3, 5));
   const dateTime = new Date(year, month, day, hour, min);
   const newTime = dateTime.toISOString();
   //person locater
-  if (name != null || undefined) {
+  if (studentName != null || undefined) {
     for (const student of studentList) {
       const studentFullName =
         student.user.lastName +
@@ -67,7 +62,7 @@ function submit(date: String, name: String, time: String) {
         student.user.firstName +
         " | " +
         student.user.email;
-      if (studentFullName == name) {
+      if (studentFullName == studentName) {
         email = student.user.email;
       }
     }
@@ -75,9 +70,11 @@ function submit(date: String, name: String, time: String) {
 
   save.value.innerHTML = "Saved";
   form.value.reset();
-  name.value.reset(); //student name is outside of form, so separate reset function is used
+  name = ''
+  date = ''
+  email = ''
+  time = ''
   userStore.changeMeeting(email, newTime);
-  console.log("Form submitted!");
 }
 
 const toggleEvent = () => {
