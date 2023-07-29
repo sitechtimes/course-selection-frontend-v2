@@ -48,7 +48,7 @@ export const useUserStore = defineStore("user", {
                                         email
                                     }
                                     homeroom
-                                 
+                                    flag
                                     grade
                                     coursesTaken{
                                         courseCode
@@ -98,7 +98,7 @@ export const useUserStore = defineStore("user", {
                                     email
                                   }
                                   homeroom
-                             
+                                  flag
                                   grade
                                   coursesTaken{
                                     courseCode
