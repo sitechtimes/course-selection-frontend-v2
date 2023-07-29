@@ -22,12 +22,12 @@ const nameError: Ref<boolean> = ref(false);
 
 function empty() {
   //checks if require fields are empty; if so, error msg pops up on respective field
-  if (date === '') {
+  if (date.value === '') {
     dateError.value = true;
   } else {
     dateError.value = false;
   }
-  if (time === '') {
+  if (time.value === '') {
     timeError.value = true;
   } else {
     timeError.value = false;
