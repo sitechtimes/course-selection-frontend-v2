@@ -24,8 +24,6 @@ async function userClick(student: studentData) {
     location.reload()
 
 }
-
-console.log(props.newstudents)
 </script>
 
 <template>

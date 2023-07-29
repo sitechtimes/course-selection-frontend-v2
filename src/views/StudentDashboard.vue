@@ -17,7 +17,7 @@ let date: String;
 let closeTime: String 
 
 if(studentStore.student.homeroom === '') {
-  console.log('o')
+  console.log('student profile not updated')
 } else {
   closeTime = studentStore.survey.dueDate.substring(0,10).split("-")
 }
