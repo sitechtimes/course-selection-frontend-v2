@@ -37,7 +37,7 @@ console.log(props.newstudents)
                     <th class="p-4">Grade</th>
                     <!-- <th class="p-4">OSIS</th> -->
                     <th class="p-4">Email</th>
-                    <th class="p-4">Progress</th>
+                    <th class="p-4">Status</th>
                     <th class="p-4">Details</th>
                     <th class="p-4 flex flex-row justify-center items-center">
                         <p class="p-2 font-bold">Flags</p>
