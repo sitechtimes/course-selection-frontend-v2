@@ -66,7 +66,7 @@ onBeforeRouteLeave((to, from, next) => {
     }
 })
 
-const reminder  =  (e) => {
+const reminder = (e) => {
     e.preventDefault(); 
     e.returnValue = '';
 };
@@ -104,20 +104,17 @@ watch(() => studentStore.answeredSurvey[0].answers, (newResponse, oldResponse) =
         <generalComponent
           v-if="currentQuestion.questionType === 'GENERAL'"
           :question="currentQuestion"
-          :answers="currentAnswer"
           :key="currentQuestion.id"
         ></generalComponent>
         <booleanComponent
           v-else-if="currentQuestion.questionType === 'BOOLEAN'"
           :question="currentQuestion"
-          :answers="currentAnswer"
           :key="currentQuestion.question"
         ></booleanComponent>
         <checkboxComponent
           v-else
           :question="currentQuestion"
           :choices="getChoices()"
-          :answers="currentAnswer"
           :key="currentQuestion.questionType"
           :color="'D6EEFF'"
         ></checkboxComponent>

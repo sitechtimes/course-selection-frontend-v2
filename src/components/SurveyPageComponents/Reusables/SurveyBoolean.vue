@@ -37,7 +37,6 @@ import { surveyQuestion } from "../../../types/interface";
 
 const props = defineProps({
   question: Object as PropType<surveyQuestion>,
-  answers: Array,
   isDisabled: Boolean,
 });
 

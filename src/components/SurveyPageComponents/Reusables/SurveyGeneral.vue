@@ -15,7 +15,6 @@
 <script setup lang="ts">
 const props = defineProps({
   question: Object,
-  answers: Array,
   isDisabled: Boolean
 });
 
