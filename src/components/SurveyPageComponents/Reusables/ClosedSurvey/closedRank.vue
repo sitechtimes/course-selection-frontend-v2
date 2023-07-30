@@ -45,7 +45,7 @@ if (index < 0) {
   const questionAnswer = {
     id: props.question.id,
     question: props.question.question,
-    answer: [{ courses: [] }, { preference: [] }],
+    answer: { courses: [''], preference: [{rank:0,name:''}] },
   };
   surveyStore.currentResponse.push(questionAnswer);
 

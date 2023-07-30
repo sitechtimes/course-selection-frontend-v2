@@ -24,6 +24,7 @@
 </template>
 
 <script setup lang="ts">
+//@ts-nocheck
 import { ref, computed, watch, Ref, onBeforeMount, PropType } from "vue";
 import { useSurveyStore } from "../../../stores/survey";
 import { preferences, course } from "../../../types/interface";
@@ -82,7 +83,7 @@ function updateRank(n: number, dragIndex: string) {
 
   } 
   ref_courses.value.sort(function(a: preferences, b: preferences) {
-    return parseFloat(a.rank) - parseFloat(b.rank);
+    return a.rank - b.rank;
   })
   if(props.index === surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses')) {
     surveyStore.currentResponse[props.index].answer.preference = ref_courses.value

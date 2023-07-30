@@ -113,7 +113,7 @@ const toggleInterest = (interest: boolean, totalIndex: number) => {
         
         surveyStore.currentResponse[totalIndex].answer.preference.forEach((x: preferences) => {
           surveyStore.currentResponse[totalIndex].answer.preference.sort(function(a: preferences, b: preferences) {
-            return parseFloat(a.rank) - parseFloat(b.rank);
+            return a.rank - b.rank;
           })
         })
 
@@ -190,7 +190,7 @@ watch(
         preference.forEach((x: preferences) => {
           const index = preference.indexOf(x) 
           preference.sort(function(a: preferences, b: preferences) {
-            return parseFloat(a.rank) - parseFloat(b.rank);
+            return a.rank - b.rank;
           })
           if(index > classIndex) {
             preference[index].rank = preference[index].rank -1
@@ -200,7 +200,7 @@ watch(
         surveyStore.currentResponse[totalIndex].answer.preference.forEach((x: preferences) => {
           const index = surveyStore.currentResponse[totalIndex].answer.preference.indexOf(x) 
           surveyStore.currentResponse[totalIndex].answer.preference.sort(function(a: preferences, b: preferences) {
-            return parseFloat(a.rank) - parseFloat(b.rank);
+            return a.rank - b.rank;
           })
           if(index > allPreferenceIndex) {
             surveyStore.currentResponse[totalIndex].answer.preference[index].rank = surveyStore.currentResponse[totalIndex].answer.preference[index].rank -1

@@ -69,7 +69,7 @@ export interface studentGuidance extends studentData{
 
 // guidance edges and nodes interfaces
 export interface guidanceStudentData { 
-    students: studentData[]
+    students: studentGuidance[]
 }
 
 export interface allAnsweredSurveys {
@@ -112,7 +112,7 @@ export interface survey {
 }
 
 export interface surveyQuestion {
-    question?: string
+    question: string
     questionType: question_type
     id: string
     status: question_status
@@ -121,7 +121,7 @@ export interface surveyQuestion {
 
 export interface surveyAnswer {
     id: string
-    question: string
+    question?: string
     answer: checkboxAnswer
 }
 

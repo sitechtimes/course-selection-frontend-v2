@@ -17,7 +17,6 @@ const studentStore = useStudentStore()
 
 surveyStore.setSurvey(
   studentStore.user.email,
-  studentStore.survey.question,
   studentStore.student.grade
 );
 

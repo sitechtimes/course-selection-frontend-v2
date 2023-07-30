@@ -10,7 +10,7 @@ export const useSurveyStore = defineStore("survey", {
   state: (): surveyStore => ({
     currentAnsweredSurvey: {answers: "[{}]", email: "", grade: "FRESHMAN", status: "INCOMPLETE"},
     currentResponse: [{id: '', question: '', answer:{courses:[], preference: []}}],
-    currentSurvey: {dueDate: "", grade: "FRESHMAN", question: [{id: "", questionType: "OTHER", status: 'STANDARD', className: ''}]},
+    currentSurvey: {dueDate: "", grade: "FRESHMAN", question: [{id: "", questionType: "OTHER", status: 'STANDARD', question:'', className: ''}]},
     loading: false,
     open: true,
     submit: false,
@@ -74,7 +74,7 @@ export const useSurveyStore = defineStore("survey", {
           } 
         });
     },
-    async startSurvey(email: string, survey: Array<object>, grade: grade) {
+    async startSurvey(email: string, grade: grade) {
       const userStore = useUserStore();
       const answers: Array<object> = [];
       const allChosen = {
@@ -138,7 +138,7 @@ export const useSurveyStore = defineStore("survey", {
           }
         });
     },
-    async setSurvey(email: string, survey: Array<object>, grade: grade) {
+    async setSurvey(email: string, grade: grade) {
       const userStore = useUserStore();
       const studentStore = useStudentStore();
       const guidanceStore = useGuidanceStore()
@@ -146,7 +146,7 @@ export const useSurveyStore = defineStore("survey", {
 
       if (userStore.userType === "student") {
         if (studentStore.answeredSurvey[0] === undefined) {
-          await this.startSurvey(email, survey, grade);
+          await this.startSurvey(email, grade);
         }
 
         this.currentAnsweredSurvey = studentStore.answeredSurvey[0];
@@ -160,7 +160,7 @@ export const useSurveyStore = defineStore("survey", {
         let studentIndex = guidanceStore.allAnsweredSurveys.edges.indexOf(survey[0])
 
         if (studentIndex < 0) {
-          await this.startSurvey(email, survey, grade);
+          await this.startSurvey(email, grade);
           survey = guidanceStore.allAnsweredSurveys.edges.filter(x => x.node.email === email && x.node.grade === grade)
           studentIndex = guidanceStore.allAnsweredSurveys.edges.indexOf(survey[0])
           
@@ -178,6 +178,7 @@ export const useSurveyStore = defineStore("survey", {
       this.currentSurvey.question.forEach((x: surveyQuestion) => {
         const answer: surveyStringAnswer| surveyAnswer | undefined = this.currentResponse.find(y => y.id === x.id)
         if(x.questionType === 'GENERAL' || x.questionType === 'BOOLEAN') {
+          //@ts-ignore
           if(answer?.answer.trim()[0] === undefined) {
             check.push(x.id)
           } 

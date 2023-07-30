@@ -3,6 +3,7 @@ import BellIcon from "../components/icons/BellIcon.vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
 import { useStudentStore } from "../stores/student";
+//@ts-ignore
 import dateFormat from "dateformat";
 import { computed, ref, Ref, watch } from "vue";
 

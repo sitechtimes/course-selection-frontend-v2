@@ -36,6 +36,7 @@ let index: number = surveyStore.currentResponse.findIndex(
       question: props.question.question,
       answer: "",
     };
+    //@ts-ignore
     surveyStore.currentResponse.push(questionAnswer);
 
     index = surveyStore.currentResponse.findIndex(

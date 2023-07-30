@@ -24,7 +24,6 @@ const max: Ref<boolean> = ref(false);
 
 surveyStore.setSurvey(
   studentStore.user.email,
-  surveyStore.currentSurvey.question,
   studentStore.student.grade
 );
 
@@ -66,9 +65,9 @@ onBeforeRouteLeave((to, from, next) => {
     }
 })
 
-const reminder = (e) => {
+const reminder = (e: Event) => {
     e.preventDefault(); 
-    e.returnValue = '';
+    e.returnValue = false;
 };
 
 watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {

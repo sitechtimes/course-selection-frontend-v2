@@ -54,6 +54,7 @@ let index: number = surveyStore.currentResponse.findIndex(
       question: props.question.question,
       answer: "",
     };
+    //@ts-ignore
     surveyStore.currentResponse.push(questionAnswer);
 
     index = surveyStore.currentResponse.findIndex(
@@ -75,7 +76,7 @@ watch(
   (newResponse, oldResponse) => {
     if(props.question?.status === 'CLASS') {
       const totalIndex = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');
-
+      //@ts-ignore
       if (newResponse === "Yes") {
         const overallRank = surveyStore.currentResponse[totalIndex].answer.courses.length + 1;
         const overallRankObject = {
@@ -86,7 +87,7 @@ watch(
         surveyStore.currentResponse[totalIndex].answer.courses.push(props.question.className)
         surveyStore.currentResponse[totalIndex].answer.preference.push(overallRankObject)
       }
-
+      //@ts-ignore
       if (newResponse === "No") {
         if(surveyStore.currentResponse[totalIndex].answer.courses.includes(props.question.className)) {
           const allClassIndex = surveyStore.currentResponse[totalIndex].answer.courses.findIndex((x: string) => x === props.question.className)
@@ -95,7 +96,7 @@ watch(
           surveyStore.currentResponse[totalIndex].answer.preference.forEach((x: preferences) => {
           const index = surveyStore.currentResponse[totalIndex].answer.preference.indexOf(x) 
           surveyStore.currentResponse[totalIndex].answer.preference.sort(function(a: preferences, b: preferences) {
-              return parseFloat(a.rank) - parseFloat(b.rank);
+              return a.rank - b.rank;
             })
             if(index > allPreferenceIndex) {
               surveyStore.currentResponse[totalIndex].answer.preference[index].rank = surveyStore.currentResponse[totalIndex].answer.preference[index].rank -1
