@@ -59,17 +59,10 @@ export interface studentData {
     grade: grade
     homeroom: string
     meeting: string | null
-    user?: userData
 }
 
 // student object (guidance side)
-export interface studentGuidance { 
-    coursesAvailable: course[]
-    coursesRequired: course[]
-    coursesTaken: course[]
-    grade: grade
-    homeroom: string
-    meeting: string | null
+export interface studentGuidance extends studentData{ 
     user: userData
     flag: string
 }
