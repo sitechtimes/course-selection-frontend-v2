@@ -64,11 +64,17 @@
 import surveyDraggable from "./SurveyDraggable.vue";
 import { useSurveyStore } from "../../../stores/survey";
 import { watch, onBeforeMount, ref, Ref, computed, PropType } from "vue";
-import { surveyQuestion } from "../../../types/interface";
+import { surveyQuestion, preferences, checkboxAnswer, course } from "../../../types/interface";
 
 const props = defineProps({
-  choices: Array,
-  question: Object as PropType<surveyQuestion>,
+  choices:{
+    type:  Array as PropType<Array<course>>,
+    required: true
+  },
+  question: {
+    type: Object as PropType<surveyQuestion>,
+    required: true
+  },
   color: String,
 });
 
@@ -101,13 +107,12 @@ const toggleInterest = (interest: boolean, totalIndex: number) => {
   if(!interest) {   
     surveyStore.currentResponse[index].answer.courses.forEach((course: string) => {
       if(course !== "Not Interested") {
-        const classIndex = surveyStore.currentResponse[index].answer.preference.findIndex(x => x.name === course)
-        const allClassIndex = surveyStore.currentResponse[totalIndex].answer.courses.findIndex(x => x === course)
-        const allPreferenceIndex = surveyStore.currentResponse[totalIndex].answer.preference.findIndex(x => x.name === course)
+        const classIndex = surveyStore.currentResponse[index].answer.preference.findIndex((x: preferences) => x.name === course)
+        const allClassIndex = surveyStore.currentResponse[totalIndex].answer.courses.findIndex((x: string) => x === course)
+        const allPreferenceIndex = surveyStore.currentResponse[totalIndex].answer.preference.findIndex((x: preferences) => x.name === course)
         
-        surveyStore.currentResponse[totalIndex].answer.preference.forEach(x => {
-          const index = surveyStore.currentResponse[totalIndex].answer.preference.indexOf(x) 
-          surveyStore.currentResponse[totalIndex].answer.preference.sort(function(a, b) {
+        surveyStore.currentResponse[totalIndex].answer.preference.forEach((x: preferences) => {
+          surveyStore.currentResponse[totalIndex].answer.preference.sort(function(a: preferences, b: preferences) {
             return parseFloat(a.rank) - parseFloat(b.rank);
           })
         })
@@ -118,7 +123,7 @@ const toggleInterest = (interest: boolean, totalIndex: number) => {
       }
     })
 
-    surveyStore.currentResponse[totalIndex].answer.preference.forEach((rankObject: {name:string, rank: number}, index: number) => {
+    surveyStore.currentResponse[totalIndex].answer.preference.forEach((rankObject: preferences, index: number) => {
       rankObject.rank = index + 1
     })
 
@@ -178,13 +183,13 @@ watch(
       if (removeClass[0] === 'Not Interested') {
         toggleInterest(true, totalIndex)
       } else if (!surveyStore.currentResponse[index].answer.courses.includes('Not Interested')){
-        const classIndex = surveyStore.currentResponse[index].answer.preference.findIndex(x => x.name === removeClass[0])
-        const allClassIndex = surveyStore.currentResponse[totalIndex].answer.courses.findIndex(x => x === removeClass[0])
-        const allPreferenceIndex = surveyStore.currentResponse[totalIndex].answer.preference.findIndex(x => x.name === removeClass[0])
+        const classIndex = surveyStore.currentResponse[index].answer.preference.findIndex((x: preferences) => x.name === removeClass[0])
+        const allClassIndex = surveyStore.currentResponse[totalIndex].answer.courses.findIndex((x: string) => x === removeClass[0])
+        const allPreferenceIndex = surveyStore.currentResponse[totalIndex].answer.preference.findIndex((x: preferences) => x.name === removeClass[0])
 
-        preference.forEach(x => {
+        preference.forEach((x: preferences) => {
           const index = preference.indexOf(x) 
-          preference.sort(function(a, b) {
+          preference.sort(function(a: preferences, b: preferences) {
             return parseFloat(a.rank) - parseFloat(b.rank);
           })
           if(index > classIndex) {
@@ -192,9 +197,9 @@ watch(
           }
         })
         
-        surveyStore.currentResponse[totalIndex].answer.preference.forEach(x => {
+        surveyStore.currentResponse[totalIndex].answer.preference.forEach((x: preferences) => {
           const index = surveyStore.currentResponse[totalIndex].answer.preference.indexOf(x) 
-          surveyStore.currentResponse[totalIndex].answer.preference.sort(function(a, b) {
+          surveyStore.currentResponse[totalIndex].answer.preference.sort(function(a: preferences, b: preferences) {
             return parseFloat(a.rank) - parseFloat(b.rank);
           })
           if(index > allPreferenceIndex) {

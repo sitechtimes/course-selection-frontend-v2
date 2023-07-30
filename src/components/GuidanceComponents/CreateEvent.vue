@@ -2,6 +2,7 @@
 import { ref, Ref, onMounted } from "vue";
 import { useGuidanceStore } from "../../stores/guidance";
 import { useUserStore } from "../../stores/user";
+import { studentGuidance } from "../../types/interface";
 
 const guidanceStore = useGuidanceStore()
 const userStore = useUserStore()
@@ -15,7 +16,7 @@ let email: string;
 const show: Ref<boolean> = ref(false)
 const save = ref()
 const form = ref()
-const studentList = guidanceStore.guidance.students;
+const studentList: studentGuidance[] = guidanceStore.guidance.students;
 const dateError: Ref<boolean> = ref(false);
 const timeError: Ref<boolean> = ref(false);
 const nameError: Ref<boolean> = ref(false);

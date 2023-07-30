@@ -14,7 +14,7 @@ const studentStore = useStudentStore();
 
 let time: String;
 let date: String;
-let closeTime: String 
+let closeTime: string[] 
 
 if(studentStore.student.homeroom === '') {
   console.log('student profile not updated')

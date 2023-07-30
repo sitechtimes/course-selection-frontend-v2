@@ -33,10 +33,13 @@
 <script setup lang="ts">
 import { useSurveyStore } from "../../../stores/survey";
 import { watch, onBeforeMount, PropType } from "vue";
-import { surveyQuestion } from "../../../types/interface";
+import { surveyQuestion, preferences } from "../../../types/interface";
 
 const props = defineProps({
-  question: Object as PropType<surveyQuestion>,
+  question: {
+    type: Object as PropType<surveyQuestion>,
+    required: true
+  },
   isDisabled: Boolean,
 });
 
@@ -48,8 +51,8 @@ let index: number = surveyStore.currentResponse.findIndex(
 
   if (index < 0) {
     const questionAnswer = {
-      id: props.question?.id,
-      question: props.question?.question,
+      id: props.question.id,
+      question: props.question.question,
       answer: "",
     };
     surveyStore.currentResponse.push(questionAnswer);
@@ -88,12 +91,12 @@ watch(
 
       if (newResponse === "No") {
         if(surveyStore.currentResponse[totalIndex].answer.courses.includes(props.question.className)) {
-          const allClassIndex = surveyStore.currentResponse[totalIndex].answer.courses.findIndex(x => x === props.question.className)
-          const allPreferenceIndex = surveyStore.currentResponse[totalIndex].answer.preference.findIndex(x => x.name === props.question.className)
+          const allClassIndex = surveyStore.currentResponse[totalIndex].answer.courses.findIndex((x: string) => x === props.question.className)
+          const allPreferenceIndex = surveyStore.currentResponse[totalIndex].answer.preference.findIndex((x: preferences) => x.name === props.question.className)
 
-          surveyStore.currentResponse[totalIndex].answer.preference.forEach(x => {
+          surveyStore.currentResponse[totalIndex].answer.preference.forEach((x: preferences) => {
           const index = surveyStore.currentResponse[totalIndex].answer.preference.indexOf(x) 
-          surveyStore.currentResponse[totalIndex].answer.preference.sort(function(a, b) {
+          surveyStore.currentResponse[totalIndex].answer.preference.sort(function(a: preferences, b: preferences) {
               return parseFloat(a.rank) - parseFloat(b.rank);
             })
             if(index > allPreferenceIndex) {

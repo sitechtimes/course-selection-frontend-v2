@@ -9,7 +9,7 @@ import axios from "axios";
 export const useSurveyStore = defineStore("survey", {
   state: (): surveyStore => ({
     currentAnsweredSurvey: {answers: "[{}]", email: "", grade: "FRESHMAN", status: "INCOMPLETE"},
-    currentResponse: [{id: '', question: '', answer:''}],
+    currentResponse: [{id: '', question: '', answer:{courses:[], preference: []}}],
     currentSurvey: {dueDate: "", grade: "FRESHMAN", question: [{id: "", questionType: "OTHER", status: 'STANDARD', className: ''}]},
     loading: false,
     open: true,

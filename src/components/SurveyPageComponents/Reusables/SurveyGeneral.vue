@@ -13,13 +13,17 @@
 </template>
 
 <script setup lang="ts">
+import { useSurveyStore } from "../../../stores/survey";
+import { watch, onBeforeMount, PropType } from "vue";
+import { survey, surveyAnswer, surveyQuestion } from "../../../types/interface";
+
 const props = defineProps({
-  question: Object,
+  question:{
+    type: Object as PropType<surveyQuestion>, 
+    required: true
+  },
   isDisabled: Boolean
 });
-
-import { useSurveyStore } from "../../../stores/survey";
-import { watch, onBeforeMount } from "vue";
 
 const surveyStore = useSurveyStore();
 let index: number = surveyStore.currentResponse.findIndex(
