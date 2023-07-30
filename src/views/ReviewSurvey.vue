@@ -42,10 +42,6 @@ const submit = async () => {
     if(surveyStore.missingAnswers.length === 0) {
         if(userStore.userType === "student") {
           router.push('/student/dashboard')
-          document.getElementById('notification')?.classList.remove('translate-y-full')
-          setTimeout(function(){
-            document.getElementById('notification')?.classList.add('translate-y-full')
-          }, 2000);
         } else if(userStore.userType === "guidance") {
           router.push('/guidance/studentlist')
         }
