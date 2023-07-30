@@ -3,7 +3,7 @@ import { useUserStore } from "./user";
 import { useStudentStore } from "./student";
 import { useGuidanceStore } from "./guidance";
 import { useRouter } from "vue-router";
-import { grade, status, surveyAnswer, surveyQuestion, surveyStore } from "../types/interface";
+import { grade, status, surveyAnswer, surveyQuestion, surveyStore, surveyStringAnswer } from "../types/interface";
 import axios from "axios";
 
 export const useSurveyStore = defineStore("survey", {
@@ -176,7 +176,7 @@ export const useSurveyStore = defineStore("survey", {
       const userStore = useUserStore()
 
       this.currentSurvey.question.forEach((x: surveyQuestion) => {
-        const answer: surveyAnswer | undefined = this.currentResponse.find(y => y.id === x.id)
+        const answer: surveyStringAnswer| surveyAnswer | undefined = this.currentResponse.find(y => y.id === x.id)
         if(x.questionType === 'GENERAL' || x.questionType === 'BOOLEAN') {
           if(answer?.answer.trim()[0] === undefined) {
             check.push(x.id)

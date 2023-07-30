@@ -29,7 +29,10 @@ import { useSurveyStore } from "../../../stores/survey";
 import { preferences, course } from "../../../types/interface";
 
 const props = defineProps({
-  courses: Array as PropType<Array<preferences>>,
+  courses: {
+    type: Array as PropType<Array<preferences>>,
+    required: true
+  },
   numbered: Boolean,
   index: Number,
   color: String

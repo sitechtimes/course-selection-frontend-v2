@@ -129,7 +129,13 @@ export interface surveyQuestion {
 export interface surveyAnswer {
     id: string
     question: string
-    answer: checkboxAnswer | string
+    answer: checkboxAnswer
+}
+
+export interface surveyStringAnswer {
+    id: string
+    question: string
+    answer: string
 }
 
 export interface checkboxAnswer {

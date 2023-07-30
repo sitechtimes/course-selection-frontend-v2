@@ -22,14 +22,14 @@
 
 <script setup lang="ts">
 import { useSurveyStore } from '../../../../stores/survey';
-import { preference } from '../../../../types/interface';
+import { preferences } from '../../../../types/interface';
 import { PropType } from 'vue';
 
 const surveyStore = useSurveyStore()
 const indexAll = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');
 
 const props = defineProps({
-  courses: Array as PropType<Array<preference>>,
+  courses: Array as PropType<Array<preferences>>,
 });
 
 </script>
