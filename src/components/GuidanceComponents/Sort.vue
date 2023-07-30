@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, Ref } from "vue";
 import { useUserStore } from '../../stores/user';
+import { useGuidanceStore } from "../../stores/guidance";
 import DownArrow from '../icons/DownArrow.vue';
+import { userData } from "../../types/interface";
 
 const userStore = useUserStore()
-// const input = ref("");
-// const props = ["title"];
+const guidanceStore = useGuidanceStore()
 const selected: Ref<string> = ref("Sort By");
 const isOpen: Ref<boolean> = ref(false);
 
@@ -42,6 +43,22 @@ const menuArray = [
     sortBy: "eleven",
     text: "Grade 11"
   },
+  {
+    sortBy: "transfer",
+    text: "Transfer"
+  },
+  {
+    sortBy: "regents",
+    text: "Missing Regents"
+  },
+  {
+    sortBy: "sports",
+    text: "Sports Team"
+  },
+  {
+    sortBy: "enl",
+    text: "ENL"
+  },
 ]
 
 const sortBy = (sort: {sortBy:string, text:string}) => {
@@ -57,26 +74,26 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
     return 0;
   }
 
-  function ns(a: { grade: string; }) {
-    if (userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined) return -1;
+  function ns(a: { grade: string, user: userData }) {
+    if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined) return -1;
     else
     return 1;
   }
 
-  function ip(a: { grade: string; }) {
-    if (userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
+  function ip(a: { grade: string, user: userData }) {
+    if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
       return 1;
-    } else if(userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email).node.status === 'INCOMPLETE'){
+    } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'INCOMPLETE'){
       return -1;
     } else {
       return 1
     }
   }
 
-  function com(a: { grade: string; }) {
-    if (userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
+  function com(a: { grade: string, user: userData }) {
+    if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
       return 1;
-    } else if(userStore.data.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email).node.status === 'COMPLETE'){
+    } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'COMPLETE'){
       return -1;
     } else {
       return 1
@@ -101,11 +118,34 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
     return 1;
   }
 
+  function transfer(a: { flag: string; }) {
+    if (a.flag.includes('Transfer')) return -1;
+    else
+    return 1;
+  }
+
+  function regents(a: { flag: string; }) {
+    if (a.flag.includes('Regents')) return -1;
+    else
+    return 1;
+  }
+
+  function sports(a: { flag: string; }) {
+    if (a.flag.includes('Team')) return -1;
+    else
+    return 1;
+  }
+
+  function enl(a: { flag: string; }) {
+    if (a.flag.includes('ENL')) return -1;
+    else
+    return 1;
+  }
+
   const sortBy = eval(sort.sortBy)
   selected.value = sort.text
   isOpen.value = false
-  console.log(userStore.data.guidance.students)
-  return (userStore.data.guidance.students.sort(sortBy))
+  return (guidanceStore.guidance.students.sort(sortBy))
 }
 </script>
 

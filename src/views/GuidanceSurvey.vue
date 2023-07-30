@@ -1,33 +1,37 @@
 <script setup lang="ts">
 import { useUserStore } from '../stores/user'
 import { useSurveyStore } from '../stores/survey';
+import { useGuidanceStore } from '../stores/guidance';
 import booleanComponent from '../components/SurveyPageComponents/Reusables/SurveyBoolean.vue'
 import generalComponent from '../components/SurveyPageComponents/Reusables/SurveyGeneral.vue'
 import checkboxComponent from '../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue'
-import surveyDraggable from '../components/SurveyPageComponents/Reusables/surveyDraggable.vue';
+import surveyDraggable from '../components/SurveyPageComponents/Reusables/SurveyDraggable.vue';
 import exclamationMark from '../components/icons/ExclamationMark.vue'
 import { surveyQuestion, surveyAnswer } from '../types/interface';
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter, useRoute, onBeforeRouteLeave } from 'vue-router'
 import { ref, Ref, watch, reactive } from 'vue';
 
 document.title = 'Survey | SITHS Course Selection'
 
 const userStore = useUserStore()
 const surveyStore = useSurveyStore()
+const guidanceStore = useGuidanceStore()
 const router = useRouter()
 const route = useRoute()
 
-const viewedStudent = userStore.data.guidance.students.filter(student => student.user.email === route.params.email)[0]
+surveyStore.missingAnswers = []
 
+const viewedStudent = guidanceStore.guidance.students.filter(student => student.user.email === `${route.params.email}@nycstudents.net`)[0]
+let surveyIndex = guidanceStore.allAnsweredSurveys.edges.findIndex(x => x.node.email === `${route.params.email}@nycstudents.net` && x.node.grade === viewedStudent.grade)
 
 const x: Ref<number> = ref(0)
 const indexAll = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');
 const indexNote = surveyStore.currentResponse.findIndex((x) => x.id === 'noteToGuidance');
 const indexGuidance = surveyStore.currentResponse.findIndex((x) => x.id === 'guidanceFinalNote');
 
-surveyStore.currentSurvey = userStore.data.allSurveys.edges.find(x => x.node.grade === viewedStudent.grade).node
+surveyStore.currentSurvey = guidanceStore.allSurveys.edges.find(x => x.node.grade === viewedStudent.grade)?.node
 
-const getChoices = (question) => {
+const getChoices = (question: surveyQuestion) => {
   const classes = viewedStudent.coursesAvailable
   return classes.filter(x => x.subject === question.questionType)
 }
@@ -46,6 +50,41 @@ const submit = async () => {
 watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newResponse) => {
   x.value = x.value+1
 }, { deep: true })
+
+onBeforeRouteLeave((to, from, next) => {
+    if(JSON.stringify(surveyStore.currentResponse) === guidanceStore.allAnsweredSurveys.edges[surveyIndex].node.answers) {
+      next()
+    } else {
+      const answer = window.confirm('Changes you made might not be saved.')
+      if (answer) {
+        next()
+      } else {
+        next(false)
+    }
+    }
+})
+
+const reminder  =  (e) => {
+    e.preventDefault(); 
+    e.returnValue = '';
+};
+
+watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
+  if(JSON.stringify(newResponse) === guidanceStore.allAnsweredSurveys.edges[surveyIndex].node.answers) {
+    window.removeEventListener('beforeunload', reminder)
+  } else {
+    window.addEventListener('beforeunload', reminder);
+  }
+}, { deep:true })
+
+watch(() => guidanceStore.allAnsweredSurveys.edges[surveyIndex].node.answers, (newResponse, oldResponse) => {
+  if(newResponse === JSON.stringify(surveyStore.currentResponse)) {
+    window.removeEventListener('beforeunload', reminder)
+  } else {
+    window.addEventListener('beforeunload', reminder);
+  }
+}, { deep:true })
+
 </script>
 
 <template>
