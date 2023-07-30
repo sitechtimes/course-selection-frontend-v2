@@ -1,7 +1,8 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { useUserStore } from '../../stores/user';
 import { useSurveyStore } from '../../stores/survey';
 import { useResetStore } from '../../stores/reset'
+import { useStudentStore } from '../../stores/student';
 import { RouterLink } from "vue-router";
 import MenuIcon from "../icons/MenuIcon.vue";
 import CloseMenu from "../icons/CloseMenu.vue";
@@ -11,27 +12,14 @@ import router from '../../router';
 
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
-const resetStore = useResetStore()
+const resetStore = useResetStore();
+const studentStore = useStudentStore()
 let menuOpen: Ref<boolean> = ref(false);
-const save = ref(null)
+const save = ref()
 
 const viewingSurvey = () => {
     return router.currentRoute.value.path.includes('survey')
 }
-
-const exitSurvey = () => {
-  if (userStore.isLoggedIn === true) {
-    if (userStore.userType === "student") {
-      router.push("/student/dashboard");
-    }
-    if (userStore.userType === "guidance") {
-      router.push("/guidance/studentlist");
-    }
-  } else {
-    return router.push("/");
-  }
-};
-
 
 const redirect = () => {
     if (userStore.isLoggedIn === true) {
@@ -39,7 +27,7 @@ const redirect = () => {
             router.push('/student/dashboard')
         } 
         if (userStore.userType === 'guidance') {
-            router.push('/guidance/dashboard')
+            router.push('/guidance/studentlist')
         }
     } else {
         return router.push('/')
@@ -95,7 +83,7 @@ const submit = async () => {
             <RouterLink to="/courses">
                 <p class="text-base hover:text-gray-500">Courses</p>
             </RouterLink>
-            <p v-if="userStore.data.student.homeroom != ''" @click="surveyNav()" class="cursor-pointer hover:text-gray-500">Survey</p>
+            <p v-if="studentStore.student.homeroom != ''" @click="surveyNav()" class="cursor-pointer hover:text-gray-500">Survey</p>
             <RouterLink to="/">
                 <p @click="logout()" id="name-link" class="text-base text-red-500 cursor-pointer hover:text-red-400">Logout</p>
             </RouterLink>
@@ -124,8 +112,7 @@ const submit = async () => {
             <CloseMenu @click="toggleMenu" v-else />
         </div>
         <div v-if="viewingSurvey()" class="flex flex-row-reverse w-full sm:w-1/4 md:1/6 justify-between">
-            <p @click="exitSurvey()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500">Exit</p>
-            <!-- doesn't show up on guidance side, need change -->
+            <p @click="redirect()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500">Exit</p>
             <p v-if="surveyStore.currentAnsweredSurvey.status === 'COMPLETE' && surveyStore.open === true" @click="submit()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500">Submit</p>
             <p v-if="surveyStore.currentAnsweredSurvey.status != 'COMPLETE' && surveyStore.open === true" @click="surveyStore.saveSurvey(surveyStore.currentAnsweredSurvey.status, surveyStore.currentAnsweredSurvey.grade); toggleSave()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500" ref="save">Save</p>
         </div>

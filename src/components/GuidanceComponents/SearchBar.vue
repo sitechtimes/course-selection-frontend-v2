@@ -3,7 +3,7 @@
       <div id="search-bar" class="flex justify-center items-center relative">
         <input
           :value="modelValue"
-          placeholder="Search by name"
+          placeholder="Search by name or email"
           @input="$emit('update:modelValue', $event?.target?.value)"
           class="border border-zinc-300 rounded w-112 h-10 p-2 text-zinc-800"
           id="search-input"
@@ -12,18 +12,12 @@
       </div>
     </div>
   </template>
-  <script lang="ts">
+  
+  <script lang="ts" setup>
   import SearchButton from "../icons/SearchButton.vue";
-  export default {
-    components: {
-      SearchButton,
-    },
-    props: ["modelValue"],
-    emits: ["update:modelValue"],
-  };
+  
+  const props = defineProps({
+    modelValue: String
+  })   
+  
   </script>
-  <style scoped>
-  #search-input {
-    border-radius: 0.5rem;
-  }
-  </style>

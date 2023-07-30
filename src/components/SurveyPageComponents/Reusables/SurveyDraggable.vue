@@ -1,6 +1,6 @@
 <template>
   <div class="h-auto select-none">
-     <div v-if="props.courses?.length > 0" class="flex flex-col mt-2 text-center text-base md:text-lg xl:text-xl">
+     <div v-if="props.courses.length > 0" class="flex flex-col mt-2 text-center text-base md:text-lg xl:text-xl">
         <div class="my-1.5 flex flex-row items-center justify-center" v-for="n in computedHeight" :key="n" :id="n.toString()">
         <p>{{ n }}.</p>
         <div
@@ -24,8 +24,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, Ref, onBeforeMount } from "vue";
+import { ref, computed, watch, Ref, onBeforeMount, PropType } from "vue";
 import { useSurveyStore } from "../../../stores/survey";
+import { preference } from "../../../types/interface";
 
 const props = defineProps({
   courses: Array,
@@ -49,7 +50,7 @@ const hoverBoxOver = function (e) {
   dragParent.appendChild(e.target);
 };
 
-const hoverBox = function (e, n) {
+const hoverBox = function (e, n: number) {
   let dragParent = dragElement.parentElement;
   let dragIndex = dragParent?.parentElement.id;
   e.target.parentElement.appendChild(dragElement);
@@ -57,7 +58,7 @@ const hoverBox = function (e, n) {
   updateRank(n, dragIndex)
 };
 
-function updateRank(n, dragIndex) {
+function updateRank(n: number, dragIndex: string | undefined) {
   const startObject = ref_courses.value.findIndex(x => x.rank === +n)
 
   if(+n > +dragIndex) {
@@ -76,16 +77,14 @@ function updateRank(n, dragIndex) {
     })
     ref_courses.value[startObject].rank = +dragIndex
 
-  } else {
-    console.log('no change')
-  }
+  } 
   ref_courses.value.sort(function(a, b) {
     return parseFloat(a.rank) - parseFloat(b.rank);
   })
   if(props.index === surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses')) {
-    surveyStore.currentResponse[props.index].preference = ref_courses.value
+    surveyStore.currentResponse[props.index].answer.preference = ref_courses.value
   } else {
-    surveyStore.currentResponse[props.index].answer[1].classPreference = ref_courses.value
+    surveyStore.currentResponse[props.index].answer.preference = ref_courses.value
   }
   
 }

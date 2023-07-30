@@ -4,11 +4,15 @@ import DownArrow from '../components/icons/DownArrow.vue';
 import Sort from '../components/GuidanceComponents/Sort.vue';
 import StudentTable from '../components/GuidanceComponents/StudentTable.vue'
 import { useUserStore } from '../stores/user';
+import { useGuidanceStore } from '../stores/guidance';
 import { studentData } from '../types/interface'
 import { ref, Ref, computed } from 'vue'
 
+document.title = 'Student List | SITHS Course Selection'
+
 // const students:Array<studentData> = useUserStore().data.guidance.students
-const students = useUserStore().data.guidance.students
+const guidanceStore = useGuidanceStore()
+const students = guidanceStore.guidance.students
 const input:Ref<string> = ref('')
 
 const newStudents = computed(() => {

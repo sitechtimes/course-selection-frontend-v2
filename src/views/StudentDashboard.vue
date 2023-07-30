@@ -2,56 +2,51 @@
 import BellIcon from "../components/icons/BellIcon.vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
-import dateFormat, { masks } from "dateformat";
-import { computed, ref, Ref } from "vue";
+import { useStudentStore } from "../stores/student";
+import dateFormat from "dateformat";
+import { computed, ref, Ref, watch } from "vue";
+
+document.title = 'Dashboard | SITHS Course Selection'
 
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
+const studentStore = useStudentStore();
 
 let time: String;
 let date: String;
 let closeTime: String 
 
-if(userStore.data.student.homeroom === '') {
-  console.log('o')
+if(studentStore.student.homeroom === '') {
+  console.log('student profile not updated')
 } else {
-  closeTime = userStore.data.survey.dueDate.substring(0,10).split("-")
+  closeTime = studentStore.survey.dueDate.substring(0,10).split("-")
 }
-
-const announcement = computed(() => {
-  if(userStore.data.answeredSurvey[0] === null) {
-  return "Your survey had not been started. Please complete it before the due date."
-} else if(userStore.data.answeredSurvey[0].status === 'COMPLETE') {
-  return "You have submitted your survey. Changes can be made before the due date."
-} else{
-  return "Your survey is in progress. Please complete it before the due date."
-}
-})
 
 if (
-  userStore.data.student.meeting != undefined ||
-  userStore.data.student.meeting != null
+  studentStore.student.meeting != undefined ||
+  studentStore.student.meeting != null
 ) {
-  const datetime = new Date(userStore.data.student.meeting);
+  const datetime = new Date(studentStore.student.meeting);
   date = dateFormat(datetime, "shortDate");
   time = dateFormat(datetime, "shortTime");
 }
+
 </script>
 
 <template>
   <div class="h-[75vh] w-full flex flex-row justify-center items-center">
-    <div v-if="userStore.data.student.homeroom === ''" id="left"
+    <div v-if="studentStore.student.homeroom === ''" id="left"
       class="w-5/6 flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left md:w-3/4 lg:max-w-2xl xl:max-w-3xl lg:space-y-6 lg:ml-12">
       <h2 id="name" class="text-5xl font-bold">Welcome, {{ userStore.first_name }}.</h2>
       <div id="announcements"
-      class="text-xl text-center flex ml-2 md:text-left">Thank you for signing up. Your account information is in the process of being updated. Please come back later. In the meantime, you can check out the courses offered.</div>
-      <RouterLink to="/schedule">
+      class="text-xl text-center flex ml-2 md:text-left">Thank you for signing up. Your account information is in the process of being updated. Please come back later.</div>
+      <!-- <RouterLink to="/schedule">
           <button
             class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s"
           >
             Courses
           </button>
-        </RouterLink>
+        </RouterLink> -->
     </div>
     <div
       v-else
@@ -94,7 +89,7 @@ if (
         </RouterLink>
       </div>
       <div>
-        <p v-if="userStore.data.student.meeting != undefined || userStore.data.student.meeting != null">You have a scheduled meeting with your guidance councelor on {{ date }} at {{ time }}.</p>
+        <p v-if="studentStore.student.meeting != undefined || studentStore.student.meeting != null">You have a scheduled meeting with your guidance councelor on {{ date }} at {{ time }}.</p>
         <p v-else>Your guidance councelor has not scheduled a meeting with you yet.</p>
       </div>
     </div>

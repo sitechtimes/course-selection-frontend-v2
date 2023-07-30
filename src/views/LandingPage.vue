@@ -1,4 +1,6 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+document.title = 'Course Selection'
+</script>
 
 <template>
   <div class="h-[75vh] w-full flex flex-row justify-center items-center">
