@@ -75,6 +75,14 @@ watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
   }
 }, { deep:true })
 
+watch(() => studentStore.answeredSurvey[0].answers, (newResponse, oldResponse) => {
+  if(newResponse === JSON.stringify(surveyStore.currentResponse)) {
+    window.removeEventListener('beforeunload', reminder)
+  } else {
+    window.addEventListener('beforeunload', reminder);
+  }
+}, { deep:true })
+
 watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newResponse) => {
   x.value = x.value+1
 }, { deep: true })

@@ -74,10 +74,16 @@ const reminder  =  (e) => {
 watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
   if(JSON.stringify(newResponse) === studentStore.answeredSurvey[0].answers) {
     window.removeEventListener('beforeunload', reminder)
-    console.log('remove')
   } else {
     window.addEventListener('beforeunload', reminder);
-    console.log('add');
+  }
+}, { deep:true })
+
+watch(() => studentStore.answeredSurvey[0].answers, (newResponse, oldResponse) => {
+  if(newResponse === JSON.stringify(surveyStore.currentResponse)) {
+    window.removeEventListener('beforeunload', reminder)
+  } else {
+    window.addEventListener('beforeunload', reminder);
   }
 }, { deep:true })
 </script>

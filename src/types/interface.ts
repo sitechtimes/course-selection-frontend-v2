@@ -70,6 +70,7 @@ export interface studentGuidance {
     homeroom: string
     meeting: string | null
     user: userData
+    flag: string
 }
 
 // guidance edges and nodes interfaces
@@ -104,7 +105,7 @@ export interface allSurveysNodes {
 // survey interfaces
 export interface answeredSurvey {
     id?: string
-    answers: surveyAnswer[] 
+    answers: string 
     email: string
     grade: grade
     status: status

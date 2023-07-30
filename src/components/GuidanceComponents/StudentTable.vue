@@ -8,7 +8,7 @@ import { useRouter } from 'vue-router'
 import { studentGuidance } from '../../types/interface';
 
 const props = defineProps({
-    newstudents: Array
+    newstudents: Array as PropType<Array<studentGuidance>>
 })
 const userStore = useUserStore()
 const surveyStore = useSurveyStore()
@@ -60,7 +60,7 @@ async function userClick(student: studentGuidance) {
                     </th>
                 </tr>
             </thead>
-            <tbody v-for="student in newstudents" :key="student" class="border-2 border-black">
+            <tbody v-for="student in newstudents" :key="student.user.firstName" class="border-2 border-black">
                 <tr @click="userClick(student)">
                     <td class="p-4">{{ student.user.lastName }}, {{ student.user.firstName }}</td>
                     <td class="p-4" v-if="student.grade === 'SOPHOMORE'">9</td>
