@@ -79,8 +79,8 @@ watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
   }
 }, { deep:true })
 
-watch(() => studentStore.answeredSurvey[0].answers, (newResponse, oldResponse) => {
-  if(newResponse === JSON.stringify(surveyStore.currentResponse)) {
+watch(() => studentStore.answeredSurvey[0], (newResponse, oldResponse) => {
+  if(newResponse.answers === JSON.stringify(surveyStore.currentResponse)) {
     window.removeEventListener('beforeunload', reminder)
   } else {
     window.addEventListener('beforeunload', reminder);
