@@ -4,7 +4,7 @@ import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
 import { useStudentStore } from "../stores/student";
 import dateFormat from "dateformat";
-import { computed, ref, Ref } from "vue";
+import { computed, ref, Ref, watch } from "vue";
 
 document.title = 'Dashboard | SITHS Course Selection'
 
@@ -30,6 +30,7 @@ if (
   date = dateFormat(datetime, "shortDate");
   time = dateFormat(datetime, "shortTime");
 }
+
 </script>
 
 <template>

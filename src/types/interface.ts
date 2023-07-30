@@ -37,6 +37,7 @@ export interface surveyStore {
     currentSurvey: survey
     loading: boolean
     open: boolean
+    submit: boolean
     missingAnswers: string[]
 }
 

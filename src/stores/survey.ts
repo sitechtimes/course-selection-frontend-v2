@@ -13,18 +13,25 @@ export const useSurveyStore = defineStore("survey", {
     currentSurvey: {dueDate: "", grade: "FRESHMAN", question: [{id: "", questionType: "OTHER", status: 'STANDARD', className: ''}]},
     loading: false,
     open: true,
+    submit: false,
     missingAnswers: [],
   }),
   getters: {
     //
   },
   actions: {
-    //
     async saveSurvey(status: status, grade: String) {
       const userStore = useUserStore();
       const email = this.currentAnsweredSurvey.email;
       const answers = this.currentResponse;
       const jsonString = JSON.stringify(answers);
+
+      if(status === 'COMPLETE') {
+        this.submit = true
+        setTimeout(() => {
+          this.submit = false
+        }, 1500)
+      }
 
       await axios
         .post(
