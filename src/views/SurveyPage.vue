@@ -92,10 +92,10 @@ watch(() => studentStore.answeredSurvey[0], (newResponse, oldResponse) => {
     <p v-if="surveyStore.loading">Setting things up...</p>
     <div
       v-else
-      class="w-11/12 md:w-4/5 lg:w-3/4 flex flex-col items-center min-h-[20rem] space-y-8 h-5/6"
+      class="w-11/12 md:w-4/5 lg:w-3/4 flex flex-col items-center min-h-[20rem] h-5/6"
     >
       <div class="mt-5">
-        <h1 class="text-4xl font-semibold">
+        <h1 class="text-2xl md:text-3xl lg:text-4xl font-semibold m-2">
         {{ surveyStore.currentSurvey.grade }} Year Survey
         </h1>
       </div>
@@ -120,7 +120,7 @@ watch(() => studentStore.answeredSurvey[0], (newResponse, oldResponse) => {
       </div>
     </div>
     <div
-      class="h-1/6 w-11/12 md:w-4/5 lg:w-3/4 flex justify-between items-start px-4"
+      class="h-1/6  w-11/12 md:w-4/5 lg:w-3/4 flex justify-between items-start px-4"
     >
       <button
         @click="previousQuestion()"
