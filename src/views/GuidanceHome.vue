@@ -21,7 +21,7 @@ document.title = 'Home | SITHS Course Selection'
     </div>
     <div
       id="circles"
-      class="-z-10 absolute h-96 w-112 sm:h-128 sm:w-128 lg:h-96 lg:w-112 xl:h-128 xl:w-128 flex justify-center items-center lg:relative lg:mx-8"
+      class="z-10 absolute h-96 w-112 sm:h-128 sm:w-128 lg:h-96 lg:w-112 xl:h-128 xl:w-128 flex justify-center items-center lg:relative lg:mx-8"
     >
       <div
         id="big"
