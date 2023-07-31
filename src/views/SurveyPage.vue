@@ -2,15 +2,18 @@
 import checkboxComponent from "../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue";
 import booleanComponent from "../components/SurveyPageComponents/Reusables/SurveyBoolean.vue";
 import generalComponent from "../components/SurveyPageComponents/Reusables/SurveyGeneral.vue";
-import { ref, reactive, Ref, onBeforeMount } from "vue";
+import { ref, reactive, Ref, onBeforeMount, watch } from "vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
+import { useStudentStore } from "../stores/student";
 import { surveyQuestion, courses, surveyAnswer } from "../types/interface";
+import { onBeforeRouteLeave } from "vue-router";
 
 document.title = 'Survey | SITHS Course Selection'
 
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
+const studentStore = useStudentStore();
 
 const currentIndex: Ref<number> = ref(0);
 let currentQuestion: surveyQuestion = reactive(
@@ -20,9 +23,9 @@ const min: Ref<boolean> = ref(true);
 const max: Ref<boolean> = ref(false);
 
 surveyStore.setSurvey(
-  userStore.data.user.email,
+  studentStore.user.email,
   surveyStore.currentSurvey.question,
-  userStore.data.student.grade
+  studentStore.student.grade
 );
 
 const previousQuestion = () => {
@@ -46,9 +49,43 @@ const nextQuestion = () => {
 };
 
 const getChoices = () => {
-  const classes = userStore.data.student.coursesAvailable;
+  const classes = studentStore.student.coursesAvailable;
   return classes.filter((x) => x.subject === currentQuestion.questionType);
 };
+
+onBeforeRouteLeave((to, from, next) => {
+    if(JSON.stringify(surveyStore.currentResponse) === studentStore.answeredSurvey[0].answers || to.path === '/student/survey/review') {
+      next()
+    } else {
+      const answer = window.confirm('Changes you made might not be saved.')
+      if (answer) {
+        next()
+      } else {
+        next(false)
+    }
+    }
+})
+
+const reminder = (e) => {
+    e.preventDefault(); 
+    e.returnValue = '';
+};
+
+watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
+  if(JSON.stringify(newResponse) === studentStore.answeredSurvey[0].answers) {
+    window.removeEventListener('beforeunload', reminder)
+  } else {
+    window.addEventListener('beforeunload', reminder);
+  }
+}, { deep:true })
+
+watch(() => studentStore.answeredSurvey[0], (newResponse, oldResponse) => {
+  if(newResponse.answers === JSON.stringify(surveyStore.currentResponse)) {
+    window.removeEventListener('beforeunload', reminder)
+  } else {
+    window.addEventListener('beforeunload', reminder);
+  }
+}, { deep:true })
 </script>
 
 <template>
@@ -67,20 +104,17 @@ const getChoices = () => {
         <generalComponent
           v-if="currentQuestion.questionType === 'GENERAL'"
           :question="currentQuestion"
-          :answers="currentAnswer"
           :key="currentQuestion.id"
         ></generalComponent>
         <booleanComponent
           v-else-if="currentQuestion.questionType === 'BOOLEAN'"
           :question="currentQuestion"
-          :answers="currentAnswer"
           :key="currentQuestion.question"
         ></booleanComponent>
         <checkboxComponent
           v-else
           :question="currentQuestion"
           :choices="getChoices()"
-          :answers="currentAnswer"
           :key="currentQuestion.questionType"
           :color="'D6EEFF'"
         ></checkboxComponent>

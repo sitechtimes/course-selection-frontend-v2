@@ -5,11 +5,13 @@ import { ref, Ref, onMounted } from 'vue'
 import { useUserStore } from '../../stores/user';
 import { useSurveyStore } from '../../stores/survey';
 import { useResetStore } from '../../stores/reset';
+import { useStudentStore } from '../../stores/student';
 import router from '../../router';
 
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
 const resetStore = useResetStore();
+const studentStore = useStudentStore();
 
 onMounted(() => {
     const tl = gsap.timeline({
@@ -47,7 +49,7 @@ const logout = async () => {
         <div v-if="userStore.isLoggedIn && userStore.userType === 'student'" class="h-full absolute top-40 left-16 flex flex-col justify-start items-start space-y-8 z-10">
             <RouterLink @click="$emit('e')" id="link" to="/student/dashboard"><p class="text-4xl" >Home</p></RouterLink>
             <RouterLink @click="$emit('e')" id="link" to="/student/survey"><p class="text-4xl">Survey</p></RouterLink>
-            <RouterLink  v-if="userStore.data.student.homeroom != ''" @click="$emit('e'); surveyNav()" id="link" to="/"><p class="text-4xl">Courses</p></RouterLink>
+            <RouterLink  v-if="studentStore.student.homeroom != ''" @click="$emit('e'); surveyNav()" id="link" to="/"><p class="text-4xl">Courses</p></RouterLink>
             <RouterLink to="/" @click="$emit('e')">
                 <p @click="logout()" id="link" class="text-4xl text-red-500 cursor-pointer">Logout</p>
             </RouterLink>
