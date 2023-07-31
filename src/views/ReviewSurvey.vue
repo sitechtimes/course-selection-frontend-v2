@@ -24,7 +24,6 @@ surveyStore.missingAnswers = []
 if(studentStore.answeredSurvey[0].status === 'COMPLETE') {
   surveyStore.setSurvey(
     studentStore.user.email,
-    studentStore.survey.question,
     studentStore.student.grade
   );
 }
@@ -63,9 +62,9 @@ onBeforeRouteLeave((to, from, next) => {
     }
 })
 
-const reminder  =  (e) => {
+const reminder = (e: Event) => {
     e.preventDefault(); 
-    e.returnValue = '';
+    e.returnValue = false;
 };
 
 watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {

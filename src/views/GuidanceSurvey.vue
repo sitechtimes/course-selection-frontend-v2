@@ -31,7 +31,8 @@ const indexAll = surveyStore.currentResponse.findIndex((x) => x.id === 'allChose
 const indexNote = surveyStore.currentResponse.findIndex((x) => x.id === 'noteToGuidance');
 const indexGuidance = surveyStore.currentResponse.findIndex((x) => x.id === 'guidanceFinalNote');
 
-surveyStore.currentSurvey = guidanceStore.allSurveys.edges.find(x => x.node.grade === viewedStudent.grade)?.node
+//@ts-ignore
+surveyStore.currentSurvey = guidanceStore.allSurveys.edges.find(x => x.node.grade === viewedStudent.grade).node
 
 const getChoices = (question: surveyQuestion) => {
   const classes = viewedStudent.coursesAvailable
@@ -66,9 +67,9 @@ onBeforeRouteLeave((to, from, next) => {
     }
 })
 
-const reminder  =  (e) => {
+const reminder = (e: Event) => {
     e.preventDefault(); 
-    e.returnValue = '';
+    e.returnValue = false;
 };
 
 watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
@@ -101,7 +102,7 @@ watch(() => guidanceStore.allAnsweredSurveys.edges[surveyIndex].node.answers, (n
       </div>
       <p v-if="surveyStore.loading">Setting things up...</p>
       <div v-else>
-        <div v-for="question in surveyStore.currentSurvey.question" :key="question" class="flex justify-center">
+        <div v-for="question in surveyStore.currentSurvey.question" :key="question.id" class="flex justify-center">
           <div v-if="surveyStore.missingAnswers.length > 0" class="w-1/12 flex justify-center items-center">
             <exclamationMark v-if="surveyStore.missingAnswers.includes(question.id)" class="text-red-500 h-8">
             </exclamationMark>

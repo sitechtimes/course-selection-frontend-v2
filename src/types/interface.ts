@@ -53,30 +53,23 @@ export interface userData {
 
 // student object (student side)
 export interface studentData { 
-    coursesAvailable: courses[]
-    coursesRequired: courses[]
-    coursesTaken: courses[]
+    coursesAvailable: course[]
+    coursesRequired: course[]
+    coursesTaken: course[]
     grade: grade
     homeroom: string
     meeting: string | null
-    user?: userData
 }
 
 // student object (guidance side)
-export interface studentGuidance { 
-    coursesAvailable: courses[]
-    coursesRequired: courses[]
-    coursesTaken: courses[]
-    grade: grade
-    homeroom: string
-    meeting: string | null
+export interface studentGuidance extends studentData{ 
     user: userData
     flag: string
 }
 
 // guidance edges and nodes interfaces
 export interface guidanceStudentData { 
-    students: studentData[]
+    students: studentGuidance[]
 }
 
 export interface allAnsweredSurveys {
@@ -119,7 +112,7 @@ export interface survey {
 }
 
 export interface surveyQuestion {
-    question?: string
+    question: string
     questionType: question_type
     id: string
     status: question_status
@@ -128,22 +121,28 @@ export interface surveyQuestion {
 
 export interface surveyAnswer {
     id: string
+    question?: string
+    answer: checkboxAnswer
+}
+
+export interface surveyStringAnswer {
+    id: string
     question: string
-    answer: checkboxAnswer | string
+    answer: string
 }
 
 export interface checkboxAnswer {
     courses: string[]
-    preference: preference[]
+    preference: preferences[]
 }
 
-export interface preference {
-    rank: string
+export interface preferences {
+    rank: number
     name: string
 }
 
 // course interfaces
-export interface courses {
+export interface course {
     courseCode: string
     subject: course_type
     name: string
