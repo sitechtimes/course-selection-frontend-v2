@@ -66,19 +66,24 @@ onBeforeRouteLeave((to, from, next) => {
     }
 })
 
-const reminder  =  (e) => {
+const reminder = (e) => {
     e.preventDefault(); 
     e.returnValue = '';
 };
 
 watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
   if(JSON.stringify(newResponse) === studentStore.answeredSurvey[0].answers) {
-    window.addEventListener('beforeunload', reminder);
     window.removeEventListener('beforeunload', reminder)
-    console.log('remove')
   } else {
     window.addEventListener('beforeunload', reminder);
-    console.log('add');
+  }
+}, { deep:true })
+
+watch(() => studentStore.answeredSurvey[0], (newResponse, oldResponse) => {
+  if(newResponse.answers === JSON.stringify(surveyStore.currentResponse)) {
+    window.removeEventListener('beforeunload', reminder)
+  } else {
+    window.addEventListener('beforeunload', reminder);
   }
 }, { deep:true })
 </script>
@@ -99,20 +104,17 @@ watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
         <generalComponent
           v-if="currentQuestion.questionType === 'GENERAL'"
           :question="currentQuestion"
-          :answers="currentAnswer"
           :key="currentQuestion.id"
         ></generalComponent>
         <booleanComponent
           v-else-if="currentQuestion.questionType === 'BOOLEAN'"
           :question="currentQuestion"
-          :answers="currentAnswer"
           :key="currentQuestion.question"
         ></booleanComponent>
         <checkboxComponent
           v-else
           :question="currentQuestion"
           :choices="getChoices()"
-          :answers="currentAnswer"
           :key="currentQuestion.questionType"
           :color="'D6EEFF'"
         ></checkboxComponent>

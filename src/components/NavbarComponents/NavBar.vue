@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { useUserStore } from '../../stores/user';
 import { useSurveyStore } from '../../stores/survey';
 import { useResetStore } from '../../stores/reset'
@@ -15,7 +15,7 @@ const surveyStore = useSurveyStore();
 const resetStore = useResetStore();
 const studentStore = useStudentStore()
 let menuOpen: Ref<boolean> = ref(false);
-const save = ref(null)
+const save = ref()
 
 const viewingSurvey = () => {
     return router.currentRoute.value.path.includes('survey')
