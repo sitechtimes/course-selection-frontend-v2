@@ -25,11 +25,14 @@
 <script setup lang="ts">
 import { useSurveyStore } from "../../../../stores/survey";
 import { PropType } from 'vue'
-import { surveyQuestion, surveyAnswer, courses } from "../../../../types/interface";
+import { surveyQuestion, surveyAnswer, course } from "../../../../types/interface";
 
 const props = defineProps({
-  choices: Array as PropType<Array<courses>>,
-  question: Object as PropType<surveyQuestion>,
+  choices: Array as PropType<Array<course>>,
+  question: {
+    type: Object as PropType<surveyQuestion>,
+    required: true
+  },
   answers: Array as PropType<Array<surveyAnswer>>,
 });
 
@@ -40,9 +43,9 @@ let index: number = surveyStore.currentResponse.findIndex((x) => x.id == props.q
 
 if (index < 0) {
   const questionAnswer = {
-    id: props.question?.id,
-    question: props.question?.question,
-    answer: [{ courses: [] }, { preference: [] }],
+    id: props.question.id,
+    question: props.question.question,
+    answer: { courses: [''], preference: [{rank:0,name:''}] },
   };
   surveyStore.currentResponse.push(questionAnswer);
 

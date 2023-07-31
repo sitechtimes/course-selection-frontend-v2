@@ -6,7 +6,7 @@ import AllStudents from '../components/GuidanceComponents/AllStudents.vue';
 import StudentTable from '../components/GuidanceComponents/StudentTable.vue'
 import { useUserStore } from '../stores/user';
 import { useGuidanceStore } from '../stores/guidance';
-import { studentData } from '../types/interface'
+import { studentGuidance } from '../types/interface'
 import { ref, Ref, computed } from 'vue'
 
 document.title = 'Student List | SITHS Course Selection'
@@ -21,7 +21,7 @@ const omg = ref(false)
 
 //sorting students to view
 const newStudents = computed(() => {
-  return students.filter((student: { user: { firstName: string; lastName: string; };  }) => {
+  return students.filter((student: studentGuidance) => {
         const studentName = student.user.firstName + ' ' + student.user.lastName
         return (
           studentName.toLowerCase().indexOf(input.value.toLowerCase()) != -1 || student.user.email.indexOf(input.value) != -1
