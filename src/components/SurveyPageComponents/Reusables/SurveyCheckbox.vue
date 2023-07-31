@@ -1,6 +1,6 @@
 <template>
   <section class="lg:text-left text-center h-full w-full">
-    <div class="flex flex-col lg:flex-row  items-center w-full">
+    <div class="flex flex-col lg:flex-row h-full items-center w-full">
       <div class="lg:w-1/2 w-[90%] h-full">
         <div class="flex items-center justify-center max-w-[40rem] overflow-hidden">
           <fieldset class="flex items-center justify-start w-full h-full">
