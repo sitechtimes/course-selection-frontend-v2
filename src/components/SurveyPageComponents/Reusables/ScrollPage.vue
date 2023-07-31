@@ -2,11 +2,11 @@
   <div class="arrows flex flex-col w-f50 h-50 bottom-2 right-5 fixed">
     <div @click="scrollTop"
       class="scrollTop none-topArrow bg-[#DEE9C8] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-50 p-4 mb-2.5 text-center flex flex-col align-center">
-      <p>back to top</p>
+      <p>go to top</p>
     </div>
     <div @click="scrollBottom"
       class="scrollBottom none-bottomArrow bg-[#DEE9C8] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-fit p-4 mb-2.5 flex flex-col align-center">
-      <p>back to bottom</p>
+      <p>go to bottom</p>
     </div>
   </div>
 </template>
@@ -26,30 +26,7 @@ function scrolledEnough() {
   const scrollTop = document.querySelector(".scrollTop");
   const scrollBottom = document.querySelector(".scrollBottom");
 
-  /*   //scroll top
-    if (window.scrollY > 2000) { //more than 2000 scrolled, scroll to top
-      scrollTop.style.display = "flex";
-      scrollTop.classList.remove('pop-out')
-      scrollTop.classList.add('pop-in')
-    } else {
-      scrollTop.style.display = "none";
-      scrollTop.classList.add('pop-out')
-      scrollTop.classList.remove('pop-in')
-    }
-  
-    //scroll bottom 
-    if (window.scrollY < 2000) { //less than 2000 scrolled, scroll to bottom 
-      scrollBottom.style.display = "flex";
-      scrollBottom.classList.remove('pop-out')
-      scrollBottom.classList.add('pop-in')
-    } else {
-      scrollBottom.style.display = "none";
-      scrollBottom.classList.add('pop-out')
-      scrollBottom.classList.remove('pop-in')
-    } */
-
-  //both buttons
-  if (window.scrollY > 0) { //more or equal to 2001 scrolled, but less than or equal to 1999, display both scroll buttons 
+  if (window.scrollY > 0) { 
     scrollTop.style.display = "flex";
     scrollTop.classList.remove('pop-out')
     scrollTop.classList.add('pop-in')
@@ -68,6 +45,9 @@ function scrolledEnough() {
 }
 onMounted(() => {
   window.addEventListener("scroll", scrolledEnough);
+  scrollBottom.style.display = "flex";
+    scrollBottom.classList.remove('pop-out')
+    scrollBottom.classList.add('pop-in')
 })
 </script>
   
