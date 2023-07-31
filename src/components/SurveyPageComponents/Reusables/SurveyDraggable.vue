@@ -115,8 +115,8 @@ const handleTouchEnd = (e, n) => {
     //finds DOM matching the target
     const targetedCourse = target.closest(".course");
     //takes the current rank of the course and updates accordingly
-    const n = parseInt(targetedCourse.getAttribute('course-rank'));
-    const dragIndex = dragElement.parentElement?.parentElement.id;
+    const dragIndex = parseInt(targetedCourse.getAttribute('course-rank'));
+    const n = dragElement.parentElement?.parentElement.id;
     updateRank(n, dragIndex);
   }
   dragElement = '';
