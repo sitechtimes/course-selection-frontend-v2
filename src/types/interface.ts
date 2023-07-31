@@ -85,7 +85,7 @@ export interface allStudents {
 }
 
 export interface allStudentNodes {
-    node: studentData
+    node: studentGuidance
 }
 
 export interface allSurveys {
