@@ -89,7 +89,7 @@ watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newRespons
 
 <template>
   <section class="flex justify-center items-center flex-col">
-    <div class="w-2/3">
+    <div class="lg:w-2/3 w-5/6">
       <div v-for="question in surveyStore.currentSurvey.question" :key="question.id" class="flex justify-center">
         <div v-if="surveyStore.missingAnswers.length > 0" class="w-1/12 flex justify-center items-center">
           <exclamationMark v-if="surveyStore.missingAnswers.includes(question.id)" class="text-red-500 h-8"></exclamationMark>

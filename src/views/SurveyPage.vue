@@ -145,7 +145,7 @@ watch(() => studentStore.answeredSurvey[0], (newResponse, oldResponse) => {
         </button>
       </RouterLink>
     </div>
-    <p class="absolute bottom-8 right-16 text-xl font-semibold">
+    <p class="absolute bottom-8 right-16 text-xl font-semibold hidden sm:block">
       {{ currentIndex + 1 }}
     </p>
   </div>
