@@ -60,7 +60,7 @@ const hoverBox = function (e, n: number) {
   updateRank(n, dragIndex)
 };
 
-function updateRank(n: number, dragIndex: string) {
+function updateRank(n: number, dragIndex: string | number) {
   const startObject = ref_courses.value.findIndex(x => x.rank === +n)
 
   if (+n > +dragIndex) {
@@ -93,7 +93,7 @@ function updateRank(n: number, dragIndex: string) {
 let touchStartX = 0;
 let touchStartY = 0;
 
-const handleTouchStart = (e, n) => {
+const handleTouchStart = (e) => {
   if (isTouchDevice) {
     touchStartX = e.touches[0].clientX;
     touchStartY = e.touches[0].clientY;
@@ -101,7 +101,7 @@ const handleTouchStart = (e, n) => {
   }
 };
 
-const handleTouchMove = (e, n) => {
+const handleTouchMove = (e) => {
   if (isTouchDevice && dragElement) {
     const touchX = e.touches[0].clientX;
     const touchY = e.touches[0].clientY;
@@ -111,7 +111,7 @@ const handleTouchMove = (e, n) => {
   }
 };
 
-const handleTouchEnd = (e, n) => {
+const handleTouchEnd = (e) => {
   dragElement.style.transform = '';
   //finds the targeted DOM the dragElement wants to take over via the x and y positioning of the touch event
   const target = document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
@@ -120,7 +120,7 @@ const handleTouchEnd = (e, n) => {
     const targetedCourse = target.closest(".course");
     //takes the current rank of the course and updates accordingly
     const dragIndex = parseInt(targetedCourse.getAttribute('course-rank'));
-    const n = dragElement.parentElement?.parentElement.id;
+    const n = parseInt(dragElement.parentElement?.parentElement.id);
     updateRank(n, dragIndex);
   }
   dragElement = '';
