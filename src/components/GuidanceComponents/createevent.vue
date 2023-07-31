@@ -5,6 +5,7 @@ import { useGuidanceStore } from "../../stores/guidance";
 
 const guidanceStore = useGuidanceStore();
 const userStore = useUserStore();
+<<<<<<< Updated upstream
 
 let title: String;
 let date: String;
@@ -16,9 +17,49 @@ const show: Ref<boolean> = ref(false);
 const save = ref(null);
 const form = ref(null);
 
+=======
+
+let title: string;
+let date: string;
+let time: string;
+let description: string;
+let name: string;
+let email: string;
+const show: Ref<boolean> = ref(false);
+const save = ref();
+const form = ref();
+>>>>>>> Stashed changes
 const studentList = guidanceStore.guidance.students;
 
+<<<<<<< Updated upstream
 function submit(date: String, name: String, time: String) {
+=======
+function empty() {
+  //checks if require fields are empty; if so, error msg pops up on respective field
+  if (date.value === "") {
+    dateError.value = true;
+  } else {
+    dateError.value = false;
+  }
+  if (time.value === "") {
+    timeError.value = true;
+  } else {
+    timeError.value = false;
+  }
+  if (!name) {
+    nameError.value = true;
+  } else {
+    nameError.value = false;
+  }
+
+  //if all required fields are filled out, proceed with submission
+  if (!dateError.value && !timeError.value && !nameError.value) {
+    submit(date, name, time);
+  }
+}
+
+function submit(meetingDate: string, studentName: string, meetingTime: string) {
+>>>>>>> Stashed changes
   //date conversion
   const year = parseInt(date.slice(0, 4));
   const month = parseInt(date.slice(6, 8)) - 1;
@@ -43,6 +84,13 @@ function submit(date: String, name: String, time: String) {
   }
   save.value.innerHTML = "Saved";
   form.value.reset();
+<<<<<<< Updated upstream
+=======
+  name = "";
+  date = "";
+  email = "";
+  time = "";
+>>>>>>> Stashed changes
   userStore.changeMeeting(email, newTime);
 }
 
@@ -112,7 +160,15 @@ const toggleEvent = () => {
                 type="date"
                 v-model="date"
                 placeholder="Date"
+<<<<<<< Updated upstream
               />
+=======
+                ref="date"
+              />
+              <p v-if="dateError" class="error text-red-600 ml-6 mt-1">
+                Field empty/invalid
+              </p>
+>>>>>>> Stashed changes
             </div>
             <div class="item mb-6">
               <label
@@ -132,7 +188,15 @@ const toggleEvent = () => {
                 type="time"
                 v-model="time"
                 placeholder="Time"
+<<<<<<< Updated upstream
               />
+=======
+                ref="time"
+              />
+              <p v-if="timeError" class="error text-red-600 ml-6 mt-1">
+                Field empty/invalid
+              </p>
+>>>>>>> Stashed changes
             </div>
           </div>
 
@@ -159,11 +223,23 @@ const toggleEvent = () => {
             </datalist>
             <input
               class="space rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80"
+<<<<<<< Updated upstream
               placeholder="Select Student"
               autoComplete="on"
               list="suggestions"
               v-model="name"
             />
+=======
+              placeholder="Select Student From List"
+              autoComplete="on"
+              list="suggestions"
+              v-model="name"
+              id="student"
+            />
+            <p v-if="nameError" class="error text-red-600 ml-6 mt-1">
+              Field empty/invalid
+            </p>
+>>>>>>> Stashed changes
           </div>
           <div class="item mb-6">
             <label
@@ -178,7 +254,11 @@ const toggleEvent = () => {
               Memo
             </label>
             <input
+<<<<<<< Updated upstream
               class="space rounded-md border border-solid border-zinc-400 w-80 h-10 p-2 ml-6 mt-1"
+=======
+              class="space rounded-md border border-solid border-zinc-4a00 w-80 h-10 p-2 ml-6 mt-1"
+>>>>>>> Stashed changes
               type="text"
               v-model="description"
               placeholder="Memo"
@@ -189,10 +269,16 @@ const toggleEvent = () => {
             <label class="ml-2" for="notify">Notify Student via Email</label>
           </div>
           <div
+<<<<<<< Updated upstream
             class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer"
           >
             <button
               @click="submit(date, name, time)"
+=======
+            class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit"
+          >
+            <button
+>>>>>>> Stashed changes
               type="submit"
               class="font-bold bg-primary-g px-4 py-2 rounded-2xl w-fit h-fit"
               id="save"
