@@ -20,14 +20,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, Ref, onBeforeMount, onMounted, PropType } from "vue";
+//@ts-nocheck
+import { ref, computed, watch, Ref, onBeforeMount, PropType } from "vue";
 import { useSurveyStore } from "../../../stores/survey";
-import { preference } from "../../../types/interface";
+import { preferences, course } from "../../../types/interface";
 
 const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
 
 const props = defineProps({
-  courses: Array,
+  courses: {
+    type: Array as PropType<Array<preferences>>,
+    required: true
+  },
   numbered: Boolean,
   index: Number,
   color: String
@@ -40,7 +44,7 @@ const computedHeight = computed(() => {
   return props.courses.length;
 });
 
-const ref_courses: Ref<Array<object>> = ref(props.courses);
+const ref_courses: Ref<Array<preferences>> = ref(props.courses);
 
 const hoverBoxOver = function (e) {
   let dragParent = dragElement.parentElement;
@@ -56,7 +60,7 @@ const hoverBox = function (e, n: number) {
   updateRank(n, dragIndex)
 };
 
-function updateRank(n: number, dragIndex: string | undefined) {
+function updateRank(n: number, dragIndex: string) {
   const startObject = ref_courses.value.findIndex(x => x.rank === +n)
 
   if (+n > +dragIndex) {
@@ -75,9 +79,9 @@ function updateRank(n: number, dragIndex: string | undefined) {
     })
     ref_courses.value[startObject].rank = +dragIndex
 
-  }
-  ref_courses.value.sort(function (a, b) {
-    return parseFloat(a.rank) - parseFloat(b.rank);
+  } 
+  ref_courses.value.sort(function(a: preferences, b: preferences) {
+    return a.rank - b.rank;
   })
   if (props.index === surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses')) {
     surveyStore.currentResponse[props.index].answer.preference = ref_courses.value

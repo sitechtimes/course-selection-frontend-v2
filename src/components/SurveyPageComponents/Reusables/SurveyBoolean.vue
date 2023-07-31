@@ -33,10 +33,13 @@
 <script setup lang="ts">
 import { useSurveyStore } from "../../../stores/survey";
 import { watch, onBeforeMount, PropType } from "vue";
-import { surveyQuestion } from "../../../types/interface";
+import { surveyQuestion, preferences } from "../../../types/interface";
 
 const props = defineProps({
-  question: Object as PropType<surveyQuestion>,
+  question: {
+    type: Object as PropType<surveyQuestion>,
+    required: true
+  },
   isDisabled: Boolean,
 });
 
@@ -45,20 +48,19 @@ let index: number = surveyStore.currentResponse.findIndex(
   (x) => x.id == props.question?.id
 );
 
-
   if (index < 0) {
     const questionAnswer = {
-      id: props.question?.id,
-      question: props.question?.question,
+      id: props.question.id,
+      question: props.question.question,
       answer: "",
     };
+    //@ts-ignore
     surveyStore.currentResponse.push(questionAnswer);
 
     index = surveyStore.currentResponse.findIndex(
       (x) => x.id == props.question?.id
     );
   }
-
 
 watch(
   () => props.question,
@@ -74,7 +76,7 @@ watch(
   (newResponse, oldResponse) => {
     if(props.question?.status === 'CLASS') {
       const totalIndex = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');
-
+      //@ts-ignore
       if (newResponse === "Yes") {
         const overallRank = surveyStore.currentResponse[totalIndex].answer.courses.length + 1;
         const overallRankObject = {
@@ -85,16 +87,16 @@ watch(
         surveyStore.currentResponse[totalIndex].answer.courses.push(props.question.className)
         surveyStore.currentResponse[totalIndex].answer.preference.push(overallRankObject)
       }
-
+      //@ts-ignore
       if (newResponse === "No") {
         if(surveyStore.currentResponse[totalIndex].answer.courses.includes(props.question.className)) {
-          const allClassIndex = surveyStore.currentResponse[totalIndex].answer.courses.findIndex(x => x === props.question.className)
-          const allPreferenceIndex = surveyStore.currentResponse[totalIndex].answer.preference.findIndex(x => x.name === props.question.className)
+          const allClassIndex = surveyStore.currentResponse[totalIndex].answer.courses.findIndex((x: string) => x === props.question.className)
+          const allPreferenceIndex = surveyStore.currentResponse[totalIndex].answer.preference.findIndex((x: preferences) => x.name === props.question.className)
 
-          surveyStore.currentResponse[totalIndex].answer.preference.forEach(x => {
+          surveyStore.currentResponse[totalIndex].answer.preference.forEach((x: preferences) => {
           const index = surveyStore.currentResponse[totalIndex].answer.preference.indexOf(x) 
-          surveyStore.currentResponse[totalIndex].answer.preference.sort(function(a, b) {
-              return parseFloat(a.rank) - parseFloat(b.rank);
+          surveyStore.currentResponse[totalIndex].answer.preference.sort(function(a: preferences, b: preferences) {
+              return a.rank - b.rank;
             })
             if(index > allPreferenceIndex) {
               surveyStore.currentResponse[totalIndex].answer.preference[index].rank = surveyStore.currentResponse[totalIndex].answer.preference[index].rank -1

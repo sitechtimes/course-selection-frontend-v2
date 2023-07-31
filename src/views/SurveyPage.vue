@@ -6,7 +6,7 @@ import { ref, reactive, Ref, onBeforeMount, watch } from "vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
 import { useStudentStore } from "../stores/student";
-import { surveyQuestion, courses, surveyAnswer } from "../types/interface";
+import { surveyQuestion, course, surveyAnswer } from "../types/interface";
 import { onBeforeRouteLeave } from "vue-router";
 
 document.title = 'Survey | SITHS Course Selection'
@@ -24,7 +24,6 @@ const max: Ref<boolean> = ref(false);
 
 surveyStore.setSurvey(
   studentStore.user.email,
-  surveyStore.currentSurvey.question,
   studentStore.student.grade
 );
 
@@ -66,9 +65,9 @@ onBeforeRouteLeave((to, from, next) => {
     }
 })
 
-const reminder = (e) => {
+const reminder = (e: Event) => {
     e.preventDefault(); 
-    e.returnValue = '';
+    e.returnValue = false;
 };
 
 watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {

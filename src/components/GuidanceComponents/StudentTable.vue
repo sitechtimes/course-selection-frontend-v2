@@ -18,7 +18,7 @@ const router = useRouter()
 let tooltip: Ref<boolean> = ref(false)
 
 async function userClick(student: studentGuidance) {
-    await surveyStore.setSurvey(student.user.email, guidanceStore.allSurveys.edges.find(x => x.node.grade === student.grade).node.question, student.grade)
+    await surveyStore.setSurvey(student.user.email, student.grade)
     await router.push(`/guidance/survey/${student.user.email.replace('@nycstudents.net', ' ')}`)
     location.reload()
 }

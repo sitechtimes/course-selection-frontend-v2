@@ -14,6 +14,7 @@
   </template>
   
   <script lang="ts" setup>
+  //@ts-nocheck
   import SearchButton from "../icons/SearchButton.vue";
   
   const props = defineProps({
