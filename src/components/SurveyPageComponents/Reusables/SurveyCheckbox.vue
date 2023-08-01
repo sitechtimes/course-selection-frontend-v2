@@ -1,5 +1,5 @@
 <template>
-  <section class="lg:text-left text-center h-full w-full">
+  <section class="lg:text-left text-center w-full">
     <div class="flex flex-col lg:flex-row h-full items-center w-full">
       <div class="lg:w-1/2 w-[90%] h-full">
         <div class="flex items-center justify-center max-w-[40rem] overflow-hidden">
