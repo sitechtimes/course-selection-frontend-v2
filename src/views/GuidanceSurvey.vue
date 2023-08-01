@@ -130,7 +130,7 @@ watch(() => guidanceStore.allAnsweredSurveys.edges[surveyIndex].node.answers, (n
             type="text" v-model="surveyStore.currentResponse[indexNote].answer" />
         </div>
         <div class="my-10">
-          <p class="text-lg md:text-xl xl:text-3xl">Final counselor notes:</p>
+          <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl">Final counselor notes:</p>
           <input
             class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base bg-transparent rounded-md border border-solid border-zinc-400 focus:outline-none focus:ring-0 focus:border-blue-400"
             type="text" v-model="surveyStore.currentResponse[indexGuidance].answer" />

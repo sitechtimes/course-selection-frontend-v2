@@ -1,9 +1,9 @@
 <template>
-  <div class="w-full h-full flex items-start sm:items-center justify-center">
-    <fieldset ref="form" >
-      <legend class="text-lg md:text-xl xl:text-3xl overflow-visible text-center sm:text-left">{{ question.question }}</legend>
+  <div class="w-full">
+    <fieldset ref="form">
+      <legend class="text-lg xl:leading-10 md:text-xl xl:text-3xl overflow-visible">{{ question.question }}</legend>
       <div class="flex flex-row text-lg md:text-xl xl:text-2xl justify-center sm:justify-start">
-        <div class="flex justify-center items-center flex-wrap sm:my-4">
+        <div class="flex justify-center items-center flex-wrap my-4">
           <input
             type="radio"
             :disabled="isDisabled"
