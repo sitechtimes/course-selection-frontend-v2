@@ -1,10 +1,10 @@
 <template>
   <section class="lg:text-left text-center h-full w-full">
     <div class="flex flex-col lg:flex-row items-center w-full">
-      <div class="lg:w-1/2 w-[90%] h-full">
+      <div class="lg:w-1/2 w-full h-full">
         <div class="flex items-center justify-center max-w-[40rem] overflow-hidden">
           <fieldset class="flex items-center justify-start w-full h-full">
-            <legend class="text-lg md:text-xl xl:text-3xl overflow-visible">{{ question.question }}</legend>
+            <legend class="text-lg xl:leading-10 md:text-xl xl:text-3xl overflow-visible text-left mb-4">{{ question.question }}</legend>
             <div class="flex flex-col flex-wrap justify-center items-start">
               <div
                 v-for="choice in choices"
@@ -45,11 +45,12 @@
           </fieldset>
         </div>
       </div>
-      <div class="border-black border border-solid rounded-xl lg:w-[45%] w-[90%] lg:ml-14 lg:h-[50vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll">
+      <div class="mt-4 border-black border border-solid rounded-xl lg:w-[45%] w-[90%] lg:ml-14 lg:h-[50vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll">
         <div class="flex justify-center mt-[1%]">
-            <p class="text-lg md:text-xl xl:text-2xl text-black">Drag course(s) into order of preference:</p>
+            <p class="text-lg xl:leading-10 md:text-xl xl:text-2xl text-black mb-6 mt-2">Drag course(s) into order of preference:</p>
           </div>
           <surveyDraggable
+          class="p-6"
           :courses="surveyStore.currentResponse[index].answer.preference"
           :index="index"
           :numbered="true"

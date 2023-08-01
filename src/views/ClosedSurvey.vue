@@ -40,7 +40,7 @@ const getChoices = (question:  surveyQuestion) => {
         <closedRank v-else class="mb-6" :question="question" :choices="getChoices(question)"></closedRank>
       </div>
       <div class="my-6">
-        <p class="text-lg md:text-xl xl:text-3xl my-4">Your final class priority:</p> <!-- Have to change what this says. surveyCheckbox probably also needs to be changed-->
+        <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl my-4">Your final class priority:</p> <!-- Have to change what this says. surveyCheckbox probably also needs to be changed-->
         <closedFinalRank 
           :courses="surveyStore.currentResponse[indexAll].answer.preference" 
 
@@ -48,7 +48,7 @@ const getChoices = (question:  surveyQuestion) => {
         </closedFinalRank>
       </div>
       <div class="mt-14">
-        <p class="text-lg md:text-xl xl:text-3xl">Final note to your guidance counselor:</p>
+        <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl">Final note to your guidance counselor:</p>
         <input
             class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base md:text-lg xl:text-2xl bg-transparent rounded-md border border-solid border-zinc-400 focus:outline-none focus:ring-0 focus:border-blue-400 disabled:bg-gray-100"
             type="text"

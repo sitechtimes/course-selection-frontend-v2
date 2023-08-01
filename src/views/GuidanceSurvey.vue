@@ -113,7 +113,7 @@ watch(() => guidanceStore.allAnsweredSurveys.edges[surveyIndex].node.answers, (n
           
         </div>
         <div class="my-6">
-          <p class="text-lg md:text-xl xl:text-3xl my-4">Student's order of priority:</p>
+          <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl my-4">Student's order of priority:</p>
           <surveyDraggable 
             :courses="surveyStore.currentResponse[indexAll].answer.preference" 
             :index="indexAll"
@@ -124,7 +124,7 @@ watch(() => guidanceStore.allAnsweredSurveys.edges[surveyIndex].node.answers, (n
           </surveyDraggable>
         </div>
         <div class="mt-14">
-          <p class="text-lg md:text-xl xl:text-3xl">Note from the student:</p>
+          <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl">Note from the student:</p>
           <input
               disabled
               class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base bg-transparent rounded-md border border-solid border-zinc-400 focus:outline-none focus:ring-0 focus:border-blue-400 disabled:bg-gray-100"
@@ -133,7 +133,7 @@ watch(() => guidanceStore.allAnsweredSurveys.edges[surveyIndex].node.answers, (n
             />
         </div>
         <div class="my-10">
-          <p class="text-lg md:text-xl xl:text-3xl">Final counselor notes:</p>
+          <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl">Final counselor notes:</p>
           <input
               class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base bg-transparent rounded-md border border-solid border-zinc-400 focus:outline-none focus:ring-0 focus:border-blue-400"
               type="text"
