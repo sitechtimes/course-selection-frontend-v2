@@ -1,14 +1,14 @@
 <template>
   <div class="arrows flex flex-col h-50 bottom-2 right-5 fixed">
-    <div @click="scrollTop" v-if="ShowScrollTop" :class="{ 'pop-in': ShowScrollTop, 'pop-out': !ShowScrollTop, 'bg-[#DEE9C8]': guidance, 'bg-[#D6EEFF]': !guidance }"
+    <button @click="scrollTop" v-if="ShowScrollTop" :class="{ 'pop-in': ShowScrollTop, 'pop-out': !ShowScrollTop, 'bg-[#DEE9C8]': guidance, 'bg-[#D6EEFF]': !guidance }"
       class="shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-50 p-4 mb-2.5 text-center flex flex-col align-center">
       <AngleUp class="h-4"/>
-    </div>
-    <div @click="scrollBottom" v-if="ShowScrollBottom"
+    </button>
+    <button @click="scrollBottom" v-if="ShowScrollBottom"
       :class="{ 'pop-in': ShowScrollBottom, 'pop-out': !ShowScrollBottom, 'bg-[#DEE9C8]': guidance, 'bg-[#D6EEFF]': !guidance }"
       class="shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-fit p-4 mb-2.5 flex flex-col align-center">
       <AngleDown class="h-4"/>
-    </div>
+    </button>
   </div>
 </template>
 
@@ -36,12 +36,11 @@ function scrollBottom() {
 function scrolledEnough() {
   const windowHeight = window.innerHeight;
   const oneThirdHeight = windowHeight;
-  const twoThirdsHeight = windowHeight * 5;
 
   if (window.scrollY <= oneThirdHeight) {
     ShowScrollTop.value = false;
     ShowScrollBottom.value = true;
-  } else if (window.scrollY >= twoThirdsHeight) {
+  } else if ((windowHeight + Math.round(window.scrollY)) >= document.body.offsetHeight - 20) {
     ShowScrollTop.value = true;
     ShowScrollBottom.value = false;
   } else {
