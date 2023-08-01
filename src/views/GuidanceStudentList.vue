@@ -20,7 +20,6 @@ guidanceStore.allStudents.edges.forEach((el) => {
 });
 
 const input:Ref<string> = ref('')
-<<<<<<< Updated upstream
 const viewAll = ref(false)
 
 //sorting students to view
@@ -36,31 +35,6 @@ watch(() => viewAll.value, (newResponse) => {
   students = allStudents
   console.log('yas')
 })
-=======
-
-//sorting students to view
-const newStudents = computed(() => {
-  console.log("okay")
-  return students.filter((student: { user: { firstName: string; lastName: string; };  }) => {
-        const studentName = student.user.firstName + ' ' + student.user.lastName
-        return (
-          studentName.toLowerCase().indexOf(input.value.toLowerCase()) != -1 || student.user.email.indexOf(input.value) != -1
-        );
-      })
-})
-let allStudents = [];
-function tester(){
-  const oldAllStudents = guidanceStore.allStudents.edges  
-    oldAllStudents.forEach((el) => {
-    allStudents.push(el.node)
-  });
-  console.log(allStudents)
-  students = allStudents
-}
-function a(){
-  console.log(students)
-}
->>>>>>> Stashed changes
 
 </script>
 
