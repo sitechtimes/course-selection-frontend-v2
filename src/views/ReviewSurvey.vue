@@ -7,7 +7,7 @@ import generalComponent from '../components/SurveyPageComponents/Reusables/Surve
 import checkboxComponent from '../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue';
 import surveyDraggable from '../components/SurveyPageComponents/Reusables/SurveyDraggable.vue';
 import exclamationMark from '../components/icons/ExclamationMark.vue';
-import ScrollTop from '../components/SurveyPageComponents/Reusables/ScrollPage.vue';
+import ScrollPage from '../components/SurveyPageComponents/Reusables/ScrollPage.vue';
 import { surveyQuestion, surveyAnswer } from '../types/interface';
 import { watch, ref, Ref, reactive, defineExpose } from 'vue';
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
@@ -129,5 +129,5 @@ watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newRespons
       </div>
     </div>
   </section>
-  <ScrollTop />
+  <ScrollPage :guidance="false"/>
 </template>

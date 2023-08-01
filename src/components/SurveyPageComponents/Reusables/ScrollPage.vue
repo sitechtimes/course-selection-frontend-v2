@@ -1,12 +1,12 @@
 <template>
   <div class="arrows flex flex-col h-50 bottom-2 right-5 fixed">
-    <div @click="scrollTop" v-if="ShowScrollTop" :class="{ 'pop-in': ShowScrollTop, 'pop-out': !ShowScrollTop }"
-      class="bg-[#DEE9C8] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-50 p-4 mb-2.5 text-center flex flex-col align-center">
+    <div @click="scrollTop" v-if="ShowScrollTop" :class="{ 'pop-in': ShowScrollTop, 'pop-out': !ShowScrollTop, 'bg-[#DEE9C8]': guidance, 'bg-[#D6EEFF]': !guidance }"
+      class="shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-50 p-4 mb-2.5 text-center flex flex-col align-center">
       <AngleUp class="h-4"/>
     </div>
     <div @click="scrollBottom" v-if="ShowScrollBottom"
-      :class="{ 'pop-in': ShowScrollBottom, 'pop-out': !ShowScrollBottom }"
-      class="bg-[#DEE9C8] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-fit p-4 mb-2.5 flex flex-col align-center">
+      :class="{ 'pop-in': ShowScrollBottom, 'pop-out': !ShowScrollBottom, 'bg-[#DEE9C8]': guidance, 'bg-[#D6EEFF]': !guidance }"
+      class="shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-fit p-4 mb-2.5 flex flex-col align-center">
       <AngleDown class="h-4"/>
     </div>
   </div>
@@ -17,6 +17,10 @@
 import { ref, onMounted } from 'vue';
 import AngleDown from '../../icons/AngleDown.vue';
 import AngleUp from '../../icons/AngleUp.vue';
+
+const props = defineProps({
+  guidance: Boolean
+})
 
 const ShowScrollTop = ref(false);
 const ShowScrollBottom = ref(true);
