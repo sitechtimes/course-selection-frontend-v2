@@ -19,7 +19,7 @@ export interface guidanceData {
     allSurveys: allSurveys
     guidance: guidanceStudentData
     user: userData
-    currentlyViewing: studentsShown
+    currentlyViewing: studentGuidance[]
 }
 
 // student store interface
