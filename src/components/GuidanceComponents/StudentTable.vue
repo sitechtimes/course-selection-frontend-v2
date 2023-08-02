@@ -76,6 +76,9 @@ async function userClick(student: studentGuidance) {
                     <td class="p-4" v-else-if="guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === student.user.email && x.node.grade === student.grade)?.node.status === 'COMPLETE'">
                         <p class="text-[#174616] bg-[#A8D480] w-[8rem] font-semibold text-center p-1 rounded-2xl">Completed</p>
                     </td>
+                    <td class="p-4" v-else-if="guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === student.user.email && x.node.grade === student.grade)?.node.status === 'FINALIZED'">
+                        <p class="text-[#174616] bg-[#D1A4DE] w-[8rem] font-semibold text-center p-1 rounded-2xl">Finalized</p>
+                    </td>
                     <td>View Survey</td>
                     <td class="p-4 flex flex-row">
                         <div v-show="student.flag.includes('Transfer')" title="Transfer student" class="m-1 bg-red-400 rounded-full h-5 w-5"></div>
