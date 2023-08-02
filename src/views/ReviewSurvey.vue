@@ -19,8 +19,11 @@ const surveyStore = useSurveyStore()
 const studentStore = useStudentStore()
 const router = useRouter()
 
+// clear out the missing answers from the previous session
 surveyStore.missingAnswers = []
 
+// set up survey data in the surveyStore, only be called when the survey has been completed
+// (students with completed surveys bypass the survey page, so the survey store gets set up here)
 if(studentStore.answeredSurvey[0].status === 'COMPLETE') {
   surveyStore.setSurvey(
     studentStore.user.email,
@@ -32,11 +35,13 @@ const indexAll: number = surveyStore.currentResponse.findIndex((x) => x.id === '
 const indexNote: number = surveyStore.currentResponse.findIndex((x) => x.id === 'noteToGuidance');
 const x: Ref<number> = ref(0)
 
+// for checkbox questions only - filter subject courses
 const getChoices = (question:  surveyQuestion) => {
   const classes = studentStore.student.coursesAvailable                            
   return classes.filter(x => x.subject === question.questionType)
 }
 
+// on submit, check if all questions are answered
 const submit = async () => {
     await surveyStore.checkAnswers()
     if(surveyStore.missingAnswers.length === 0) {
@@ -47,7 +52,6 @@ const submit = async () => {
         }
     }
 }
-
 
 onBeforeRouteLeave((to, from, next) => {
     if(JSON.stringify(surveyStore.currentResponse) === studentStore.answeredSurvey[0].answers || to.path === '/student/survey/review') {

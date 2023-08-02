@@ -21,8 +21,10 @@ const guidanceStore = useGuidanceStore()
 const router = useRouter()
 const route = useRoute()
 
+// clear out the missing answers from the previous session
 surveyStore.missingAnswers = []
 
+// the route's url contains the student's email, so use the url to fetch the student's survey data and profile
 const viewedStudent = guidanceStore.guidance.students.filter(student => student.user.email === `${route.params.email}@nycstudents.net`)[0]
 let surveyIndex = guidanceStore.allAnsweredSurveys.edges.findIndex(x => x.node.email === `${route.params.email}@nycstudents.net` && x.node.grade === viewedStudent.grade)
 

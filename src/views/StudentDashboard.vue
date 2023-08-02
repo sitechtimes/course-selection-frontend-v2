@@ -69,13 +69,11 @@ if (
         <span class="font-medium">In Progress</span>
       </div>
       
-
       <div>
         <div class="flex flex-col justify-start items-center space-y-4 lg:flex-row lg:space-y-0 lg:space-x-4">
           <RouterLink to="/schedule">
             <button class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s">Courses</button>
           </RouterLink>
-          <!-- check if survey exists, if not create new and set current -->
           <RouterLink v-if="surveyStore.open" to="/student/survey">
             <button class="bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
               Course Survey
@@ -86,6 +84,7 @@ if (
               View Survey
             </button>
           </RouterLink>
+
         </div>
           <p v-if="studentStore.student.meeting != undefined || studentStore.student.meeting != null">You have a scheduled meeting with your guidance councelor on {{ date }} at {{ time }}.</p>
           <p v-else>Your guidance councelor has not scheduled a meeting with you yet.</p>

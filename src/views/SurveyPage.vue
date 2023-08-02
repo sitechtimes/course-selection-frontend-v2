@@ -19,9 +19,11 @@ const currentIndex: Ref<number> = ref(0);
 let currentQuestion: surveyQuestion = reactive(
   surveyStore.currentSurvey.question[currentIndex.value]
 );
+
 const min: Ref<boolean> = ref(true);
 const max: Ref<boolean> = ref(false);
 
+// set up survey data in the surveyStore
 surveyStore.setSurvey(
   studentStore.user.email,
   studentStore.student.grade
@@ -47,12 +49,15 @@ const nextQuestion = () => {
   }
 };
 
+// for checkbox questions only - filter courses according to subject
 const getChoices = () => {
   const classes = studentStore.student.coursesAvailable;
   return classes.filter((x) => x.subject === currentQuestion.questionType);
 };
 
+// warn the user before they leave the survey page without saving their answers (route changes)
 onBeforeRouteLeave((to, from, next) => {
+    // if the current session's response equals previously saved answer, allow user to bypass the warning.
     if(JSON.stringify(surveyStore.currentResponse) === studentStore.answeredSurvey[0].answers || to.path === '/student/survey/review') {
       next()
     } else {
@@ -65,11 +70,13 @@ onBeforeRouteLeave((to, from, next) => {
     }
 })
 
+// warn users before they leave the survey page without saving when user (exiting window/refresh)
 const reminder = (e: Event) => {
     e.preventDefault(); 
     e.returnValue = false;
 };
 
+// watch for changes to the answer, add/remove alert accordingly
 watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
   if(JSON.stringify(newResponse) === studentStore.answeredSurvey[0].answers) {
     window.removeEventListener('beforeunload', reminder)
@@ -78,6 +85,7 @@ watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
   }
 }, { deep:true })
 
+// watch for changes to saved answer, add/remove alert accordingly
 watch(() => studentStore.answeredSurvey[0], (newResponse, oldResponse) => {
   if(newResponse.answers === JSON.stringify(surveyStore.currentResponse)) {
     window.removeEventListener('beforeunload', reminder)
