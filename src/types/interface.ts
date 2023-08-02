@@ -19,6 +19,7 @@ export interface guidanceData {
     allSurveys: allSurveys
     guidance: guidanceStudentData
     user: userData
+    currentlyViewing: studentsShown
 }
 
 // student store interface
