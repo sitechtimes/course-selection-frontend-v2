@@ -89,6 +89,10 @@ export const useUserStore = defineStore("user", {
                                     }
                                 }
                             }
+                            surveyYearStatistics{
+                              year
+                              stats
+                            }
                             allStudents {
                               edges{
                                 node{
@@ -132,6 +136,7 @@ export const useUserStore = defineStore("user", {
             guidanceStore.allSurveys = res.data.data.allSurveys
             guidanceStore.guidance = res.data.data.guidance
             guidanceStore.user = res.data.data.user
+            guidanceStore.statistics=res.data.data.surveyYearStatistics
 
             this.loading = false;
           });
@@ -179,7 +184,6 @@ export const useUserStore = defineStore("user", {
                             status
                             grade
                         }
-                        
                         }`,
             },
             {

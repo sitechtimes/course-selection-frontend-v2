@@ -141,6 +141,18 @@ const router = createRouter({
         }
       }
     },
+    {
+      path: '/guidance/statistics',
+      name: 'statistics',
+      component: () => import('../views/GuidanceStatistics.vue'),
+      beforeEnter: (to) => {
+        const userStore = useUserStore();
+
+        if (userStore.userType === 'student') {
+          return { name: "studentDash" };
+        }
+      }
+    },
   ]
 })
 

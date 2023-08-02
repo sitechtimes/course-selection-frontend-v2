@@ -5,11 +5,12 @@ import axios from "axios";
 
 export const useGuidanceStore = defineStore("guidance", {
     state: (): guidanceData => ({
-        allAnsweredSurveys: {edges: []},
-        allStudents: {edges: []},
-        allSurveys: {edges: []},
-        guidance: {students: []},
-        user: {email: "", firstName: "", lastName: ""},
+        allAnsweredSurveys: { edges: [] },
+        allStudents: { edges: [] },
+        allSurveys: { edges: [] },
+        guidance: { students: [] },
+        user: { email: "", firstName: "", lastName: "" },
+        statistics: { year: 0, stats: "" }
     }),
     getters: {
         //
