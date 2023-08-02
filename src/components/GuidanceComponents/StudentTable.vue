@@ -17,6 +17,7 @@ const router = useRouter()
 
 let tooltip: Ref<boolean> = ref(false)
 
+// when guidance selects a student from the list, set up the students survey and redirect to survey page
 async function userClick(student: studentGuidance) {
     await surveyStore.setSurvey(student.user.email, student.grade)
     await router.push(`/guidance/survey/${student.user.email.replace('@nycstudents.net', ' ')}`)

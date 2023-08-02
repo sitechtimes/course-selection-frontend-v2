@@ -44,11 +44,13 @@ const computedHeight = computed(() => {
   return props.courses.length;
 });
 
+// this is an array of ranked courses
 const ref_courses: Ref<Array<preferences>> = ref(props.courses);
 
 const hoverBoxOver = function (e) {
   let dragParent = dragElement.parentElement;
   e.target.parentElement.appendChild(dragElement);
+  // append dragged element into parent it's dropped in
   dragParent.appendChild(e.target);
 };
 
@@ -57,29 +59,40 @@ const hoverBox = function (e, n: number) {
   let dragIndex = dragParent?.parentElement.id;
   e.target.parentElement.appendChild(dragElement);
   dragParent.appendChild(e.target);
+
+  // n = start rank, dragIndex = end rank
   updateRank(n, dragIndex)
 };
 
 function updateRank(n: number, dragIndex: string | number) {
+  // find the course that was dragged and dropped according to its start rank
   const startObject = ref_courses.value.findIndex(x => x.rank === +n)
 
+  // if the start rank was higher than end rank (decrease course's ranking) 
   if (+n > +dragIndex) {
+    // for all classes in rankings, if their ranks are between the end and start rank, lower their ranks by 1
     ref_courses.value.forEach((x, index) => {
       if (x.rank < +n && x.rank >= +dragIndex) {
         ref_courses.value[index].rank = ref_courses.value[index].rank + 1
       }
     });
+    // give dragged and dropped object its new rank
     ref_courses.value[startObject].rank = +dragIndex
 
+  // if the start rank is lower than end rank (increase course's ranking)
   } else if (+n < +dragIndex) {
     ref_courses.value.forEach((x, index) => {
+      // for all classes in rankings, if their ranks are between the end and start rank, boost their ranks by 1
       if (x.rank > +n && x.rank <= +dragIndex) {
         ref_courses.value[index].rank = ref_courses.value[index].rank - 1
       }
     })
+    // give dragged and dropped object its new rank
     ref_courses.value[startObject].rank = +dragIndex
 
   } 
+
+  // sort array so rankings go from highest to lowest
   ref_courses.value.sort(function(a: preferences, b: preferences) {
     return a.rank - b.rank;
   })

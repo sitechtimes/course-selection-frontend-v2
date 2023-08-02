@@ -15,6 +15,7 @@ const guidanceStore = useGuidanceStore()
 const students = guidanceStore.guidance.students
 const input:Ref<string> = ref('')
 
+// passed into the student table to be displayed (when search bar is used or sorting is active, this list updates)
 const newStudents = computed(() => {
   return students.filter((student: studentGuidance) => {
         const studentName = student.user.firstName + ' ' + student.user.lastName

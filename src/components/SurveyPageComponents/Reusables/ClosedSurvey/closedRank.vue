@@ -40,7 +40,7 @@ const surveyStore = useSurveyStore();
 
 let index: number = surveyStore.currentResponse.findIndex((x) => x.id == props.question?.id);
 
-
+// if survey is locked and student had not gotten to this question, create an empty answer object for them
 if (index < 0) {
   const questionAnswer = {
     id: props.question.id,

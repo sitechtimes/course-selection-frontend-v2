@@ -26,25 +26,29 @@ const props = defineProps({
 });
 
 const surveyStore = useSurveyStore();
+
+// find the index of answer object corresponding to currently displayed question
 let index: number = surveyStore.currentResponse.findIndex(
   (x) => x.id == props.question.id
 );
 
-  if (index < 0) {
-    const questionAnswer = {
-      id: props.question.id,
-      question: props.question.question,
-      answer: "",
-    };
-    //@ts-ignore
-    surveyStore.currentResponse.push(questionAnswer);
+// if answer object does not exist, the above index will return as -1
+// create a new answer object for this question in this case
+if (index < 0) {
+  const questionAnswer = {
+    id: props.question.id,
+    question: props.question.question,
+    answer: "",
+  };
+  //@ts-ignore
+  surveyStore.currentResponse.push(questionAnswer);
 
-    index = surveyStore.currentResponse.findIndex(
-      (x) => x.id == props.question.id
-    );
-  }
+  index = surveyStore.currentResponse.findIndex(
+    (x) => x.id == props.question.id
+  );
+}
 
-
+// when navigating through the survey, update the index for answer objects
 watch(
   () => props.question,
   (newResponse) => {
