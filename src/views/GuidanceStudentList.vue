@@ -23,8 +23,8 @@ const viewAll = ref(false)
 
 //sorting students to view
 const newStudents = computed(() => {
-  viewAll.value
-  return students.filter((student: studentGuidance) =>
+  // viewAll.value
+  return guidanceStore.currentlyViewing.filter((student: studentGuidance) =>
           (student.user.firstName + ' ' + student.user.lastName).toLowerCase().indexOf(input.value.toLowerCase()) != -1 || student.user.email.indexOf(input.value) != -1
   );
 
@@ -32,11 +32,11 @@ const newStudents = computed(() => {
 
 watch(() => viewAll.value, (newResponse) => {
   if(viewAll.value === true){
-    students = allStudents
+    guidanceStore.currentlyViewing = allStudents
     console.log('hi')
   }
   if(viewAll.value === false){
-    students = guidanceStore.guidance.students
+    guidanceStore.currentlyViewing = guidanceStore.guidance.students
     console.log('hi')
   }
 })
