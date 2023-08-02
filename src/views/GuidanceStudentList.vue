@@ -10,7 +10,6 @@ import { ref, Ref, computed } from 'vue'
 
 document.title = 'Student List | SITHS Course Selection'
 
-// const students:Array<studentData> = useUserStore().data.guidance.students
 const guidanceStore = useGuidanceStore()
 const students = guidanceStore.guidance.students
 const input:Ref<string> = ref('')
