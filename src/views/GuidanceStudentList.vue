@@ -11,7 +11,8 @@ import { ref, Ref, computed, watch } from 'vue'
 document.title = 'Student List | SITHS Course Selection'
 
 const guidanceStore = useGuidanceStore()
-let students = guidanceStore.guidance.students // students sorted from here, masterlis
+let students = ref()
+students = guidanceStore.guidance.students // students sorted from here, masterlis
 let allStudents: studentGuidance[] = [];
 
 guidanceStore.allStudents.edges.forEach((el) => {
