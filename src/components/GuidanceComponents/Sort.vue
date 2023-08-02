@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, Ref } from "vue";
+import { computed, onMounted, ref, Ref, watch, set } from "vue";
 import { useUserStore } from '../../stores/user';
 import { useGuidanceStore } from "../../stores/guidance";
 import DownArrow from '../icons/DownArrow.vue';
@@ -10,6 +10,12 @@ const guidanceStore = useGuidanceStore()
 const selected: Ref<string> = ref("Sort By");
 const isOpen: Ref<boolean> = ref(false);
 let allStudents = [];
+
+
+watch(() => guidanceStore.currentlyViewing, (newValue) => {
+    // do something based on the new value
+  selected.value = "Sort By"
+})
 
 guidanceStore.allStudents.edges.forEach((el) => {
     allStudents.push(el.node)
@@ -150,7 +156,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
   const sortBy = eval(sort.sortBy)
   selected.value = sort.text
   isOpen.value = false
-  return (guidanceStore.guidance.students.sort(sortBy))
+  return (guidanceStore.currentlyViewing.sort(sortBy))
 }
 </script>
 

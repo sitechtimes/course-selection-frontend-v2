@@ -11,7 +11,7 @@ import { ref, Ref, computed, watch } from 'vue'
 document.title = 'Student List | SITHS Course Selection'
 
 const guidanceStore = useGuidanceStore()
-let students = guidanceStore.guidance.students // students sorted from here, masterlis
+guidanceStore.currentlyViewing = guidanceStore.guidance.students
 let allStudents: studentGuidance[] = [];
 
 guidanceStore.allStudents.edges.forEach((el) => {
@@ -24,7 +24,7 @@ const viewAll = ref(false)
 //sorting students to view
 const newStudents = computed(() => {
   viewAll.value
-  return students.filter((student: studentGuidance) =>
+  return guidanceStore.currentlyViewing.filter((student: studentGuidance) =>
           (student.user.firstName + ' ' + student.user.lastName).toLowerCase().indexOf(input.value.toLowerCase()) != -1 || student.user.email.indexOf(input.value) != -1
   );
 
@@ -32,15 +32,14 @@ const newStudents = computed(() => {
 
 watch(() => viewAll.value, (newResponse) => {
   if(viewAll.value === true){
-    students = allStudents
+    guidanceStore.currentlyViewing = allStudents
     console.log('hi')
   }
   if(viewAll.value === false){
-    students = guidanceStore.guidance.students
+    guidanceStore.currentlyViewing = guidanceStore.guidance.students
     console.log('hi')
   }
 })
-
 </script>
 
 <template>
@@ -50,7 +49,7 @@ watch(() => viewAll.value, (newResponse) => {
             <input class="font-semibold mt-2.5 ml-0 flex" type="checkbox" v-model="viewAll"/>
             <label class="font-semibold mt-2.5 ml-0 flex">View all students</label>
           </div>
-          <Sort :students="students"/>
+          <Sort/>
           <SearchBar class="" type="text" v-model="input" placeholder="Search Students..." />
         </div>
         <StudentTable :newstudents="newStudents"/>
