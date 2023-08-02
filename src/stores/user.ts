@@ -131,7 +131,6 @@ export const useUserStore = defineStore("user", {
             guidanceStore.allStudents = res.data.data.allStudents
             guidanceStore.allSurveys = res.data.data.allSurveys
             guidanceStore.guidance = res.data.data.guidance
-            guidanceStore.currentlyViewing = res.data.data.guidance.students
             guidanceStore.user = res.data.data.user
 
             this.loading = false;
