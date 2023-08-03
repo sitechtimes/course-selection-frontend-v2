@@ -10,7 +10,8 @@ export const useGuidanceStore = defineStore("guidance", {
         allSurveys: { edges: [] },
         guidance: { students: [] },
         user: { email: "", firstName: "", lastName: "" },
-        surveyStats: { edges: [] },
+        surveyStats: { edges: [] }, 
+        currentlyViewing: {[]}
     }),
     getters: {
         //

@@ -6,10 +6,9 @@ import booleanComponent from '../components/SurveyPageComponents/Reusables/Surve
 import generalComponent from '../components/SurveyPageComponents/Reusables/SurveyGeneral.vue'
 import checkboxComponent from '../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue'
 import surveyDraggable from '../components/SurveyPageComponents/Reusables/SurveyDraggable.vue';
-import exclamationMark from '../components/icons/ExclamationMark.vue';
+import exclamationMark from '../components/icons/ExclamationMark.vue'
 import ScrollPage from '../components/SurveyPageComponents/Reusables/ScrollPage.vue';
-
-import { surveyQuestion, surveyAnswer } from '../types/interface';
+import { surveyQuestion, surveyAnswer, studentGuidance } from '../types/interface';
 import { useRouter, useRoute, onBeforeRouteLeave } from 'vue-router'
 import { ref, Ref, watch, reactive } from 'vue';
 
@@ -20,10 +19,15 @@ const surveyStore = useSurveyStore()
 const guidanceStore = useGuidanceStore()
 const router = useRouter()
 const route = useRoute()
+let allStudents: studentGuidance[] = [];
+
+guidanceStore.allStudents.edges.forEach((el) => {
+    allStudents.push(el.node)
+});
 
 surveyStore.missingAnswers = []
-
-const viewedStudent = guidanceStore.guidance.students.filter(student => student.user.email === `${route.params.email}@nycstudents.net`)[0]
+//let guidance see all students
+const viewedStudent = allStudents.filter(student => student.user.email === `${route.params.email}@nycstudents.net`)[0] //looking at all students
 let surveyIndex = guidanceStore.allAnsweredSurveys.edges.findIndex(x => x.node.email === `${route.params.email}@nycstudents.net` && x.node.grade === viewedStudent.grade)
 
 const x: Ref<number> = ref(0)

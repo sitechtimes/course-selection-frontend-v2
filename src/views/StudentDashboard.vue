@@ -49,6 +49,7 @@ if (
       <div id="announcements" class="flex justify-center items-center ml-4 lg:ml-0 lg:justify-start">
         <BellIcon />
         <h2 v-if="surveyStore.open" class="text-xl text-left flex ml-2">Surveys are closing on {{ closeTime[1] }}/{{ closeTime[2] }}/{{ closeTime[0] }}.</h2>
+        <h2 v-else-if="studentStore.answeredSurvey[0].status === 'FINALIZED'" class="text-xl text-left flex ml-2">Your guidance counselor has finalised your survey. If you wish to make changes, please contact them.</h2>
         <h2 v-else class="text-xl text-left flex ml-2">The due date for completion has passed. Please contact your guidance counselor to request changes.</h2>
       </div>
 
@@ -59,10 +60,12 @@ if (
       <div v-else-if="studentStore.answeredSurvey[0].status === 'COMPLETE'" class="text-[#174616] bg-[#A8D480]  font-semibold text-center p-3 lg:px-6 lg:text-base text-sm rounded-md">Survey Status:
         <span class="font-medium">Submitted</span>
       </div>
-      <div v-else="studentStore.answeredSurvey[0].status === 'INCOMPLETE'" class="text-[#461616] bg-[#F9D477] font-semibold text-center p-3 lg:px-6 lg:text-base text-sm rounded-md">Survey Status:
+      <div v-else-if="studentStore.answeredSurvey[0].status === 'INCOMPLETE'" class="text-[#461616] bg-[#F9D477] font-semibold text-center p-3 lg:px-6 lg:text-base text-sm rounded-md">Survey Status:
         <span class="font-medium">In Progress</span>
       </div>
-      
+      <div v-else-if="studentStore.answeredSurvey[0].status === 'FINALIZED'" class="text-[#461616] bg-[#D1A4DE] font-semibold text-center p-3 lg:px-6 lg:text-base text-sm rounded-md">Survey Status:
+        <span class="font-medium">Finalized</span>
+      </div>
 
       <div>
         <div class="flex flex-col justify-start items-center mb-2 lg:flex-row lg:space-y-0 lg:space-x-4">

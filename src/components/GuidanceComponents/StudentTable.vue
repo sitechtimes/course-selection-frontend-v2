@@ -71,10 +71,13 @@ async function userClick(student: studentGuidance) {
                         <p class="text-[#461616] bg-[#EA9F9F] w-[8rem] font-semibold text-center p-1 rounded-2xl">Not Started</p>
                     </td>
                     <td class="p-4" v-else-if="guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === student.user.email && x.node.grade === student.grade)?.node.status === 'INCOMPLETE'">
-                        <p class="text-[#461616] bg-[#F9D477] w-[8rem] font-semibold text-center p-1 rounded-2xl">In Progress</p>
+                        <p class="text-[#322911] bg-[#F9D477] w-[8rem] font-semibold text-center p-1 rounded-2xl">In Progress</p>
                     </td>
                     <td class="p-4" v-else-if="guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === student.user.email && x.node.grade === student.grade)?.node.status === 'COMPLETE'">
                         <p class="text-[#174616] bg-[#A8D480] w-[8rem] font-semibold text-center p-1 rounded-2xl">Completed</p>
+                    </td>
+                    <td class="p-4" v-else-if="guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === student.user.email && x.node.grade === student.grade)?.node.status === 'FINALIZED'">
+                        <p class="text-[#311638] bg-[#D1A4DE] w-[8rem] font-semibold text-center p-1 rounded-2xl">Finalized</p>
                     </td>
                     <td>View Survey</td>
                     <td class="p-4 flex flex-row">

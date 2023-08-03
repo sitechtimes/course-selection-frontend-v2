@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, Ref } from "vue";
+import { computed, onMounted, ref, Ref, watch } from "vue";
 import { useUserStore } from '../../stores/user';
 import { useGuidanceStore } from "../../stores/guidance";
 import DownArrow from '../icons/DownArrow.vue';
@@ -9,6 +9,11 @@ const userStore = useUserStore()
 const guidanceStore = useGuidanceStore()
 const selected: Ref<string> = ref("Sort By");
 const isOpen: Ref<boolean> = ref(false);
+
+watch(() => guidanceStore.currentlyViewing, (newValue) => {
+    // do something based on the new value
+  selected.value = "Sort By"
+})
 
 const menuArray = [
   {
@@ -30,6 +35,10 @@ const menuArray = [
   {
     sortBy: "com",
     text: "Completed"
+  },
+  {
+    sortBy: "final",
+    text: "Finalized"
   },
   {
     sortBy: "nine",
@@ -100,6 +109,16 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
     }
   }
 
+  function final(a: { grade: string, user: userData }) {
+    if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
+      return 1;
+    } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'FINALIZED'){
+      return -1;
+    } else {
+      return 1
+    }
+  }
+
   function nine(a: { grade: string; }) {
     if (a.grade === "SOPHOMORE") return -1;
     else
@@ -145,14 +164,14 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
   const sortBy = eval(sort.sortBy)
   selected.value = sort.text
   isOpen.value = false
-  return (guidanceStore.guidance.students.sort(sortBy))
+  return (guidanceStore.currentlyViewing.sort(sortBy))
 }
 </script>
 
 <template>
-     <div class="w-[16rem]">
+     <div class="w-44">
      <div
-      class="h-10 w-44 flex flex-row bg-primary-g text-black justify-evenly cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
+      class="h-10 w-full flex flex-row bg-primary-g text-black justify-evenly cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
       id="sort"
       @click="isOpen = !isOpen"
     >
@@ -163,7 +182,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
       </div>
       <DownArrow class="mt-2.5"/>
       </div>
-      <div class="sub-menu absolute shadow-[4px_3px_3px_rgba(0,0,0,0.25)]" v-if="isOpen" >
+      <div class="sub-menu absolute shadow-[4px_3px_3px_rgba(0,0,0,0.25)] " v-if="isOpen" >
         <div v-for="x in menuArray" :key="x.sortBy" class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
           <button @click="sortBy(x)" class="ml-2">{{ x.text }}</button>
         </div>
