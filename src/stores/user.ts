@@ -89,10 +89,13 @@ export const useUserStore = defineStore("user", {
                                     }
                                 }
                             }
-                            surveyYearStatistics{
-                              year
-                              stats
-                            }
+                            surveyStats {
+                              edges {
+                                  node {
+                                      stats
+                                  }
+                              }
+                          }
                             allStudents {
                               edges{
                                 node{
