@@ -92,6 +92,7 @@ export const useUserStore = defineStore("user", {
                             surveyStats {
                               edges {
                                   node {
+                                      year
                                       stats
                                   }
                               }
@@ -139,7 +140,7 @@ export const useUserStore = defineStore("user", {
             guidanceStore.allSurveys = res.data.data.allSurveys
             guidanceStore.guidance = res.data.data.guidance
             guidanceStore.user = res.data.data.user
-            guidanceStore.statistics=res.data.data.surveyYearStatistics
+            guidanceStore.surveyStats=res.data.data.surveyStats
 
             this.loading = false;
           });

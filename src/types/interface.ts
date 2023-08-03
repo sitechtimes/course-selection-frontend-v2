@@ -19,7 +19,7 @@ export interface guidanceData {
     allSurveys: allSurveys
     guidance: guidanceStudentData
     user: userData
-    statistics: statistics
+    surveyStats: surveyStats
 }
 
 // student store interface
@@ -73,7 +73,15 @@ export interface guidanceStudentData {
     students: studentGuidance[]
 }
 
-export interface statistics {
+export interface surveyStats {
+    edges: surveyStatsNodes[]
+}
+
+export interface surveyStatsNodes{
+    node: stats
+}
+
+export interface stats{
     year: number
     stats: string
 }

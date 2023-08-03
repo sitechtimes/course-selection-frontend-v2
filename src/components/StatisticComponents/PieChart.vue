@@ -1,10 +1,8 @@
 <template>
-    <!-- bar graph component -->
     <Bar id="BarChart" :options="chartOptions" :data="chartData" />
   </template>
   
-  <script>
-  // imports for the chart stuff
+  <script lang="ts">
   import { Bar } from 'vue-chartjs'
   import {
     Chart as ChartJS,
@@ -15,16 +13,12 @@
     CategoryScale,
     LinearScale
   } from 'chart.js'
-  
-  // register the chart stuff (idk thats what the docs said)
+
   ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
   
   export default {
-    // just the name and component
     name: 'BarChart',
     components: { Bar },
-  
-    // props for the chart data and chart options (w/ default settings)
     props: {
       chartData: {
         type: Object,
