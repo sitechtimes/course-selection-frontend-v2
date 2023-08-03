@@ -42,13 +42,15 @@ watch(() => viewAll.value, (newResponse) => {
 
 <template>
     <div class="h-auto w-full flex flex-col justify-center items-center mb-10">
-        <div class="flex flex-row items-center justify-center">
-          <div class="h-10 w-80 mx-10 flex flex-row bg-primary-g text-black justify-evenly cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]">
-            <input class="font-semibold mt-2.5 ml-0 flex" type="checkbox" v-model="viewAll"/>
-            <label class="font-semibold mt-2.5 ml-0 flex">View all students</label>
+        <div class="flex flex-row items-center justify-center w-5/6">
+          <div class="w-1/3 flex flex-row">
+            <div class="h-10 w-80 mx-10 flex flex-row bg-primary-g text-black justify-evenly cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]">
+              <input class="font-semibold mt-2.5 ml-0 flex" type="checkbox" v-model="viewAll"/>
+              <label class="font-semibold mt-2.5 ml-0 flex">View all students</label>
+            </div>
+            <Sort/>
           </div>
-          <Sort/>
-          <SearchBar class="" type="text" v-model="input" placeholder="Search Students..." />
+          <SearchBar class="w-2/3" type="text" v-model="input" placeholder="Search Students..." />
         </div>
         <StudentTable :newstudents="newStudents"/>
     </div>
