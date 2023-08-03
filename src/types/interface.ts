@@ -19,6 +19,7 @@ export interface guidanceData {
     allSurveys: allSurveys
     guidance: guidanceStudentData
     user: userData
+    currentlyViewing: studentGuidance[]
 }
 
 // student store interface
@@ -85,7 +86,7 @@ export interface allStudents {
 }
 
 export interface allStudentNodes {
-    node: studentData
+    node: studentGuidance
 }
 
 export interface allSurveys {

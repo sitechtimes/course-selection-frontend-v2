@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, Ref } from "vue";
+import { computed, onMounted, ref, Ref, watch } from "vue";
 import { useUserStore } from '../../stores/user';
 import { useGuidanceStore } from "../../stores/guidance";
 import DownArrow from '../icons/DownArrow.vue';
@@ -9,6 +9,11 @@ const userStore = useUserStore()
 const guidanceStore = useGuidanceStore()
 const selected: Ref<string> = ref("Sort By");
 const isOpen: Ref<boolean> = ref(false);
+
+watch(() => guidanceStore.currentlyViewing, (newValue) => {
+    // do something based on the new value
+  selected.value = "Sort By"
+})
 
 const menuArray = [
   {
@@ -145,14 +150,14 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
   const sortBy = eval(sort.sortBy)
   selected.value = sort.text
   isOpen.value = false
-  return (guidanceStore.guidance.students.sort(sortBy))
+  return (guidanceStore.currentlyViewing.sort(sortBy))
 }
 </script>
 
 <template>
-     <div class="w-[16rem]">
+     <div class="w-44">
      <div
-      class="h-10 w-44 flex flex-row bg-primary-g text-black justify-evenly cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
+      class="h-10 w-full flex flex-row bg-primary-g text-black justify-evenly cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
       id="sort"
       @click="isOpen = !isOpen"
     >
