@@ -37,6 +37,10 @@ const menuArray = [
     text: "Completed"
   },
   {
+    sortBy: "final",
+    text: "Finalized"
+  },
+  {
     sortBy: "nine",
     text: "Grade 9"
   },
@@ -99,6 +103,16 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
     if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
       return 1;
     } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'COMPLETE'){
+      return -1;
+    } else {
+      return 1
+    }
+  }
+
+  function final(a: { grade: string, user: userData }) {
+    if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
+      return 1;
+    } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'FINALIZED'){
       return -1;
     } else {
       return 1
@@ -168,7 +182,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
       </div>
       <DownArrow class="mt-2.5"/>
       </div>
-      <div class="sub-menu absolute shadow-[4px_3px_3px_rgba(0,0,0,0.25)]" v-if="isOpen" >
+      <div class="sub-menu absolute shadow-[4px_3px_3px_rgba(0,0,0,0.25)] " v-if="isOpen" >
         <div v-for="x in menuArray" :key="x.sortBy" class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
           <button @click="sortBy(x)" class="ml-2">{{ x.text }}</button>
         </div>
