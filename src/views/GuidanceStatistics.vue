@@ -33,6 +33,7 @@ const stats = JSON.parse(guidanceStore.surveyStats.edges[0].node.stats)
 onMounted(() => {
   console.log(guidanceStore.surveyStats)
   console.log(stats)
+  console.log(stats[0])
 
   // stats.forEach((stat) => {
   //   console.log(stat)
