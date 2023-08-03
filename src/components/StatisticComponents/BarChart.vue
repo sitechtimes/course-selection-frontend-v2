@@ -1,29 +1,38 @@
 <template>
-    <Pie id="PieChart" :options="chartOptions" :data="chartData" />
+    <Bar id="BarChart" :options="chartOptions" :data="chartData" />
   </template>
   
-  <script>
-  import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
-  import { Pie } from 'vue-chartjs'
-  
-  ChartJS.register(ArcElement, Tooltip, Legend)
+  <script lang="ts">
+  import { Bar } from 'vue-chartjs'
+  import {
+    Chart as ChartJS,
+    Title,
+    Tooltip,
+    Legend,
+    BarElement,
+    CategoryScale,
+    LinearScale
+  } from 'chart.js'
+
+  ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
   
   export default {
-    name: 'PieChart',
-    components: {
-      Pie
-    },
-    props: { //register options and data as objects, required; standard default setup
-      chartOptions: {
-        type: Object,
-        required: true,
-        default: () => ({
-          responsive: true,
-        })
-      },
+    name: 'BarChart',
+    components: { Bar },
+    props: {
       chartData: {
         type: Object,
         required: true
+      },
+      chartOptions: {
+        type: Object,
+        default: () => ({
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          },
+        })
       }
     }
   }
