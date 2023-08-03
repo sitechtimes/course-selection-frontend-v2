@@ -6,7 +6,8 @@ import booleanComponent from '../components/SurveyPageComponents/Reusables/Surve
 import generalComponent from '../components/SurveyPageComponents/Reusables/SurveyGeneral.vue'
 import checkboxComponent from '../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue';
 import surveyDraggable from '../components/SurveyPageComponents/Reusables/SurveyDraggable.vue';
-import exclamationMark from '../components/icons/ExclamationMark.vue'
+import exclamationMark from '../components/icons/ExclamationMark.vue';
+import ScrollPage from '../components/SurveyPageComponents/Reusables/ScrollPage.vue';
 import { surveyQuestion, surveyAnswer } from '../types/interface';
 import { watch, ref, Ref, reactive, defineExpose } from 'vue';
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
@@ -103,7 +104,7 @@ watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newRespons
         </div>
       </div>
       <div class="my-6">
-        <p class="text-lg md:text-xl xl:text-3xl my-4">For the final part of the survey, please drag your classes in the order of priority, with the first choice being your top priority.</p>
+        <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl my-4">For the final part of the survey, please drag your classes in the order of priority, with the first choice being your top priority.</p>
         <surveyDraggable 
           :courses="surveyStore.currentResponse[indexAll].answer.preference" 
           :index="indexAll"
@@ -114,7 +115,7 @@ watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newRespons
         </surveyDraggable>
       </div>
       <div class="mt-14">
-        <p class="text-lg md:text-xl xl:text-3xl">Final note to your guidance counselor:</p>
+        <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl">Final note to your guidance counselor:</p>
         <input
             class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base bg-transparent rounded-md border border-solid border-zinc-400 focus:outline-none focus:ring-0 focus:border-blue-400"
             type="text"
@@ -128,4 +129,5 @@ watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newRespons
       </div>
     </div>
   </section>
+  <ScrollPage :guidance="false"/>
 </template>

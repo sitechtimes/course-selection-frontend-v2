@@ -78,9 +78,7 @@ const submit = async () => {
             <p class="text-2xl md:text-3xl font-semibold z-50 hover:text-gray-600 hidden sm:flex">Course Selection</p>
         </div>
         <div v-if="userStore.isLoggedIn && userStore.userType === 'student' && viewingSurvey()  === false" class="hidden justify-center items-center space-x-12 md:flex">
-            <RouterLink to="/courses">
-                <p class="text-base hover:text-gray-500">Courses</p>
-            </RouterLink>
+            <p><a href="https://siths-catalog.netlify.app/" target="_blank" rel="noopener">Courses</a></p>
             <p v-if="studentStore.student.homeroom != ''" @click="surveyNav()" class="cursor-pointer hover:text-gray-500">Survey</p>
             <RouterLink to="/">
                 <p @click="logout()" id="name-link" class="text-base text-red-500 cursor-pointer hover:text-red-400">Logout</p>
@@ -98,9 +96,7 @@ const submit = async () => {
             </RouterLink>
         </div>
         <div v-if="!userStore.isLoggedIn && viewingSurvey() === false" class="hidden justify-center items-center space-x-12 md:flex">
-            <RouterLink to="/courses">
-                <p class="text-base hover:text-gray-500">Courses</p>
-            </RouterLink>
+            <p><a href="https://siths-catalog.netlify.app/" target="_blank" rel="noopener">Courses</a></p>
             <RouterLink to="/login">
                 <p class="text-base hover:text-gray-500">Login</p>
             </RouterLink>

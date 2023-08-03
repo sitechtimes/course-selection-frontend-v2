@@ -26,13 +26,6 @@ export const useSurveyStore = defineStore("survey", {
       const answers = this.currentResponse;
       const jsonString = JSON.stringify(answers);
 
-      if(status === 'COMPLETE') {
-        this.submit = true
-        setTimeout(() => {
-          this.submit = false
-        }, 1500)
-      }
-
       await axios
         .post(
           `${import.meta.env.VITE_URL}/graphql/`,
@@ -72,6 +65,12 @@ export const useSurveyStore = defineStore("survey", {
             guidanceStore.allAnsweredSurveys.edges[studentIndex].node.answers = jsonString;
             guidanceStore.allAnsweredSurveys.edges[studentIndex].node.status = status;
           } 
+          if(status === 'COMPLETE') {
+            this.submit = true
+            setTimeout(() => {
+              this.submit = false
+            }, 1500)
+          }
         });
     },
     async startSurvey(email: string, grade: grade) {
