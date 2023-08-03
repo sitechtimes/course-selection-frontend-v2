@@ -33,11 +33,9 @@ const newStudents = computed(() => {
 watch(() => viewAll.value, (newResponse) => {
   if(viewAll.value === true){
     guidanceStore.currentlyViewing = allStudents
-    console.log('hi')
   }
   if(viewAll.value === false){
     guidanceStore.currentlyViewing = guidanceStore.guidance.students
-    console.log('hi')
   }
 })
 </script>

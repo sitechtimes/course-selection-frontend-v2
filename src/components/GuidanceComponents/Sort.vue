@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, Ref, watch, set } from "vue";
+import { computed, onMounted, ref, Ref, watch } from "vue";
 import { useUserStore } from '../../stores/user';
 import { useGuidanceStore } from "../../stores/guidance";
 import DownArrow from '../icons/DownArrow.vue';

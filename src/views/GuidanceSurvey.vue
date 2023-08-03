@@ -7,7 +7,7 @@ import generalComponent from '../components/SurveyPageComponents/Reusables/Surve
 import checkboxComponent from '../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue'
 import surveyDraggable from '../components/SurveyPageComponents/Reusables/SurveyDraggable.vue';
 import exclamationMark from '../components/icons/ExclamationMark.vue'
-import { surveyQuestion, surveyAnswer } from '../types/interface';
+import { surveyQuestion, surveyAnswer, studentGuidance } from '../types/interface';
 import { useRouter, useRoute, onBeforeRouteLeave } from 'vue-router'
 import { ref, Ref, watch, reactive } from 'vue';
 
@@ -18,7 +18,7 @@ const surveyStore = useSurveyStore()
 const guidanceStore = useGuidanceStore()
 const router = useRouter()
 const route = useRoute()
-let allStudents = [];
+let allStudents: studentGuidance[] = [];
 
 guidanceStore.allStudents.edges.forEach((el) => {
     allStudents.push(el.node)
