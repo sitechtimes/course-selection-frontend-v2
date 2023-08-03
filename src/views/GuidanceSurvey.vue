@@ -7,8 +7,8 @@ import generalComponent from '../components/SurveyPageComponents/Reusables/Surve
 import checkboxComponent from '../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue'
 import surveyDraggable from '../components/SurveyPageComponents/Reusables/SurveyDraggable.vue';
 import exclamationMark from '../components/icons/ExclamationMark.vue'
-import { surveyQuestion, surveyAnswer, studentGuidance } from '../types/interface';
 import ScrollPage from '../components/SurveyPageComponents/Reusables/ScrollPage.vue';
+import { surveyQuestion, surveyAnswer, studentGuidance } from '../types/interface';
 import { useRouter, useRoute, onBeforeRouteLeave } from 'vue-router'
 import { ref, Ref, watch, reactive } from 'vue';
 
