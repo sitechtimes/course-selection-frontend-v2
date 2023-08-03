@@ -1,6 +1,6 @@
 <template>
     <div id="search" class="border-white flex justify-center items-center">
-      <div id="search-bar" class="flex justify-center items-center relative w-5/6">
+      <div id="search-bar" class="flex justify-center items-center relative w-11/12">
         <input
           :value="modelValue"
           placeholder="Search by name or email"
