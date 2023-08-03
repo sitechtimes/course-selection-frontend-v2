@@ -13,33 +13,57 @@
   </div>
   <div class="barChart">
     <BarChart v-if="loaded" :chartData="chartData" :chartOptions="chartOptions" />
+    <div v-else>
+      <p>Data is not available yet.</p>
+    </div>
   </div>
+
   <!-- <div class="pieChart">
     <PieChart v-if="loaded" :chartData="chartData" :chartOptions="chartOptions" />
   </div> -->
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useGuidanceStore } from '../stores/guidance';
-import BarChart from '../components/StatisticComponents/BarChart.vue'
+import BarChart from '../components/StatisticComponents/BarChart.vue';
 
-const guidanceStore = useGuidanceStore()
+const guidanceStore = useGuidanceStore();
+
 const pieChart = ref(true)
 const barChart = ref(true)
 const loaded = ref(false)
 const stats = JSON.parse(guidanceStore.surveyStats.edges[0].node.stats)
 
+const chartOptions = ref({
+  responsive: true
+});
+
+const chartData = ref({
+  labels: [],
+  datasets: [
+    {
+      data: [],
+      backgroundColor: '#8e4d4d',
+      label: '# of students',
+    },
+  ],
+});
+
 onMounted(() => {
-  console.log(guidanceStore.surveyStats)
-  console.log(stats)
-  console.log(stats[0])
+  if (stats) {
+    const data = [];
 
-  // stats.forEach((stat) => {
-  //   console.log(stat)
-  // })
-})
+    for (const courseName in stats) {
+      const course = stats[courseName];
+      const { picks } = course;
+
+      data.push(courseName);
+      chartData.value.datasets[0].data.push(picks);
+    }
+
+    chartData.value.labels = data;
+    loaded.value = true;
+  }
+});
 </script>
-
-
-  
