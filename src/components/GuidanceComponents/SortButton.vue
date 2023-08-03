@@ -9,17 +9,11 @@ const userStore = useUserStore()
 const guidanceStore = useGuidanceStore()
 const selected: Ref<string> = ref("Sort By");
 const isOpen: Ref<boolean> = ref(false);
-let allStudents = [];
-
 
 watch(() => guidanceStore.currentlyViewing, (newValue) => {
     // do something based on the new value
   selected.value = "Sort By"
 })
-
-guidanceStore.allStudents.edges.forEach((el) => {
-    allStudents.push(el.node)
-});
 
 const menuArray = [
   {
