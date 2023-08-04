@@ -73,9 +73,9 @@ const submit = async () => {
 </script>
 
 <template>
-    <nav id="navbar" class="w-full top-0 h-[15vh] flex justify-between items-center px-8 md:px-12 lg:px-16 overflow-visible">
+    <nav id="navbar" class="w-full top-0  h-[13vh] md:h-[15vh] flex justify-between items-center px-8 md:px-12 lg:px-16 overflow-visible">
         <div @click="redirect()" class="cursor-pointer">
-            <p class="text-base sm:text-xl md:text-xl font-semibold z-50 hover:text-gray-600 flex sm:flex" :class="{'hidden': viewingSurvey() }">Course Selection</p>
+            <p class="text-lg sm:text-xl md:text-xl font-semibold z-50 hover:text-gray-600 flex sm:flex" :class="{'hidden': viewingSurvey() }">Course Selection</p>
         </div>
         <div v-if="userStore.isLoggedIn && userStore.userType === 'student' && viewingSurvey()  === false" class="hidden justify-center items-center space-x-12 md:flex">
             <p><a href="https://siths-catalog.netlify.app/" target="_blank" rel="noopener">Courses</a></p>
