@@ -1,39 +1,57 @@
 <template>
-    <Bar id="BarChart" :options="chartOptions" :data="chartData" />
-  </template>
+  <Bar v-if="loaded" :options="chartOptions" :data="chartData" />
+  <div v-else>
+      <p>Data is not available yet.</p>
+    </div>
+</template>
   
-  <script lang="ts">
-  import { Bar } from 'vue-chartjs'
-  import {
-    Chart as ChartJS,
-    Title,
-    Tooltip,
-    Legend,
-    BarElement,
-    CategoryScale,
-    LinearScale
-  } from 'chart.js'
+<script lang="ts" setup>
+import { Bar } from 'vue-chartjs'
+import { useGuidanceStore } from '../../stores/guidance';
+import { ref, onMounted } from 'vue';
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale
+} from 'chart.js'
 
-  ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
-  
-  export default {
-    name: 'BarChart',
-    components: { Bar },
-    props: {
-      chartData: {
-        type: Object,
-        required: true
-      },
-      chartOptions: {
-        type: Object,
-        default: () => ({
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          },
-        })
-      }
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+
+const loaded = ref(false)
+const guidanceStore = useGuidanceStore();
+const stats = JSON.parse(guidanceStore.surveyStats.edges[0].node.stats)
+const chartOptions = ref({
+  responsive: true
+});
+
+const chartData = ref({
+  labels: [],
+  datasets: [
+    {
+      data: [],
+      backgroundColor: '#C5D4A4',
+      label: '# of students',
+    },
+  ],
+});
+
+onMounted(() => {
+  if (stats) {
+    const data = [];
+
+    for (const courseName in stats) {
+      const course = stats[courseName];
+      const { picks } = course;
+
+      data.push(courseName);
+      chartData.value.datasets[0].data.push(picks);
     }
+    chartData.value.labels = data;
+    loaded.value = true;
   }
-  </script>
+});
+</script>
