@@ -75,7 +75,7 @@ const submit = async () => {
 <template>
     <nav id="navbar" class="w-full top-0 h-[15vh] flex justify-between items-center px-8 md:px-12 lg:px-16 overflow-visible">
         <div @click="redirect()" class="cursor-pointer">
-            <p class="text-2xl md:text-3xl font-semibold z-50 hover:text-gray-600 hidden sm:flex">Course Selection</p>
+            <p class="text-base sm:text-xl md:text-xl font-semibold z-50 hover:text-gray-600 flex sm:flex" :class="{'hidden': viewingSurvey() }">Course Selection</p>
         </div>
         <div v-if="userStore.isLoggedIn && userStore.userType === 'student' && viewingSurvey()  === false" class="hidden justify-center items-center space-x-12 md:flex">
             <p><a href="https://siths-catalog.netlify.app/" target="_blank" rel="noopener">Courses</a></p>
@@ -105,10 +105,10 @@ const submit = async () => {
             <MenuIcon @click="toggleMenu" v-if="!menuOpen" />
             <CloseMenu @click="toggleMenu" v-else />
         </div>
-        <div v-if="viewingSurvey()" class="flex flex-row-reverse w-full sm:w-1/4 md:1/6 justify-between">
-            <p @click="redirect()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500">Exit</p>
-            <p v-if="surveyStore.currentAnsweredSurvey.status === 'COMPLETE' && surveyStore.open === true" @click="submit()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500">Submit</p>
-            <p v-if="surveyStore.currentAnsweredSurvey.status != 'COMPLETE' && surveyStore.open === true" @click="surveyStore.saveSurvey(surveyStore.currentAnsweredSurvey.status, surveyStore.currentAnsweredSurvey.grade); toggleSave()" class="text-[#37394F] text-2xl cursor-pointer hover:text-gray-500" ref="save">Save</p>
+        <div v-if="viewingSurvey()" class="flex flex-row-reverse w-full sm:w-1/4 md:1/6 justify-between text-xl md:text-xl">
+            <p @click="redirect()" class="text-[#37394F] cursor-pointer hover:text-gray-500">Exit</p>
+            <p v-if="surveyStore.currentAnsweredSurvey.status === 'COMPLETE' && surveyStore.open === true" @click="submit()" class="text-[#37394F] cursor-pointer hover:text-gray-500">Submit</p>
+            <p v-if="surveyStore.currentAnsweredSurvey.status != 'COMPLETE' && surveyStore.open === true" @click="surveyStore.saveSurvey(surveyStore.currentAnsweredSurvey.status, surveyStore.currentAnsweredSurvey.grade); toggleSave()" class="text-[#37394F] cursor-pointer hover:text-gray-500" ref="save">Save</p>
         </div>
     <MobileNav v-if="menuOpen" @e="toggleMenu"/>
     </nav>

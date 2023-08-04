@@ -94,7 +94,7 @@ watch(() => studentStore.answeredSurvey[0], (newResponse, oldResponse) => {
     </div>
     <div
       v-else
-      class="w-11/12 md:w-4/5 lg:w-3/4 flex flex-col items-center min-h-[20rem] h-5/6 overflow-auto"
+      class="w-11/12 md:w-4/5 lg:w-3/4 flex flex-col items-center min-h-[20rem] h-5/6 overflow-hidden"
     >
       <div class="mt-2 sm:mt-5">
         <h1 class="text-2xl md:text-3xl lg:text-4xl font-semibold m-2">

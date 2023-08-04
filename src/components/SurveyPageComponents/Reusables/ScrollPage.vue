@@ -35,7 +35,7 @@ function scrollBottom() {
 
 function scrolledEnough() {
   const windowHeight = window.innerHeight;
-  const oneThirdHeight = windowHeight;
+  const oneThirdHeight = windowHeight/5;
 
   if (window.scrollY <= oneThirdHeight) {
     ShowScrollTop.value = false;

@@ -49,7 +49,7 @@ const logout = async () => {
         <div v-if="userStore.isLoggedIn && userStore.userType === 'student'" class="h-full absolute top-40 left-16 flex flex-col justify-start items-start space-y-8 z-10">
             <RouterLink @click="$emit('e')" id="link" to="/student/dashboard"><p class="text-4xl" >Home</p></RouterLink>
             <RouterLink @click="$emit('e')" id="link" to="/student/survey"><p class="text-4xl">Survey</p></RouterLink>
-            <p class="text-4xl"><a href="https://siths-catalog.netlify.app/" target="_blank" rel="noopener">Courses</a></p>
+            <p @click="$emit('e')" class="text-4xl"><a href="https://siths-catalog.netlify.app/" target="_blank" rel="noopener">Courses</a></p>
             <RouterLink to="/" @click="$emit('e')">
                 <p @click="logout()" id="link" class="text-4xl text-red-500 cursor-pointer">Logout</p>
             </RouterLink>
