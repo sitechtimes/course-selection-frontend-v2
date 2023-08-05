@@ -203,13 +203,10 @@ export const useUserStore = defineStore("user", {
             } else {
               const currentDate = new Date()
               const closeTime = studentStore.survey.dueDate.substring(0,10).split("-")
-              if(studentStore.answeredSurvey.length === 0){
-                console.log('no survey')
-              } else {
-                if(studentStore.answeredSurvey[0].status === 'FINALIZED'){
+              if(studentStore.answeredSurvey.length !== 0 && studentStore.answeredSurvey[0].status === 'FINALIZED'){
                   surveyStore.open = false
-                }
               }
+              
               if (Number(closeTime[0]) < currentDate.getFullYear()) {
                 surveyStore.open = false
               } else if (Number(closeTime[0]) === currentDate.getFullYear()) {
