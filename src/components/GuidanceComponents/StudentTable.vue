@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import cornerArrow from '../icons/CornerArrow.vue'
+import PlusSign from '../icons/PlusSign.vue';
 import { ref, computed, PropType, Ref } from 'vue';
 import { useUserStore } from '../../stores/user';
 import { useSurveyStore } from '../../stores/survey';
@@ -16,6 +17,29 @@ const guidanceStore = useGuidanceStore()
 const router = useRouter()
 
 let tooltip: Ref<boolean> = ref(false)
+
+const flags = [
+    {
+        flag: 'Transfer',
+        title: 'Transfer student',
+        color: 'red-400'
+    },
+    {
+        flag: 'Regents',
+        title: 'Missing regents',
+        color: 'green-400'
+    },
+    {
+        flag: 'Team',
+        title: 'Three season athlete',
+        color: 'blue-400'
+    },
+    {
+        flag: 'ENL',
+        title: 'ENL',
+        color: 'purple-400'
+    },
+]
 
 async function userClick(student: studentGuidance) {
     await surveyStore.setSurvey(student.user.email, student.grade)
@@ -39,7 +63,11 @@ async function userClick(student: studentGuidance) {
                         <div>
                             <img src="../icons/InfoCircle.png" alt="information button for flags" class="h-5" @mouseover="tooltip = true" @mouseout="tooltip = false"/>
                             <div v-show="tooltip" class="absolute h-auto w-auto bg-white border-primary-g border p-2">
-                                <div class="flex flex-row">
+                                <div v-for="flag in flags" class="flex flex-row">
+                                    <div class="m-1 rounded-full h-5 w-5" :class="`bg-${flag.color}`"></div>
+                                    <p class="m-1">= {{ flag.title}}</p>
+                                </div>
+                                <!-- <div class="flex flex-row">
                                     <div class="m-1 bg-red-400 rounded-full h-5 w-5"></div>
                                     <p class="m-1">= Transfer Student</p>
                                 </div>
@@ -54,7 +82,7 @@ async function userClick(student: studentGuidance) {
                                 <div class="flex flex-row">
                                     <div class="m-1 bg-purple-400 rounded-full h-5 w-5"></div>
                                     <p class="m-1">= ENL</p>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </th>
@@ -80,14 +108,23 @@ async function userClick(student: studentGuidance) {
                         <p class="text-[#311638] bg-[#D1A4DE] w-[8rem] font-semibold text-center p-1 rounded-2xl">Finalized</p>
                     </td>
                     <td>View Survey</td>
-                    <td class="p-4 flex flex-row">
-                        <div v-show="student.flag.includes('Transfer')" title="Transfer student" class="m-1 bg-red-400 rounded-full h-5 w-5"></div>
-                        <div v-show="student.flag.includes('Regents')"  title="Missing regents" class="m-1 bg-green-400 rounded-full h-5 w-5"></div>
-                        <div v-show="student.flag.includes('Team')"  title="On a sports team" class="m-1 bg-blue-400 rounded-full h-5 w-5"></div>
-                        <div v-show="student.flag.includes('ENL')" title="ENL" class="m-1 bg-purple-400 rounded-full h-5 w-5"></div>
+                    <td class="p-4 flex flex-row parent items-center justify-center">
+                        <div v-for="flag in flags" :key="flag.flag">
+                            <div>
+                                <div v-show="student.flag.includes(flag.flag)" :title=flag.title :class="`bg-${flag.color}`" class="m-1 rounded-full h-5 w-5"></div>
+                            </div>
+                        </div>
+                        <PlusSign class="m-1 hidden child"></PlusSign>
                     </td>
                 </tr>
             </tbody>
         </table>
         </div>
 </template>
+
+<style scoped>
+.parent:hover .child {
+    display: block;
+    transition: 0.3s;
+}
+</style>
