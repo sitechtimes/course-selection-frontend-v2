@@ -1,8 +1,8 @@
 <template>
   <Bar v-if="loaded" :options="chartOptions" :data="chartData" />
   <div v-else>
-      <p>Data is not available yet.</p>
-    </div>
+    <p>Data is not available yet.</p>
+  </div>
 </template>
   
 <script lang="ts" setup>
@@ -27,7 +27,6 @@ const stats = JSON.parse(guidanceStore.surveyStats.edges[0].node.stats)
 const chartOptions = ref({
   responsive: true
 });
-
 const chartData = ref({
   labels: [],
   datasets: [
