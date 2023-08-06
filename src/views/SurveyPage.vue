@@ -54,10 +54,12 @@ const getChoices = () => {
 
 onBeforeRouteLeave((to, from, next) => {
     if(JSON.stringify(surveyStore.currentResponse) === studentStore.answeredSurvey[0].answers || to.path === '/student/survey/review') {
+      window.removeEventListener('beforeunload', reminder)
       next()
     } else {
       const answer = window.confirm('Changes you made might not be saved.')
       if (answer) {
+        window.removeEventListener('beforeunload', reminder)
         next()
       } else {
         next(false)

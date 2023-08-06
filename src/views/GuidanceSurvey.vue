@@ -26,8 +26,9 @@ guidanceStore.allStudents.edges.forEach((el) => {
 });
 
 surveyStore.missingAnswers = []
-//let guidance see all students
-const viewedStudent = guidanceStore.allStudents.edges.filter(student => student.node.user.email === `${route.params.email}@nycstudents.net`)[0] //looking at all students
+//let guidance see all students\
+//@ts-ignore
+const viewedStudent: studentGuidance = guidanceStore.allStudents.edges.filter(student => student.node.user.email === `${route.params.email}@nycstudents.net`)[0] //looking at all students
 let surveyIndex = guidanceStore.allAnsweredSurveys.edges.findIndex(x => x.node.email === `${route.params.email}@nycstudents.net` && x.node.grade === viewedStudent.grade)
 
 const x: Ref<number> = ref(0)
@@ -60,10 +61,12 @@ watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newRespons
 
 onBeforeRouteLeave((to, from, next) => {
     if(JSON.stringify(surveyStore.currentResponse) === guidanceStore.allAnsweredSurveys.edges[surveyIndex].node.answers) {
+      window.removeEventListener('beforeunload', reminder)
       next()
     } else {
       const answer = window.confirm('Changes you made might not be saved.')
       if (answer) {
+        window.removeEventListener('beforeunload', reminder)
         next()
       } else {
         next(false)
@@ -141,10 +144,10 @@ watch(() => guidanceStore.allAnsweredSurveys.edges[surveyIndex].node.answers, (n
         </div>
       </div>
       <div class="flex justify-center mb-10 flex-col items-center">
-        <p v-if="surveyStore.missingAnswers.length > 0" class="text-red-500 mb-4 text-center">Please fill in all questions
-          before submitting.</p>
+        <p v-if="surveyStore.missingAnswers.length > 0" class="text-red-500 mb-4 text-center">Please fill in all questions before submitting.</p>
+        <p v-else class="mb-4 text-center">After submitting this survey, the survey will be marked as reviewed (finalized) and the student will no longer be able to edit it.</p>
         <button @click="submit()"
-          class="bg-[#DEE9C8] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-36 h-12 text-2xl font-bold text-[#37394F]">Complete</button>
+          class="bg-[#DEE9C8] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-36 h-12 text-2xl font-bold text-[#37394F]">Finalize</button>
       </div>
     </div>
   </section>
