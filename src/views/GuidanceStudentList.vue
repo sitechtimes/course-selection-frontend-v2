@@ -42,23 +42,15 @@ const pages = computed(() => {
 });
 
 const add = () => {
-  if (currentPage.value <= guidanceStore.currentlyViewing.length / pageCapacity) {
     currentPage.value++;
     x.value = x.value + pageCapacity;
     y.value = y.value + pageCapacity;
-  } else {
-    currentPage.value;
-  }
 };
 
 const subtract = () => {
-  if (currentPage.value > 1) {
     currentPage.value--;
     x.value = x.value - pageCapacity;
     y.value = y.value - pageCapacity;
-  } else {
-    currentPage.value;
-  }
 };
 
 const updatePage = (pageNumber: number) => {
@@ -84,40 +76,23 @@ watch(
 
 <template>
   <div class="h-auto w-full flex flex-col justify-center items-center mb-10">
-    <div class="flex flex-row items-center justify-center">
-      <div
-        class="h-10 w-80 mx-10 flex flex-row bg-primary-g text-black justify-evenly cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
-      >
-        <input
-          class="font-semibold mt-2.5 ml-0 flex"
-          type="checkbox"
-          v-model="viewAll"
-        />
-        <label class="font-semibold mt-2.5 ml-0 flex">View all students</label>
-      </div>
-      <Sort />
-      <SearchBar
-        class=""
-        type="text"
-        v-model="input"
-        placeholder="Search Students..."
-      />
-    </div>
+    <div class="flex flex-row items-center justify-center w-5/6">
+          <div class="w-1/3 flex flex-row justify-evenly">
+            <div @click="viewAll = !viewAll" class="h-10 px-4 w-60 mx-10 flex flex-row bg-primary-g text-black justify-evenly  font-semibold items-center cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)] ">
+              <label class="cursor-pointer">View all students</label>
+              <input class="ml-2" type="checkbox" v-model="viewAll"/>
+            </div>
+            <Sort class="mr-0"/>
+          </div>
+          <SearchBar class="w-2/3" type="text" v-model="input" placeholder="Search Students..." />
+        </div>
     <StudentTable  :newstudents="newStudents.slice(x, y)" />
     <div class="mt-4 flex flex-row justify-between ">
-      <button class=" mx-2  bg-[#ebebeb] h-8 w-8 rounded-lg font-bold" @click="subtract">
+      <button class=" mx-2  bg-[#ebebeb] h-8 w-8 rounded-lg font-bold" @click="subtract" :disabled="currentPage === 1">
         ❮
       </button>
-      <button
-        v-for="n in pages"
-        @click="updatePage(n)"
-        :class="{'bg-[#cdeeb4] focus:bg-[#cdeeb4]': currentPage === n}"
-        class="bg-[#ebebeb] h-8 w-8 rounded-lg hover:opacity-75 ease-in-out duration-300 font-bold  mx-2"
-      >
-        {{ n }}
-      </button>
-
-      <button class=" mx-2  bg-[#ebebeb] h-8 w-8 rounded-lg font-bold" @click="add">❯</button>
+      <button v-for="n in pages" @click="updatePage(n)" :class="{'bg-[#cdeeb4] focus:bg-[#cdeeb4]': currentPage === n, 'bg-[#ebebeb]': currentPage !== n}" class=" h-8 w-8 rounded-lg hover:opacity-75 ease-in-out duration-300 font-bold mx-2" > {{ n }} </button>
+      <button class=" mx-2  bg-[#ebebeb] h-8 w-8 rounded-lg font-bold" :disabled="currentPage === pages" @click="add">❯</button>
     </div>
     <h5 class="mt-4">
       Page
