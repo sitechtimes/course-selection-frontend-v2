@@ -78,7 +78,7 @@ async function userClick(student: studentGuidance) {
                     </th>
                 </tr>
             </thead>
-            <tbody v-for="student in newstudents" :key="student.user.firstName" class="border-2 border-black">
+            <tbody v-for="student in newstudents" :key="student.user.email" class="border-2 border-black">
                 <AddFlag v-if="showFlagModal === student.user.email" @exit="toggleFlagModal('')" :student="student" :flags="flags"></AddFlag>
                 <tr>
                     <td class="p-4">{{ student.user.lastName }}, {{ student.user.firstName }}</td>
