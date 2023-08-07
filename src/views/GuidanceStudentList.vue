@@ -105,25 +105,25 @@ watch(
         placeholder="Search Students..."
       />
     </div>
-    <StudentTable :newstudents="newStudents.slice(x, y)" />
-    <div class="mt-1 flex flex-row justify-between">
-      <button class="bg-[#ebebeb] h-8 w-8 rounded-lg" @click="subtract">
+    <StudentTable  :newstudents="newStudents.slice(x, y)" />
+    <div class="mt-4 flex flex-row justify-between">
+      <button class="bg-[#ebebeb] h-8 w-8 rounded-lg font-bold" @click="subtract">
         ❮
       </button>
       <button
         v-for="n in pages"
         @click="updatePage(n)"
         :class="{
-          'active:bg-[#cdeeb4] focus:bg-[#cdeeb4]  h-8 w-8  rounded-lg  hover:opacity-75 ease-in-out duration-300 disabled:bg-[#ebebeb]':
+          'bg-[#cdeeb4] mx-3 h-8 w-8 focus:bg-[#cdeeb4] rounded-lg hover:opacity-75 ease-in-out duration-300 font-bold':
             currentPage === n,
         }"
- 
       >
         {{ n }}
       </button>
-      <button class="bg-[#ebebeb] h-8 w-8 rounded-lg" @click="add">❯</button>
+
+      <button class="bg-[#ebebeb] h-8 w-8 rounded-lg font-bold" @click="add">❯</button>
     </div>
-    <h5>
+    <h5 class="mt-4">
       Page
       <span class="font-bold m-1"> {{ currentPage }}</span>
       of
