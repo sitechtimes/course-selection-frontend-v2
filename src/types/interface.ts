@@ -139,6 +139,8 @@ export interface checkboxAnswer {
 export interface preferences {
     rank: number
     name: string
+    courseCode: string
+    subject: string
 }
 
 // course interfaces
