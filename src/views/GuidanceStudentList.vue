@@ -38,11 +38,11 @@ const newStudents = computed(() => {
 });
 
 const pages = computed(() => {
-  return Math.ceil(guidanceStore.currentlyViewing.length / 10);
+  return Math.ceil(guidanceStore.currentlyViewing.length / pageCapacity);
 });
 
 const add = () => {
-  if (currentPage.value <= guidanceStore.currentlyViewing.length / 10) {
+  if (currentPage.value <= guidanceStore.currentlyViewing.length / pageCapacity) {
     currentPage.value++;
     x.value = x.value + pageCapacity;
     y.value = y.value + pageCapacity;
@@ -72,11 +72,9 @@ watch(
   (newResponse) => {
     if (viewAll.value === true) {
       guidanceStore.currentlyViewing = allStudents;
-      console.log("hi");
     }
     if (viewAll.value === false) {
       guidanceStore.currentlyViewing = guidanceStore.guidance.students;
-      console.log("hi");
     }
 
     updatePage(1);
