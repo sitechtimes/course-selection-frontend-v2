@@ -15,7 +15,7 @@
                   type="checkbox"
                   class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
                   :id="choice.courseCode"
-                  :value="choice.name"
+                  :value="choice"
                   v-model="surveyStore.currentResponse[index].answer.courses"
                   :disabled="notInterested"
                 />

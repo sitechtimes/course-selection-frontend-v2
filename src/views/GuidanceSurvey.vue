@@ -37,7 +37,6 @@ const indexNote = surveyStore.currentResponse.findIndex((x) => x.id === 'noteToG
 const indexGuidance = surveyStore.currentResponse.findIndex((x) => x.id === 'guidanceFinalNote');
 
 //@ts-ignore
-console.log(viewedStudent.grade)
 surveyStore.currentSurvey = guidanceStore.allSurveys.edges.find(x => x.node.grade === viewedStudent.grade).node
 
 const getChoices = (question: surveyQuestion) => {

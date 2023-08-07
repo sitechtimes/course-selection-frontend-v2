@@ -11,7 +11,7 @@
             @dragover.prevent="(e) => hoverBoxOver(e)" @dragstart="(e) => (dragElement = e.target)"
             @drop.prevent="(e) => hoverBox(e, n)" @touchstart.prevent="(e) => handleTouchStart(e, n)"
             @touchmove.prevent="(e) => handleTouchMove(e)" @touchend.prevent="(e) => handleTouchEnd(e, n)">
-            {{ props.courses.find(x => x.rank == n).name }}
+            {{ props.courses.find(x => x.rank == n).name.name }}
           </div>
         </div>
       </div>
