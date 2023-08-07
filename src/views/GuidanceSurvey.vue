@@ -26,8 +26,9 @@ guidanceStore.allStudents.edges.forEach((el) => {
 });
 
 surveyStore.missingAnswers = []
-//let guidance see all students
-const viewedStudent = allStudents.filter(student => student.user.email === `${route.params.email}@nycstudents.net`)[0] //looking at all students
+//let guidance see all students\
+//@ts-ignore
+const viewedStudent: studentGuidance = guidanceStore.allStudents.edges.filter(student => student.node.user.email === `${route.params.email}@nycstudents.net`)[0].node //looking at all students
 let surveyIndex = guidanceStore.allAnsweredSurveys.edges.findIndex(x => x.node.email === `${route.params.email}@nycstudents.net` && x.node.grade === viewedStudent.grade)
 
 const x: Ref<number> = ref(0)
@@ -36,6 +37,7 @@ const indexNote = surveyStore.currentResponse.findIndex((x) => x.id === 'noteToG
 const indexGuidance = surveyStore.currentResponse.findIndex((x) => x.id === 'guidanceFinalNote');
 
 //@ts-ignore
+console.log(viewedStudent.grade)
 surveyStore.currentSurvey = guidanceStore.allSurveys.edges.find(x => x.node.grade === viewedStudent.grade).node
 
 const getChoices = (question: surveyQuestion) => {
