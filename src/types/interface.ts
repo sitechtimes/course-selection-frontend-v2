@@ -3,7 +3,6 @@ export interface user {
     first_name: string
     last_name: string
     email: string
-    grade?: grade
     userType: account_type
     isLoggedIn: boolean
     access_token: string
