@@ -48,7 +48,7 @@ onMounted(() => {
     for (const courseName in stats) {
       const course = stats[courseName];
       const { picks } = course;
-
+      
       data.push(courseName);
       chartData.value.datasets[0].data.push(picks);
     }

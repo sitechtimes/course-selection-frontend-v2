@@ -48,7 +48,6 @@ const getChartData = computed(() => { //use computed properties to recalculate o
   for (let i = 0; i < 40; i++) {
     const randomColours = "#" + Math.floor(Math.random() * 16777215).toString(16); //toString(16) turns it into a hexadecimal
     chartData.datasets[0].backgroundColor.push(randomColours)
-    console.log(chartData.datasets[0].backgroundColor)
   }
 
   if (selectedCourse.value) {
