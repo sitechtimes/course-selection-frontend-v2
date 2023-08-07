@@ -105,7 +105,7 @@ async function userClick(student: studentGuidance) {
                                 <div v-show="student.flag.includes(flag.flag)" :title=flag.title :class="`${flag.color}`" class="m-1 rounded-full h-5 w-5"></div>
                             </div>
                         </div>
-                        <PlusSign @click="toggleFlagModal(student.user.email)" class="m-1 hidden child"></PlusSign>
+                        <PlusSign @click="toggleFlagModal(student.user.email)" class="m-1 hidden child hover:cursor-pointer"></PlusSign>
                     </td>
                 </tr>
             </tbody>
