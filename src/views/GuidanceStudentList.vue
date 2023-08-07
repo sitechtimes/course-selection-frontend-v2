@@ -111,8 +111,8 @@ watch(
       <button
         v-for="n in pages"
         @click="updatePage(n)"
-        :class="{'bg-[#cdeeb4]':currentPage === n}"
-        class="bg-[#ebebeb] h-8 w-8 focus:bg-[#cdeeb4] rounded-lg hover:opacity-75 ease-in-out duration-300 font-bold  mx-2"
+        :class="{'bg-[#cdeeb4] focus:bg-[#cdeeb4]': currentPage === n}"
+        class="bg-[#ebebeb] h-8 w-8 rounded-lg hover:opacity-75 ease-in-out duration-300 font-bold  mx-2"
       >
         {{ n }}
       </button>
