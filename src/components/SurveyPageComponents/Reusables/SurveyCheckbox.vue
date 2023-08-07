@@ -188,9 +188,9 @@ watch(
       if (removeClass[0] === 'Not Interested') {
         toggleInterest(true, totalIndex)
       } else if (!surveyStore.currentResponse[index].answer.courses.includes('Not Interested')){
-        const classIndex = surveyStore.currentResponse[index].answer.preference.findIndex((x: preferences) => x.name.name === removeClass[0].name)
+        const classIndex = surveyStore.currentResponse[index].answer.preference.findIndex((x: preferences) => x.name === removeClass[0].name)
         const allClassIndex = surveyStore.currentResponse[totalIndex].answer.courses.findIndex((x: string) => x.name === removeClass[0].name)
-        const allPreferenceIndex = surveyStore.currentResponse[totalIndex].answer.preference.findIndex((x: preferences) => x.name.name === removeClass[0].name)
+        const allPreferenceIndex = surveyStore.currentResponse[totalIndex].answer.preference.findIndex((x: preferences) => x.name === removeClass[0].name)
 
         preference.forEach((x: preferences) => {
           const index = preference.indexOf(x) 
