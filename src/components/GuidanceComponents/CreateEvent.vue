@@ -75,9 +75,9 @@ function submit(meetingDate: string, studentName: string, meetingTime: string) {
   form.value.reset();
   name = ''
   date = ''
-  email = ''
   time = ''
   userStore.changeMeeting(email, newTime);
+  email = ''
 }
 
 const toggleEvent = () => {

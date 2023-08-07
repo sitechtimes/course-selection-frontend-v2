@@ -95,7 +95,7 @@ watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newRespons
     <div class="lg:w-2/3 w-11/12">
       <div v-for="question in surveyStore.currentSurvey.question" :key="question.id" class="flex justify-center">
         <div v-if="surveyStore.missingAnswers.length > 0" class="w-1/12 flex justify-center items-center">
-          <exclamationMark v-if="surveyStore.missingAnswers.includes(question.id)" class="text-red-500 h-8"></exclamationMark>
+          <exclamationMark v-if="surveyStore.missingAnswers.includes(question.id)" class="text-red-500 h-8 motion-safe:animate-bounce"></exclamationMark>
         </div>
         <div class="w-11/12">
           <booleanComponent class="mb-2" v-if="question.questionType === 'BOOLEAN'" :question="question" ></booleanComponent>

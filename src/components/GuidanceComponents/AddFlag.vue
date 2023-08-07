@@ -1,6 +1,11 @@
 <script setup lang="ts">
     import { studentGuidance } from '../../types/interface';
+    import { useUserStore } from '../../stores/user';
     import { PropType, ref, Ref } from 'vue'
+    import { defineEmits } from 'vue'
+
+    const emit = defineEmits(['exit'])
+    const userStore = useUserStore()
 
     interface flag {
         flag: string
@@ -20,6 +25,16 @@
     })
 
     const selected: Ref<string> = ref('')
+    const missing : Ref<boolean> = ref(false)
+
+    const confirm = async (flag: string) => {
+        if(flag === '') {
+            missing.value = true
+        } else {
+            await userStore.addFlag(props.student.user.email, flag)
+            emit('exit')
+        }
+    }
 </script>
 
 <template>
@@ -29,14 +44,15 @@
                 <p><b>Student:</b> {{ student.user.firstName }} {{ student.user.lastName }}</p>
             </div>
             <div class="w-full flex flex-col items-center">
-                <p class="my-2">Add a flag:</p>
+                <p class="my-2" :class="{'text-red-500' : missing, 'animate-pulse': missing}">Add a flag:</p>
+                <!-- <p v-show="missing">hi</p> -->
                 <select v-model="selected" class="w-full">
                     <option v-for="flag in flags" :value="flag.flag">{{ flag.title }}</option>
                 </select>
             </div>
             <div class="flex flex-row w-full justify-between">
                 <button @click="$emit('exit')">Cancel</button>
-                <button class="bg-[#DEE9C8] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] px-4 py-2 text-[#37394F]">Confirm</button>
+                <button @click="confirm(selected)" class="bg-[#DEE9C8] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] px-4 py-2 text-[#37394F]">Confirm</button>
             </div>
         </div>
     </div>

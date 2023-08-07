@@ -265,7 +265,7 @@ export const useUserStore = defineStore("user", {
           this.first_name = response.data.user.first_name;
           this.last_name = response.data.user.last_name;
           this.isLoggedIn = true;
-          console.log(this.first_name);
+
           this.getUserType(); //make dj rest auth return user type (backend) to remove this function
         });
     },
@@ -290,7 +290,49 @@ export const useUserStore = defineStore("user", {
           }
         )
         .then((res) => {
-          console.log("meeting changed");
+          console.log(res)
+          const guidanceStore = useGuidanceStore()
+          const studentIndexAll = guidanceStore.allStudents.edges.findIndex(student => student.node.user.email === email)
+          const studentIndex = guidanceStore.guidance.students.findIndex(student => student.user.email === email)
+
+          if(studentIndex > -1) {
+            guidanceStore.guidance.students[studentIndex].meeting = res.data.data.updateMeeting.student.meeting
+          }
+
+          console.log(guidanceStore.allStudents.edges[studentIndexAll].node)
+          guidanceStore.allStudents.edges[studentIndexAll].node.meeting = res.data.data.updateMeeting.student.meeting
+        });
+    },
+    async addFlag(email: string, newFlag: string) {
+      await axios
+        .post(
+          `${import.meta.env.VITE_URL}/graphql/`,
+          {
+            query: `mutation {
+                            updateFlag(email: "${email}", flag:"${newFlag}") {
+                                student{
+                                    flag
+                                }
+                            }
+                        }`,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${this.access_token}`,
+            },
+          }
+        )
+        .then((res) => {
+          const guidanceStore = useGuidanceStore()
+          const studentIndexAll = guidanceStore.allStudents.edges.findIndex(student => student.node.user.email === email)
+          const studentIndex = guidanceStore.guidance.students.findIndex(student => student.user.email === email)
+
+          if(studentIndex > -1) {
+            guidanceStore.guidance.students[studentIndex].flag = res.data.data.updateFlag.student.flag
+          }
+
+          guidanceStore.allStudents.edges[studentIndexAll].node.flag = res.data.data.updateFlag.student.flag
         });
     },
   },
