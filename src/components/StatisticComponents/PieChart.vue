@@ -20,6 +20,7 @@ import { Pie } from 'vue-chartjs';
 import { useGuidanceStore } from '../../stores/guidance';
 import { ref, onMounted, computed } from 'vue';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { random } from 'gsap';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const loaded = ref(true);
@@ -38,11 +39,17 @@ const getChartData = computed(() => { //use computed properties to recalculate o
     datasets: [
       {
         data: [],
-        backgroundColor: '#C5D4A4', //we need to find 20 shades of green :'/
+        backgroundColor: [],
         label: '# of students',
       },
     ],
   };
+
+  for (let i = 0; i < 40; i++) {
+    const randomColours = "#" + Math.floor(Math.random() * 16777215).toString(16); //toString(16) turns it into a hexadecimal
+    chartData.datasets[0].backgroundColor.push(randomColours)
+    console.log(chartData.datasets[0].backgroundColor)
+  }
 
   if (selectedCourse.value) {
     const course = stats[selectedCourse.value];
