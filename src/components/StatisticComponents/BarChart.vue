@@ -1,7 +1,10 @@
 <template>
-  <Bar v-if="loaded" :options="chartOptions" :data="chartData" />
+  <div class="flex flex-col justify-center align-center items-center">
+    <div class="text-2xl md:text-3xl font-semibold sm:flex text-center">All Courses</div>
+  <Bar class="mt-2 w-[70rem]" v-if="loaded" :options="chartOptions" :data="chartData" />
   <div v-else>
     <p>Data is not available yet.</p>
+  </div>
   </div>
 </template>
   

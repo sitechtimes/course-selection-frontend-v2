@@ -1,15 +1,16 @@
 <template>
-  <div>
+  <div class="flex flex-col justify-center align-center items-center">
+    <div class="text-2xl md:text-3xl font-semibold sm:flex text-center">Course Rankings</div>
     <!-- drop-down menu -->
-    <select v-model="selectedCourse" class="space rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80">
+    <select v-model="selectedCourse" class="space rounded-md border border-solid border-zinc-400 h-10 p-2 mt-2 w-80">
       <option v-for="course in courses" :key="course" :value="course">{{ course }}</option>
     </select>
 
-    <div class="w-[70rem]" v-if="loaded && selectedCourse">
+    <div class="w-[70rem] mt-2" v-if="loaded && selectedCourse">
       <Pie :options="chartOptions" :data="getChartData" />
     </div>
-    <div v-else>
-      <p>Data is not available yet.</p>
+    <div v-else class="mt-2">
+      <p>Please select a course from the list above</p>
     </div>
   </div>
 </template>
@@ -30,7 +31,6 @@ const selectedCourse = ref('');
 const chartOptions = ref({
   responsive: true,
 });
-
 
 const getChartData = computed(() => { //use computed properties to recalculate on render
   const chartData = {
@@ -53,7 +53,7 @@ const getChartData = computed(() => { //use computed properties to recalculate o
       chartData.datasets[0].data.push(ranks[i]);
     }
   }
-  loaded.value=true
+  loaded.value = true
   return chartData
 });
 
