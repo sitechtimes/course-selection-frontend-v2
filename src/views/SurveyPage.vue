@@ -6,9 +6,8 @@ import { ref, reactive, Ref, onBeforeMount, watch } from "vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
 import { useStudentStore } from "../stores/student";
-import { surveyQuestion, courses, surveyAnswer } from "../types/interface";
+import { surveyQuestion, course, surveyAnswer } from "../types/interface";
 import { onBeforeRouteLeave } from "vue-router";
-import SurveyModal from "../components/SurveyPageComponents/Reusables/SurveyModal.vue";
 
 document.title = 'Survey | SITHS Course Selection'
 
@@ -25,7 +24,6 @@ const max: Ref<boolean> = ref(false);
 
 surveyStore.setSurvey(
   studentStore.user.email,
-  surveyStore.currentSurvey.question,
   studentStore.student.grade
 );
 
@@ -56,10 +54,12 @@ const getChoices = () => {
 
 onBeforeRouteLeave((to, from, next) => {
     if(JSON.stringify(surveyStore.currentResponse) === studentStore.answeredSurvey[0].answers || to.path === '/student/survey/review') {
-      next() //if the current responses are the same as the previous responses, proceed to go
+      window.removeEventListener('beforeunload', reminder)
+      next()
     } else {
       const answer = window.confirm('Changes you made might not be saved.')
       if (answer) {
+        window.removeEventListener('beforeunload', reminder)
         next()
       } else {
         next(false)
@@ -67,9 +67,9 @@ onBeforeRouteLeave((to, from, next) => {
     }
 })
 
-const reminder = (e) => {
+const reminder = (e: Event) => {
     e.preventDefault(); 
-    e.returnValue = '';
+    e.returnValue = false;
 };
 
 watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
@@ -98,7 +98,7 @@ watch(() => studentStore.answeredSurvey[0], (newResponse, oldResponse) => {
     >
       <div class="mt-5">
         <h1 class="text-4xl font-semibold mb-6">
-        {{ surveyStore.currentSurvey.gradeo }} Year Survey
+        {{ surveyStore.currentSurvey.grade }} Year Survey
         </h1>
       </div>
       <div class="h-5/6 flex items-center">
@@ -147,7 +147,7 @@ watch(() => studentStore.answeredSurvey[0], (newResponse, oldResponse) => {
         </button>
       </RouterLink>
     </div>
-    <p class="absolute bottom-8 right-16 text-xl font-semibold">
+    <p class="absolute bottom-8 right-16 text-xl font-semibold hidden sm:block">
       {{ currentIndex + 1 }}
     </p>
   </div>
