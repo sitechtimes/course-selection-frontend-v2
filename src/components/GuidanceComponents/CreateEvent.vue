@@ -1,23 +1,10 @@
 <script setup lang="ts">
 import { ref, Ref, onMounted } from "vue";
-import { useUserStore } from "../../stores/user";
 import { useGuidanceStore } from "../../stores/guidance";
+import { useUserStore } from "../../stores/user";
 
 const guidanceStore = useGuidanceStore();
 const userStore = useUserStore();
-<<<<<<< Updated upstream
-
-let title: String;
-let date: String;
-let time: String;
-let description: String;
-let name: String;
-let email: String;
-const show: Ref<boolean> = ref(false);
-const save = ref(null);
-const form = ref(null);
-
-=======
 
 let title: string;
 let date: string;
@@ -28,12 +15,11 @@ let email: string;
 const show: Ref<boolean> = ref(false);
 const save = ref();
 const form = ref();
->>>>>>> Stashed changes
 const studentList = guidanceStore.guidance.students;
+const dateError: Ref<boolean> = ref(false);
+const timeError: Ref<boolean> = ref(false);
+const nameError: Ref<boolean> = ref(false);
 
-<<<<<<< Updated upstream
-function submit(date: String, name: String, time: String) {
-=======
 function empty() {
   //checks if require fields are empty; if so, error msg pops up on respective field
   if (date.value === "") {
@@ -59,17 +45,16 @@ function empty() {
 }
 
 function submit(meetingDate: string, studentName: string, meetingTime: string) {
->>>>>>> Stashed changes
   //date conversion
-  const year = parseInt(date.slice(0, 4));
-  const month = parseInt(date.slice(6, 8)) - 1;
-  const day = parseInt(date.slice(9, 11));
-  const hour = parseInt(time.slice(0, 2));
-  const min = parseInt(time.slice(3, 5));
+  const year = parseInt(meetingDate.slice(0, 4));
+  const month = parseInt(meetingDate.slice(6, 8)) - 1;
+  const day = parseInt(meetingDate.slice(9, 11));
+  const hour = parseInt(meetingTime.slice(0, 2));
+  const min = parseInt(meetingTime.slice(3, 5));
   const dateTime = new Date(year, month, day, hour, min);
   const newTime = dateTime.toISOString();
   //person locater
-  if (name != null || undefined) {
+  if (studentName != null || undefined) {
     for (const student of studentList) {
       const studentFullName =
         student.user.lastName +
@@ -77,20 +62,18 @@ function submit(meetingDate: string, studentName: string, meetingTime: string) {
         student.user.firstName +
         " | " +
         student.user.email;
-      if (studentFullName == name) {
+      if (studentFullName == studentName) {
         email = student.user.email;
       }
     }
   }
+
   save.value.innerHTML = "Saved";
   form.value.reset();
-<<<<<<< Updated upstream
-=======
   name = "";
   date = "";
   email = "";
   time = "";
->>>>>>> Stashed changes
   userStore.changeMeeting(email, newTime);
 }
 
@@ -121,7 +104,7 @@ const toggleEvent = () => {
             </svg>
           </button>
         </div>
-        <form id="form" ref="form" @submit.prevent="submit(date, name, time)">
+        <form id="form" ref="form" @submit.prevent="empty()">
           <div class="item mb-6">
             <label
               class="formt mt-2 flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold"
@@ -160,15 +143,11 @@ const toggleEvent = () => {
                 type="date"
                 v-model="date"
                 placeholder="Date"
-<<<<<<< Updated upstream
-              />
-=======
                 ref="date"
               />
               <p v-if="dateError" class="error text-red-600 ml-6 mt-1">
                 Field empty/invalid
               </p>
->>>>>>> Stashed changes
             </div>
             <div class="item mb-6">
               <label
@@ -188,18 +167,13 @@ const toggleEvent = () => {
                 type="time"
                 v-model="time"
                 placeholder="Time"
-<<<<<<< Updated upstream
-              />
-=======
                 ref="time"
               />
               <p v-if="timeError" class="error text-red-600 ml-6 mt-1">
                 Field empty/invalid
               </p>
->>>>>>> Stashed changes
             </div>
           </div>
-
           <div class="item mb-6">
             <label
               class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold"
@@ -223,13 +197,6 @@ const toggleEvent = () => {
             </datalist>
             <input
               class="space rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80"
-<<<<<<< Updated upstream
-              placeholder="Select Student"
-              autoComplete="on"
-              list="suggestions"
-              v-model="name"
-            />
-=======
               placeholder="Select Student From List"
               autoComplete="on"
               list="suggestions"
@@ -239,7 +206,6 @@ const toggleEvent = () => {
             <p v-if="nameError" class="error text-red-600 ml-6 mt-1">
               Field empty/invalid
             </p>
->>>>>>> Stashed changes
           </div>
           <div class="item mb-6">
             <label
@@ -254,11 +220,7 @@ const toggleEvent = () => {
               Memo
             </label>
             <input
-<<<<<<< Updated upstream
-              class="space rounded-md border border-solid border-zinc-400 w-80 h-10 p-2 ml-6 mt-1"
-=======
               class="space rounded-md border border-solid border-zinc-4a00 w-80 h-10 p-2 ml-6 mt-1"
->>>>>>> Stashed changes
               type="text"
               v-model="description"
               placeholder="Memo"
@@ -269,16 +231,9 @@ const toggleEvent = () => {
             <label class="ml-2" for="notify">Notify Student via Email</label>
           </div>
           <div
-<<<<<<< Updated upstream
-            class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer"
-          >
-            <button
-              @click="submit(date, name, time)"
-=======
             class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit"
           >
             <button
->>>>>>> Stashed changes
               type="submit"
               class="font-bold bg-primary-g px-4 py-2 rounded-2xl w-fit h-fit"
               id="save"
@@ -334,5 +289,9 @@ svg {
   width: 1.2rem;
   margin-right: 10px;
   fill: #717494;
+}
+
+input:invalid {
+  border-color: red;
 }
 </style>

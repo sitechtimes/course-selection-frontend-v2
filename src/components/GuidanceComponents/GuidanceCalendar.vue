@@ -52,7 +52,7 @@
         class="createevent flex flex-row m-auto mt-5 w-fit h-fit rounded-[1rem] border border-black"
       >
         <div class="event flex flex-col">
-          <div class="top flex-row flex items-center">
+          <div class="top flex-row flex items-center justify-between">
             <h2 class="h2 font-bold text-[2rem] m-8 mb-4">Create Event</h2>
             <button class="mt-5 mr-12" @click="toggleEvent">
               <svg
@@ -66,7 +66,7 @@
               </svg>
             </button>
           </div>
-          <form id="form" ref="form" @submit.prevent="submit(date, name, time)">
+          <form id="form" ref="form" @submit.prevent="empty()">
             <div class="item mb-6">
               <label
                 class="formt mt-2 flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold"
@@ -105,7 +105,11 @@
                   type="date"
                   v-model="date"
                   placeholder="Date"
+                  ref="date"
                 />
+                <p v-if="dateError" class="error text-red-600 ml-6 mt-1">
+                  Field empty/invalid
+                </p>
               </div>
               <div class="item mb-6">
                 <label
@@ -125,10 +129,13 @@
                   type="time"
                   v-model="time"
                   placeholder="Time"
+                  ref="time"
                 />
+                <p v-if="timeError" class="error text-red-600 ml-6 mt-1">
+                  Field empty/invalid
+                </p>
               </div>
             </div>
-
             <div class="item mb-6">
               <label
                 class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold"
@@ -152,11 +159,15 @@
               </datalist>
               <input
                 class="space rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80"
-                placeholder="Select Student"
+                placeholder="Select Student From List"
                 autoComplete="on"
                 list="suggestions"
                 v-model="name"
+                id="student"
               />
+              <p v-if="nameError" class="error text-red-600 ml-6 mt-1">
+                Field empty/invalid
+              </p>
             </div>
             <div class="item mb-6">
               <label
@@ -171,7 +182,7 @@
                 Memo
               </label>
               <input
-                class="space rounded-md border border-solid border-zinc-400 w-80 h-10 p-2 ml-6 mt-1"
+                class="space rounded-md border border-solid border-zinc-4a00 w-80 h-10 p-2 ml-6 mt-1"
                 type="text"
                 v-model="description"
                 placeholder="Memo"
@@ -182,10 +193,9 @@
               <label class="ml-2" for="notify">Notify Student via Email</label>
             </div>
             <div
-              class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer"
+              class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit"
             >
               <button
-                @click="submit(date, name, time)"
                 type="submit"
                 class="font-bold bg-primary-g px-4 py-2 rounded-2xl w-fit h-fit"
                 id="save"
@@ -217,29 +227,55 @@ import { useGuidanceStore } from "../../stores/guidance";
 const guidanceStore = useGuidanceStore();
 const userStore = useUserStore();
 
-let title: String;
-let date: String;
-let time: String;
-let description: String;
-let name: String;
-let email: String;
+let title: string;
+let date: string;
+let time: string;
+let description: string;
+let name: string;
+let email: string;
 const show: Ref<boolean> = ref(false);
-const save = ref(null);
-const form = ref(null);
-
+const save = ref();
+const form = ref();
 const studentList = guidanceStore.guidance.students;
+const dateError: Ref<boolean> = ref(false);
+const timeError: Ref<boolean> = ref(false);
+const nameError: Ref<boolean> = ref(false);
 
-function submit(date: String, name: String, time: String) {
+function empty() {
+  //checks if require fields are empty; if so, error msg pops up on respective field
+  if (date.value === "") {
+    dateError.value = true;
+  } else {
+    dateError.value = false;
+  }
+  if (time.value === "") {
+    timeError.value = true;
+  } else {
+    timeError.value = false;
+  }
+  if (!name) {
+    nameError.value = true;
+  } else {
+    nameError.value = false;
+  }
+
+  //if all required fields are filled out, proceed with submission
+  if (!dateError.value && !timeError.value && !nameError.value) {
+    submit(date, name, time);
+  }
+}
+
+function submit(meetingDate: string, studentName: string, meetingTime: string) {
   //date conversion
-  const year = parseInt(date.slice(0, 4));
-  const month = parseInt(date.slice(6, 8)) - 1;
-  const day = parseInt(date.slice(9, 11));
-  const hour = parseInt(time.slice(0, 2));
-  const min = parseInt(time.slice(3, 5));
+  const year = parseInt(meetingDate.slice(0, 4));
+  const month = parseInt(meetingDate.slice(6, 8)) - 1;
+  const day = parseInt(meetingDate.slice(9, 11));
+  const hour = parseInt(meetingTime.slice(0, 2));
+  const min = parseInt(meetingTime.slice(3, 5));
   const dateTime = new Date(year, month, day, hour, min);
   const newTime = dateTime.toISOString();
   //person locater
-  if (name != null || undefined) {
+  if (studentName != null || undefined) {
     for (const student of studentList) {
       const studentFullName =
         student.user.lastName +
@@ -247,14 +283,20 @@ function submit(date: String, name: String, time: String) {
         student.user.firstName +
         " | " +
         student.user.email;
-      if (studentFullName == name) {
+      if (studentFullName == studentName) {
         email = student.user.email;
       }
     }
   }
+
   save.value.innerHTML = "Saved";
   form.value.reset();
+  name = "";
+  date = "";
+  email = "";
+  time = "";
   userStore.changeMeeting(email, newTime);
+  console.log(title);
 }
 
 const toggleEvent = () => {
