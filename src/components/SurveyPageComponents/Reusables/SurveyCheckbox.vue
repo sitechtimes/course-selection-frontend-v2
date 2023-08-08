@@ -47,7 +47,7 @@
       </div>
       <div class="mt-4 border-black border border-solid rounded-xl lg:w-[45%] w-[90%] lg:ml-14 lg:h-[50vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll">
         <div class="flex justify-center mt-[1%]">
-            <p class="text-lg xl:leading-10 md:text-xl xl:text-2xl text-black">Drag course(s) into order of preference:</p>
+            <p class="ml-6 mt-2 text-lg xl:leading-10 md:text-xl xl:text-2xl text-black">Drag course(s) into order of preference:</p>
           </div>
           <surveyDraggable
           class="p-6"
