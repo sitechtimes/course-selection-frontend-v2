@@ -16,6 +16,7 @@ export const useUserStore = defineStore("user", {
     access_token: "",
     refresh_token: "",
     loading: false,
+    expire_time: 0,
   }),
   getters: {
     // getStudents(name?: string): object[] | object | undefined {
@@ -272,8 +273,13 @@ export const useUserStore = defineStore("user", {
           this.email = response.data.user.email;
           this.first_name = response.data.user.first_name;
           this.last_name = response.data.user.last_name;
-          this.isLoggedIn = true;
-          console.log(this.first_name);
+          this.isLoggedIn = true;  
+
+          const date = new Date()
+          const expiration = date.setHours(date.getHours() + 1);
+
+          this.expire_time = expiration
+  
           this.getUserType(); //make dj rest auth return user type (backend) to remove this function
         });
     },
@@ -298,7 +304,49 @@ export const useUserStore = defineStore("user", {
           }
         )
         .then((res) => {
-          console.log("meeting changed");
+          console.log(res)
+          const guidanceStore = useGuidanceStore()
+          const studentIndexAll = guidanceStore.allStudents.edges.findIndex(student => student.node.user.email === email)
+          const studentIndex = guidanceStore.guidance.students.findIndex(student => student.user.email === email)
+
+          if(studentIndex > -1) {
+            guidanceStore.guidance.students[studentIndex].meeting = res.data.data.updateMeeting.student.meeting
+          }
+
+          console.log(guidanceStore.allStudents.edges[studentIndexAll].node)
+          guidanceStore.allStudents.edges[studentIndexAll].node.meeting = res.data.data.updateMeeting.student.meeting
+        });
+    },
+    async addFlag(email: string, newFlag: string) {
+      await axios
+        .post(
+          `${import.meta.env.VITE_URL}/graphql/`,
+          {
+            query: `mutation {
+                            updateFlag(email: "${email}", flag:"${newFlag}") {
+                                student{
+                                    flag
+                                }
+                            }
+                        }`,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${this.access_token}`,
+            },
+          }
+        )
+        .then((res) => {
+          const guidanceStore = useGuidanceStore()
+          const studentIndexAll = guidanceStore.allStudents.edges.findIndex(student => student.node.user.email === email)
+          const studentIndex = guidanceStore.guidance.students.findIndex(student => student.user.email === email)
+
+          if(studentIndex > -1) {
+            guidanceStore.guidance.students[studentIndex].flag = res.data.data.updateFlag.student.flag
+          }
+
+          guidanceStore.allStudents.edges[studentIndexAll].node.flag = res.data.data.updateFlag.student.flag
         });
     },
   },

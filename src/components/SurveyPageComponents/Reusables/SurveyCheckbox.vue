@@ -15,7 +15,7 @@
                   type="checkbox"
                   class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
                   :id="choice.courseCode"
-                  :value="choice.name"
+                  :value="choice"
                   v-model="surveyStore.currentResponse[index].answer.courses"
                   :disabled="notInterested"
                 />
@@ -62,6 +62,7 @@
 </template>
 
 <script setup lang="ts"> 
+//@ts-nocheck
 import surveyDraggable from "./SurveyDraggable.vue";
 import { useSurveyStore } from "../../../stores/survey";
 import { watch, onBeforeMount, ref, Ref, computed, PropType } from "vue";
@@ -159,13 +160,17 @@ watch(
         const rank = newResponse.length;
         const rankObject = {
           rank: rank,
-          name: newClass[0],
+          name: newClass[0].name,
+          courseCode: newClass[0].courseCode,
+          subject: newClass[0].subject
         };
 
         const overallRank = surveyStore.currentResponse[totalIndex].answer.courses.length + 1;
         const overallRankObject = {
           rank: overallRank,
-          name: newClass[0],
+          name: newClass[0].name,
+          courseCode: newClass[0].courseCode,
+          subject: newClass[0].subject
         };
 
         surveyStore.currentResponse[index].answer.preference.push(rankObject);
@@ -184,9 +189,9 @@ watch(
       if (removeClass[0] === 'Not Interested') {
         toggleInterest(true, totalIndex)
       } else if (!surveyStore.currentResponse[index].answer.courses.includes('Not Interested')){
-        const classIndex = surveyStore.currentResponse[index].answer.preference.findIndex((x: preferences) => x.name === removeClass[0])
-        const allClassIndex = surveyStore.currentResponse[totalIndex].answer.courses.findIndex((x: string) => x === removeClass[0])
-        const allPreferenceIndex = surveyStore.currentResponse[totalIndex].answer.preference.findIndex((x: preferences) => x.name === removeClass[0])
+        const classIndex = surveyStore.currentResponse[index].answer.preference.findIndex((x: preferences) => x.name === removeClass[0].name)
+        const allClassIndex = surveyStore.currentResponse[totalIndex].answer.courses.findIndex((x: string) => x.name === removeClass[0].name)
+        const allPreferenceIndex = surveyStore.currentResponse[totalIndex].answer.preference.findIndex((x: preferences) => x.name === removeClass[0].name)
 
         preference.forEach((x: preferences) => {
           const index = preference.indexOf(x) 

@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import cornerArrow from '../icons/CornerArrow.vue'
+import PlusSign from '../icons/PlusSign.vue';
+import AddFlag from '../GuidanceComponents/AddFlag.vue'
 import { ref, computed, PropType, Ref } from 'vue';
 import { useUserStore } from '../../stores/user';
 import { useSurveyStore } from '../../stores/survey';
@@ -16,6 +18,34 @@ const guidanceStore = useGuidanceStore()
 const router = useRouter()
 
 let tooltip: Ref<boolean> = ref(false)
+let showFlagModal: Ref<string> = ref('')
+
+const flags = [
+    {
+        flag: 'Transfer',
+        title: 'Transfer student',
+        color: 'bg-red-400'
+    },
+    {
+        flag: 'Regents',
+        title: 'Missing regents',
+        color: 'bg-green-400'
+    },
+    {
+        flag: 'Team',
+        title: 'Three season athlete',
+        color: 'bg-blue-400'
+    },
+    {
+        flag: 'ENL',
+        title: 'ENL',
+        color: 'bg-purple-400'
+    },
+]
+
+const toggleFlagModal = (student: string) => {
+    showFlagModal.value = student
+}
 
 async function userClick(student: studentGuidance) {
     await surveyStore.setSurvey(student.user.email, student.grade)
@@ -39,29 +69,18 @@ async function userClick(student: studentGuidance) {
                         <div>
                             <img src="../icons/InfoCircle.png" alt="information button for flags" class="h-5" @mouseover="tooltip = true" @mouseout="tooltip = false"/>
                             <div v-show="tooltip" class="absolute h-auto w-auto bg-white border-primary-g border p-2">
-                                <div class="flex flex-row">
-                                    <div class="m-1 bg-red-400 rounded-full h-5 w-5"></div>
-                                    <p class="m-1">= Transfer Student</p>
-                                </div>
-                                <div class="flex flex-row"> 
-                                    <div class="m-1 bg-green-400 rounded-full h-5 w-5"></div>
-                                    <p class="m-1">= Missing Regents</p>
-                                </div>
-                                <div class="flex flex-row">
-                                    <div class="m-1 bg-blue-400 rounded-full h-5 w-5"></div>
-                                    <p class="m-1">= Sports Team</p>
-                                </div>
-                                <div class="flex flex-row">
-                                    <div class="m-1 bg-purple-400 rounded-full h-5 w-5"></div>
-                                    <p class="m-1">= ENL</p>
+                                <div v-for="flag in flags" class="flex flex-row">
+                                    <div class="m-1 rounded-full h-5 w-5" :class="`${flag.color}`"></div>
+                                    <p class="m-1">= {{ flag.title}}</p>
                                 </div>
                             </div>
                         </div>
                     </th>
                 </tr>
             </thead>
-            <tbody v-for="student in newstudents" :key="student.user.firstName" class="border-2 border-black">
-                <tr @click="userClick(student)">
+            <tbody v-for="student in newstudents" :key="student.user.email" class="border-2 border-black">
+                <AddFlag v-if="showFlagModal === student.user.email" @exit="toggleFlagModal('')" :student="student" :flags="flags"></AddFlag>
+                <tr>
                     <td class="p-4">{{ student.user.lastName }}, {{ student.user.firstName }}</td>
                     <td class="p-4" v-if="student.grade === 'SOPHOMORE'">9</td>
                     <td class="p-4" v-if="student.grade === 'JUNIOR'">10</td>
@@ -79,15 +98,24 @@ async function userClick(student: studentGuidance) {
                     <td class="p-4" v-else-if="guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === student.user.email && x.node.grade === student.grade)?.node.status === 'FINALIZED'">
                         <p class="text-[#311638] bg-[#D1A4DE] w-[8rem] font-semibold text-center p-1 rounded-2xl">Finalized</p>
                     </td>
-                    <td>View Survey</td>
-                    <td class="p-4 flex flex-row">
-                        <div v-show="student.flag.includes('Transfer')" title="Transfer student" class="m-1 bg-red-400 rounded-full h-5 w-5"></div>
-                        <div v-show="student.flag.includes('Regents')"  title="Missing regents" class="m-1 bg-green-400 rounded-full h-5 w-5"></div>
-                        <div v-show="student.flag.includes('Team')"  title="On a sports team" class="m-1 bg-blue-400 rounded-full h-5 w-5"></div>
-                        <div v-show="student.flag.includes('ENL')" title="ENL" class="m-1 bg-purple-400 rounded-full h-5 w-5"></div>
+                    <td @click="userClick(student)" class="p-4 hover:cursor-pointer">View Survey</td>
+                    <td class="p-4 flex flex-row parent items-center justify-center">
+                        <div v-for="flag in flags" :key="flag.flag">
+                            <div>
+                                <div v-show="student.flag.includes(flag.flag)" :title=flag.title :class="`${flag.color}`" class="m-1 rounded-full h-5 w-5"></div>
+                            </div>
+                        </div>
+                        <PlusSign @click="toggleFlagModal(student.user.email)" class="m-1 hidden child hover:cursor-pointer"></PlusSign>
                     </td>
                 </tr>
             </tbody>
         </table>
         </div>
 </template>
+
+<style scoped>
+.parent:hover .child {
+    display: block;
+    transition: 0.3s;
+}
+</style>
