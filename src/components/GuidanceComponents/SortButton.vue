@@ -1,15 +1,19 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, Ref } from "vue";
+import { computed, onMounted, ref, Ref, watch } from "vue";
 import { useUserStore } from '../../stores/user';
 import { useGuidanceStore } from "../../stores/guidance";
 import DownArrow from '../icons/DownArrow.vue';
+import { userData } from "../../types/interface";
 
 const userStore = useUserStore()
 const guidanceStore = useGuidanceStore()
-// const input = ref("");
-// const props = ["title"];
 const selected: Ref<string> = ref("Sort By");
 const isOpen: Ref<boolean> = ref(false);
+
+watch(() => guidanceStore.currentlyViewing, (newValue) => {
+    // do something based on the new value
+  selected.value = "Sort By"
+})
 
 const menuArray = [
   {
@@ -33,6 +37,10 @@ const menuArray = [
     text: "Completed"
   },
   {
+    sortBy: "final",
+    text: "Finalized"
+  },
+  {
     sortBy: "nine",
     text: "Grade 9"
   },
@@ -43,6 +51,22 @@ const menuArray = [
   {
     sortBy: "eleven",
     text: "Grade 11"
+  },
+  {
+    sortBy: "transfer",
+    text: "Transfer"
+  },
+  {
+    sortBy: "regents",
+    text: "Missing Regents"
+  },
+  {
+    sortBy: "sports",
+    text: "Sports Team"
+  },
+  {
+    sortBy: "enl",
+    text: "ENL"
   },
 ]
 
@@ -59,26 +83,36 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
     return 0;
   }
 
-  function ns(a: { grade: string; }) {
+  function ns(a: { grade: string, user: userData }) {
     if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined) return -1;
     else
     return 1;
   }
 
-  function ip(a: { grade: string; }) {
+  function ip(a: { grade: string, user: userData }) {
     if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
       return 1;
-    } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email).node.status === 'INCOMPLETE'){
+    } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'INCOMPLETE'){
       return -1;
     } else {
       return 1
     }
   }
 
-  function com(a: { grade: string; }) {
+  function com(a: { grade: string, user: userData }) {
     if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
       return 1;
-    } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email).node.status === 'COMPLETE'){
+    } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'COMPLETE'){
+      return -1;
+    } else {
+      return 1
+    }
+  }
+
+  function final(a: { grade: string, user: userData }) {
+    if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
+      return 1;
+    } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'FINALIZED'){
       return -1;
     } else {
       return 1
@@ -103,17 +137,41 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
     return 1;
   }
 
+  function transfer(a: { flag: string; }) {
+    if (a.flag.includes('Transfer')) return -1;
+    else
+    return 1;
+  }
+
+  function regents(a: { flag: string; }) {
+    if (a.flag.includes('Regents')) return -1;
+    else
+    return 1;
+  }
+
+  function sports(a: { flag: string; }) {
+    if (a.flag.includes('Team')) return -1;
+    else
+    return 1;
+  }
+
+  function enl(a: { flag: string; }) {
+    if (a.flag.includes('ENL')) return -1;
+    else
+    return 1;
+  }
+
   const sortBy = eval(sort.sortBy)
   selected.value = sort.text
   isOpen.value = false
-  return (guidanceStore.guidance.students.sort(sortBy))
+  return (guidanceStore.currentlyViewing.sort(sortBy))
 }
 </script>
 
 <template>
-     <div class="w-[16rem]">
+     <div class="w-44">
      <div
-      class="h-10 w-44 flex flex-row bg-primary-g text-black justify-evenly cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
+      class="h-10 w-full flex flex-row bg-primary-g text-black justify-evenly cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
       id="sort"
       @click="isOpen = !isOpen"
     >
@@ -124,7 +182,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
       </div>
       <DownArrow class="mt-2.5"/>
       </div>
-      <div class="sub-menu absolute shadow-[4px_3px_3px_rgba(0,0,0,0.25)]" v-if="isOpen" >
+      <div class="sub-menu absolute shadow-[4px_3px_3px_rgba(0,0,0,0.25)] " v-if="isOpen" >
         <div v-for="x in menuArray" :key="x.sortBy" class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
           <button @click="sortBy(x)" class="ml-2">{{ x.text }}</button>
         </div>

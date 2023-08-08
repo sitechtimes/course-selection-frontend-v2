@@ -6,7 +6,7 @@ import { ref, reactive, Ref, onBeforeMount, watch } from "vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
 import { useStudentStore } from "../stores/student";
-import { surveyQuestion, courses, surveyAnswer } from "../types/interface";
+import { surveyQuestion, course, surveyAnswer } from "../types/interface";
 import { onBeforeRouteLeave } from "vue-router";
 
 document.title = 'Survey | SITHS Course Selection'
@@ -24,7 +24,6 @@ const max: Ref<boolean> = ref(false);
 
 surveyStore.setSurvey(
   studentStore.user.email,
-  surveyStore.currentSurvey.question,
   studentStore.student.grade
 );
 
@@ -55,10 +54,12 @@ const getChoices = () => {
 
 onBeforeRouteLeave((to, from, next) => {
     if(JSON.stringify(surveyStore.currentResponse) === studentStore.answeredSurvey[0].answers || to.path === '/student/survey/review') {
+      window.removeEventListener('beforeunload', reminder)
       next()
     } else {
       const answer = window.confirm('Changes you made might not be saved.')
       if (answer) {
+        window.removeEventListener('beforeunload', reminder)
         next()
       } else {
         next(false)
@@ -66,60 +67,64 @@ onBeforeRouteLeave((to, from, next) => {
     }
 })
 
-const reminder  =  (e) => {
+const reminder = (e: Event) => {
     e.preventDefault(); 
-    e.returnValue = '';
+    e.returnValue = false;
 };
 
 watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
   if(JSON.stringify(newResponse) === studentStore.answeredSurvey[0].answers) {
-    window.addEventListener('beforeunload', reminder);
     window.removeEventListener('beforeunload', reminder)
-    console.log('remove')
   } else {
     window.addEventListener('beforeunload', reminder);
-    console.log('add');
+  }
+}, { deep:true })
+
+watch(() => studentStore.answeredSurvey[0], (newResponse, oldResponse) => {
+  if(newResponse.answers === JSON.stringify(surveyStore.currentResponse)) {
+    window.removeEventListener('beforeunload', reminder)
+  } else {
+    window.addEventListener('beforeunload', reminder);
   }
 }, { deep:true })
 </script>
 
 <template>
   <div class="h-[80vh] flex flex-col justify-center items-center space-y-8">
-    <p v-if="surveyStore.loading">Setting things up...</p>
+    <div v-if="surveyStore.loading" class="animate-spin">
+      <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z"/></svg>
+    </div>
     <div
       v-else
-      class="w-11/12 md:w-4/5 lg:w-3/4 flex flex-col items-center min-h-[20rem] space-y-8 h-5/6"
+      class="w-11/12 md:w-4/5 lg:w-3/4 flex flex-col items-center min-h-[20rem] h-5/6 overflow-hidden"
     >
-      <div class="mt-5">
-        <h1 class="text-4xl font-semibold">
+      <div class="mt-2 sm:mt-5">
+        <h1 class="text-2xl md:text-3xl lg:text-4xl font-semibold m-2">
         {{ surveyStore.currentSurvey.grade }} Year Survey
         </h1>
       </div>
-      <div class="h-5/6 flex items-center">
+      <div class="h-full flex items-center">
         <generalComponent
           v-if="currentQuestion.questionType === 'GENERAL'"
           :question="currentQuestion"
-          :answers="currentAnswer"
           :key="currentQuestion.id"
         ></generalComponent>
         <booleanComponent
           v-else-if="currentQuestion.questionType === 'BOOLEAN'"
           :question="currentQuestion"
-          :answers="currentAnswer"
           :key="currentQuestion.question"
         ></booleanComponent>
         <checkboxComponent
           v-else
           :question="currentQuestion"
           :choices="getChoices()"
-          :answers="currentAnswer"
           :key="currentQuestion.questionType"
           :color="'D6EEFF'"
         ></checkboxComponent>
       </div>
     </div>
     <div
-      class="h-1/6 w-11/12 md:w-4/5 lg:w-3/4 flex justify-between items-start px-4"
+      class="h-1/6  w-11/12 md:w-4/5 lg:w-3/4 flex justify-between items-start px-4"
     >
       <button
         @click="previousQuestion()"
@@ -144,7 +149,7 @@ watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
         </button>
       </RouterLink>
     </div>
-    <p class="absolute bottom-8 right-16 text-xl font-semibold">
+    <p class="absolute bottom-8 right-16 text-xl font-semibold hidden sm:block">
       {{ currentIndex + 1 }}
     </p>
   </div>

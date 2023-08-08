@@ -1,10 +1,10 @@
 <template>
   <section class="lg:text-left text-center h-full w-full">
-    <div class="flex flex-col lg:flex-row h-full">
-      <div class="w-1/2">
+    <div class="flex flex-col lg:flex-row items-center w-full">
+      <div class="lg:w-1/2 w-full h-full">
         <div class="flex items-center justify-center max-w-[40rem] overflow-hidden">
-          <fieldset class="flex items-center justify-start w-full">
-            <legend class="text-lg md:text-xl xl:text-3xl overflow-visible">{{ question.question }}</legend>
+          <fieldset class="flex items-center justify-start w-full h-full">
+            <legend class="text-lg xl:leading-10 md:text-xl xl:text-3xl overflow-visible text-left mb-4">{{ question.question }}</legend>
             <div class="flex flex-col flex-wrap justify-center items-start">
               <div
                 v-for="choice in choices"
@@ -15,13 +15,13 @@
                   type="checkbox"
                   class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
                   :id="choice.courseCode"
-                  :value="choice.name"
+                  :value="choice"
                   v-model="surveyStore.currentResponse[index].answer.courses"
                   :disabled="notInterested"
                 />
                 <label
                   :for="choice.courseCode"
-                  class="text-lg xl:text-xl ml-4"
+                  class="text-base sm:text-lg xl:text-xl ml-4"
                   >{{ choice.name }}</label
                 >
               </div>
@@ -45,11 +45,12 @@
           </fieldset>
         </div>
       </div>
-      <div class="border-black border border-solid rounded-xl lg:w-[45%] w-[90%] lg:ml-14 lg:h-[50vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll">
+      <div class="mt-4 border-black border border-solid rounded-xl lg:w-[45%] w-[90%] lg:ml-14 lg:h-[50vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll">
         <div class="flex justify-center mt-[1%]">
-            <p class="text-lg md:text-xl xl:text-2xl text-black">Drag course(s) into order of preference:</p>
+            <p class="text-lg xl:leading-10 md:text-xl xl:text-2xl text-black">Drag course(s) into order of preference:</p>
           </div>
           <surveyDraggable
+          class="p-6"
           :courses="surveyStore.currentResponse[index].answer.preference"
           :index="index"
           :numbered="true"
@@ -60,22 +61,29 @@
   </section>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts"> 
+//@ts-nocheck
+import surveyDraggable from "./SurveyDraggable.vue";
+import { useSurveyStore } from "../../../stores/survey";
+import { watch, onBeforeMount, ref, Ref, computed, PropType } from "vue";
+import { surveyQuestion, preferences, checkboxAnswer, course } from "../../../types/interface";
+
 const props = defineProps({
-  choices: Array,
-  question: Object,
-  answers: Array,
+  choices:{
+    type:  Array as PropType<Array<course>>,
+    required: true
+  },
+  question: {
+    type: Object as PropType<surveyQuestion>,
+    required: true
+  },
   color: String,
 });
-
-import surveyDraggable from "./surveyDraggable.vue";
-import { useSurveyStore } from "../../../stores/survey";
-import { watch, onBeforeMount, ref, Ref, computed } from "vue";
 
 const surveyStore = useSurveyStore();
 
 const x: Ref<number>= ref(0)
-let index: number = surveyStore.currentResponse.findIndex((x) => x.id == props.question.id); 
+let index: number = surveyStore.currentResponse.findIndex((x) => x.id == props.question?.id); 
 
 const notInterested = computed(() =>{
   return surveyStore.currentResponse[index].answer.courses.includes('Not Interested')
@@ -83,8 +91,8 @@ const notInterested = computed(() =>{
 
 if (index < 0) {
   const questionAnswer = {
-    id: props.question.id,
-    question: props.question.question,
+    id: props.question?.id,
+    question: props.question?.question,
     answer: {
       courses: [], 
       preference: []
@@ -93,7 +101,7 @@ if (index < 0) {
   surveyStore.currentResponse.push(questionAnswer);
 
   index = surveyStore.currentResponse.findIndex(
-    (x) => x.id == props.question.id
+    (x) => x.id == props.question?.id
   );
 }
 
@@ -101,14 +109,13 @@ const toggleInterest = (interest: boolean, totalIndex: number) => {
   if(!interest) {   
     surveyStore.currentResponse[index].answer.courses.forEach((course: string) => {
       if(course !== "Not Interested") {
-        const classIndex = surveyStore.currentResponse[index].answer.preference.findIndex(x => x.name === course)
-        const allClassIndex = surveyStore.currentResponse[totalIndex].answer.courses.findIndex(x => x === course)
-        const allPreferenceIndex = surveyStore.currentResponse[totalIndex].answer.preference.findIndex(x => x.name === course)
+        const classIndex = surveyStore.currentResponse[index].answer.preference.findIndex((x: preferences) => x.name === course)
+        const allClassIndex = surveyStore.currentResponse[totalIndex].answer.courses.findIndex((x: string) => x === course)
+        const allPreferenceIndex = surveyStore.currentResponse[totalIndex].answer.preference.findIndex((x: preferences) => x.name === course)
         
-        surveyStore.currentResponse[totalIndex].answer.preference.forEach(x => {
-          const index = surveyStore.currentResponse[totalIndex].answer.preference.indexOf(x) 
-          surveyStore.currentResponse[totalIndex].answer.preference.sort(function(a, b) {
-            return parseFloat(a.rank) - parseFloat(b.rank);
+        surveyStore.currentResponse[totalIndex].answer.preference.forEach((x: preferences) => {
+          surveyStore.currentResponse[totalIndex].answer.preference.sort(function(a: preferences, b: preferences) {
+            return a.rank - b.rank;
           })
         })
 
@@ -118,7 +125,7 @@ const toggleInterest = (interest: boolean, totalIndex: number) => {
       }
     })
 
-    surveyStore.currentResponse[totalIndex].answer.preference.forEach((rankObject: {name:string, rank: number}, index: number) => {
+    surveyStore.currentResponse[totalIndex].answer.preference.forEach((rankObject: preferences, index: number) => {
       rankObject.rank = index + 1
     })
 
@@ -130,7 +137,7 @@ watch(
   () => props.question,
   (newResponse) => {
     index = surveyStore.currentResponse.findIndex(
-      (x) => x.id == newResponse.id
+      (x) => x.id == newResponse?.id
     );
   }
 );
@@ -153,13 +160,17 @@ watch(
         const rank = newResponse.length;
         const rankObject = {
           rank: rank,
-          name: newClass[0],
+          name: newClass[0].name,
+          courseCode: newClass[0].courseCode,
+          subject: newClass[0].subject
         };
 
         const overallRank = surveyStore.currentResponse[totalIndex].answer.courses.length + 1;
         const overallRankObject = {
           rank: overallRank,
-          name: newClass[0],
+          name: newClass[0].name,
+          courseCode: newClass[0].courseCode,
+          subject: newClass[0].subject
         };
 
         surveyStore.currentResponse[index].answer.preference.push(rankObject);
@@ -178,24 +189,24 @@ watch(
       if (removeClass[0] === 'Not Interested') {
         toggleInterest(true, totalIndex)
       } else if (!surveyStore.currentResponse[index].answer.courses.includes('Not Interested')){
-        const classIndex = surveyStore.currentResponse[index].answer.preference.findIndex(x => x.name === removeClass[0])
-        const allClassIndex = surveyStore.currentResponse[totalIndex].answer.courses.findIndex(x => x === removeClass[0])
-        const allPreferenceIndex = surveyStore.currentResponse[totalIndex].answer.preference.findIndex(x => x.name === removeClass[0])
+        const classIndex = surveyStore.currentResponse[index].answer.preference.findIndex((x: preferences) => x.name === removeClass[0].name)
+        const allClassIndex = surveyStore.currentResponse[totalIndex].answer.courses.findIndex((x: string) => x.name === removeClass[0].name)
+        const allPreferenceIndex = surveyStore.currentResponse[totalIndex].answer.preference.findIndex((x: preferences) => x.name === removeClass[0].name)
 
-        preference.forEach(x => {
+        preference.forEach((x: preferences) => {
           const index = preference.indexOf(x) 
-          preference.sort(function(a, b) {
-            return parseFloat(a.rank) - parseFloat(b.rank);
+          preference.sort(function(a: preferences, b: preferences) {
+            return a.rank - b.rank;
           })
           if(index > classIndex) {
             preference[index].rank = preference[index].rank -1
           }
         })
         
-        surveyStore.currentResponse[totalIndex].answer.preference.forEach(x => {
+        surveyStore.currentResponse[totalIndex].answer.preference.forEach((x: preferences) => {
           const index = surveyStore.currentResponse[totalIndex].answer.preference.indexOf(x) 
-          surveyStore.currentResponse[totalIndex].answer.preference.sort(function(a, b) {
-            return parseFloat(a.rank) - parseFloat(b.rank);
+          surveyStore.currentResponse[totalIndex].answer.preference.sort(function(a: preferences, b: preferences) {
+            return a.rank - b.rank;
           })
           if(index > allPreferenceIndex) {
             surveyStore.currentResponse[totalIndex].answer.preference[index].rank = surveyStore.currentResponse[totalIndex].answer.preference[index].rank -1

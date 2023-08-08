@@ -3,23 +3,23 @@ import { useUserStore } from "./user";
 import { useStudentStore } from "./student";
 import { useGuidanceStore } from "./guidance";
 import { useRouter } from "vue-router";
-import { grade, status, surveyAnswer, surveyQuestion } from "../types/interface";
+import { grade, status, surveyAnswer, surveyQuestion, surveyStore, surveyStringAnswer } from "../types/interface";
 import axios from "axios";
 
 export const useSurveyStore = defineStore("survey", {
-  state: () => ({
-    currentAnsweredSurvey: [],
-    currentResponse: [],
-    currentSurvey: [],
+  state: (): surveyStore => ({
+    currentAnsweredSurvey: {answers: "[{}]", email: "", grade: "FRESHMAN", status: "INCOMPLETE"},
+    currentResponse: [{id: '', question: '', answer:{courses:[], preference: []}}],
+    currentSurvey: {dueDate: "", grade: "FRESHMAN", question: [{id: "", questionType: "OTHER", status: 'STANDARD', question:'', className: ''}]},
     loading: false,
     open: true,
+    submit: false,
     missingAnswers: [],
   }),
   getters: {
     //
   },
   actions: {
-    //
     async saveSurvey(status: status, grade: String) {
       const userStore = useUserStore();
       const email = this.currentAnsweredSurvey.email;
@@ -65,9 +65,15 @@ export const useSurveyStore = defineStore("survey", {
             guidanceStore.allAnsweredSurveys.edges[studentIndex].node.answers = jsonString;
             guidanceStore.allAnsweredSurveys.edges[studentIndex].node.status = status;
           } 
+          if(status === 'COMPLETE') {
+            this.submit = true
+            setTimeout(() => {
+              this.submit = false
+            }, 1500)
+          }
         });
     },
-    async startSurvey(email: string, survey: Array<object>, grade: grade) {
+    async startSurvey(email: string, grade: grade) {
       const userStore = useUserStore();
       const answers: Array<object> = [];
       const allChosen = {
@@ -131,7 +137,7 @@ export const useSurveyStore = defineStore("survey", {
           }
         });
     },
-    async setSurvey(email: string, survey: Array<object>, grade: grade) {
+    async setSurvey(email: string, grade: grade) {
       const userStore = useUserStore();
       const studentStore = useStudentStore();
       const guidanceStore = useGuidanceStore()
@@ -139,7 +145,7 @@ export const useSurveyStore = defineStore("survey", {
 
       if (userStore.userType === "student") {
         if (studentStore.answeredSurvey[0] === undefined) {
-          await this.startSurvey(email, survey, grade);
+          await this.startSurvey(email, grade);
         }
 
         this.currentAnsweredSurvey = studentStore.answeredSurvey[0];
@@ -153,7 +159,7 @@ export const useSurveyStore = defineStore("survey", {
         let studentIndex = guidanceStore.allAnsweredSurveys.edges.indexOf(survey[0])
 
         if (studentIndex < 0) {
-          await this.startSurvey(email, survey, grade);
+          await this.startSurvey(email, grade);
           survey = guidanceStore.allAnsweredSurveys.edges.filter(x => x.node.email === email && x.node.grade === grade)
           studentIndex = guidanceStore.allAnsweredSurveys.edges.indexOf(survey[0])
           
@@ -167,15 +173,16 @@ export const useSurveyStore = defineStore("survey", {
     async checkAnswers() {
       const check: Array<string> = []
       const userStore = useUserStore()
-      // const router = useRouter()
+
       this.currentSurvey.question.forEach((x: surveyQuestion) => {
-        const answer: surveyAnswer | undefined = this.currentResponse.find(y => y.id === x.id)
+        const answer: surveyStringAnswer| surveyAnswer | undefined = this.currentResponse.find(y => y.id === x.id)
         if(x.questionType === 'GENERAL' || x.questionType === 'BOOLEAN') {
-          if(answer.answer.trim()[0] === undefined) {
+          //@ts-ignore
+          if(answer?.answer.trim()[0] === undefined) {
             check.push(x.id)
           } 
         } else {
-          if(answer.answer.courses.length === 0){
+          if(answer?.answer.courses.length === 0){
             check.push(x.id)
           }
         }
@@ -183,13 +190,9 @@ export const useSurveyStore = defineStore("survey", {
       this.missingAnswers = check
       if(check.length === 0) {
         if(userStore.userType === "student") {
-          // const router = useRouter()
           await this.saveSurvey('COMPLETE', this.currentAnsweredSurvey.grade)
-          // router.push('/student/dashboard')
         } else if(userStore.userType === "guidance") {
-          // const router = useRouter()
-          await this.saveSurvey('COMPLETE', this.currentAnsweredSurvey.grade)
-          // router.push('/guidance/studentlist')
+          await this.saveSurvey('FINALIZED', this.currentAnsweredSurvey.grade)
         }
       } 
     },

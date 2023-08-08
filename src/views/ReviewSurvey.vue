@@ -5,8 +5,9 @@ import { useStudentStore } from '../stores/student';
 import booleanComponent from '../components/SurveyPageComponents/Reusables/SurveyBoolean.vue'
 import generalComponent from '../components/SurveyPageComponents/Reusables/SurveyGeneral.vue'
 import checkboxComponent from '../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue';
-import surveyDraggable from '../components/SurveyPageComponents/Reusables/surveyDraggable.vue';
-import exclamationMark from '../components/icons/ExclamationMark.vue'
+import surveyDraggable from '../components/SurveyPageComponents/Reusables/SurveyDraggable.vue';
+import exclamationMark from '../components/icons/ExclamationMark.vue';
+import ScrollPage from '../components/SurveyPageComponents/Reusables/ScrollPage.vue';
 import { surveyQuestion, surveyAnswer } from '../types/interface';
 import { watch, ref, Ref, reactive, defineExpose } from 'vue';
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
@@ -23,7 +24,6 @@ surveyStore.missingAnswers = []
 if(studentStore.answeredSurvey[0].status === 'COMPLETE') {
   surveyStore.setSurvey(
     studentStore.user.email,
-    studentStore.survey.question,
     studentStore.student.grade
   );
 }
@@ -51,10 +51,12 @@ const submit = async () => {
 
 onBeforeRouteLeave((to, from, next) => {
     if(JSON.stringify(surveyStore.currentResponse) === studentStore.answeredSurvey[0].answers || to.path === '/student/survey/review') {
+      window.removeEventListener('beforeunload', reminder)
       next()
     } else {
       const answer = window.confirm('Changes you made might not be saved.')
       if (answer) {
+        window.removeEventListener('beforeunload', reminder)
         next()
       } else {
         next(false)
@@ -62,18 +64,24 @@ onBeforeRouteLeave((to, from, next) => {
     }
 })
 
-const reminder  =  (e) => {
+const reminder = (e: Event) => {
     e.preventDefault(); 
-    e.returnValue = '';
+    e.returnValue = false;
 };
 
 watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
   if(JSON.stringify(newResponse) === studentStore.answeredSurvey[0].answers) {
     window.removeEventListener('beforeunload', reminder)
-    console.log('remove')
   } else {
     window.addEventListener('beforeunload', reminder);
-    console.log('add');
+  }
+}, { deep:true })
+
+watch(() => studentStore.answeredSurvey[0].answers, (newResponse, oldResponse) => {
+  if(newResponse === JSON.stringify(surveyStore.currentResponse)) {
+    window.removeEventListener('beforeunload', reminder)
+  } else {
+    window.addEventListener('beforeunload', reminder);
   }
 }, { deep:true })
 
@@ -84,10 +92,10 @@ watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newRespons
 
 <template>
   <section class="flex justify-center items-center flex-col">
-    <div class="w-2/3">
+    <div class="lg:w-2/3 w-11/12">
       <div v-for="question in surveyStore.currentSurvey.question" :key="question.id" class="flex justify-center">
         <div v-if="surveyStore.missingAnswers.length > 0" class="w-1/12 flex justify-center items-center">
-          <exclamationMark v-if="surveyStore.missingAnswers.includes(question.id)" class="text-red-500 h-8"></exclamationMark>
+          <exclamationMark v-if="surveyStore.missingAnswers.includes(question.id)" class="text-red-500 h-8 motion-safe:animate-bounce"></exclamationMark>
         </div>
         <div class="w-11/12">
           <booleanComponent class="mb-2" v-if="question.questionType === 'BOOLEAN'" :question="question" ></booleanComponent>
@@ -98,7 +106,7 @@ watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newRespons
         </div>
       </div>
       <div class="my-6">
-        <p class="text-lg md:text-xl xl:text-3xl my-4">For the final part of the survey, please drag your classes in the order of priority, with the first choice being your top priority.</p>
+        <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl my-4">For the final part of the survey, please drag your classes in the order of priority, with the first choice being your top priority.</p>
         <surveyDraggable 
           :courses="surveyStore.currentResponse[indexAll].answer.preference" 
           :index="indexAll"
@@ -109,7 +117,7 @@ watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newRespons
         </surveyDraggable>
       </div>
       <div class="mt-14">
-        <p class="text-lg md:text-xl xl:text-3xl">Final note to your guidance counselor:</p>
+        <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl">Final note to your guidance counselor:</p>
         <input
             class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base bg-transparent rounded-md border border-solid border-zinc-400 focus:outline-none focus:ring-0 focus:border-blue-400"
             type="text"
@@ -123,4 +131,5 @@ watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newRespons
       </div>
     </div>
   </section>
+  <ScrollPage :guidance="false"/>
 </template>

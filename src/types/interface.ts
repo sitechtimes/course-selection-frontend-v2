@@ -1,16 +1,28 @@
-// general user store interfaces
+// user store interfaces
 export interface user {
     first_name: string
     last_name: string
     email: string
-    data: object // this is a temporary fix , will have fields for the diff types of data
-    grade?: grade
     userType: account_type
     isLoggedIn: boolean
     access_token: string
     refresh_token: string
     loading: boolean
+    expire_time: number
 }
+
+// guidance store interface
+
+export interface guidanceData {
+    allAnsweredSurveys: allAnsweredSurveys
+    allStudents: allStudents
+    allSurveys: allSurveys
+    guidance: guidanceStudentData
+    user: userData
+    currentlyViewing: studentGuidance[]
+}
+
+// student store interface
 
 export interface studentUser {
     answeredSurvey: answeredSurvey[]
@@ -19,7 +31,18 @@ export interface studentUser {
     user: userData
 }
 
-// user related interfaces
+// survey store interface
+export interface surveyStore {
+    currentAnsweredSurvey: answeredSurvey
+    currentResponse: surveyAnswer[]
+    currentSurvey: survey
+    loading: boolean
+    open: boolean
+    submit: boolean
+    missingAnswers: string[]
+}
+
+// user object
 export interface userData {
     email: string
     firstName: string
@@ -29,27 +52,25 @@ export interface userData {
     isStudent?: boolean
 }
 
+// student object (student side)
 export interface studentData { 
-    coursesAvailable: courses[]
-    coursesRequired: courses[]
-    coursesTaken: courses[]
+    coursesAvailable: course[]
+    coursesRequired: course[]
+    coursesTaken: course[]
     grade: grade
     homeroom: string
     meeting: string | null
-    user?: userData
 }
 
-export interface guidanceData {
-    allAnsweredSurveys: allAnsweredSurveys
-    allStudents: allStudents
-    allSurveys: allSurveys
-    guidance: guidanceStudentData
+// student object (guidance side)
+export interface studentGuidance extends studentData{ 
     user: userData
+    flag: string
 }
 
 // guidance edges and nodes interfaces
 export interface guidanceStudentData { 
-    students: studentData[]
+    students: studentGuidance[]
 }
 
 export interface allAnsweredSurveys {
@@ -65,7 +86,7 @@ export interface allStudents {
 }
 
 export interface allStudentNodes {
-    node: studentData
+    node: studentGuidance
 }
 
 export interface allSurveys {
@@ -79,7 +100,7 @@ export interface allSurveysNodes {
 // survey interfaces
 export interface answeredSurvey {
     id?: string
-    answers: string
+    answers: string 
     email: string
     grade: grade
     status: status
@@ -92,29 +113,37 @@ export interface survey {
 }
 
 export interface surveyQuestion {
-    question?: string
+    question: string
     questionType: question_type
     id: string
+    status: question_status
+    className: string
 }
 
 export interface surveyAnswer {
     id: string
+    question?: string
+    answer: checkboxAnswer
+}
+
+export interface surveyStringAnswer {
+    id: string
     question: string
-    answer: checkboxAnswer | string
+    answer: string
 }
 
 export interface checkboxAnswer {
     courses: string[]
-    preference: preference[]
+    preference: preferences[]
 }
 
-export interface preference {
-    rank: string
+export interface preferences {
+    rank: number
     name: string
 }
 
 // course interfaces
-export interface courses{
+export interface course {
     courseCode: string
     subject: course_type
     name: string
@@ -123,5 +152,6 @@ export interface courses{
 export type course_type = 'MATH' | 'ENGLISH' | 'LANG' | 'SS' | 'TECH' | 'PE' | 'CAREER' | 'SCIENCE' | 'ARTS' | 'OTHER'
 export type account_type = 'student' | 'guidance' | null;
 export type grade = 'FRESHMAN' | 'SOPHOMORE' | 'JUNIOR' | 'SENIOR';
-export type status= 'COMPLETE' | 'INCOMPLETE' | null | undefined
+export type status= 'COMPLETE' | 'INCOMPLETE' | 'FINALIZED' | null | undefined 
 export type question_type = 'BOOLEAN' | 'GENERAL' | 'MATH' | 'ENGLISH' | 'LANG' | 'SS' | 'TECH' | 'PE' | 'CAREER' | 'SCIENCE' | 'ARTS' | 'OTHER'
+export type question_status = 'STANDARD' | 'CLASS' | 'OPTIONAL' 
