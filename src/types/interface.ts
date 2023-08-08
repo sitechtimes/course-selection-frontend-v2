@@ -8,6 +8,7 @@ export interface user {
     access_token: string
     refresh_token: string
     loading: boolean
+    expire_time: number
 }
 
 // guidance store interface

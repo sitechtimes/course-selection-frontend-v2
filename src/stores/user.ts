@@ -16,6 +16,7 @@ export const useUserStore = defineStore("user", {
     access_token: "",
     refresh_token: "",
     loading: false,
+    expire_time: 0,
   }),
   getters: {
     // getStudents(name?: string): object[] | object | undefined {
@@ -264,7 +265,14 @@ export const useUserStore = defineStore("user", {
           this.email = response.data.user.email;
           this.first_name = response.data.user.first_name;
           this.last_name = response.data.user.last_name;
-          this.isLoggedIn = true;
+          this.isLoggedIn = true;  
+
+          const date = new Date()
+          const expiration = date.setHours(date.getHours() + 1);
+
+          this.expire_time = expiration
+  
+          // console.log(currentTime.getTime(), expiration)
 
           this.getUserType(); //make dj rest auth return user type (backend) to remove this function
         });
