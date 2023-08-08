@@ -271,8 +271,8 @@ export const useUserStore = defineStore("user", {
           const expiration = date.setHours(date.getHours() + 1);
 
           this.expire_time = expiration
-
-          this.getUserType(); 
+  
+          this.getUserType(); //make dj rest auth return user type (backend) to remove this function
         });
     },
     async changeMeeting(email: string, newTime: string) {
