@@ -272,8 +272,6 @@ export const useUserStore = defineStore("user", {
 
           this.expire_time = expiration
   
-          // console.log(currentTime.getTime(), expiration)
-
           this.getUserType(); //make dj rest auth return user type (backend) to remove this function
         });
     },
