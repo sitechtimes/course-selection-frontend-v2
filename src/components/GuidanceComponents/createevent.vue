@@ -2,6 +2,7 @@
 import { ref, Ref, onMounted } from "vue";
 import { useGuidanceStore } from "../../stores/guidance";
 import { useUserStore } from "../../stores/user";
+import { studentGuidance } from "../../types/interface";
 
 const guidanceStore = useGuidanceStore();
 const userStore = useUserStore();
@@ -15,18 +16,20 @@ let email: string;
 const show: Ref<boolean> = ref(false);
 const save = ref();
 const form = ref();
-const studentList = guidanceStore.guidance.students;
+const studentList: studentGuidance[] = guidanceStore.guidance.students;
 const dateError: Ref<boolean> = ref(false);
 const timeError: Ref<boolean> = ref(false);
 const nameError: Ref<boolean> = ref(false);
 
 function empty() {
   //checks if require fields are empty; if so, error msg pops up on respective field
+  //@ts-ignore
   if (date.value === "") {
     dateError.value = true;
   } else {
     dateError.value = false;
   }
+  //@ts-ignore
   if (time.value === "") {
     timeError.value = true;
   } else {
@@ -72,9 +75,9 @@ function submit(meetingDate: string, studentName: string, meetingTime: string) {
   form.value.reset();
   name = "";
   date = "";
-  email = "";
   time = "";
   userStore.changeMeeting(email, newTime);
+  email = "";
 }
 
 const toggleEvent = () => {
