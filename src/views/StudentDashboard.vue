@@ -69,7 +69,7 @@ if (
 
       <div>
         <div class="flex flex-col justify-start items-center mb-2 lg:flex-row lg:space-y-0 lg:space-x-4">
-          <button class="mb-2 lg:m-0 bg-primary-s w-48 h-14 rounded-md text-xl hover:bg-other-s"><a href="https://siths-catalog.netlify.app/" target="_blank" rel="noopener" class="font-semibold">Courses</a></button>
+          <a href="https://siths-catalog.netlify.app/" target="_blank" rel="noopener" class="font-semibold"><button class="mb-2 lg:m-0 bg-primary-s w-48 h-14 rounded-md text-xl hover:bg-other-s">Courses</button></a>
           <!-- check if survey exists, if not create new and set current -->
           <RouterLink v-if="surveyStore.open" to="/student/survey">
             <button class="mb-2 lg:m-0 bg-primary-s w-48 h-14 rounded-md text-xl font-semibold hover:bg-other-s">
