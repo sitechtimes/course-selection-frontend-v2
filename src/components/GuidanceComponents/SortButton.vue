@@ -71,6 +71,8 @@ const menuArray = [
 ]
 
 const sortBy = (sort: {sortBy:string, text:string}) => {
+  selected.value = sort.text
+  isOpen.value = false
   if(sort.sortBy === 'lastnameaz') {
     function lastnameaz(a: { user: { lastName: string; }; }, b: { user: { lastName: string; }; }) {
     if (a.user.lastName < b.user.lastName) return -1;
@@ -199,6 +201,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
     }
     return (guidanceStore.currentlyViewing.sort(enl))
   }
+
 }
 </script>
 
