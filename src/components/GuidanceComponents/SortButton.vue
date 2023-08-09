@@ -164,7 +164,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
   const sortFunction = eval(sort.sortBy)
   selected.value = sort.text
   isOpen.value = false
-  return (guidanceStore.currentlyViewing.sort(sortFunction))
+  return (guidanceStore.currentlyViewing.sort(com))
 }
 </script>
 
