@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import PlusIcon from "../icons/PlusIcon.vue";
 import { ref, Ref, onMounted } from "vue";
 import { useGuidanceStore } from "../../stores/guidance";
 import { useUserStore } from "../../stores/user";
@@ -87,7 +88,10 @@ const toggleEvent = () => {
 
 <template>
   <div class="event h-screen w-full flex flex-col mt-20">
-    <button class="test mb-12" @click="toggleEvent">create event</button>
+    <PlusIcon
+      class="plusIcon w-3 ml-2 cursor-pointer invisible"
+      @click="toggleEvent"
+    />
     <div
       v-if="show"
       class="createevent flex flex-row m-auto mt-5 w-fit h-fit rounded-[1rem] border border-black"
