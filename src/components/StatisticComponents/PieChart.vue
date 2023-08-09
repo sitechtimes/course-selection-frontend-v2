@@ -20,7 +20,7 @@ import { Pie } from 'vue-chartjs';
 import { useGuidanceStore } from '../../stores/guidance';
 import { ref, onMounted, computed } from 'vue';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { random } from 'gsap';
+
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const loaded = ref(true);
@@ -62,9 +62,4 @@ const getChartData = computed(() => { //use computed properties to recalculate o
   loaded.value = true
   return chartData
 });
-
-
-onMounted(() => {
-  console.log(stats)
-})
 </script>
