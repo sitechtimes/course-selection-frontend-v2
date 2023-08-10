@@ -1,9 +1,18 @@
 <script setup lang="ts">
 import NavBar from './components/NavbarComponents/NavBar.vue';
 import { useSurveyStore } from './stores/survey';
+import { useUserStore } from './stores/user';
+import { useResetStore } from './stores/reset';
 
 const surveyStore = useSurveyStore()
+const userStore = useUserStore()
+const resetStore = useResetStore()
 
+const currentTime = new Date()
+
+if(currentTime.getTime() > userStore.expire_time) {
+  resetStore.all()
+}
 </script>
 
 <template>

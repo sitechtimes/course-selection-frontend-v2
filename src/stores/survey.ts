@@ -192,7 +192,7 @@ export const useSurveyStore = defineStore("survey", {
         if(userStore.userType === "student") {
           await this.saveSurvey('COMPLETE', this.currentAnsweredSurvey.grade)
         } else if(userStore.userType === "guidance") {
-          await this.saveSurvey('COMPLETE', this.currentAnsweredSurvey.grade)
+          await this.saveSurvey('FINALIZED', this.currentAnsweredSurvey.grade)
         }
       } 
     },

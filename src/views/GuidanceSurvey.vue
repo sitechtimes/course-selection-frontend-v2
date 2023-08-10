@@ -6,10 +6,9 @@ import booleanComponent from '../components/SurveyPageComponents/Reusables/Surve
 import generalComponent from '../components/SurveyPageComponents/Reusables/SurveyGeneral.vue'
 import checkboxComponent from '../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue'
 import surveyDraggable from '../components/SurveyPageComponents/Reusables/SurveyDraggable.vue';
-import exclamationMark from '../components/icons/ExclamationMark.vue';
+import exclamationMark from '../components/icons/ExclamationMark.vue'
 import ScrollPage from '../components/SurveyPageComponents/Reusables/ScrollPage.vue';
-
-import { surveyQuestion, surveyAnswer } from '../types/interface';
+import { surveyQuestion, surveyAnswer, studentGuidance } from '../types/interface';
 import { useRouter, useRoute, onBeforeRouteLeave } from 'vue-router'
 import { ref, Ref, watch, reactive } from 'vue';
 
@@ -20,12 +19,17 @@ const surveyStore = useSurveyStore()
 const guidanceStore = useGuidanceStore()
 const router = useRouter()
 const route = useRoute()
+let allStudents: studentGuidance[] = [];
+
+guidanceStore.allStudents.edges.forEach((el) => {
+    allStudents.push(el.node)
+});
 
 // clear out the missing answers from the previous session
 surveyStore.missingAnswers = []
-
-// the route's url contains the student's email, so use the url to fetch the student's survey data and profile
-const viewedStudent = guidanceStore.guidance.students.filter(student => student.user.email === `${route.params.email}@nycstudents.net`)[0]
+//let guidance see all students\
+//@ts-ignore
+const viewedStudent: studentGuidance = guidanceStore.allStudents.edges.filter(student => student.node.user.email === `${route.params.email}@nycstudents.net`)[0].node //looking at all students
 let surveyIndex = guidanceStore.allAnsweredSurveys.edges.findIndex(x => x.node.email === `${route.params.email}@nycstudents.net` && x.node.grade === viewedStudent.grade)
 
 const x: Ref<number> = ref(0)
@@ -58,10 +62,12 @@ watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newRespons
 
 onBeforeRouteLeave((to, from, next) => {
     if(JSON.stringify(surveyStore.currentResponse) === guidanceStore.allAnsweredSurveys.edges[surveyIndex].node.answers) {
+      window.removeEventListener('beforeunload', reminder)
       next()
     } else {
       const answer = window.confirm('Changes you made might not be saved.')
       if (answer) {
+        window.removeEventListener('beforeunload', reminder)
         next()
       } else {
         next(false)
@@ -139,10 +145,10 @@ watch(() => guidanceStore.allAnsweredSurveys.edges[surveyIndex].node.answers, (n
         </div>
       </div>
       <div class="flex justify-center mb-10 flex-col items-center">
-        <p v-if="surveyStore.missingAnswers.length > 0" class="text-red-500 mb-4 text-center">Please fill in all questions
-          before submitting.</p>
+        <p v-if="surveyStore.missingAnswers.length > 0" class="text-red-500 mb-4 text-center">Please fill in all questions before submitting.</p>
+        <p v-else class="mb-4 text-center">After submitting this survey, the survey will be marked as reviewed (finalized) and the student will no longer be able to edit it.</p>
         <button @click="submit()"
-          class="bg-[#DEE9C8] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-36 h-12 text-2xl font-bold text-[#37394F]">Complete</button>
+          class="bg-[#DEE9C8] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-36 h-12 text-2xl font-bold text-[#37394F]">Finalize</button>
       </div>
     </div>
   </section>

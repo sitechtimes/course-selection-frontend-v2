@@ -8,6 +8,7 @@ export interface user {
     access_token: string
     refresh_token: string
     loading: boolean
+    expire_time: number
 }
 
 // guidance store interface
@@ -18,6 +19,7 @@ export interface guidanceData {
     allSurveys: allSurveys
     guidance: guidanceStudentData
     user: userData
+    currentlyViewing: studentGuidance[]
 }
 
 // student store interface
@@ -84,7 +86,7 @@ export interface allStudents {
 }
 
 export interface allStudentNodes {
-    node: studentData
+    node: studentGuidance
 }
 
 export interface allSurveys {
@@ -150,6 +152,6 @@ export interface course {
 export type course_type = 'MATH' | 'ENGLISH' | 'LANG' | 'SS' | 'TECH' | 'PE' | 'CAREER' | 'SCIENCE' | 'ARTS' | 'OTHER'
 export type account_type = 'student' | 'guidance' | null;
 export type grade = 'FRESHMAN' | 'SOPHOMORE' | 'JUNIOR' | 'SENIOR';
-export type status= 'COMPLETE' | 'INCOMPLETE' | 'FINALIZED' | null | undefined
+export type status= 'COMPLETE' | 'INCOMPLETE' | 'FINALIZED' | null | undefined 
 export type question_type = 'BOOLEAN' | 'GENERAL' | 'MATH' | 'ENGLISH' | 'LANG' | 'SS' | 'TECH' | 'PE' | 'CAREER' | 'SCIENCE' | 'ARTS' | 'OTHER'
-export type question_status = 'STANDARD' | 'CLASS' | 'OPTIONAL'
+export type question_status = 'STANDARD' | 'CLASS' | 'OPTIONAL' 
