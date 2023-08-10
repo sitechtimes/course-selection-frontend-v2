@@ -71,100 +71,137 @@ const menuArray = [
 ]
 
 const sortBy = (sort: {sortBy:string, text:string}) => {
-  function lastnameaz(a: { user: { lastName: string; }; }, b: { user: { lastName: string; }; }) {
+  selected.value = sort.text
+  isOpen.value = false
+  if(sort.sortBy === 'lastnameaz') {
+    function lastnameaz(a: { user: { lastName: string; }; }, b: { user: { lastName: string; }; }) {
     if (a.user.lastName < b.user.lastName) return -1;
     if (a.user.lastName > b.user.lastName) return 1;
     return 0;
   }
-
-  function lastnameza(a: { user: { lastName: string; }; }, b: { user: { lastName: string; }; }) {
-    if (a.user.lastName > b.user.lastName) return -1;
-    if (a.user.lastName < b.user.lastName) return 1;
-    return 0;
+    return (guidanceStore.currentlyViewing.sort(lastnameaz))
   }
 
-  function ns(a: { grade: string, user: userData }) {
-    if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined) return -1;
-    else
-    return 1;
-  }
-
-  function ip(a: { grade: string, user: userData }) {
-    if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
-      return 1;
-    } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'INCOMPLETE'){
-      return -1;
-    } else {
-      return 1
+  if(sort.sortBy === 'lastnameza') {
+    function lastnameza(a: { user: { lastName: string; }; }, b: { user: { lastName: string; }; }) {
+      if (a.user.lastName > b.user.lastName) return -1;
+      if (a.user.lastName < b.user.lastName) return 1;
+      return 0;
     }
+    return (guidanceStore.currentlyViewing.sort(lastnameza))
   }
 
-  function com(a: { grade: string, user: userData }) {
-    if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
-      return 1;
-    } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'COMPLETE'){
-      return -1;
-    } else {
-      return 1
+  if(sort.sortBy === 'ns') {
+    function ns(a: { grade: string, user: userData }) {
+        if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined) return -1;
+        else
+        return 1;
     }
+    return (guidanceStore.currentlyViewing.sort(ns))
   }
 
-  function final(a: { grade: string, user: userData }) {
-    if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
-      return 1;
-    } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'FINALIZED'){
-      return -1;
-    } else {
-      return 1
+  if(sort.sortBy === 'ip') {
+    function ip(a: { grade: string, user: userData }) {
+      if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
+        return 1;
+      } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'INCOMPLETE'){
+        return -1;
+      } else {
+        return 1
+      }
     }
+    return (guidanceStore.currentlyViewing.sort(ip))
   }
 
-  function nine(a: { grade: string; }) {
-    if (a.grade === "SOPHOMORE") return -1;
-    else
-    return 1;
+  if(sort.sortBy === 'com') {
+    function com(a: { grade: string, user: userData }) {
+      if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
+        return 1;
+      } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'COMPLETE'){
+        return -1;
+      } else {
+        return 1
+      }
+    }
+    return (guidanceStore.currentlyViewing.sort(com))
   }
 
-  function ten(a: { grade: string; }) {
-    if (a.grade === "JUNIOR") return -1;
-    else
-    return 1;
+  if(sort.sortBy === 'final') {
+    function final(a: { grade: string, user: userData }) {
+      if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
+        return 1;
+      } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'FINALIZED'){
+        return -1;
+      } else {
+        return 1
+      }
+    }
+    return (guidanceStore.currentlyViewing.sort(final))
+  }
+  
+  if(sort.sortBy === 'nine') {
+    function nine(a: { grade: string; }) {
+      if (a.grade === "SOPHOMORE") return -1;
+      else
+      return 1;
+    }
+    return (guidanceStore.currentlyViewing.sort(nine))
   }
 
-  function eleven(a: { grade: string; }) {
-    if (a.grade === "SENIOR") return -1;
-    else
-    return 1;
+  if(sort.sortBy === 'ten') {
+    function ten(a: { grade: string; }) {
+      if (a.grade === "JUNIOR") return -1;
+      else
+      return 1;
+    }
+    return (guidanceStore.currentlyViewing.sort(ten))
+  }
+  
+  if(sort.sortBy === 'eleven') {
+    function eleven(a: { grade: string; }) {
+      if (a.grade === "SENIOR") return -1;
+      else
+      return 1;
+    }
+    return (guidanceStore.currentlyViewing.sort(eleven))
+  }
+  
+  if(sort.sortBy === 'transfer') {
+    function transfer(a: { flag: string; }) {
+      if (a.flag.includes('Transfer')) return -1;
+      else
+      return 1;
+    }
+    return (guidanceStore.currentlyViewing.sort(transfer))
   }
 
-  function transfer(a: { flag: string; }) {
-    if (a.flag.includes('Transfer')) return -1;
-    else
-    return 1;
+  if(sort.sortBy === 'regents') {
+    function regents(a: { flag: string; }) {
+      if (a.flag.includes('Regents')) return -1;
+      else
+      return 1;
+    }
+    return (guidanceStore.currentlyViewing.sort(regents))
+  }
+  
+  if(sort.sortBy === 'sports') {
+    function sports(a: { flag: string; }) {
+      if (a.flag.includes('Team')) return -1;
+      else
+      return 1;
+    }
+    return (guidanceStore.currentlyViewing.sort(sports))
+  }
+  
+  if(sort.sortBy === 'enl') {
+    const enl = (a: { flag: string; }) => {
+      if (a.flag.includes('ENL')) return -1;
+      else
+      return 1;
+    }
+    return (guidanceStore.currentlyViewing.sort(enl))
   }
 
-  function regents(a: { flag: string; }) {
-    if (a.flag.includes('Regents')) return -1;
-    else
-    return 1;
-  }
-
-  function sports(a: { flag: string; }) {
-    if (a.flag.includes('Team')) return -1;
-    else
-    return 1;
-  }
-
-  function enl(a: { flag: string; }) {
-    if (a.flag.includes('ENL')) return -1;
-    else
-    return 1;
-  }
-
-  const sortBy = eval(sort.sortBy)
-  selected.value = sort.text
-  isOpen.value = false
-  return (guidanceStore.currentlyViewing.sort(sortBy))
 }
 </script>
 
