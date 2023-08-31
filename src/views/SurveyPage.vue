@@ -6,8 +6,9 @@ import { ref, reactive, Ref, onBeforeMount, watch } from "vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
 import { useStudentStore } from "../stores/student";
-import { surveyQuestion, course, surveyAnswer } from "../types/interface";
+import { surveyQuestion, courses, surveyAnswer } from "../types/interface";
 import { onBeforeRouteLeave } from "vue-router";
+import SurveyModal from "../components/SurveyPageComponents/Reusables/SurveyModal.vue";
 
 document.title = 'Survey | SITHS Course Selection'
 
@@ -24,6 +25,7 @@ const max: Ref<boolean> = ref(false);
 
 surveyStore.setSurvey(
   studentStore.user.email,
+  surveyStore.currentSurvey.question,
   studentStore.student.grade
 );
 
@@ -67,9 +69,9 @@ onBeforeRouteLeave((to, from, next) => {
     }
 })
 
-const reminder = (e: Event) => {
+const reminder = (e) => {
     e.preventDefault(); 
-    e.returnValue = false;
+    e.returnValue = '';
 };
 
 watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
@@ -91,9 +93,7 @@ watch(() => studentStore.answeredSurvey[0], (newResponse, oldResponse) => {
 
 <template>
   <div class="h-[80vh] flex flex-col justify-center items-center space-y-8">
-    <div v-if="surveyStore.loading" class="animate-spin">
-      <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z"/></svg>
-    </div>
+    <p v-if="surveyStore.loading">Setting things up...</p>
     <div
       v-else
       class="w-11/12 md:w-4/5 lg:w-3/4 flex flex-col items-center min-h-[20rem] h-5/6 overflow mt-6"
@@ -149,7 +149,7 @@ watch(() => studentStore.answeredSurvey[0], (newResponse, oldResponse) => {
         </button>
       </RouterLink>
     </div>
-    <p class="absolute bottom-8 right-16 text-xl font-semibold hidden sm:block">
+    <p class="absolute bottom-8 right-16 text-xl font-semibold">
       {{ currentIndex + 1 }}
     </p>
   </div>

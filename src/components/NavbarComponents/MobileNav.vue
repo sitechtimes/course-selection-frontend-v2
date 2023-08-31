@@ -58,9 +58,11 @@ const logout = async () => {
             <RouterLink @click="$emit('e')" id="link" to="/guidance/dashboard"><p class="text-4xl" >Home</p></RouterLink>
             <RouterLink @click="$emit('e')" id="link" to="/guidance/studentlist"><p class="text-4xl">Students</p></RouterLink>
             <RouterLink @click="$emit('e')" id="link" to="/guidance/calendar"><p class="text-4xl">Calendar</p></RouterLink>
+            <RouterLink @click="$emit('e')" id="link" to="/guidance/statistics"><p class="text-4xl">Statistics</p></RouterLink>
             <RouterLink to="/" @click="$emit('e')">
                 <p @click="logout()" id="link" class="text-4xl text-red-500 cursor-pointer">Logout</p>
             </RouterLink>
+            
         </div>
         <div v-if="!userStore.isLoggedIn" class="h-full absolute top-56 left-16 flex flex-col justify-start items-start space-y-8 z-10">
             <RouterLink @click="$emit('e')" id="link" to="/"><p class="text-4xl">Home</p></RouterLink>

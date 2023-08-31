@@ -19,6 +19,7 @@ export interface guidanceData {
     allSurveys: allSurveys
     guidance: guidanceStudentData
     user: userData
+    surveyStats: surveyStats
     currentlyViewing: studentGuidance[]
 }
 
@@ -71,6 +72,19 @@ export interface studentGuidance extends studentData{
 // guidance edges and nodes interfaces
 export interface guidanceStudentData { 
     students: studentGuidance[]
+}
+
+export interface surveyStats {
+    edges: surveyStatsNodes[]
+}
+
+export interface surveyStatsNodes{
+    node: stats
+}
+
+export interface stats{
+    year: number
+    stats: string
 }
 
 export interface allAnsweredSurveys {
