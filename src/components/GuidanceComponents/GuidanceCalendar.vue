@@ -418,8 +418,6 @@ const changeMonth = (next: boolean) => {
   display: flex;
   flex-direction: row;
 }
-.calendar {
-}
 .calendar ul {
   display: flex;
   flex-wrap: wrap;
@@ -492,8 +490,8 @@ const changeMonth = (next: boolean) => {
   height: 35rem;
   border-radius: 1rem;
   position: absolute;
-  left: auto;
-  right: auto;
+  left: 20%;
+  right: 20%;
   top: 30%;
   margin-left: auto;
   margin-right: auto;
