@@ -106,6 +106,11 @@ const router = createRouter({
       }
     },
     {
+      path: '/guidanceCalendar',
+      name: 'guidanceCalendar',
+      component: () => import('../views/GuidanceCalendar.vue')
+    },
+    {
       path: '/student/dashboard',
       name: 'studentDash',
       component: () => import('../views/StudentDashboard.vue'),
@@ -160,7 +165,7 @@ router.beforeEach(async (to) => {
   const userStore = useUserStore();
   const loggedIn = userStore.isLoggedIn;
 
-  const publicPages = ["/", "/login"];
+  const publicPages = ["/", "/login", '/test', '/test2'];
   const authRequired = !publicPages.includes(to.path);
 
   if (authRequired && !loggedIn) {

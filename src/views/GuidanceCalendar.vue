@@ -1,13 +1,15 @@
 <template>
-  <div class="event h-screen w-full flex flex-row justify-center items-center">
+  <div class="">
+    <GuidanceCalendar />
     <createevent />
   </div>
 </template>
 
 <script setup lang="ts">
 import createevent from "../components/GuidanceComponents/CreateEvent.vue";
+import GuidanceCalendar from "../components/GuidanceComponents/GuidanceCalendar.vue";
 
-document.title = 'Calendar & Events | SITHS Course Selection'
+document.title = "Calendar & Events | SITHS Course Selection";
 </script>
 
 <style scoped>
