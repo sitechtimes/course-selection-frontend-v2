@@ -1,5 +1,5 @@
 <template>
-  <div class="grid content-center justify-between">
+  <div class="grid content-center justify-center flex-wrap">
     <div class="container">
       <div class="select text-4xl font-bold">
         <span
