@@ -283,6 +283,30 @@ export const useUserStore = defineStore("user", {
           this.getUserType(); //make dj rest auth return user type (backend) to remove this function
         });
     },
+    async EmailLogin(username: String, password: String) {
+        this.loading = true;
+        await axios
+          .post(`${import.meta.env.VITE_URL}/auth/login/`, {
+            username: username,
+            password: password
+          })
+          .then((response) => {
+            console.log(response);
+            this.access_token = response.data.access_token;
+            this.refresh_token = response.data.refresh_token;
+            this.email = response.data.user.email;
+            this.first_name = response.data.user.first_name;
+            this.last_name = response.data.user.last_name;
+            this.isLoggedIn = true;  
+  
+            const date = new Date()
+            const expiration = date.setHours(date.getHours() + 1);
+  
+            this.expire_time = expiration
+    
+            this.getUserType(); //make dj rest auth return user type (backend) to remove this function
+          });
+      },
     async changeMeeting(email: string, newTime: string) {
       await axios
         .post(
