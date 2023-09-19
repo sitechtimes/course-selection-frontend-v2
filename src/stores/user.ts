@@ -141,7 +141,7 @@ export const useUserStore = defineStore("user", {
             guidanceStore.allSurveys = res.data.data.allSurveys
             guidanceStore.guidance = res.data.data.guidance
             guidanceStore.user = res.data.data.user
-            guidanceStore.surveyStats=res.data.data.surveyStats
+            guidanceStore.surveyStats = res.data.data.surveyStats
 
             this.loading = false;
           });
@@ -205,17 +205,17 @@ export const useUserStore = defineStore("user", {
             studentStore.survey = res.data.data.survey
             studentStore.user = res.data.data.user
 
-            const surveyStore = useSurveyStore() 
+            const surveyStore = useSurveyStore()
             const router = useRouter()
-            if(studentStore.student.homeroom === "") {
+            if (studentStore.student.homeroom === "") {
               console.log("profile not updated")
             } else {
               const currentDate = new Date()
-              const closeTime = studentStore.survey.dueDate.substring(0,10).split("-")
-              if(studentStore.answeredSurvey.length !== 0 && studentStore.answeredSurvey[0].status === 'FINALIZED'){
-                  surveyStore.open = false
+              const closeTime = studentStore.survey.dueDate.substring(0, 10).split("-")
+              if (studentStore.answeredSurvey.length !== 0 && studentStore.answeredSurvey[0].status === 'FINALIZED') {
+                surveyStore.open = false
               }
-              
+
               if (Number(closeTime[0]) < currentDate.getFullYear()) {
                 surveyStore.open = false
               } else if (Number(closeTime[0]) === currentDate.getFullYear()) {
@@ -228,8 +228,8 @@ export const useUserStore = defineStore("user", {
                 }
               }
               surveyStore.currentSurvey = studentStore.survey
-              }
-              this.loading = false;              
+            }
+            this.loading = false;
           });
       }
     },
@@ -273,40 +273,44 @@ export const useUserStore = defineStore("user", {
           this.email = response.data.user.email;
           this.first_name = response.data.user.first_name;
           this.last_name = response.data.user.last_name;
-          this.isLoggedIn = true;  
+          this.isLoggedIn = true;
 
           const date = new Date()
           const expiration = date.setHours(date.getHours() + 1);
 
           this.expire_time = expiration
-  
+
           this.getUserType(); //make dj rest auth return user type (backend) to remove this function
         });
     },
-    async EmailLogin(username: String, password: String) {
-        this.loading = true;
-        await axios
-          .post(`${import.meta.env.VITE_URL}/auth/login/`, {
-            username: username,
-            password: password
-          })
-          .then((response) => {
-            console.log(response);
-            this.access_token = response.data.access_token;
-            this.refresh_token = response.data.refresh_token;
-            this.email = response.data.user.email;
-            this.first_name = response.data.user.first_name;
-            this.last_name = response.data.user.last_name;
-            this.isLoggedIn = true;  
-  
-            const date = new Date()
-            const expiration = date.setHours(date.getHours() + 1);
-  
-            this.expire_time = expiration
-    
-            this.getUserType(); //make dj rest auth return user type (backend) to remove this function
-          });
-      },
+    async EmailLogin(username: string, password: string) {
+      this.loading = true;
+      try {
+        const response = await axios.post(`${import.meta.env.VITE_URL}/auth/login/`, {
+          username: username,
+          password: password
+        });
+
+        console.log(response);
+        this.access_token = response.data.access_token;
+        this.refresh_token = response.data.refresh_token;
+        this.email = response.data.user.email;
+        this.first_name = response.data.user.first_name;
+        this.last_name = response.data.user.last_name;
+        this.isLoggedIn = true;
+
+        const date = new Date()
+        const expiration = date.setHours(date.getHours() + 1);
+
+        this.expire_time = expiration;
+
+        this.getUserType(); // make dj rest auth return user type (backend) to remove this function
+      } catch (error) {
+        this.loading=false;
+        alert("Login failed. Please check your credentials.");
+      }
+    },
+
     async changeMeeting(email: string, newTime: string) {
       await axios
         .post(
@@ -333,7 +337,7 @@ export const useUserStore = defineStore("user", {
           const studentIndexAll = guidanceStore.allStudents.edges.findIndex(student => student.node.user.email === email)
           const studentIndex = guidanceStore.guidance.students.findIndex(student => student.user.email === email)
 
-          if(studentIndex > -1) {
+          if (studentIndex > -1) {
             guidanceStore.guidance.students[studentIndex].meeting = res.data.data.updateMeeting.student.meeting
           }
 
@@ -366,7 +370,7 @@ export const useUserStore = defineStore("user", {
           const studentIndexAll = guidanceStore.allStudents.edges.findIndex(student => student.node.user.email === email)
           const studentIndex = guidanceStore.guidance.students.findIndex(student => student.user.email === email)
 
-          if(studentIndex > -1) {
+          if (studentIndex > -1) {
             guidanceStore.guidance.students[studentIndex].flag = res.data.data.updateFlag.student.flag
           }
 
