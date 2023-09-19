@@ -29,7 +29,7 @@ watch(() => userStore.loading, (newResponse) => {
         <img
                 id="loginpic"
                 class="h-60"
-                src="https://images.squarespace-cdn.com/content/v1/58334b19579fb3628a7146d2/1479920558610-HKJIOE92XN0I2KH6RDFU/Seagull_04.gif?format=1500w"
+                src="/seagull.gif"
                 alt="fillerpic"
               />
       </div>
