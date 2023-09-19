@@ -299,14 +299,16 @@ export const useUserStore = defineStore("user", {
           console.log(res)
           const guidanceStore = useGuidanceStore()
           const studentIndexAll = guidanceStore.allStudents.edges.findIndex(student => student.node.user.email === email)
+          //using the guidance store, find the index of the student who's meeting you wish to change via their email
           const studentIndex = guidanceStore.guidance.students.findIndex(student => student.user.email === email)
-
-          if(studentIndex > -1) {
+          //same as above, except with guidanceStore.guidance.students
+          if (studentIndex > -1) {
             guidanceStore.guidance.students[studentIndex].meeting = res.data.data.updateMeeting.student.meeting
           }
-
+          //by ensuring that the index is above -1, we can verify that the student exists and has a valid index
           console.log(guidanceStore.allStudents.edges[studentIndexAll].node)
           guidanceStore.allStudents.edges[studentIndexAll].node.meeting = res.data.data.updateMeeting.student.meeting
+          //this line updates the student's meeting time using the array values in "updateMeeting"
         });
     },
     async addFlag(email: string, newFlag: string) {
