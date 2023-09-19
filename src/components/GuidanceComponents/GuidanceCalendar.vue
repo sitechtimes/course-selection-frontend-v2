@@ -241,6 +241,47 @@ const dateError: Ref<boolean> = ref(false);
 const timeError: Ref<boolean> = ref(false);
 const nameError: Ref<boolean> = ref(false);
 
+// filter all students with meetings (!=null || undefined)
+const allMeeting = guidanceStore.guidance.students.filter(
+  (student) => student.meeting !== null || undefined
+);
+console.log(allMeeting);
+// for (const index of indexList) {
+// var hasMeeting = student.user.meeting.filter(checkMeeting)
+// return hasMeeting
+// }
+// console.log(allMeeting[index].grade);
+// }
+// get rid of title field?
+
+// function checkMeeting(meeting) {
+// return (meeting != null || undefined)
+//}
+// for (const student of studentList) {
+// var hasMeeting = student.user.meeting.filter(checkMeeting)
+// return hasMeeting
+// }
+// if meeting is not null take each student's meeting info
+// const student of student w/ meeting (each student w/ meeting)
+// match year, month, date with calendar
+// after match how to display?
+// take the title of their meeting for display
+// on click show all details (student name, grade?, email, date, time, note)
+// optional take grade and set color for event tab
+// print function someday?
+// function allMeetings {
+// for (const student of studentList) {
+// const studentMeeting = student.user.meeting
+// if (allStudents.user.meeting != null || undefined) {
+//     const studentFullName =
+//       student.user.lastName +
+//       ", " +
+//       student.user.firstName +
+//       " | " +
+//       student.user.email;
+//   }}
+// };
+
 function empty() {
   //checks if require fields are empty; if so, error msg pops up on respective field
   if (date.value === "") {
