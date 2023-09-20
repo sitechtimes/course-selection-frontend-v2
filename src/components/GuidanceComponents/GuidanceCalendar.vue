@@ -338,6 +338,11 @@ function submit(meetingDate: string, studentName: string, meetingTime: string) {
   time = "";
   userStore.changeMeeting(email, newTime);
   console.log(title);
+  //console.log(newTime);
+  //console.log(description);
+  //console.log(studentName);
+  //console.log(email)
+
 }
 
 const toggleEvent = () => {
