@@ -241,11 +241,27 @@ const dateError: Ref<boolean> = ref(false);
 const timeError: Ref<boolean> = ref(false);
 const nameError: Ref<boolean> = ref(false);
 
-// filter all students with meetings (!=null || undefined)
-const allMeeting = guidanceStore.guidance.students.filter(
-  (student) => student.meeting !== null || undefined
+//filter out valid meetings within the guidance store
+const validMeetings = guidanceStore.guidance.students.filter(
+  (student) => student.meeting !== null && student.meeting !== undefined
 );
-console.log(allMeeting);
+//create an array with these valid meetings
+const allMeetings = validMeetings.map((student) => student.meeting).flat();
+console.log('All Meetings:', allMeetings);
+
+
+for (const student of validMeetings) { //for each student with a valid meeting, 
+  const name = `${student.user.firstName} ${student.user.lastName}`; //extract first and last name
+  const meetingDate = student.meeting; //extract meeting date
+  const studentMeetings = { //create an OBJECT with the name and meeting date
+    name,
+    meetingDate
+  };
+  console.log('Student Meetings:', studentMeetings);
+}
+
+
+
 // for (const index of indexList) {
 // var hasMeeting = student.user.meeting.filter(checkMeeting)
 // return hasMeeting
