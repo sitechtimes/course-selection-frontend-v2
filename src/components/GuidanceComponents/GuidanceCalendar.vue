@@ -2,9 +2,21 @@
   <div class="grid content-center justify-between">
     <div class="container">
       <div class="select text-4xl font-bold">
-        <span class="arrow cursor-pointer" id="prev" ref="prev" @click="changeMonth(false)">&#10094;</span>
+        <span
+          class="arrow cursor-pointer"
+          id="prev"
+          ref="prev"
+          @click="changeMonth(false)"
+          >&#10094;</span
+        >
         <div class="mY">{{ months[currMonth] }} {{ currYear }}</div>
-        <span class="arrow cursor-pointer" id="next" ref="next" @click="changeMonth(true)">&#10095;</span>
+        <span
+          class="arrow cursor-pointer"
+          id="next"
+          ref="next"
+          @click="changeMonth(true)"
+          >&#10095;</span
+        >
       </div>
       <div class="flex flex-row justify-between space-x-28">
         <div class="calendar">
@@ -20,7 +32,10 @@
           <ul class="days">
             <li class="dayCon" v-for="h in hmm.wow" :key="h.id">
               <p class="mt-2 text-end mr-2 mb-16">{{ h.calDate }}</p>
-              <PlusIcon class="plusIcon w-3 ml-2 cursor-pointer invisible" @click="toggleEvent" />
+              <PlusIcon
+                class="plusIcon w-3 ml-2 cursor-pointer invisible"
+                @click="toggleEvent"
+              />
             </li>
           </ul>
         </div>
@@ -28,67 +43,109 @@
       </div>
     </div>
     <div class="event h-screen w-full flex flex-col mt-20">
-      <PlusIcon class="plusIcon w-3 ml-2 cursor-pointer invisible" @click="toggleEvent" />
-      <div v-if="show" class="createevent flex flex-row m-auto mt-5 w-fit h-fit rounded-[1rem] border border-black">
+      <PlusIcon
+        class="plusIcon w-3 ml-2 cursor-pointer invisible"
+        @click="toggleEvent"
+      />
+      <div
+        v-if="show"
+        class="createevent flex flex-row m-auto mt-5 w-fit h-fit rounded-[1rem] border border-black"
+      >
         <div class="event flex flex-col">
           <div class="top flex-row flex items-center justify-between">
             <h2 class="h2 font-bold text-[2rem] m-8 mb-4">Create Event</h2>
             <button class="mt-5 mr-12" @click="toggleEvent">
-              <svg class="x fill-current text-37394f transition duration-300 mt-4 hover:opacity-80 cursor-pointer"
-                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+              <svg
+                class="x fill-current text-37394f transition duration-300 mt-4 hover:opacity-80 cursor-pointer"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 320 512"
+              >
                 <path
-                  d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z" />
+                  d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"
+                />
               </svg>
             </button>
           </div>
           <form id="form" ref="form" @submit.prevent="empty()">
             <div class="item mb-6">
-              <label class="formt mt-2 flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold" for="title">
+              <label
+                class="formt mt-2 flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold"
+                for="title"
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                   <path
-                    d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z" />
+                    d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"
+                  />
                 </svg>
                 Title
               </label>
-              <input class="space rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80" type="text"
-                v-model="title" placeholder="Title" />
+              <input
+                class="space rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80"
+                type="text"
+                v-model="title"
+                placeholder="Title"
+              />
             </div>
             <div class="times flex flex-col lg:flex-row">
               <div class="item mb-6">
-                <label class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold" for="date">
+                <label
+                  class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold"
+                  for="date"
+                >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                     <!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                     <path
-                      d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192H400V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192z" />
+                      d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192H400V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192z"
+                    />
                   </svg>
-                  Date</label>
-                <input class="space d rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80" type="date"
-                  v-model="date" placeholder="Date" ref="date" />
+                  Date</label
+                >
+                <input
+                  class="space d rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80"
+                  type="date"
+                  v-model="date"
+                  placeholder="Date"
+                  ref="date"
+                />
                 <p v-if="dateError" class="error text-red-600 ml-6 mt-1">
                   Field empty/invalid
                 </p>
               </div>
               <div class="item mb-6">
-                <label class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold" for="time">
+                <label
+                  class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold"
+                  for="time"
+                >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                     <!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                     <path
-                      d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
+                      d="M464 256A208 208 0 1 1 48 256a208 208 0 1 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"
+                    />
                   </svg>
-                  Time</label>
-                <input class="space d mr-8 rounded-md border border-solid border-zinc-400 w-80 h-10 p-2 ml-6 mt-1"
-                  type="time" v-model="time" placeholder="Time" ref="time" />
+                  Time</label
+                >
+                <input
+                  class="space d mr-8 rounded-md border border-solid border-zinc-400 w-80 h-10 p-2 ml-6 mt-1"
+                  type="time"
+                  v-model="time"
+                  placeholder="Time"
+                  ref="time"
+                />
                 <p v-if="timeError" class="error text-red-600 ml-6 mt-1">
                   Field empty/invalid
                 </p>
               </div>
             </div>
             <div class="item mb-6">
-              <label class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold" for="emails">
+              <label
+                class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold"
+                for="emails"
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                   <!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                   <path
-                    d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                    d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"
+                  />
                 </svg>
                 Student
               </label>
@@ -100,30 +157,50 @@
                   </option>
                 </div>
               </datalist>
-              <input class="space rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80"
-                placeholder="Select Student From List" autoComplete="on" list="suggestions" v-model="name" id="student" />
+              <input
+                class="space rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80"
+                placeholder="Select Student From List"
+                autoComplete="on"
+                list="suggestions"
+                v-model="name"
+                id="student"
+              />
               <p v-if="nameError" class="error text-red-600 ml-6 mt-1">
                 Field empty/invalid
               </p>
             </div>
             <div class="item mb-6">
-              <label class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold" for="description"><svg
-                  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+              <label
+                class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold"
+                for="description"
+                ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                   <!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                   <path
-                    d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z" />
+                    d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z"
+                  />
                 </svg>
                 Memo
               </label>
-              <input class="space rounded-md border border-solid border-zinc-4a00 w-80 h-10 p-2 ml-6 mt-1" type="text"
-                v-model="description" placeholder="Memo" />
+              <input
+                class="space rounded-md border border-solid border-zinc-4a00 w-80 h-10 p-2 ml-6 mt-1"
+                type="text"
+                v-model="description"
+                placeholder="Memo"
+              />
             </div>
             <div class="flex flex-row items-center ml-6 mb-6">
               <input type="checkbox" class="ml-2" id="notify" name="notify" />
               <label class="ml-2" for="notify">Notify Student via Email</label>
             </div>
-            <div class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit">
-              <button type="submit" class="font-bold bg-primary-g px-4 py-2 rounded-2xl w-fit h-fit" id="save" ref="save">
+            <div
+              class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit"
+            >
+              <button
+                type="submit"
+                class="font-bold bg-primary-g px-4 py-2 rounded-2xl w-fit h-fit"
+                id="save"
+                ref="save"
+              >
                 Save
               </button>
             </div>
@@ -142,7 +219,6 @@
 <script setup lang="ts">
 import Upcoming from "../GuidanceComponents/Upcoming.vue";
 import PlusIcon from "../icons/PlusIcon.vue";
-import createevent from "./CreateEvent.vue";
 import { ref, Ref, reactive, onMounted } from "vue";
 import { useUserStore } from "../../stores/user";
 import { useGuidanceStore } from "../../stores/guidance";
@@ -166,25 +242,26 @@ const nameError: Ref<boolean> = ref(false);
 
 //filter out valid meetings within the guidance store
 const validMeetings = guidanceStore.allStudents.edges.filter(
-  (student) => student.node.meeting !== null && student.node.meeting !== undefined
+  (student) =>
+    student.node.meeting !== null && student.node.meeting !== undefined
 );
 //filter out valid meetings within the guidance store (valid as long as they are not null and undefined), and turn this into an array
 const allMeetings = validMeetings.map((student) => student.node.meeting).flat();
-console.log('All Meetings:', allMeetings); 
+console.log("All Meetings:", allMeetings);
 
-const studentInfo = [];//this array contains the name AND meeting date of the students
+const studentInfo = []; //this array contains the name AND meeting date of the students
 
 for (const student of validMeetings) {
   const name = `${student.node.user.firstName} ${student.node.user.lastName}`; //extract first and last name
   const meetingDate = student.node.meeting; //extract meeting date
-  const studentMeetings = { //create an OBJECT with the name and meeting date
+  const studentMeetings = {
+    //create an OBJECT with the name and meeting date
     name,
     meetingDate,
   };
   studentInfo.push(studentMeetings);
 }
-console.log('Student Info:', studentInfo);
-
+console.log("Student Info:", studentInfo);
 
 // for (const index of indexList) {
 // var hasMeeting = student.user.meeting.filter(checkMeeting)
@@ -282,7 +359,6 @@ function submit(meetingDate: string, studentName: string, meetingTime: string) {
   //console.log(description);
   //console.log(studentName);
   //console.log(email)
-
 }
 
 const toggleEvent = () => {
@@ -337,8 +413,8 @@ const renderCalendar = () => {
     // adding active class to li if the current day, month, and year matched
     let isToday =
       i === calDate.getDate() &&
-        currMonth === new Date().getMonth() &&
-        currYear === new Date().getFullYear()
+      currMonth === new Date().getMonth() &&
+      currYear === new Date().getFullYear()
         ? "active"
         : "";
     liTag += `<li class="${isToday}">${i}</li>`;
@@ -456,7 +532,7 @@ const changeMonth = (next: boolean) => {
   cursor: pointer;
   display: none;
 } */
-.days li:hover+.plusIcon {
+.days li:hover + .plusIcon {
   display: block;
 }
 
