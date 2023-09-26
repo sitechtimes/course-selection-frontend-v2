@@ -157,6 +157,12 @@ const router = createRouter({
       name: 'testExit',
       component: () => import('../views/ExitReminderTest.vue')
       
+    },
+    {
+      path: '/EventTest',
+      name: 'EventTest',
+      component: () => import('../views/EventTest.vue')
+      
     }
   ]
 })
