@@ -1,0 +1,109 @@
+<template>
+  <div class="flex flex-col justify-center align-center items-center">
+    <div class="text-2xl md:text-3xl font-semibold sm:flex text-center">All Courses</div>
+    <!-- drop-down menu for years -->
+    <select v-model="selectedYear" class="space rounded-md border border-solid border-zinc-400 h-10 p-2 mt-2 w-80">
+      <option v-for="year in years" :value="year" :key="year">
+        {{ year }}
+      </option>
+    </select>
+    <div v-if="!selectedYear" class="mt-2">
+      <p>Please select a year from the list above</p>
+    </div>
+
+    <!-- drop-down menu for subjects -->
+    <select v-model="selectedSubject" class="space rounded-md border border-solid border-zinc-400 h-10 p-2 mt-2 w-80">
+      <option v-for="subject in subjects" :value="subject.value" :key="subject.value">
+        {{ subject.subject }}
+      </option>
+    </select>
+    <div v-if="!selectedSubject" class="mt-2">
+      <p>Please select a subject from the list above</p>
+    </div>
+
+    <div class="w-[70rem] mt-2" v-if="loaded && selectedSubject">
+      <Bar :options="chartOptions" :data="getChartData" />
+    </div>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { Bar } from 'vue-chartjs'
+import { useGuidanceStore } from '../../stores/guidance';
+import { ref, onMounted, computed } from 'vue';
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale
+} from 'chart.js'
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+
+const loaded = ref(true);
+const guidanceStore = useGuidanceStore();
+const years = guidanceStore.surveyStats.edges.map(edge => edge.node.year); //map an array of the years; this gets parsed in the dropdown
+const selectedYear = ref(null);
+
+const stats = computed(() => {
+  if (selectedYear.value !== null) {
+    const indexSelectedYear = years.indexOf(selectedYear.value); //based on the year the user has selected from the dropdown, find the index of the node that matches the year
+    return JSON.parse(guidanceStore.surveyStats.edges[indexSelectedYear].node.stats); //the statistic that gets parsed in is based on this selected year
+  }
+  return null;
+});
+
+const selectedSubject = ref('');
+const subjects = [
+  { value: "MATH", subject: "Math" },
+  { value: "ENGLISH", subject: "English" },
+  { value: "SCIENCE", subject: "Science" },
+  { value: "SS", subject: "Social Studies" },
+  { value: "LANG", subject: "Language" },
+  { value: "PE", subject: "P.E." },
+  { value: "TECH", subject: "Technology" },
+  { value: "ARTS", subject: "Arts" },
+  { value: "OTHER", subject: "Other" },
+];
+
+const chartOptions = ref({
+  responsive: true,
+});
+
+const getChartData = computed(() => {
+  const chartData = {
+    labels: [],
+    datasets: [
+      {
+        data: [],
+        backgroundColor: ['#C5D4A4'],
+        label: '# of students',
+      },
+    ],
+  };
+
+  if (selectedSubject.value && stats.value) {
+    const targettedCourses = Object.entries(stats.value) //take each key-value pair and filter them by !null courses that match the user's selected subject
+      .filter(([courseName, info]) => {
+        return (
+          info.courseInfo !== null && info.courseInfo.fields.subject === selectedSubject.value
+        );
+      });
+
+    if (targettedCourses.length > 0) { //if the # of targetted courses exceed 1 (there is data), push to the graph
+      for (const [courseName, info] of targettedCourses) {
+        chartData.labels.push(courseName);
+        chartData.datasets[0].data.push(info.picks);
+      }
+    } else { //if the number of targetted courses DO NOT exceed 1 (there is no data), push 0 to the graph
+      chartData.labels.push('No courses match this subject');
+      chartData.datasets[0].data.push(0);
+    }
+  }
+  loaded.value = true;
+  return chartData;
+});
+</script>
