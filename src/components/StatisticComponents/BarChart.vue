@@ -2,12 +2,18 @@
   <div class="flex flex-col justify-center align-center items-center">
     <div class="text-2xl md:text-3xl font-semibold sm:flex text-center">All Courses</div>
     <!-- drop-down menu -->
+    <select v-model="selectedYear" class="space rounded-md border border-solid border-zinc-400 h-10 p-2 mt-2 w-80">
+      <option v-for="one in years" :value="one.value" :key="one.value" >
+        {{ one }}
+      </option>
+    </select>
+    <h1>selected:{{ selectedYear.prop }}</h1>
+
     <select v-model="selectedSubject" class="space rounded-md border border-solid border-zinc-400 h-10 p-2 mt-2 w-80">
       <option v-for="subject in subjects" :value="subject.value" :key="subject.value">
         {{ subject.subject }}
       </option>
     </select>
-
     <div class="w-[70rem] mt-2" v-if="loaded && selectedSubject">
       <Bar :options="chartOptions" :data="getChartData" />
     </div>
@@ -35,6 +41,22 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 const loaded = ref(true);
 const guidanceStore = useGuidanceStore();
+
+const years = []
+const arr = guidanceStore.surveyStats.edges
+let selectedYear = {}
+arr.forEach((el)=>{
+  const eachYear = el.node
+  years.push(selectedYear.year)
+  Object.defineProperty(selectedYear, 'prop',{
+    value: eachYear.year,
+    writable: false
+  })
+  console.log(selectedYear.prop)
+})  
+
+const i = years.indexOf(selectedYear.prop)
+console.log(i)
 const stats = JSON.parse(guidanceStore.surveyStats.edges[0].node.stats);
 const selectedSubject = ref('');
 const subjects = [
