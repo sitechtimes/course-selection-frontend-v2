@@ -3,18 +3,18 @@
     <div class="text-2xl md:text-3xl font-semibold sm:flex text-center">All Courses</div>
     <!-- drop-down menu -->
     <select v-model="selectedYear" class="space rounded-md border border-solid border-zinc-400 h-10 p-2 mt-2 w-80">
-      <option v-for="one in years" :value="one.value" :key="one.value" >
+      <option v-for="one in years" :value="one" :key="one" >
         {{ one }}
       </option>
     </select>
-    <h1>selected:{{ selectedYear.prop }}</h1>
+    <h1>selected:{{ selectedYear }}</h1>
 
     <select v-model="selectedSubject" class="space rounded-md border border-solid border-zinc-400 h-10 p-2 mt-2 w-80">
       <option v-for="subject in subjects" :value="subject.value" :key="subject.value">
         {{ subject.subject }}
       </option>
     </select>
-    <div class="w-[70rem] mt-2" v-if="loaded && selectedSubject">
+    <div class="w-[70rem] mt-2" v-if="loaded && selectedSubject && selectedYear">
       <Bar :options="chartOptions" :data="getChartData" />
     </div>
     <div v-else class="mt-2">
@@ -42,22 +42,21 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 const loaded = ref(true);
 const guidanceStore = useGuidanceStore();
 
-const years = []
-const arr = guidanceStore.surveyStats.edges
-let selectedYear = {}
+const years = []       // {year: [2023, 2024]}
+const arr = guidanceStore.surveyStats.edges     // {arr: [0:node: {year:..., stats:...}]}
+let selectedYear = ref(2023)
 arr.forEach((el)=>{
-  const eachYear = el.node
-  years.push(selectedYear.year)
-  Object.defineProperty(selectedYear, 'prop',{
-    value: eachYear.year,
-    writable: false
-  })
-  console.log(selectedYear.prop)
+  const eachYear = el.node         // you need this part to display each year
+  years.push(eachYear.year)        // in the data set as an option in the drop down
 })  
+// make a function so that if the year 2023 is selected, the stats for 2023 is generated
+// find index of year selected - 2023 - in years[] and find the stats with the matching index
+console.log(selectedYear.value)
 
-const i = years.indexOf(selectedYear.prop)
-console.log(i)
-const stats = JSON.parse(guidanceStore.surveyStats.edges[0].node.stats);
+let i = years.indexOf(selectedYear.value)
+  console.log(i)
+
+let stats = JSON.parse(guidanceStore.surveyStats.edges[i].node.stats);
 const selectedSubject = ref('');
 const subjects = [
   { value: "MATH", subject: "Math" },
@@ -87,7 +86,7 @@ const getChartData = computed(() => {
     ],
   };
 
-  if (selectedSubject.value) {   //if the user has selected a subject from the dropdown, then do this: 
+  if (selectedSubject.value && selectedYear.value) {   //if the user has selected a subject from the dropdown, then do this: 
     const targettedCourses =
       Object.entries(stats) //take each key-value pair and filter them by !null courses that match the user's selected subject
         .filter(([courseName, info]) => {
