@@ -1,19 +1,30 @@
 <template>
   <div class="flex flex-col justify-center align-center items-center">
     <div class="text-2xl md:text-3xl font-semibold sm:flex text-center">All Courses</div>
-    <!-- drop-down menu -->
+    <!-- drop-down menu for years -->
+    <select v-model="selectedYear" class="space rounded-md border border-solid border-zinc-400 h-10 p-2 mt-2 w-80">
+      <option v-for="year in years" :value="year" :key="year">
+        {{ year }}
+      </option>
+    </select>
+    <div v-if="!selectedYear" class="mt-2">
+      <p>Please select a year from the list above</p>
+    </div>
+
+    <!-- drop-down menu for subjects -->
     <select v-model="selectedSubject" class="space rounded-md border border-solid border-zinc-400 h-10 p-2 mt-2 w-80">
       <option v-for="subject in subjects" :value="subject.value" :key="subject.value">
         {{ subject.subject }}
       </option>
     </select>
+    <div v-if="!selectedSubject" class="mt-2">
+      <p>Please select a subject from the list above</p>
+    </div>
 
     <div class="w-[70rem] mt-2" v-if="loaded && selectedSubject">
       <Bar :options="chartOptions" :data="getChartData" />
     </div>
-    <div v-else class="mt-2">
-      <p>Please select a subject from the list above</p>
-    </div>
+
   </div>
 </template>
 
@@ -35,7 +46,19 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 const loaded = ref(true);
 const guidanceStore = useGuidanceStore();
-const stats = JSON.parse(guidanceStore.surveyStats.edges[0].node.stats);
+
+const selectedYear = ref('');
+const storedYears = guidanceStore.surveyStats.edges
+let years = storedYears.map((yearSelected)=> yearSelected.node.year);
+
+//if a new year is selected from the dropdown, find the index where the stats are located and parse it into the
+const stats = computed(()=>{ 
+  if(selectedYear !== null){
+    const indexSelectedYear = years.indexOf(selectedYear.value)
+    return JSON.parse(guidanceStore.surveyStats.edges[indexSelectedYear].node.stats);
+}
+})
+
 const selectedSubject = ref('');
 const subjects = [
   { value: "MATH", subject: "Math" },
@@ -65,9 +88,9 @@ const getChartData = computed(() => {
     ],
   };
 
-  if (selectedSubject.value) {   //if the user has selected a subject from the dropdown, then do this: 
+  if (selectedSubject.value && selectedYear.value) {   //if the user has selected a subject from the dropdown, then do this: 
     const targettedCourses =
-      Object.entries(stats) //take each key-value pair and filter them by !null courses that match the user's selected subject
+      Object.entries(stats.value) //take each key-value pair and filter them by !null courses that match the user's selected subject
         .filter(([courseName, info]) => {
           return (info.courseInfo !== null && info.courseInfo.fields.subject) === (selectedSubject.value);
         });
