@@ -42,21 +42,26 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 const loaded = ref(true);
 const guidanceStore = useGuidanceStore();
 
-const years = []       // {year: [2023, 2024]}
-const arr = guidanceStore.surveyStats.edges     // {arr: [0:node: {year:..., stats:...}]}
-let selectedYear = ref(2023)
-arr.forEach((el)=>{
-  const eachYear = el.node         // you need this part to display each year
-  years.push(eachYear.year)        // in the data set as an option in the drop down
-})  
+let years = []       // {year: [2023, 2024]}
+const storedYears = guidanceStore.surveyStats.edges     // {storedYears: [0:node: {year:..., stats:...}]}
+let selectedYear = ref(null)
+
+years = storedYears.map((yearSelected)=> yearSelected.node.year)
+console.log(years)
+
 // make a function so that if the year 2023 is selected, the stats for 2023 is generated
 // find index of year selected - 2023 - in years[] and find the stats with the matching index
 console.log(selectedYear.value)
+const stats = computed(()=>{
+  if(selectedYear !== null){
+    const i = years.indexOf(selectedYear.value)
+    console.log(i)
+    return JSON.parse(guidanceStore.surveyStats.edges[i].node.stats);
+}
+})
 
-let i = years.indexOf(selectedYear.value)
-  console.log(i)
 
-let stats = JSON.parse(guidanceStore.surveyStats.edges[i].node.stats);
+
 const selectedSubject = ref('');
 const subjects = [
   { value: "MATH", subject: "Math" },
@@ -88,7 +93,7 @@ const getChartData = computed(() => {
 
   if (selectedSubject.value && selectedYear.value) {   //if the user has selected a subject from the dropdown, then do this: 
     const targettedCourses =
-      Object.entries(stats) //take each key-value pair and filter them by !null courses that match the user's selected subject
+      Object.entries(stats.value) //take each key-value pair and filter them by !null courses that match the user's selected subject
         .filter(([courseName, info]) => {
           return (info.courseInfo !== null && info.courseInfo.fields.subject) === (selectedSubject.value);
         });
