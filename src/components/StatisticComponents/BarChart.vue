@@ -1,25 +1,30 @@
 <template>
   <div class="flex flex-col justify-center align-center items-center">
     <div class="text-2xl md:text-3xl font-semibold sm:flex text-center">All Courses</div>
-    <!-- drop-down menu -->
+    <!-- drop-down menu for years -->
     <select v-model="selectedYear" class="space rounded-md border border-solid border-zinc-400 h-10 p-2 mt-2 w-80">
-      <option v-for="one in years" :value="one" :key="one" >
-        {{ one }}
+      <option v-for="year in years" :value="year" :key="year">
+        {{ year }}
       </option>
     </select>
-    <h1>selected:{{ selectedYear }}</h1>
+    <div v-if="!selectedYear" class="mt-2">
+      <p>Please select a year from the list above</p>
+    </div>
 
+    <!-- drop-down menu for subjects -->
     <select v-model="selectedSubject" class="space rounded-md border border-solid border-zinc-400 h-10 p-2 mt-2 w-80">
       <option v-for="subject in subjects" :value="subject.value" :key="subject.value">
         {{ subject.subject }}
       </option>
     </select>
-    <div class="w-[70rem] mt-2" v-if="loaded && selectedSubject && selectedYear">
-      <Bar :options="chartOptions" :data="getChartData" />
-    </div>
-    <div v-else class="mt-2">
+    <div v-if="!selectedSubject" class="mt-2">
       <p>Please select a subject from the list above</p>
     </div>
+
+    <div class="w-[70rem] mt-2" v-if="loaded && selectedSubject">
+      <Bar :options="chartOptions" :data="getChartData" />
+    </div>
+
   </div>
 </template>
 
@@ -42,25 +47,17 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 const loaded = ref(true);
 const guidanceStore = useGuidanceStore();
 
-let years = []       // {year: [2023, 2024]}
-const storedYears = guidanceStore.surveyStats.edges     // {storedYears: [0:node: {year:..., stats:...}]}
-let selectedYear = ref(null)
+const selectedYear = ref('');
+const storedYears = guidanceStore.surveyStats.edges
+let years = storedYears.map((yearSelected)=> yearSelected.node.year);
 
-years = storedYears.map((yearSelected)=> yearSelected.node.year)
-console.log(years)
-
-// make a function so that if the year 2023 is selected, the stats for 2023 is generated
-// find index of year selected - 2023 - in years[] and find the stats with the matching index
-console.log(selectedYear.value)
-const stats = computed(()=>{
+//if a new year is selected from the dropdown, find the index where the stats are located and parse it into the
+const stats = computed(()=>{ 
   if(selectedYear !== null){
-    const i = years.indexOf(selectedYear.value)
-    console.log(i)
-    return JSON.parse(guidanceStore.surveyStats.edges[i].node.stats);
+    const indexSelectedYear = years.indexOf(selectedYear.value)
+    return JSON.parse(guidanceStore.surveyStats.edges[indexSelectedYear].node.stats);
 }
 })
-
-
 
 const selectedSubject = ref('');
 const subjects = [
