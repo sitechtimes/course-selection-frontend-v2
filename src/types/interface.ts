@@ -54,7 +54,7 @@ export interface userData {
 }
 
 // student object (student side)
-export interface studentData { 
+export interface studentData {
     coursesAvailable: course[]
     coursesRequired: course[]
     coursesTaken: course[]
@@ -64,13 +64,13 @@ export interface studentData {
 }
 
 // student object (guidance side)
-export interface studentGuidance extends studentData{ 
+export interface studentGuidance extends studentData {
     user: userData
     flag: string
 }
 
 // guidance edges and nodes interfaces
-export interface guidanceStudentData { 
+export interface guidanceStudentData {
     students: studentGuidance[]
 }
 
@@ -78,11 +78,11 @@ export interface surveyStats {
     edges: surveyStatsNodes[]
 }
 
-export interface surveyStatsNodes{
+export interface surveyStatsNodes {
     node: stats
 }
 
-export interface stats{
+export interface stats {
     year: number
     stats: string
 }
@@ -114,7 +114,7 @@ export interface allSurveysNodes {
 // survey interfaces
 export interface answeredSurvey {
     id?: string
-    answers: string 
+    answers: string
     email: string
     grade: grade
     status: status
@@ -163,9 +163,14 @@ export interface course {
     name: string
 }
 
+export interface StudentMeeting {
+    name: string;
+    meetingDate: string;
+}
+
 export type course_type = 'MATH' | 'ENGLISH' | 'LANG' | 'SS' | 'TECH' | 'PE' | 'CAREER' | 'SCIENCE' | 'ARTS' | 'OTHER'
 export type account_type = 'student' | 'guidance' | null;
 export type grade = 'FRESHMAN' | 'SOPHOMORE' | 'JUNIOR' | 'SENIOR';
-export type status= 'COMPLETE' | 'INCOMPLETE' | 'FINALIZED' | null | undefined 
+export type status = 'COMPLETE' | 'INCOMPLETE' | 'FINALIZED' | null | undefined
 export type question_type = 'BOOLEAN' | 'GENERAL' | 'MATH' | 'ENGLISH' | 'LANG' | 'SS' | 'TECH' | 'PE' | 'CAREER' | 'SCIENCE' | 'ARTS' | 'OTHER'
 export type question_status = 'STANDARD' | 'CLASS' | 'OPTIONAL' 
