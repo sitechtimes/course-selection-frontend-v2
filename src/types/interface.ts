@@ -163,9 +163,9 @@ export interface course {
     name: string
 }
 
-export interface StudentMeeting {
+export interface studentMeetings {
     name: string;
-    meetingDate: string;
+    meetingDate: Date;
 }
 
 export type course_type = 'MATH' | 'ENGLISH' | 'LANG' | 'SS' | 'TECH' | 'PE' | 'CAREER' | 'SCIENCE' | 'ARTS' | 'OTHER'

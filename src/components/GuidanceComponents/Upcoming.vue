@@ -17,12 +17,10 @@
 <script setup lang="ts">
 import { ref, Ref, onMounted } from "vue";
 import { useGuidanceStore } from "../../stores/guidance";
-import { StudentMeeting } from "../../types/interface";
+import { studentMeetings } from "../../types/interface";
 
 const guidanceStore = useGuidanceStore();
-
-const studentInfo: Ref<StudentMeeting[]> = ref([]); //initalise array as an array
-
+const studentInfo: Ref<studentMeetings[]> = ref([]); //initialise the array as an array
 
 //filter out valid meetings within the guidance store
 const validMeetings = guidanceStore.allStudents.edges.filter(
@@ -33,30 +31,30 @@ const validMeetings = guidanceStore.allStudents.edges.filter(
 const currentDate = new Date();
 for (const student of validMeetings) { //for each student with a valid meeting...
   const meetingDate = new Date(student.node.meeting);
-  //if the meeting is before the current date, dont show it
+  //if the meeting is before the current date, don't show it
   if (meetingDate > currentDate) {
-    const studentMeetings = {
-      name: `${student.node.user.firstName} ${student.node.user.lastName}`,//extract first and last name
-      meetingDate: student.node.meeting,
+    const studentMeetingsData: studentMeetings = {
+      name: `${student.node.user.firstName} ${student.node.user.lastName}`, //extract first and last name
+      meetingDate: meetingDate, 
     };
-    studentInfo.value.push(studentMeetings); //push the meetings into the array
+    studentInfo.value.push(studentMeetingsData);
   }
 }
 
 //sort the meetings
 studentInfo.value.sort((a, b) => {
-  return new Date(a.meetingDate).getTime() - new Date(b.meetingDate).getTime();
+  return a.meetingDate.getTime() - b.meetingDate.getTime();
 });
 
-//convert the date to weekday, mm/dd/yy
-function formatDate(meetingDate: string): string {
-  const event = new Date(meetingDate);
-  const options = {
+//update the formatDate function to accept a Date object
+function formatDate(meetingDate: Date): string {
+  const options = { //convert the date to weekday, mm/dd/yy
     weekday: "long",
     month: "long",
     day: "numeric",
     year: "numeric",
   };
-  return event.toLocaleDateString("en-US", options);
+  //@ts-ignore
+  return meetingDate.toLocaleDateString("en-US", options);
 }
 </script>

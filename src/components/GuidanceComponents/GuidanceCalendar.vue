@@ -36,6 +36,8 @@
   </div>
 </template>
 <script setup lang="ts">
+//@ts-nocheck
+//I will be fixing the typescript errors after the "wow"-"wo"-"ehe"-"hmm" gets figured out
 import Upcoming from "../GuidanceComponents/Upcoming.vue";
 import PlusIcon from "../icons/PlusIcon.vue";
 import { ref, Ref, reactive, onMounted } from "vue";
