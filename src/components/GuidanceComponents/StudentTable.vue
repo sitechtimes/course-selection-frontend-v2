@@ -13,6 +13,7 @@ import { studentGuidance } from "../../types/interface";
 const props = defineProps({
   newstudents: Array as PropType<Array<studentGuidance>>,
 });
+
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
 const guidanceStore = useGuidanceStore();
@@ -49,7 +50,7 @@ const toggleFlagModal = (student: string) => {
 };
 
 const remove = async (email: string, flag: string) => {
-  await userStore.removeFlag(email, flag);
+  await userStore.removeFlag(email, flag.flag);
 };
 
 async function userClick(student: studentGuidance) {

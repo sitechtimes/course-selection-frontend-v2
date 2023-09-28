@@ -377,37 +377,8 @@ export const useUserStore = defineStore("user", {
         });
     },
     async removeFlag(email: string, flag: string){
-      await axios
-        .post(
-          `${import.meta.env.VITE_URL}/graphql/`,
-          {
-            query: `mutation {
-                            updateFlag(email: "${email}", flag:"${flag}") {
-                                student{
-                                    flag
-                                }
-                            }
-                        }`,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${this.access_token}`,
-            },
-          }
-        )
-        .then((res) => {
-          const guidanceStore = useGuidanceStore()
-          const studentIndexAll = guidanceStore.allStudents.edges.findIndex(student => student.node.user.email === email)
-          const studentIndex = guidanceStore.guidance.students.findIndex(student => student.user.email === email)
-          if (studentIndex > -1) {
-            res.data.data.updateFlag.student.flag = ''
-            guidanceStore.guidance.students[studentIndex].flag = res.data.data.updateFlag.student.flag
-          }
-
-          guidanceStore.allStudents.edges[studentIndexAll].node.flag = res.data.data.updateFlag.student.flag
-        });
-    }
+     
+    },
   },
   persist: true,
 });
