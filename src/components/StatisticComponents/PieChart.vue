@@ -10,7 +10,6 @@
     <div v-if="!selectedYear" class="mt-2">
       <p>Please select a year from the list above</p>
     </div>
-   
     <!-- drop-down menu -->
     <select v-model="selectedCourse" class="space rounded-md border border-solid border-zinc-400 h-10 p-2 mt-2 w-80">
       <option v-for="course in courses" :key="course" :value="course">{{ course }}</option>
@@ -35,24 +34,24 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 const loaded = ref(true);
 const guidanceStore = useGuidanceStore();
-const selectedYear = ref('')
+let selectedYear = ref('')
 const storedYears = guidanceStore.surveyStats.edges
 let years = storedYears.map((yearSelected)=> yearSelected.node.year);
-
+console.log(selectedYear.value)
 // if a new year is selected from the dropdown, find the index where the stats are located and parse it into the
 
-// const stats = computed(()=>{ 
-//   if(selectedYear.value !== null){
-//     const indexSelectedYear = years.indexOf(selectedYear.value)
-//     console.log(indexSelectedYear)
+const stats = computed(()=>{ 
+  if(selectedYear.value !== null){
+    console.log('yes')
+    const indexSelectedYear = years.indexOf(selectedYear)
+    console.log(indexSelectedYear.value)
+    return JSON.parse(guidanceStore.surveyStats.edges[indexSelectedYear].node.stats);
+} 
+})
 
-//     return JSON.parse(guidanceStore.surveyStats.edges[indexSelectedYear].node.stats);
-// }
-// })
-
-const stats = JSON.parse(guidanceStore.surveyStats.edges[0].node.stats);
-console.log(stats)
+// const stats = JSON.parse(guidanceStore.surveyStats.edges[0].node.stats);
 const courses = Object.keys(stats); //returns each course name
+console.log(stats)
 const selectedCourse = ref('');
 
 const chartOptions = ref({
