@@ -24,14 +24,13 @@
     <div class="w-[70rem] mt-2" v-if="loaded && selectedSubject">
       <Bar :options="chartOptions" :data="getChartData" />
     </div>
-
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Bar } from 'vue-chartjs'
 import { useGuidanceStore } from '../../stores/guidance';
-import { ref, onMounted, computed } from 'vue';
+import { ref, Ref, onMounted, computed } from 'vue';
 import {
   Chart as ChartJS,
   Title,
@@ -47,19 +46,19 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 const loaded = ref(true);
 const guidanceStore = useGuidanceStore();
 
-const selectedYear = ref('');
+const selectedYear: Ref<number> = ref(0);
 const storedYears = guidanceStore.surveyStats.edges
-let years = storedYears.map((yearSelected)=> yearSelected.node.year);
+let years = storedYears.map((yearSelected) => yearSelected.node.year);
 
 //if a new year is selected from the dropdown, find the index where the stats are located and parse it into the
-const stats = computed(()=>{ 
-  if(selectedYear !== null){
+const stats = computed(() => {
+  if (selectedYear !== null) {
     const indexSelectedYear = years.indexOf(selectedYear.value)
     return JSON.parse(guidanceStore.surveyStats.edges[indexSelectedYear].node.stats);
-}
+  }
 })
 
-const selectedSubject = ref('');
+const selectedSubject: Ref<string> = ref('')
 const subjects = [
   { value: "MATH", subject: "Math" },
   { value: "ENGLISH", subject: "English" },
@@ -88,20 +87,21 @@ const getChartData = computed(() => {
     ],
   };
 
+
   if (selectedSubject.value && selectedYear.value) {   //if the user has selected a subject from the dropdown, then do this: 
     const targettedCourses =
       Object.entries(stats.value) //take each key-value pair and filter them by !null courses that match the user's selected subject
         .filter(([courseName, info]) => {
           return (info.courseInfo !== null && info.courseInfo.fields.subject) === (selectedSubject.value);
         });
-
     if (targettedCourses.length > 0) { //if the # of targetted courses exceed 1 (there is data), push to the graph
       for (const [courseName, info] of targettedCourses) {
         chartData.labels.push(courseName);
         chartData.datasets[0].data.push(info.picks);
       }
     } else { //if the number of targetted courses DO NOT exceed 1 (there is no data), push 0 to the graph
-      chartData.labels.push('No courses match this subject'); 
+      //@ts-ignore
+      chartData.labels.push('No courses match this subject');
       chartData.datasets[0].data.push(0);
     }
   }

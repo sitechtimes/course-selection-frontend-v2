@@ -18,7 +18,7 @@
 <script lang="ts" setup>
 import { Pie } from 'vue-chartjs';
 import { useGuidanceStore } from '../../stores/guidance';
-import { ref, onMounted, computed } from 'vue';
+import { ref, Ref, onMounted, computed } from 'vue';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -44,6 +44,7 @@ const getChartData = computed(() => { //use computed properties to recalculate o
       },
     ],
   };
+
 
   for (let i = 0; i < 40; i++) {
     const randomColours = "#" + Math.floor(Math.random() * 16777215).toString(16); //toString(16) turns it into a hexadecimal
