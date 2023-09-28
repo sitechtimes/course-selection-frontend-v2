@@ -377,6 +377,14 @@ export const useUserStore = defineStore("user", {
           guidanceStore.allStudents.edges[studentIndexAll].node.flag = res.data.data.updateFlag.student.flag
         });
     },
+    async removeFlag(email: string, flag: string){
+      const guidanceStore = useGuidanceStore()
+      const studentIndexAll = guidanceStore.allStudents.edges.findIndex(student => student.node.user.email === email)
+      const studentIndex = guidanceStore.guidance.students.findIndex(student => student.user.email === email)
+      const newdata = guidanceStore.guidance.students[studentIndex].flag.slice()
+      console.log(newdata)
+      guidanceStore.guidance.students[studentIndex].flag = newdata
+    }
   },
   persist: true,
 });

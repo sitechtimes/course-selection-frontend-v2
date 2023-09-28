@@ -21,10 +21,6 @@ const router = useRouter();
 let tooltip: Ref<boolean> = ref(false);
 let showFlagModal: Ref<string> = ref("");
 
-async function test(student, flag) {
-  await userStore;
-}
-
 const flags = [
   {
     flag: "Transfer",
@@ -50,6 +46,10 @@ const flags = [
 
 const toggleFlagModal = (student: string) => {
   showFlagModal.value = student;
+};
+
+const remove = async (email: string, flag: string) => {
+  await userStore.removeFlag(email, flag);
 };
 
 async function userClick(student: studentGuidance) {
@@ -193,7 +193,7 @@ async function userClick(student: studentGuidance) {
                   class="m-1 rounded-full h-5 w-5"
                 >
                   <MinusSign
-                    @click="test(student, flag)"
+                    @click="remove(student.user.email, flag)"
                     class="m-1 hidden child hover:curson-pointer"
                   ></MinusSign>
                 </div>
