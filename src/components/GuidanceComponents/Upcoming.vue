@@ -1,7 +1,7 @@
 <template>
   <div class="w-[25vw] border border-gray-500 rounded-md">
     <div class="border-b border-gray-500">
-      <h1 class="py-2 px-4 text-center font-extrabold text-2xl">Upcoming Events</h1>
+      <h1 class="py-2 px-4 text-center font-extrabold text-2xl">Upcoming Meetings</h1>
     </div>
     <div class="p-4">
       <div class="overflow-y-auto max-h-100">
