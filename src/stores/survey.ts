@@ -142,10 +142,10 @@ export const useSurveyStore = defineStore("survey", {
       const studentStore = useStudentStore();
       const guidanceStore = useGuidanceStore()
       this.loading = true;
-
       if (userStore.userType === "student") {
         if (studentStore.answeredSurvey[0] === undefined) {
-          await this.startSurvey(email, grade);
+          await this.startSurvey(email, studentStore.student.grade);
+         
         }
 
         this.currentAnsweredSurvey = studentStore.answeredSurvey[0];
