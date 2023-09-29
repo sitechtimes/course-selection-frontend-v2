@@ -90,7 +90,7 @@ const getChartData = computed(() => {
   if (selectedSubject.value && selectedYear.value) { //if the user has selected a subject and year from the dropdown, then do this: 
     const targettedCourses = Object.entries(stats.value) //take each key-value pair and filter them by !null courses that match the user's selected subject
       .filter(([courseName, info]: [string, any]) => {
-        return (info && info.courseInfo && info.courseInfo.fields.subject) === selectedSubject.value;
+        return (info && info.courseInfo && info.courseInfo.fields.subject) === (selectedSubject.value);
       });
     if (targettedCourses.length > 0) { //if the # of targetted courses exceed 0 (there is data), push to the graph
       for (const [courseName, info] of targettedCourses) {
