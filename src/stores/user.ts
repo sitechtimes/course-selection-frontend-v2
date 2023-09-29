@@ -364,26 +364,7 @@ export const useUserStore = defineStore("user", {
         });
     },
     async addFlag(email: string, newFlag: string) {
-      await axios
-        .post(
-          `${import.meta.env.VITE_URL}/graphql/`,
-          {
-            query: `mutation {
-                            updateFlag(email: "${email}", flag:"${newFlag}") {
-                                student{
-                                    flag
-                                }
-                            }
-                        }`,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${this.access_token}`,
-            },
-          }
-        )
-        .then((res) => {
+      
           const guidanceStore = useGuidanceStore();
           const studentIndexAll = guidanceStore.allStudents.edges.findIndex(
             (student) => student.node.user.email === email
@@ -391,16 +372,53 @@ export const useUserStore = defineStore("user", {
           const studentIndex = guidanceStore.guidance.students.findIndex(
             (student) => student.user.email === email
           );
+          const existingflag = guidanceStore.allStudents.edges[studentIndex].node.flag
+          
+             //checks if flag already exists
 
-          if (studentIndex > -1) {
-            guidanceStore.guidance.students[studentIndex].flag =
+             if(existingflag.includes(newFlag)){
+             }else{
+              await axios
+          .post(
+            `${import.meta.env.VITE_URL}/graphql/`,
+            {
+              query: `mutation {
+                              updateFlag(email: "${email}", flag:"${newFlag}") {
+                                  student{
+                                      flag
+                                  }
+                              }
+                          }`,
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${this.access_token}`,
+              },
+            }
+          )
+          .then((res) => {
+            const guidanceStore = useGuidanceStore();
+            const studentIndexAll = guidanceStore.allStudents.edges.findIndex(
+              (student) => student.node.user.email === email
+            );
+            const studentIndex = guidanceStore.guidance.students.findIndex(
+              (student) => student.user.email === email
+            );
+  
+            if (studentIndex > -1) {
+              guidanceStore.guidance.students[studentIndex].flag =
+                res.data.data.updateFlag.student.flag;
+            }
+  
+            guidanceStore.allStudents.edges[studentIndexAll].node.flag =
               res.data.data.updateFlag.student.flag;
-          }
+              console.log(guidanceStore.guidance.students[studentIndex].flag)
+              console.log(guidanceStore.allStudents.edges[studentIndexAll].node.flag)
+          });
+            }
 
-          guidanceStore.allStudents.edges[studentIndexAll].node.flag =
-            res.data.data.updateFlag.student.flag;
-        });
-    },
+  
   },
   persist: true,
-});
+}});
