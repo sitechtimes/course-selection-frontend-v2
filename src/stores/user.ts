@@ -374,10 +374,53 @@ export const useUserStore = defineStore("user", {
           }
 
           guidanceStore.allStudents.edges[studentIndexAll].node.flag = res.data.data.updateFlag.student.flag
+          console.log(res.data.data.updateFlag.student.flag)
         });
     },
-    async removeFlag(email: string, flag: string){
-     
+    async removeFlag(email: string, flagToBeRemoved: string) {
+      await axios
+        .post(
+          `${import.meta.env.VITE_URL}/graphql/`,
+          {
+            query: `mutation {
+                            updateFlag(email: "${email}", flag:"${flagToBeRemoved}") {
+                                student{
+                                    flag
+                                }
+                            }
+                        }`,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${this.access_token}`,
+            },
+          }
+        )
+        .then((res) => {
+          const guidanceStore = useGuidanceStore()
+          const studentIndexAll = guidanceStore.allStudents.edges.findIndex(student => student.node.user.email === email)
+          const studentIndex = guidanceStore.guidance.students.findIndex(student => student.user.email === email)
+          
+            console.log(res.data.data.updateFlag.student.flag)
+            if(res.data.data.updateFlag.student.flag.includes(flagToBeRemoved)){ //perform following if database contains the flag that needs to be deleted
+              let data = ""
+              data += res.data.data.updateFlag.student.flag 
+              let data2 = data.replaceAll(`${flagToBeRemoved}`, "") //sets a variable = to the database but with all the flag to be deleted replaced ""
+              console.log(data2)
+              res.data.data.updateFlag.student.flag = data2 //sets the res = to data2 which has the flag removed
+              console.log(res.data.data.updateFlag.student.flag)
+            }
+  
+            if (studentIndex > -1) {
+              guidanceStore.guidance.students[studentIndex].flag = res.data.data.updateFlag.student.flag
+            }
+  
+            guidanceStore.allStudents.edges[studentIndexAll].node.flag = res.data.data.updateFlag.student.flag
+            console.log(guidanceStore.guidance.students[studentIndex].flag)
+            console.log(guidanceStore.allStudents.edges[studentIndexAll].node.flag)
+
+        });
     },
   },
   persist: true,
