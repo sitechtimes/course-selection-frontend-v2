@@ -306,7 +306,7 @@ export const useUserStore = defineStore("user", {
 
         this.getUserType(); // make dj rest auth return user type (backend) to remove this function
       } catch (error) {
-        this.loading=false;
+        this.loading = false;
         alert("Login failed. Please check your credentials.");
       }
     },
@@ -402,23 +402,15 @@ export const useUserStore = defineStore("user", {
           const studentIndexAll = guidanceStore.allStudents.edges.findIndex(student => student.node.user.email === email)
           const studentIndex = guidanceStore.guidance.students.findIndex(student => student.user.email === email)
           
-            console.log(res.data.data.updateFlag.student.flag)
-            if(res.data.data.updateFlag.student.flag.includes(flagToBeRemoved)){ //perform following if database contains the flag that needs to be deleted
-              let data = ""
-              data += res.data.data.updateFlag.student.flag 
+          if (studentIndex > -1) {
+            const studentAll = guidanceStore.allStudents.edges[studentIndexAll];
+            const student = guidanceStore.guidance.students[studentIndex];
+          
+            if (student.flag.includes(flagToBeRemoved)) { //perform following if database contains the flag that needs to be deleted
               let data2 = data.replaceAll(`${flagToBeRemoved}`, "") //sets a variable = to the database but with all the flag to be deleted replaced ""
-              console.log(data2)
-              res.data.data.updateFlag.student.flag = data2 //sets the res = to data2 which has the flag removed
-              console.log(res.data.data.updateFlag.student.flag)
+              student.flag = data2 //sets the res = to data2 which has the flag removed
             }
-  
-            if (studentIndex > -1) {
-              guidanceStore.guidance.students[studentIndex].flag = res.data.data.updateFlag.student.flag
-            }
-  
-            guidanceStore.allStudents.edges[studentIndexAll].node.flag = res.data.data.updateFlag.student.flag
-            console.log(guidanceStore.guidance.students[studentIndex].flag)
-            console.log(guidanceStore.allStudents.edges[studentIndexAll].node.flag)
+          }
 
         });
     },
