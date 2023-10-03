@@ -3,8 +3,6 @@ import { ref, Ref, onMounted } from "vue";
 import { useGuidanceStore } from "../../stores/guidance";
 import { useUserStore } from "../../stores/user";
 import { studentGuidance } from "../../types/interface";
-import router from '../../router';
-import { RouterLink } from "vue-router";
 
 const guidanceStore = useGuidanceStore()
 const userStore = useUserStore()
@@ -83,12 +81,27 @@ function submit(meetingDate: string, studentName: string, meetingTime: string) {
 }
 
 const toggleEvent = () => {
-  show.value=!show.value
+  show.value = !show.value
 }
 </script>
 
 <template>
-          <form id="form" ref="form" @submit.prevent="empty()" >
+   <div class="event flex flex-col">
+          <div class="top flex-row flex items-center justify-between">
+            <h2 class="h2 font-bold text-[2rem] m-8 mb-4">Schedule Meeting</h2>
+            <button class="mt-5 mr-12" @click="toggleEvent">
+              <svg
+                class="x fill-current text-37394f transition duration-300 mt-4 hover:opacity-80 cursor-pointer"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 320 512"
+              >
+                <path
+                  d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"
+                />
+              </svg>
+            </button>
+          </div>
+          <form id="form" ref="form" @submit.prevent="empty()">
             <div class="times flex flex-col lg:flex-row">
               <div class="item mb-6">
                 <label
@@ -214,6 +227,7 @@ const toggleEvent = () => {
           <p>People : {{ people }}</p>
           <p>Description : {{ description }}</p>
         </div> -->
+        </div>
 </template>
 
 <style scoped>
