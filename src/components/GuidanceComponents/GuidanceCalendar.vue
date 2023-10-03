@@ -63,16 +63,19 @@ const studentInfo = []; //this array contains the name AND meeting date of the s
 
 for (const student of validMeetings) {
   const name = `${student.node.user.firstName} ${student.node.user.lastName}`; //extract first and last name
-  const meetingDate = student.node.meeting; //extract meeting date
+  const meetingDate = student.node.meeting;
+  const date = new Date(meetingDate);
+  console.log(date.getMonth());
+
   const studentMeetings = {
-    //create an OBJECT with the name and meeting date
+    //create an ARRAY with the name and meeting date
     name,
     meetingDate,
   };
   studentInfo.push(studentMeetings);
-}
-console.log("Student Info:", studentInfo);
 
+console.log("Student Info:", studentInfo);
+}
 // for (const index of indexList) {
 // var hasMeeting = student.user.meeting.filter(checkMeeting)
 // return hasMeeting
@@ -139,6 +142,10 @@ const months = [
   "December",
 ];
 
+//let meetingMonths = studentMeetings.meetingDate.forEach((meetingDate) => meetingDate.getDate);
+//console.log(meetingMonths);
+//console.log(studentMeetings);
+console.log(meetingDate);
 const renderCalendar = () => {
   let firstDayofMonth = new Date(currYear, currMonth, 1).getDay(); // getting first day of month
   let lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate(); // getting last date of month

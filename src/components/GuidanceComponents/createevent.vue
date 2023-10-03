@@ -56,6 +56,7 @@ function submit(meetingDate: string, studentName: string, meetingTime: string) {
   const min = parseInt(meetingTime.slice(3, 5));
   const dateTime = new Date(year, month, day, hour, min);
   const newTime = dateTime.toISOString();
+
   //person locater
   if (studentName != null || undefined) {
     for (const student of studentList) {
@@ -70,6 +71,7 @@ function submit(meetingDate: string, studentName: string, meetingTime: string) {
       }
     }
   }
+  
 
   save.value.innerHTML = "Saved";
   form.value.reset();
@@ -79,6 +81,7 @@ function submit(meetingDate: string, studentName: string, meetingTime: string) {
   userStore.changeMeeting(email, newTime);
   email = ''
 }
+
 
 const toggleEvent = () => {
   show.value = !show.value
