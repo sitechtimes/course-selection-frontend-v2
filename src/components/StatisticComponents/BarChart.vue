@@ -54,7 +54,6 @@ let years = storedYears.map((yearSelected)=> yearSelected.node.year);
 //if a new year is selected from the dropdown, find the index where the stats are located and parse it into the
 const stats = computed(()=>{ 
   if(selectedYear !== null){
-    console.log('yes')
     const indexSelectedYear = years.indexOf(selectedYear.value)
     return JSON.parse(guidanceStore.surveyStats.edges[indexSelectedYear].node.stats);
 }

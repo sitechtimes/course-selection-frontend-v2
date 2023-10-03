@@ -7,7 +7,7 @@
         {{ year }}
       </option>
     </select>
-    <h2>selected year: {{ selectedYear }}</h2>
+    <h1>{{ selectedYear }}</h1>
     <div v-if="!selectedYear" class="mt-2">
       <p>Please select a year from the list above</p>
     </div>
@@ -37,22 +37,21 @@ const guidanceStore = useGuidanceStore();
 
 const selectedYear = ref('')
 const storedYears = guidanceStore.surveyStats.edges
-const years = storedYears.map((yearSelected)=> yearSelected.node.year);
+let years = storedYears.map((yearSelected)=> yearSelected.node.year);
 // console.log(selectedYear.value)  --> returns empty
 // if a new year is selected from the dropdown, find the index where the stats are located and parse it into the
 
 const stats = computed(()=>{ 
-  if(selectedYear.value !== ''){
-    console.log(selectedYear.value)
+  if(selectedYear.value !== null){
+    console.log(selectedYear.value)     //empty
     const indexSelectedYear = years.indexOf(selectedYear.value)
-    console.log(indexSelectedYear)
-    return JSON.parse(guidanceStore.surveyStats.edges[indexSelectedYear].node.stats);
+    console.log(indexSelectedYear)      //returns -1
+    return JSON.parse(guidanceStore.surveyStats.edges[1].node.stats);
 } 
 })
 
 // const stats = JSON.parse(guidanceStore.surveyStats.edges[0].node.stats);
-const courses = Object.keys(stats); //returns each course name
-console.log(stats)// --> returns undefined
+const courses = Object.keys(stats.value); //returns each course name
 const selectedCourse = ref('');
 
 const chartOptions = ref({
@@ -77,7 +76,7 @@ const getChartData = computed(() => { //use computed properties to recalculate o
   }
 
   if (selectedCourse.value) {
-    const course = stats[selectedCourse.value];
+    const course = stats.value[selectedCourse.value];
     const ranks = course.ranks;
 
     for (let i = 0; i < ranks.length; i++) {
