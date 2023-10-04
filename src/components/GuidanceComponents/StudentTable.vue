@@ -3,6 +3,7 @@ import cornerArrow from "../icons/CornerArrow.vue";
 import PlusSign from "../icons/PlusSign.vue";
 import MinusSign from "../icons/MinusSign.vue";
 import AddFlag from "../GuidanceComponents/AddFlag.vue";
+import DeleteFlag from "../GuidanceComponents/DeleteFlag.vue";
 import { ref, computed, PropType, Ref } from "vue";
 import { useUserStore } from "../../stores/user";
 import { useSurveyStore } from "../../stores/survey";
@@ -21,6 +22,7 @@ const router = useRouter();
 
 let tooltip: Ref<boolean> = ref(false);
 let showFlagModal: Ref<string> = ref("");
+let showDeleteFlag: Ref<string> = ref("");
 
 const flags = [
   {
@@ -47,6 +49,10 @@ const flags = [
 
 const toggleFlagModal = (student: string) => {
   showFlagModal.value = student;
+};
+
+const toggleDeleteFlag = (student: string) => {
+  showDeleteFlag.value = student;
 };
 
 const remove = async (email: string, flag: string) => {
@@ -109,6 +115,14 @@ async function userClick(student: studentGuidance) {
           :student="student"
           :flags="flags"
         ></AddFlag>
+
+        <DeleteFlag
+          v-if="showDeleteFlag === student.user.email"
+          @exit="toggleDeleteFlag('')"
+          :student="student"
+          :flags="flags"
+        >
+        </DeleteFlag>
         <tr>
           <td class="p-4">
             {{ student.user.lastName }}, {{ student.user.firstName }}
@@ -192,18 +206,17 @@ async function userClick(student: studentGuidance) {
                   :title="flag.title"
                   :class="`${flag.color}`"
                   class="m-1 rounded-full h-5 w-5"
-                >
-                  <MinusSign
-                    @click="remove(student.user.email, flag)"
-                    class="m-1 hidden child hover:curson-pointer"
-                  ></MinusSign>
-                </div>
+                ></div>
               </div>
             </div>
             <PlusSign
               @click="toggleFlagModal(student.user.email)"
               class="m-1 hidden child hover:cursor-pointer"
             ></PlusSign>
+            <MinusSign
+              @click="toggleDeleteFlag(student.user.email)"
+              class="m-1 hidden child hover:curson-pointer"
+            ></MinusSign>
           </td>
         </tr>
       </tbody>
@@ -215,5 +228,8 @@ async function userClick(student: studentGuidance) {
 .parent:hover .child {
   display: block;
   transition: 0.3s;
+}
+.minus {
+  font-size: 20px;
 }
 </style>
