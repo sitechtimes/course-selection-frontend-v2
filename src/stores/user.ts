@@ -383,7 +383,7 @@ export const useUserStore = defineStore("user", {
           `${import.meta.env.VITE_URL}/graphql/`,
           {
             query: `mutation {
-                            removeFlag(email: "${email}", flag:"${flagToBeRemoved}") {
+                            updateFlag(email: "${email}", flag:"${flagToBeRemoved}") {
                                 student{
                                     flag
                                 }
@@ -401,12 +401,17 @@ export const useUserStore = defineStore("user", {
           const guidanceStore = useGuidanceStore()
           const studentIndexAll = guidanceStore.allStudents.edges.findIndex(student => student.node.user.email === email)
           const studentIndex = guidanceStore.guidance.students.findIndex(student => student.user.email === email)
+          
           if (studentIndex > -1) {
-            guidanceStore.guidance.students[studentIndex].flag = res.data.data.removeFlag.student.flag
+            const studentAll = guidanceStore.allStudents.edges[studentIndexAll];
+            const student = guidanceStore.guidance.students[studentIndex];
+          
+            if (student.flag.includes(flagToBeRemoved)) { //perform following if database contains the flag that needs to be deleted
+              let data2 = data.replaceAll(`${flagToBeRemoved}`, "") //sets a variable = to the database but with all the flag to be deleted replaced ""
+              student.flag = data2 //sets the res = to data2 which has the flag removed
+            }
           }
 
-          guidanceStore.allStudents.edges[studentIndexAll].node.flag = res.data.data.removeFlag.student.flag
-          console.log(res.data.data.removeFlag.student.flag)
         });
     },
   },
