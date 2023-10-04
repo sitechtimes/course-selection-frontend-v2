@@ -49,8 +49,8 @@ const toggleFlagModal = (student: string) => {
   showFlagModal.value = student;
 };
 
-const remove = async (email: string, flag: string) => {
-  await userStore.removeFlag(email, flag.flag);
+const remove = async (email: string, flagToBeRemoved: string) => {
+  await userStore.removeFlag(email, flagToBeRemoved.flag);
 };
 
 async function userClick(student: studentGuidance) {
@@ -197,7 +197,7 @@ async function userClick(student: studentGuidance) {
                   <MinusSign
                     id="minussign"
                     class="ml-1"
-                    @click="remove(student.user.email, flag)"
+                    @click="remove(student.user.email, flagToBeRemoved)"
                   ></MinusSign>
                 </div>
               </div>
