@@ -378,41 +378,7 @@ export const useUserStore = defineStore("user", {
         });
     },
     async removeFlag(email: string, flagToBeRemoved: string) {
-      await axios
-        .post(
-          `${import.meta.env.VITE_URL}/graphql/`,
-          {
-            query: `mutation {
-                            updateFlag(email: "${email}", flag:"${flagToBeRemoved}") {
-                                student{
-                                    flag
-                                }
-                            }
-                        }`,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${this.access_token}`,
-            },
-          }
-        )
-        .then((res) => {
-          const guidanceStore = useGuidanceStore()
-          const studentIndexAll = guidanceStore.allStudents.edges.findIndex(student => student.node.user.email === email)
-          const studentIndex = guidanceStore.guidance.students.findIndex(student => student.user.email === email)
-          
-          if (studentIndex > -1) {
-            const studentAll = guidanceStore.allStudents.edges[studentIndexAll];
-            const student = guidanceStore.guidance.students[studentIndex];
-          
-            if (student.flag.includes(flagToBeRemoved)) { //perform following if database contains the flag that needs to be deleted
-              let data2 = data.replaceAll(`${flagToBeRemoved}`, "") //sets a variable = to the database but with all the flag to be deleted replaced ""
-              student.flag = data2 //sets the res = to data2 which has the flag removed
-            }
-          }
-
-        });
+     console.log(email, flagToBeRemoved)
     },
   },
   persist: true,
