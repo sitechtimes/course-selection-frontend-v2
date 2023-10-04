@@ -198,14 +198,15 @@ async function userClick(student: studentGuidance) {
           <td @click="userClick(student)" class="p-4 hover:cursor-pointer">
             View Survey
           </td>
-          <td class="p-4 flex flex-row parent items-center justify-center">
+          <td class="p-4 flex flex-row parent items-center">
             <div v-for="flag in flags" :key="flag.flag">
               <div>
                 <div
+                  id="flagbox"
                   v-show="student.flag.includes(flag.flag)"
                   :title="flag.title"
                   :class="`${flag.color}`"
-                  class="m-1 rounded-full h-5 w-5"
+                  class="m-1 rounded-full h-5 w-5 flex items-center align-middle"
                 ></div>
               </div>
             </div>
