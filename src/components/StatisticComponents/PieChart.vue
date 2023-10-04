@@ -35,24 +35,25 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const loaded = ref(true);
 const guidanceStore = useGuidanceStore();
 
-const selectedYear = ref('')
+const selectedYear = ref(2023)  
+// the code wont run unless there is a year selected at start
 const storedYears = guidanceStore.surveyStats.edges
 let years = storedYears.map((yearSelected)=> yearSelected.node.year);
 // console.log(selectedYear.value)  --> returns empty
 // if a new year is selected from the dropdown, find the index where the stats are located and parse it into the
 
 const stats = computed(()=>{ 
-  if(selectedYear.value !== null){
-    console.log(selectedYear.value)     //empty
+  if(selectedYear !== null){
+    console.log(selectedYear.value)     // the year selected
     const indexSelectedYear = years.indexOf(selectedYear.value)
-    console.log(indexSelectedYear)      //returns -1
-    return JSON.parse(guidanceStore.surveyStats.edges[1].node.stats);
+    console.log(indexSelectedYear)      // the index of the selected year
+    return JSON.parse(guidanceStore.surveyStats.edges[indexSelectedYear].node.stats);
 } 
 })
 
 // const stats = JSON.parse(guidanceStore.surveyStats.edges[0].node.stats);
-const courses = Object.keys(stats.value); //returns each course name
 const selectedCourse = ref('');
+const courses = Object.keys(stats.value); //returns each course name
 
 const chartOptions = ref({
   responsive: true,
@@ -75,7 +76,7 @@ const getChartData = computed(() => { //use computed properties to recalculate o
     chartData.datasets[0].backgroundColor.push(randomColours)
   }
 
-  if (selectedCourse.value) {
+  if (selectedCourse.value && selectedYear.value) {
     const course = stats.value[selectedCourse.value];
     const ranks = course.ranks;
 
