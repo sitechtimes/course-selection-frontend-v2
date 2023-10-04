@@ -68,19 +68,24 @@ function submit(meetingDate: string, studentName: string, meetingTime: string) {
         student.user.email;
       if (studentFullName == studentName) {
         email = student.user.email;
+         
       }
     }
   }
-  
-
+const monthsDate = new Date(meetingDate);
+  const completeMonths = monthsDate.getMonth();
+  const monthsArr = []
   save.value.innerHTML = "Saved";
   form.value.reset();
   name = ''
   date = ''
   time = ''
+   monthsArr.push(completeMonths);
   userStore.changeMeeting(email, newTime);
   email = ''
+  console.log(monthsArr);
 }
+
 
 
 const toggleEvent = () => {
