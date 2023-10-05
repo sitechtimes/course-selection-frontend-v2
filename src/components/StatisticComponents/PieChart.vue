@@ -4,7 +4,7 @@
    
     <select v-model="selectedYear" class="space rounded-md border border-solid border-zinc-400 h-10 p-2 mt-2 w-80">
       <option v-for="year in years" :value="year" :key="year">
-        {{ year }}
+        {{ year }}                                                                                                                                                                                                                                    
       </option>
     </select>
     <h1>{{ selectedYear }}</h1>
@@ -35,7 +35,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const loaded = ref(true);
 const guidanceStore = useGuidanceStore();
 
-const selectedYear = ref(2023)  
+const selectedYear = ref(null)  
 // the code wont run unless there is a year selected at start
 const storedYears = guidanceStore.surveyStats.edges
 let years = storedYears.map((yearSelected)=> yearSelected.node.year);
@@ -43,17 +43,20 @@ let years = storedYears.map((yearSelected)=> yearSelected.node.year);
 // if a new year is selected from the dropdown, find the index where the stats are located and parse it into the
 
 const stats = computed(()=>{ 
-  if(selectedYear !== null){
-    console.log(selectedYear.value)     // the year selected
+  if(selectedYear.value !== null){
     const indexSelectedYear = years.indexOf(selectedYear.value)
-    console.log(indexSelectedYear)      // the index of the selected year
     return JSON.parse(guidanceStore.surveyStats.edges[indexSelectedYear].node.stats);
 } 
 })
 
 // const stats = JSON.parse(guidanceStore.surveyStats.edges[0].node.stats);
 const selectedCourse = ref('');
-const courses = Object.keys(stats.value); //returns each course name
+const courses = computed(()=>{
+  if (stats.value) {
+    console.log(stats.value)
+    return Object.keys(stats.value); //returns each course name
+  }
+}) 
 
 const chartOptions = ref({
   responsive: true,
