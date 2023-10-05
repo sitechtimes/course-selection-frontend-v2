@@ -378,36 +378,7 @@ export const useUserStore = defineStore("user", {
         });
     },
     async removeFlag(email: string, flagToBeRemoved: string) {
-      await axios
-        .post(
-          `${import.meta.env.VITE_URL}/graphql/`,
-          {
-            query: `mutation {
-                            removeFlag(email: "${email}", flag:"${flagToBeRemoved}") {
-                                student{
-                                    flag
-                                }
-                            }
-                        }`,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${this.access_token}`,
-            },
-          }
-        )
-        .then((res) => {
-          const guidanceStore = useGuidanceStore()
-          const studentIndexAll = guidanceStore.allStudents.edges.findIndex(student => student.node.user.email === email)
-          const studentIndex = guidanceStore.guidance.students.findIndex(student => student.user.email === email)
-          if (studentIndex > -1) {
-            guidanceStore.guidance.students[studentIndex].flag = res.data.data.removeFlag.student.flag
-          }
-
-          guidanceStore.allStudents.edges[studentIndexAll].node.flag = res.data.data.removeFlag.student.flag
-          console.log(res.data.data.removeFlag.student.flag)
-        });
+    
     },
   },
   persist: true,

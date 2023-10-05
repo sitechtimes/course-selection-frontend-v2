@@ -55,10 +55,6 @@ const toggleDeleteFlag = (student: string) => {
   showDeleteFlag.value = student;
 };
 
-const remove = async (email: string, flag: string) => {
-  await userStore.removeFlag(email, flag.flag);
-};
-
 async function userClick(student: studentGuidance) {
   await surveyStore.setSurvey(student.user.email, student.grade);
   await router.push(
@@ -206,7 +202,7 @@ async function userClick(student: studentGuidance) {
                   v-show="student.flag.includes(flag.flag)"
                   :title="flag.title"
                   :class="`${flag.color}`"
-                  class="m-1 rounded-full h-5 w-5 flex items-center align-middle"
+                  class="m-1 rounded-full h-5 w-5"
                 ></div>
               </div>
             </div>
