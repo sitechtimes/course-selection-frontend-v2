@@ -31,8 +31,11 @@ const confirm = async (flag: string) => {
   if (flag === "") {
     missing.value = true;
   } else {
-    await userStore.removeFlag(props.student.user.email, flag);
-    emit("exit");
+    if (props.student.flag.includes(`${flag}`)) {
+      await userStore.removeFlag(props.student.user.email, flag);
+      emit("exit");
+    } else {
+    }
   }
 };
 </script>

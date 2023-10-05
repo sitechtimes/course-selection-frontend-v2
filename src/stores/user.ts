@@ -378,7 +378,6 @@ export const useUserStore = defineStore("user", {
         });
     },
     async removeFlag(email: string, flagToBeRemoved: string) {
-    
     },
   },
   persist: true,
