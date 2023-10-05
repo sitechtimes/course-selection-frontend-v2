@@ -4,8 +4,9 @@
 
 <style scoped>
 button {
-  width: 5%;
+  position: relative;
+  bottom: 3px;
   font-weight: bolder;
-  font-size: 130%;
+  font-size: 150%;
 }
 </style>
