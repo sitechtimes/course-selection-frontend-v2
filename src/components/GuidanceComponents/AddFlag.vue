@@ -27,12 +27,14 @@ const props = defineProps({
 
 const selected: Ref<string> = ref("");
 const missing: Ref<boolean> = ref(false);
+const alertuser: Ref<string> = ref("");
 
 const confirm = async (flag: string) => {
   if (flag === "") {
     missing.value = true;
   } else {
     if (props.student.flag.includes(`${flag}`)) {
+      alertuser.value = "Flag is already added";
     } else {
       await userStore.addFlag(props.student.user.email, flag);
       emit("exit");
@@ -67,6 +69,9 @@ const confirm = async (flag: string) => {
             {{ flag.title }}
           </option>
         </select>
+      </div>
+      <div class="item-center">
+        <h1 class="text-center text-red-600">{{ alertuser }}</h1>
       </div>
       <div class="flex flex-row w-full justify-between">
         <button @click="$emit('exit')">Cancel</button>
