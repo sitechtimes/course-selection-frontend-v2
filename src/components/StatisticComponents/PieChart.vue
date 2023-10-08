@@ -7,7 +7,6 @@
         {{ year }}                                                                                                                                                                                                                                    
       </option>
     </select>
-    <h1>{{ selectedYear }}</h1>
     <div v-if="!selectedYear" class="mt-2">
       <p>Please select a year from the list above</p>
     </div>
@@ -27,7 +26,7 @@
 <script lang="ts" setup>
 import { Pie } from 'vue-chartjs';
 import { useGuidanceStore } from '../../stores/guidance';
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -42,18 +41,23 @@ let years = storedYears.map((yearSelected)=> yearSelected.node.year);
 // console.log(selectedYear.value)  --> returns empty
 // if a new year is selected from the dropdown, find the index where the stats are located and parse it into the
 
-const stats = computed(()=>{ 
+let stats = computed(()=>{ 
   if(selectedYear.value !== null){
     const indexSelectedYear = years.indexOf(selectedYear.value)
     return JSON.parse(guidanceStore.surveyStats.edges[indexSelectedYear].node.stats);
 } 
 })
+let selectedCourse = ref('');
+
+watch(selectedYear, (newSelectedYear) => {
+  if (newSelectedYear !== null) {
+    selectedCourse.value = null
+  }
+  })
 
 // const stats = JSON.parse(guidanceStore.surveyStats.edges[0].node.stats);
-const selectedCourse = ref('');
 const courses = computed(()=>{
   if (stats.value) {
-    console.log(stats.value)
     return Object.keys(stats.value); //returns each course name
   }
 }) 
