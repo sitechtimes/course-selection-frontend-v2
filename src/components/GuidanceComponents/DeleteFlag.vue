@@ -33,7 +33,7 @@ const confirm = async (flag: string) => {
     missing.value = true;
   } else {
     if (props.student.flag.includes(`${flag}`)) {
-      await userStore.removeFlag(props.student.user.email, flag);
+      await userStore.deleteFlag(props.student.user.email, flag);
       emit("exit");
     } else {
       alertuser.value = "Student does not have the flag to be deleted";
@@ -85,4 +85,3 @@ const confirm = async (flag: string) => {
   </div>
 </template>
 
-<style scoped></style>
