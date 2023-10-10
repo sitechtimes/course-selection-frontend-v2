@@ -1,12 +1,12 @@
 <template>
   <div class="">
     <GuidanceCalendar />
-    <createevent />
+    <CreateEvent />
   </div>
 </template>
 
 <script setup lang="ts">
-import createevent from "../components/GuidanceComponents/createevent.vue";
+import CreateEvent from "../components/GuidanceComponents/CreateEvent.vue";
 import GuidanceCalendar from "../components/GuidanceComponents/GuidanceCalendar.vue";
 
 document.title = "Calendar & Events | SITHS Course Selection";

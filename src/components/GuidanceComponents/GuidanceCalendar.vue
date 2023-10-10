@@ -43,7 +43,7 @@ import PlusIcon from "../icons/PlusIcon.vue";
 import { ref, Ref, reactive, onMounted } from "vue";
 import { useUserStore } from "../../stores/user";
 import { useGuidanceStore } from "../../stores/guidance";
-import CreateEvent from "./createevent.vue";
+import CreateEvent from "../components/GuidanceComponents/CreateEvent.vue";
 
 const guidanceStore = useGuidanceStore();
 const userStore = useUserStore();
