@@ -21,7 +21,7 @@
       <p>Please select a subject from the list above</p>
     </div>
 
-    <div class="w-[70rem] mt-2" v-if="loaded && selectedSubject">
+    <div class="w-[70rem] mt-2" v-if="loaded && selectedSubject && selectedYear">
       <Bar :options="chartOptions" :data="getChartData" />
     </div>
   </div>
