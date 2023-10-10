@@ -1,16 +1,17 @@
 <template>
   <div class="flex flex-col justify-center align-center items-center">
     <div class="text-2xl md:text-3xl font-semibold sm:flex text-center">Course Rankings</div>
-   
+    <!-- drop-down menu for years-->
     <select v-model="selectedYear" class="space rounded-md border border-solid border-zinc-400 h-10 p-2 mt-2 w-80">
       <option v-for="year in years" :value="year" :key="year">
-        {{ year }}                                                                                                                                                                                                                                    
+        {{ year }}
       </option>
     </select>
+    <h1>{{ selectedYear }}</h1>
     <div v-if="!selectedYear" class="mt-2">
       <p>Please select a year from the list above</p>
     </div>
-    <!-- drop-down menu -->
+    <!-- drop-down menu for courses-->
     <select v-model="selectedCourse" class="space rounded-md border border-solid border-zinc-400 h-10 p-2 mt-2 w-80">
       <option v-for="course in courses" :key="course" :value="course">{{ course }}</option>
     </select>
@@ -26,42 +27,35 @@
 <script lang="ts" setup>
 import { Pie } from 'vue-chartjs';
 import { useGuidanceStore } from '../../stores/guidance';
-import { ref, onMounted, computed, watch } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const loaded = ref(true);
 const guidanceStore = useGuidanceStore();
-
-const selectedYear = ref(null)  
-// the code wont run unless there is a year selected at start
+const selectedCourse = ref('');
+const selectedYear = ref('')
 const storedYears = guidanceStore.surveyStats.edges
 let years = storedYears.map((yearSelected)=> yearSelected.node.year);
-// console.log(selectedYear.value)  --> returns empty
-// if a new year is selected from the dropdown, find the index where the stats are located and parse it into the
 
-let stats = computed(()=>{ 
-  if(selectedYear.value !== null){
+// if a new year is selected from the dropdown, find the index where the stats are located and parse it into the stats
+const stats = computed(()=>{ 
+  if(selectedYear.value !== ''){
     const indexSelectedYear = years.indexOf(selectedYear.value)
+    console.log(selectedYear.value)
+    console.log(indexSelectedYear)
     return JSON.parse(guidanceStore.surveyStats.edges[indexSelectedYear].node.stats);
-} 
+}
 })
-let selectedCourse = ref('');
 
-watch(selectedYear, (newSelectedYear) => {
-  if (newSelectedYear !== null) {
-    selectedCourse.value = null
-  }
-  })
-
-// const stats = JSON.parse(guidanceStore.surveyStats.edges[0].node.stats);
-const courses = computed(()=>{
-  if (stats.value) {
-    return Object.keys(stats.value); //returns each course name
-  }
-}) 
-
+ //returns each course name
+const courses = computed(() => {
+  //check if stats is defined before using Object.keys()
+  return stats.value ? Object.keys(stats.value) : [];
+ 
+});
+ 
 const chartOptions = ref({
   responsive: true,
 });
@@ -83,7 +77,7 @@ const getChartData = computed(() => { //use computed properties to recalculate o
     chartData.datasets[0].backgroundColor.push(randomColours)
   }
 
-  if (selectedCourse.value && selectedYear.value) {
+  if (selectedCourse.value) {
     const course = stats.value[selectedCourse.value];
     const ranks = course.ranks;
 
