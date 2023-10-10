@@ -3,7 +3,6 @@ import { studentGuidance } from "../../types/interface";
 import { useUserStore } from "../../stores/user";
 import { PropType, ref, Ref } from "vue";
 import { defineEmits } from "vue";
-import { useGuidanceStore } from "../../stores/guidance";
 
 const emit = defineEmits(["exit"]);
 const userStore = useUserStore();
@@ -34,10 +33,10 @@ const confirm = async (flag: string) => {
     missing.value = true;
   } else {
     if (props.student.flag.includes(`${flag}`)) {
-      alertuser.value = "Flag is already added";
-    } else {
-      await userStore.addFlag(props.student.user.email, flag);
+      await userStore.deleteFlag(props.student.user.email, flag);
       emit("exit");
+    } else {
+      alertuser.value = "Student does not have the flag to be deleted";
     }
   }
 };
@@ -61,7 +60,7 @@ const confirm = async (flag: string) => {
           class="my-2"
           :class="{ 'text-red-500': missing, 'animate-pulse': missing }"
         >
-          Add a flag:
+          Select Flag to Delete:
         </p>
         <!-- <p v-show="missing">hi</p> -->
         <select v-model="selected" class="w-full">
@@ -86,4 +85,3 @@ const confirm = async (flag: string) => {
   </div>
 </template>
 
-<style scoped></style>
