@@ -18,7 +18,7 @@
             <li class="">Sat</li>
           </ul>
           <ul class="days">
-            <li class="dayCon" v-for="h in hmm.wow" :key="h.id">
+            <li class="dayCon" v-for="h in calendarData.dateInfo" :key="h.id">
               <p class="mt-2 text-end mr-2 mb-16">{{ h.calDate }}</p>
               <PlusIcon class="plusIcon w-3 ml-2 cursor-pointer invisible" @click="toggleEvent" />
             </li>
@@ -76,6 +76,115 @@ for (const student of validMeetings) {
 
 console.log("Student Info:", studentInfo);
 }
+
+const toggleEvent = () => {
+  show.value = !show.value;
+};
+const currentDate = ref(null);
+const daysTag = ref(null);
+
+// getting new date, current year and month
+let calDate = new Date();
+let currYear = calDate.getFullYear();
+let currMonth = calDate.getMonth();
+let calendarData = reactive([]);
+let monthChanges = ref(0);
+
+// storing full name of all months in array
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+//let meetingMonths = studentMeetings.meetingDate.forEach((meetingDate) => meetingDate.getDate);
+//console.log(meetingMonths);
+//console.log(studentMeetings);
+
+const renderCalendar = () => {
+  let firstDayofMonth = new Date(currYear, currMonth, 1).getDay(); // getting first day of month
+  let lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate(); // getting last date of month
+  let lastDayofMonth = new Date(currYear, currMonth, lastDateofMonth).getDay(); // getting last day of month
+  let lastDateofLastMonth = new Date(currYear, currMonth, 0).getDate(); // getting last date of previous month
+  let liTag = "";
+  let dateInfo = [];
+
+  for (let i = firstDayofMonth; i > 0; i--) {
+    // creating li of previous month last days
+    liTag += `<li class="inactive">${lastDateofLastMonth - i + 1}</li>`;
+    const dateBoxInfo = {
+      type: "inactive",
+      calDate: lastDateofLastMonth - i + 1,
+    };
+    dateInfo.push(dateBoxInfo);
+  }
+
+  for (let i = 1; i <= lastDateofMonth; i++) {
+    // creating li of all days of current month
+    // adding active class to li if the current day, month, and year matched
+    let isToday =
+      i === calDate.getDate() &&
+        currMonth === new Date().getMonth() &&
+        currYear === new Date().getFullYear()
+        ? "active"
+        : "";
+    liTag += `<li class="${isToday}">${i}</li>`;
+    const dateBoxInfo = {
+      type: "active",
+      calDate: i,
+      id: i + "p",
+    };
+    dateInfo.push(dateBoxInfo);
+  }
+
+  for (let i = lastDayofMonth; i < 6; i++) {
+    // creating li of next month first days
+    liTag += `<li class="inactive">${i - lastDayofMonth + 1}</li>`;
+    const dateBoxInfo = {
+      type: "inactive",
+      calDate: i - lastDayofMonth + 1,
+      id: i + "o",
+    };
+    dateInfo.push(dateBoxInfo);
+  }
+  currentDate.innerText = `${months[currMonth]} ${currYear}`; // passing current mon and yr as currentDate text
+  // console.log(wow)
+  calendarData.dateInfo = dateInfo;
+  calendarData.monthChanges = monthChanges.value + 1;
+  
+  monthChanges.value = calendarData.monthChanges;
+  console.log(calendarData);
+  console.log(monthChanges.value);
+  // daysTag.innerHTML = liTag;
+  // console.log(liTag)
+};
+renderCalendar();
+const changeMonth = (next: boolean) => {
+  if (next) {
+    currMonth = currMonth + 1;
+  } else {
+    currMonth = currMonth - 1;
+  }
+  if (currMonth < 0 || currMonth > 11) {
+    // if current month is less than 0 or greater than 11
+    // creating a new date of current year & month and pass it as date value
+    calDate = new Date(currYear, currMonth, new Date().getDate());
+    currYear = calDate.getFullYear(); // updating current year with new date year
+    currMonth = calDate.getMonth(); // updating current month with new date month
+  } else {
+    calDate = new Date(); // pass the current date as date value
+  }
+  renderCalendar();
+};
 // for (const index of indexList) {
 // var hasMeeting = student.user.meeting.filter(checkMeeting)
 // return hasMeeting
@@ -113,113 +222,7 @@ console.log("Student Info:", studentInfo);
 // };
 
 
-const toggleEvent = () => {
-  show.value = !show.value;
-};
-const currentDate = ref(null);
-const daysTag = ref(null);
 
-// getting new date, current year and month
-let calDate = new Date();
-let currYear = calDate.getFullYear();
-let currMonth = calDate.getMonth();
-let hmm = reactive([]);
-let wo = ref(0);
-
-// storing full name of all months in array
-const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
-//let meetingMonths = studentMeetings.meetingDate.forEach((meetingDate) => meetingDate.getDate);
-//console.log(meetingMonths);
-//console.log(studentMeetings);
-
-const renderCalendar = () => {
-  let firstDayofMonth = new Date(currYear, currMonth, 1).getDay(); // getting first day of month
-  let lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate(); // getting last date of month
-  let lastDayofMonth = new Date(currYear, currMonth, lastDateofMonth).getDay(); // getting last day of month
-  let lastDateofLastMonth = new Date(currYear, currMonth, 0).getDate(); // getting last date of previous month
-  let liTag = "";
-  let wow = [];
-
-  for (let i = firstDayofMonth; i > 0; i--) {
-    // creating li of previous month last days
-    liTag += `<li class="inactive">${lastDateofLastMonth - i + 1}</li>`;
-    const ehe = {
-      type: "inactive",
-      calDate: lastDateofLastMonth - i + 1,
-    };
-    wow.push(ehe);
-  }
-
-  for (let i = 1; i <= lastDateofMonth; i++) {
-    // creating li of all days of current month
-    // adding active class to li if the current day, month, and year matched
-    let isToday =
-      i === calDate.getDate() &&
-        currMonth === new Date().getMonth() &&
-        currYear === new Date().getFullYear()
-        ? "active"
-        : "";
-    liTag += `<li class="${isToday}">${i}</li>`;
-    const ehe = {
-      type: "active",
-      calDate: i,
-      id: i + "p",
-    };
-    wow.push(ehe);
-  }
-
-  for (let i = lastDayofMonth; i < 6; i++) {
-    // creating li of next month first days
-    liTag += `<li class="inactive">${i - lastDayofMonth + 1}</li>`;
-    const ehe = {
-      type: "inactive",
-      calDate: i - lastDayofMonth + 1,
-      id: i + "o",
-    };
-    wow.push(ehe);
-  }
-  currentDate.innerText = `${months[currMonth]} ${currYear}`; // passing current mon and yr as currentDate text
-  // console.log(wow)
-  hmm.wow = wow;
-  hmm.wo = wo.value + 1;
-  console.log(wo.value, "o");
-  wo.value = hmm.wo;
-  console.log(hmm);
-  // daysTag.innerHTML = liTag;
-  // console.log(liTag)
-};
-renderCalendar();
-const changeMonth = (next: boolean) => {
-  if (next) {
-    currMonth = currMonth + 1;
-  } else {
-    currMonth = currMonth - 1;
-  }
-  if (currMonth < 0 || currMonth > 11) {
-    // if current month is less than 0 or greater than 11
-    // creating a new date of current year & month and pass it as date value
-    calDate = new Date(currYear, currMonth, new Date().getDate());
-    currYear = calDate.getFullYear(); // updating current year with new date year
-    currMonth = calDate.getMonth(); // updating current month with new date month
-  } else {
-    calDate = new Date(); // pass the current date as date value
-  }
-  renderCalendar();
-};
 </script>
 
 <style scoped>
