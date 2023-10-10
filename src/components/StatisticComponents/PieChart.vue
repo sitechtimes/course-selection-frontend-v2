@@ -34,16 +34,15 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const loaded = ref(true);
 const guidanceStore = useGuidanceStore();
 const selectedCourse = ref('');
-const selectedYear = ref('')
+const selectedYear = ref('');
 const storedYears = guidanceStore.surveyStats.edges
 let years = storedYears.map((yearSelected)=> yearSelected.node.year);
 
 // if a new year is selected from the dropdown, find the index where the stats are located and parse it into the stats
 const stats = computed(()=>{ 
   if(selectedYear.value !== ''){
+    //@ts-ignore
     const indexSelectedYear = years.indexOf(selectedYear.value)
-    console.log(selectedYear.value)
-    console.log(indexSelectedYear)
     return JSON.parse(guidanceStore.surveyStats.edges[indexSelectedYear].node.stats);
 }
 })
@@ -60,16 +59,23 @@ const chartOptions = ref({
 });
 
 const getChartData = computed(() => { //use computed properties to recalculate on render
-  const chartData = {
-    labels: [],
-    datasets: [
-      {
-        data: [],
-        backgroundColor: [],
-        label: '# of students',
-      },
-    ],
-  };
+  const chartData: {
+  labels: string[];
+  datasets: {
+    data: number[];
+    backgroundColor: string[];
+    label: string;
+  }[];
+} = {
+  labels: [],
+  datasets: [
+    {
+      data: [],
+      backgroundColor: ['#C5D4A4'],
+      label: '# of students',
+    },
+  ],
+};
 
 
   for (let i = 0; i < 40; i++) {
