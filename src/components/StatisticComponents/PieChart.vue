@@ -7,7 +7,6 @@
         {{ year }}
       </option>
     </select>
-    <h1>{{ selectedYear }}</h1>
     <div v-if="!selectedYear" class="mt-2">
       <p>Please select a year from the list above</p>
     </div>
