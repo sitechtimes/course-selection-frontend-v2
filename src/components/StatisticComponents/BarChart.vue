@@ -1,6 +1,7 @@
 <template>
   <div class="flex flex-col justify-center align-center items-center">
     <div class="text-2xl md:text-3xl font-semibold sm:flex text-center">All Courses</div>
+
     <!-- drop-down menu for years -->
     <select v-model="selectedYear" class="space rounded-md border border-solid border-zinc-400 h-10 p-2 mt-2 w-80">
       <option v-for="year in years" :value="year" :key="year">
@@ -21,7 +22,7 @@
       <p>Please select a subject from the list above</p>
     </div>
 
-    <div class="w-[70rem] mt-2" v-if="loaded && selectedSubject">
+    <div class="w-[70rem] mt-2" v-if="loaded && selectedSubject && selectedYear">
       <Bar :options="chartOptions" :data="getChartData" />
     </div>
   </div>
@@ -76,18 +77,30 @@ const chartOptions = ref({
 });
 
 const getChartData = computed(() => {
-  const chartData = {
-    labels: [],
-    datasets: [
-      {
-        data: [],
-        backgroundColor: ['#C5D4A4'],
-        label: '# of students',
-      },
-    ],
-  };
+  const chartData: {
+  labels: string[];
+  datasets: {
+    data: number[];
+    backgroundColor: string[];
+    label: string;
+  }[];
+} = {
+  labels: [],
+  datasets: [
+    {
+      data: [],
+      backgroundColor: ['#C5D4A4'],
+      label: '# of students',
+    },
+  ],
+};
+
 
   if (selectedSubject.value && selectedYear.value) { //if the user has selected a subject and year from the dropdown, then do this: 
+    interface targettedCourses {
+      coursename: string,
+      info: Object
+    }
     const targettedCourses = Object.entries(stats.value) //take each key-value pair and filter them by !null courses that match the user's selected subject
       .filter(([courseName, info]: [string, any]) => {
         return (info && info.courseInfo && info.courseInfo.fields.subject) === (selectedSubject.value);
@@ -95,6 +108,7 @@ const getChartData = computed(() => {
     if (targettedCourses.length > 0) { //if the # of targetted courses exceed 0 (there is data), push to the graph
       for (const [courseName, info] of targettedCourses) {
         chartData.labels.push(courseName);
+        //@ts-ignore
         chartData.datasets[0].data.push(info.picks);
       }
     } else {

@@ -131,7 +131,7 @@ export interface surveyQuestion {
     questionType: question_type
     id: string
     status: question_status
-    className: string
+    classReferenced: any
 }
 
 export interface surveyAnswer {
@@ -166,6 +166,9 @@ export interface course {
 export interface studentMeetings {
     name: string;
     meetingDate: Date;
+}
+export interface classReferenced {
+    name: string;
 }
 
 export type course_type = 'MATH' | 'ENGLISH' | 'LANG' | 'SS' | 'TECH' | 'PE' | 'CAREER' | 'SCIENCE' | 'ARTS' | 'OTHER'

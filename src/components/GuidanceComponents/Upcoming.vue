@@ -30,12 +30,12 @@ const validMeetings = guidanceStore.allStudents.edges.filter(
 
 const currentDate = new Date();
 for (const student of validMeetings) { //for each student with a valid meeting...
-  const meetingDate = new Date(student.node.meeting);
+  const meetingDate = new Date(student.node.meeting as string);
   //if the meeting is before the current date, don't show it
   if (meetingDate > currentDate) {
     const studentMeetingsData: studentMeetings = {
       name: `${student.node.user.firstName} ${student.node.user.lastName}`, //extract first and last name
-      meetingDate: meetingDate, 
+      meetingDate: meetingDate
     };
     studentInfo.value.push(studentMeetingsData);
   }

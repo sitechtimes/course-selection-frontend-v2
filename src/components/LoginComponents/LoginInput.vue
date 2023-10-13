@@ -1,16 +1,3 @@
-<script setup lang="ts">
-
-defineProps({
-    name: String,
-    type: String,
-    required: Boolean,
-    label: String,
-    id: String,
-    value: String
-})
-defineEmits(['update'])
-</script>
-
 <template>
   <div class="relative z-0 w-full group overflow-visible">
     <input @change="event => $emit('update', event.target.value)" :value="value" class="block py-2.5 px-2 mt-2.5 w-full text-sm text-zinc-900 bg-transparent rounded-md border border-solid border-zinc-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-400 peer" placeholder=" " :id="id" :name="name" :type="type" :required="required ? true : false" />
@@ -20,3 +7,16 @@ defineEmits(['update'])
     </label>
   </div>
 </template>
+
+<script setup lang="ts">
+//@ts-nocheck
+defineProps({
+    name: String,
+    type: String,
+    required: Boolean,
+    label: String,
+    id: String,
+    value: String,
+})
+defineEmits(['update'])
+</script>
