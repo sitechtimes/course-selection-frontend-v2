@@ -74,7 +74,9 @@ export const useUserStore = defineStore("user", {
                                             questionType
                                             id
                                             status
-                                            className
+                                            classReferenced {
+                                                name
+                                            }
                                         }
                                         dueDate
                                     }
@@ -179,7 +181,9 @@ export const useUserStore = defineStore("user", {
                                 questionType
                                 id
                                 status
-                                className
+                                classReferenced {
+                                    name
+                                }
                             }
                             dueDate
                         }
