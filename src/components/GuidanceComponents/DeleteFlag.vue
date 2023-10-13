@@ -36,7 +36,7 @@ const confirm = async (flag: string) => {
       await userStore.deleteFlag(props.student.user.email, flag);
       emit("exit");
     } else {
-      alertuser.value = "Student does not have the flag to be deleted";
+      alertuser.value = "Flag does not exist";
     }
   }
 };
@@ -62,7 +62,7 @@ const confirm = async (flag: string) => {
         >
           Select Flag to Delete:
         </p>
-        <!-- <p v-show="missing">hi</p> -->
+        
         <select v-model="selected" class="w-full">
           <option v-for="flag in flags" :value="flag.flag">
             {{ flag.title }}
