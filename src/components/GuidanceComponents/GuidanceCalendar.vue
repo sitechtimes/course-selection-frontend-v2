@@ -178,7 +178,6 @@
 </template>
 <script setup lang="ts">
 //@ts-nocheck
-//I will be fixing the typescript errors after the "wow"-"wo"-"ehe"-"hmm" gets figured out
 import Upcoming from "../GuidanceComponents/Upcoming.vue";
 import PlusIcon from "../icons/PlusIcon.vue";
 import { ref, Ref, reactive, onMounted } from "vue";
@@ -261,11 +260,6 @@ function submit(meetingDate: string, studentName: string, meetingTime: string) {
   userStore.changeMeeting(email, newTime);
   email = ''
 }
-
-const toggleEvent = () => {
-  show.value = !show.value
-}
-
 //filter out valid meetings within the guidance store
 const validMeetings = guidanceStore.allStudents.edges.filter(
   (student) =>
@@ -436,9 +430,6 @@ const changeMonth = (next: boolean) => {
 //       student.user.email;
 //   }}
 // };
-
-const currentDate = ref(null);
-const daysTag = ref(null);
 
 </script>
 
