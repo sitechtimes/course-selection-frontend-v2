@@ -3,10 +3,10 @@
         <div class="container">
             <div class="select text-4xl font-bold">
                 <span class="arrow cursor-pointer" id="prev" ref="prev" @click="changeMonth(false)">&#10094;</span>
-                <div class="mY">{{ months[currMonth] }} {{ currYear }}</div>
+                <div class="mY">{{ months[todaysMonth] }} {{ todaysYear }}</div>
                 <span class="arrow cursor-pointer" id="next" ref="next" @click="changeMonth(true)">&#10095;</span>
             </div>
-            <div class="flex flex-row justify-between space-x-28">
+            <div class="flex flex-row justify-between space-x-28 mb-12">
                 <div class="calendar">
                     <ul class="weeks bg-primary-g">
                         <li class="">Sun</li>
@@ -20,6 +20,12 @@
                     <ul class="days">
                         <li class="dayCon" v-for="h in calendarData.dateInfo" :key="h.id">
                             <p class="mt-2 text-end mr-2 mb-16">{{ h.calDate }}</p>
+                            <div class="">
+                                <p class="mt-2 mx-2 text-left truncate w-32" v-for="meeting in h.meetings"
+                                    :key="meeting.id">
+                                    {{ meeting.name }}
+                                </p>
+                            </div>
                             <PlusIcon class="plusIcon w-3 ml-2 cursor-pointer invisible" @click="toggleEvent" />
                         </li>
                     </ul>
@@ -61,24 +67,21 @@ console.log("All Meetings:", allMeetings);
 const studentInfo = []; //this array contains the name AND meeting date of the students
 
 for (const student of validMeetings) {
-    const name = `${student.node.user.firstName} ${student.node.user.lastName}`; //extract first and last name
+    const name = `${student.node.user.firstName} ${student.node.user.lastName}`;
     const meetingDate = student.node.meeting;
-    // const monthsDate = new Date(meetingDate);
-    // console.log(monthsDate.getMonth());
-
     const studentMeetings = {
-        //create an ARRAY with the name and meeting date
         name,
         meetingDate,
     };
-    studentInfo.push(studentMeetings); 
+    studentInfo.push(studentMeetings);
 }
 console.log("Student Info:", studentInfo);
+
 const currentDate = ref(null);
 
 let calDate = new Date();
-let currYear = calDate.getFullYear();
-let currMonth = calDate.getMonth();
+let todaysYear = calDate.getFullYear();
+let todaysMonth = calDate.getMonth();
 let calendarData = reactive([]);
 let monthChanges = ref(0);
 
@@ -98,16 +101,13 @@ const months = [
 ];
 
 const renderCalendar = () => {
-    let firstDayofMonth = new Date(currYear, currMonth, 1).getDay(); // getting first day of month
-    let lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate(); // getting last date of month
-    let lastDayofMonth = new Date(currYear, currMonth, lastDateofMonth).getDay(); // getting last day of month
-    let lastDateofLastMonth = new Date(currYear, currMonth, 0).getDate(); // getting last date of previous month
-    let liTag = "";
+    let firstDayofMonth = new Date(todaysYear, todaysMonth, 1).getDay();
+    let lastDateofMonth = new Date(todaysYear, todaysMonth + 1, 0).getDate();
+    let lastDayofMonth = new Date(todaysYear, todaysMonth, lastDateofMonth).getDay();
+    let lastDateofLastMonth = new Date(todaysYear, todaysMonth, 0).getDate();
     let dateInfo = [];
 
     for (let i = firstDayofMonth; i > 0; i--) {
-        // creating li of previous month last days
-        liTag += `<li class="inactive">${lastDateofLastMonth - i + 1}</li>`;
         const dateBoxInfo = {
             type: "inactive",
             calDate: lastDateofLastMonth - i + 1,
@@ -116,54 +116,69 @@ const renderCalendar = () => {
     }
 
     for (let i = 1; i <= lastDateofMonth; i++) {
-        // creating li of all days of current month
-        // adding active class to li if the current day, month, and year matched
         let isToday =
             i === calDate.getDate() &&
-                currMonth === new Date().getMonth() &&
-                currYear === new Date().getFullYear()
+                todaysMonth === new Date().getMonth() &&
+                todaysYear === new Date().getFullYear()
                 ? "active"
                 : "";
-        liTag += `<li class="${isToday}">${i}</li>`;
+
+        const activeDate = new Date(todaysYear, todaysMonth, i);
+
+        const studentsWithMeetings = [];
+
+        for (const student of studentInfo) {
+            const studentMeetingDate = new Date(student.meetingDate);
+            const isSameDate =
+                studentMeetingDate.getDate() === activeDate.getDate() &&
+                studentMeetingDate.getMonth() === activeDate.getMonth() &&
+                studentMeetingDate.getFullYear() === activeDate.getFullYear();
+
+            if (isSameDate) {
+                studentsWithMeetings.push(student);
+            }
+        }
+
+
+
         const dateBoxInfo = {
             type: "active",
             calDate: i,
-            id: i + "p",
+            id: i + "a",
+            meetings: studentsWithMeetings,
         };
         dateInfo.push(dateBoxInfo);
     }
 
     for (let i = lastDayofMonth; i < 6; i++) {
-        // creating li of next month first days
-        liTag += `<li class="inactive">${i - lastDayofMonth + 1}</li>`;
         const dateBoxInfo = {
             type: "inactive",
             calDate: i - lastDayofMonth + 1,
-            id: i,
+            id: i + "i",
         };
         dateInfo.push(dateBoxInfo);
     }
-    currentDate.innerText = `${months[currMonth]} ${currYear}`; // passing current mon and yr as currentDate text
+
+    currentDate.innerText = `${months[todaysMonth]} ${todaysYear}`;
     calendarData.dateInfo = dateInfo;
     calendarData.monthChanges = monthChanges.value + 1;
-
     monthChanges.value = calendarData.monthChanges;
-    console.log(calendarData);
 };
+
 renderCalendar();
 
 const changeMonth = (next: boolean) => {
     if (next) {
-        currMonth = currMonth + 1;
+        todaysMonth = todaysMonth + 1;
     } else {
-        currMonth = currMonth - 1;
+        todaysMonth = todaysMonth - 1;
     }
-    if (currMonth < 0 || currMonth > 11) {
+    if (todaysMonth < 0 || todaysMonth > 11) {
         // if current month is less than 0 or greater than 11
         // creating a new date of current year & month and pass it as date value
-        calDate = new Date(currYear, currMonth, new Date().getDate());
-        currYear = calDate.getFullYear(); // updating current year with new date year
-        currMonth = calDate.getMonth(); // updating current month with new date month
+        calDate = new Date(todaysYear, todaysMonth, new Date().getDate());
+        todaysYear = calDate.getFullYear(); // updating current year with new date year
+        todaysMonth = calDate.getMonth(); // updating current month with new date month
     } else {
         calDate = new Date(); // pass the current date as date value
     }
