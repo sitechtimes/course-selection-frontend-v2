@@ -212,7 +212,7 @@ async function userClick(student: studentGuidance) {
             ></PlusSign>
             <MinusSign
               @click="toggleDeleteFlag(student.user.email)"
-              class="m-1 hidden child hover:curson-pointer"
+              class="m-1 hidden child hover:cursor-pointer"
             ></MinusSign>
           </td>
         </tr>
