@@ -21,7 +21,8 @@
             <li class="dayCon" v-for="h in calendarData.dateInfo" :key="h.id">
               <p class="mt-2 text-end mr-2 mb-16">{{ h.calDate }}</p>
               <div class="">
-                <p class="mt-2 mx-2 text-left truncate w-32" v-for="meeting in h.meetings" :key="meeting.id">
+                <p class="mt-2 text-center truncate w-fit bg-[#EED7FD] text-[#2D004B] rounded-md p-1.5 my-2.5 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md"
+                  v-for="meeting in h.meetings" :key="meeting.id" @click="toggleDetails">
                   {{ meeting.name }}
                 </p>
               </div>
@@ -35,6 +36,9 @@
     <div v-if="show">
       <CreateEvent />
     </div>
+    <div v-if="showDetails">
+      <MeetingDetails />
+    </div>
   </div>
 </template>
 
@@ -45,11 +49,16 @@ import PlusIcon from "../icons/PlusIcon.vue";
 import { ref, Ref, reactive, onMounted } from "vue";
 import { useGuidanceStore } from "../../stores/guidance";
 import CreateEvent from "./CreateEvent.vue"
+import MeetingDetails from "./MeetingDetails.vue"
 
 const guidanceStore = useGuidanceStore()
 
 const show: Ref<boolean> = ref(false);
+const showDetails: Ref<boolean> = ref(false);
 
+const toggleDetails = () => {
+  showDetails.value = !showDetails.value
+}
 const toggleEvent = () => {
   show.value = !show.value;
 };

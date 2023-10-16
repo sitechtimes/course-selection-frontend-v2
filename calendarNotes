@@ -33,3 +33,17 @@
 //       student.user.email;
 //   }}
 // };
+
+{/* <div
+class="tab freshman bg-[#EED7FD] text-[#2D004B] rounded-md text-left p-2.5 w-40 mx-auto my-2.5 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md">
+Freshman meet</div>
+<div
+class="tab sophomore bg-[#F5CDCD] text-[#590000] rounded-md text-left p-2.5 w-40 mx-auto my-2.5 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md">
+Sophomore meet</div>
+<div
+class="tab junior bg-[#D2F6D2] text-[#003400] rounded-md text-left p-2.5 w-40 mx-auto my-2.5 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md">
+Junior meet</div>
+<div
+class="tab senior bg-[#CCDDF5] text-[#002254] rounded-md text-left p-2.5 w-40 mx-auto my-2.5 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md">
+Senior meet</div>
+</div> */
