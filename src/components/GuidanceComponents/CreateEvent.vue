@@ -103,7 +103,7 @@ const userStore = useUserStore()
 
 let date: string;
 let time: string;
-let description: string;
+let description: string = "";
 let name: string;
 let email: string;
 const save = ref()
@@ -138,11 +138,11 @@ function empty() {
   }
   //if all required fields are filled out, proceed with submission
   if (!dateError.value && !timeError.value && !nameError.value) {
-    submit(date, name, time);
+    submit(date, name, time, description);
   }
 }
 
-function submit(meetingDate: string, studentName: string, meetingTime: string) {
+function submit(meetingDate: string, studentName: string, meetingTime: string, description:string) {
   //date conversion
   const year = parseInt(meetingDate.slice(0, 4));
   const month = parseInt(meetingDate.slice(6, 8)) - 1;
@@ -171,7 +171,7 @@ function submit(meetingDate: string, studentName: string, meetingTime: string) {
   name = ''
   date = ''
   time = ''
-  userStore.changeMeeting(email, newTime);
+  userStore.changeMeeting(email, newTime, description);
   email = ''
 }
 
