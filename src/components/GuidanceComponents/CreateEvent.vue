@@ -1,9 +1,9 @@
 <template>
-  <div v-if="show" class="createevent flex flex-row m-auto mt-5 w-fit h-fit rounded-[1rem] border border-black">
+  <div v-if="show" class="createEvent flex flex-row m-auto mt-5 w-fit h-fit rounded-[1rem] border border-black">
     <div class="event flex flex-col">
       <div class="top flex-row flex items-center justify-between">
         <h2 class="h2 font-bold text-[2rem] m-8 mb-4">Schedule Meeting</h2>
-        <button class="mt-5 mr-12" @click="toggleEvent">
+        <button class="mt-5 mr-12" @click="toggleShow">
           <svg class="x fill-current text-37394f transition duration-300 mt-4 hover:opacity-80 cursor-pointer"
             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
             <path
@@ -114,7 +114,7 @@ const timeError: Ref<boolean> = ref(false);
 const nameError: Ref<boolean> = ref(false);
 const show: Ref<boolean> = ref(true)
 
-function toggleEvent(){
+function toggleShow(){
   show.value=!show.value
 }
 //checking for empty fields
@@ -200,7 +200,7 @@ for (const student of validMeetings) {
 </script>
 
 <style scoped>
-.createevent {
+.createEvent {
   height: 35rem;
   border-radius: 1rem;
   position: absolute;

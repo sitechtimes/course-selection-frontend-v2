@@ -33,7 +33,7 @@
         <Upcoming />
       </div>
     </div>
-    <div v-if="show">
+    <div v-if="showEvent">
       <CreateEvent />
     </div>
     <div v-if="showDetails">
@@ -48,19 +48,19 @@ import Upcoming from "../GuidanceComponents/Upcoming.vue";
 import PlusIcon from "../icons/PlusIcon.vue";
 import { ref, Ref, reactive, onMounted } from "vue";
 import { useGuidanceStore } from "../../stores/guidance";
-import CreateEvent from "./CreateEvent.vue"
+import CreateEvent from "./CreateEvent.vue";
 import MeetingDetails from "./MeetingDetails.vue"
 
 const guidanceStore = useGuidanceStore()
 
-const show: Ref<boolean> = ref(false);
+const showEvent: Ref<boolean> = ref(false);
 const showDetails: Ref<boolean> = ref(false);
 
 const toggleDetails = () => {
   showDetails.value = !showDetails.value
 }
 const toggleEvent = () => {
-  show.value = !show.value;
+  showEvent.value = !showEvent.value;
 };
 
 //filter out valid meetings within the guidance store
