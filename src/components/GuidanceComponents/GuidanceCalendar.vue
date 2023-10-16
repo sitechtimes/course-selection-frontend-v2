@@ -30,7 +30,7 @@
             </li>
           </ul>
         </div>
-        <Upcoming />
+        <UpcomingMeetings />
       </div>
     </div>
     <div v-if="showEvent">
@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 //@ts-nocheck
-import Upcoming from "../GuidanceComponents/Upcoming.vue";
+import UpcomingMeetings from "../GuidanceComponents/UpcomingMeetings.vue";
 import PlusIcon from "../icons/PlusIcon.vue";
 import { ref, Ref, reactive, onMounted } from "vue";
 import { useGuidanceStore } from "../../stores/guidance";
