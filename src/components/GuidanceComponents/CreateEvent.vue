@@ -1,5 +1,5 @@
 <template>
-  <div class="createevent flex flex-row m-auto mt-5 w-fit h-fit rounded-[1rem] border border-black">
+  <div v-if="show" class="createevent flex flex-row m-auto mt-5 w-fit h-fit rounded-[1rem] border border-black">
     <div class="event flex flex-col">
       <div class="top flex-row flex items-center justify-between">
         <h2 class="h2 font-bold text-[2rem] m-8 mb-4">Schedule Meeting</h2>
@@ -112,9 +112,11 @@ const studentList: studentGuidance[] = guidanceStore.guidance.students;
 const dateError: Ref<boolean> = ref(false);
 const timeError: Ref<boolean> = ref(false);
 const nameError: Ref<boolean> = ref(false);
-const show: Ref<boolean> = ref(false)
+const show: Ref<boolean> = ref(true)
 
-
+function toggleEvent(){
+  show.value=!show.value
+}
 //checking for empty fields
 function empty() {
   //@ts-ignore

@@ -158,11 +158,6 @@ const router = createRouter({
         }
       }
     },
-    {
-      path: '/guidance/calendarTest',
-      name: 'calendarTest',
-      component: () => import('../views/CalendarTest.vue'),
-    },
   ]
 })
 
