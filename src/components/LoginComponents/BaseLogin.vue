@@ -20,7 +20,7 @@ const password = ref("")
 
         <div class="flex flex-col w-11/12 max-w-[21rem] space-y-5 rounded-md">
             <LoginInput id="email" label="email" name="email" type="email" required :value="username"
-                @update="newValue => username = newValue">Email</LoginInput>
+                @update="newValue => username = newValue">Username</LoginInput>
             <LoginInput id="password" label="password" name="password" type="password" required :value="password"
                 @update="newValue => password = newValue">Password</LoginInput>
         </div>
