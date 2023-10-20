@@ -3,7 +3,6 @@ import { studentGuidance } from "../../types/interface";
 import { useUserStore } from "../../stores/user";
 import { PropType, ref, Ref } from "vue";
 import { defineEmits } from "vue";
-import { useGuidanceStore } from "../../stores/guidance";
 
 const emit = defineEmits(["exit"]);
 const userStore = useUserStore();
@@ -32,14 +31,13 @@ const alertuser: Ref<string> = ref("");
 const confirm = async (flag: string) => {
   if (flag === "") {
     missing.value = true;
-  } else {
-    if (props.student.flag.includes(`${flag}`)) {
+  } else if (props.student.flag.includes(`${flag}`)) {
       alertuser.value = "Flag is already added";
     } else {
       await userStore.addFlag(props.student.user.email, flag);
       emit("exit");
     }
-  }
+  
 };
 </script>
 

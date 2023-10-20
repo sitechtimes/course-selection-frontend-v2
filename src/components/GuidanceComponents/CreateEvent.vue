@@ -1,9 +1,9 @@
 <template>
-  <div v-if="show" class="createEvent flex flex-row m-auto mt-5 w-fit h-fit rounded-[1rem] border border-black">
+  <div v-if="show" class="createevent flex flex-row m-auto mt-5 w-fit h-fit rounded-[1rem] border border-black">
     <div class="event flex flex-col">
       <div class="top flex-row flex items-center justify-between">
         <h2 class="h2 font-bold text-[2rem] m-8 mb-4">Schedule Meeting</h2>
-        <button class="mt-5 mr-12" @click="toggleShow">
+        <button class="mt-5 mr-12" @click="toggleEvent">
           <svg class="x fill-current text-37394f transition duration-300 mt-4 hover:opacity-80 cursor-pointer"
             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
             <path
@@ -114,28 +114,17 @@ const timeError: Ref<boolean> = ref(false);
 const nameError: Ref<boolean> = ref(false);
 const show: Ref<boolean> = ref(true)
 
-function toggleShow(){
+function toggleEvent(){
   show.value=!show.value
 }
 //checking for empty fields
 function empty() {
   //@ts-ignore
-  if (date.value === '') {
-    dateError.value = true;
-  } else {
-    dateError.value = false;
-  }
+  
+  date.value === ''? dateError.value = true : dateError.value = false
   //@ts-ignore
-  if (time.value === '') {
-    timeError.value = true;
-  } else {
-    timeError.value = false;
-  }
-  if (!name) {
-    nameError.value = true;
-  } else {
-    nameError.value = false;
-  }
+  time.value ===''? timeError.value = true : timeError.value = false
+  nameError.value = !name
   //if all required fields are filled out, proceed with submission
   if (!dateError.value && !timeError.value && !nameError.value) {
     submit(date, name, time, description);
@@ -200,7 +189,7 @@ for (const student of validMeetings) {
 </script>
 
 <style scoped>
-.createEvent {
+.createevent {
   height: 35rem;
   border-radius: 1rem;
   position: absolute;
