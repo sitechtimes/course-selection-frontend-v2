@@ -66,9 +66,9 @@ const studentInfo = guidanceStore.allStudents.edges
   }));
 
 const currentDate = ref(null)
-const calDate = new Date();
-const todaysYear = calDate.getFullYear();
-const todaysMonth = calDate.getMonth();
+let calDate = new Date();
+let todaysYear = calDate.getFullYear();
+let todaysMonth = calDate.getMonth();
 const calendarData = reactive([]);
 let monthChanges = ref(0);
 

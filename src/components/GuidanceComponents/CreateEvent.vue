@@ -119,12 +119,11 @@ const show: Ref<boolean> = ref(true)
 function toggleEvent() {
   show.value = !show.value
 }
-//checking for empty fields
+
 function empty() {
-  date.value === '' ? dateError.value = true : dateError.value = false;
-  time.value === '' ? timeError.value = true : timeError.value = false;
-  nameError.value = !name
-  //if all required fields are filled out, proceed with submission
+  date.value === '' ? (dateError.value = true) : (dateError.value = false);
+  time.value === '' ? (timeError.value = true) : (timeError.value = false);
+  nameError.value = !name;
   if (!dateError.value && !timeError.value && !nameError.value) {
     submit(date, name, time, description);
   }
@@ -134,28 +133,25 @@ function submit(meetingDate: string, studentName: string, meetingTime: string, d
   //date conversion
   const meetingDateTime: Date = new Date(meetingDate + "T" + meetingTime);
   const meetingISO: string = meetingDateTime.toISOString().slice(0, -1)
-console.log(meetingISO);
   //person locater
-  for (const student of studentList) {
-    const studentFullName =
-      student.user.lastName +
-      ", " +
-      student.user.firstName +
-      " | " +
-      student.user.email;
-    if (studentFullName === studentName) {
-      email = student.user.email;
+    for (const student of studentList) {
+      const studentFullName =
+        student.user.lastName +
+        ", " +
+        student.user.firstName +
+        " | " +
+        student.user.email;
+      if (studentFullName == studentName) {
+        email = student.user.email;
+      }
     }
-  }
-
-
   save.value.innerHTML = "Saved";
-  form.value.reset();
-  name = ''
-  email = ''
-  date = ''
-  time = ''
   userStore.changeMeeting(email, meetingISO, description);
+  form.value.reset();
+  name = '';
+  email = '';
+  date = '';
+  time = '';
 }
 </script>
 
