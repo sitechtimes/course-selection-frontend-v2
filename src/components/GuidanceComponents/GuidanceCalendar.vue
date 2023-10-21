@@ -1,9 +1,9 @@
 <template>
   <div class="grid content-center justify-center flex-wrap">
     <div class="container">
-      <div class="select text-4xl font-bold">
+      <div class="flex flex-row mb-8 text-4xl font-bold">
         <span class="arrow cursor-pointer" id="prev" ref="prev" @click="changeMonth(false)">&#10094;</span>
-        <div class="mY">{{ months[todaysMonth] }} {{ todaysYear }}</div>
+        <div class="mx-2 flex flex-row">{{ months[todaysMonth] }} {{ todaysYear }}</div>
         <span class="arrow cursor-pointer" id="next" ref="next" @click="changeMonth(true)">&#10095;</span>
       </div>
       <div class="flex flex-row justify-between space-x-28 mb-12">
@@ -33,23 +33,18 @@
         <UpcomingMeetings />
       </div>
     </div>
-    <div v-if="showEvent">
-      <CreateEvent />
-    </div>
-    <div v-if="showDetails">
-      <MeetingDetails />
-    </div>
+      <CreateEvent v-if="showEvent"/>
+      <MeetingDetails v-if="showDetails"/>
   </div>
 </template>
 
 <script setup lang="ts">
-
-import UpcomingMeetings from "../GuidanceComponents/UpcomingMeetings.vue";
-import PlusIcon from "../icons/PlusIcon.vue";
-import { ref, Ref, reactive } from "vue";
+import { ref, Ref, reactive, onMounted } from "vue";
 import { useGuidanceStore } from "../../stores/guidance";
+import UpcomingMeetings from "../GuidanceComponents/UpcomingMeetings.vue";
 import CreateEvent from "./CreateEvent.vue";
-import MeetingDetails from "./MeetingDetails.vue"
+import MeetingDetails from "./MeetingDetails.vue";
+import PlusIcon from "../icons/PlusIcon.vue";
 
 const guidanceStore = useGuidanceStore()
 
@@ -63,34 +58,18 @@ const toggleEvent = () => {
   showEvent.value = !showEvent.value;
 };
 
-//filter out valid meetings within the guidance store
-const validMeetings = guidanceStore.allStudents.edges.filter(
-  (student) =>
-    student.node.meeting !== null && student.node.meeting !== undefined
-);
-//filter out valid meetings within the guidance store (valid as long as they are not null and undefined), and turn this into an array
-const allMeetings = validMeetings.map((student) => student.node.meeting).flat();
-console.log("All Meetings:", allMeetings);
+const studentInfo = guidanceStore.allStudents.edges
+  .filter((student) => student.node.meeting)
+  .map((student) => ({
+    name: `${student.node.user.firstName} ${student.node.user.lastName}`,
+    meetingDate: student.node.meeting,
+  }));
 
-const studentInfo = []; //this array contains the name AND meeting date of the students
-
-for (const student of validMeetings) {
-  const name = `${student.node.user.firstName} ${student.node.user.lastName}`;
-  const meetingDate = student.node.meeting;
-  const studentMeetings = {
-    name,
-    meetingDate,
-  };
-  studentInfo.push(studentMeetings);
-}
-console.log("Student Info:", studentInfo);
-
-const currentDate = ref(null);
-
-let calDate = new Date();
-let todaysYear = calDate.getFullYear();
-let todaysMonth = calDate.getMonth();
-let calendarData = reactive([]);
+const currentDate = ref(null)
+const calDate = new Date();
+const todaysYear = calDate.getFullYear();
+const todaysMonth = calDate.getMonth();
+const calendarData = reactive([]);
 let monthChanges = ref(0);
 
 const months = [
@@ -171,8 +150,6 @@ const renderCalendar = () => {
   monthChanges.value = calendarData.monthChanges;
 };
 
-renderCalendar();
-
 const changeMonth = (next: boolean) => {
   if (next) {
     todaysMonth = todaysMonth + 1;
@@ -190,25 +167,19 @@ const changeMonth = (next: boolean) => {
   }
   renderCalendar();
 };
+
+onMounted(() => {
+  renderCalendar();
+  console.log("Student Info:", studentInfo)
+});
+
+
 </script>
 
 <style scoped>
 .container {
   margin: 2rem 4rem 0 4rem;
 }
-
-.select {
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 2rem;
-}
-
-.mY {
-  margin: 0 1.5rem 0 1.5rem;
-  display: flex;
-  flex-direction: row;
-}
-
 .calendar ul {
   display: flex;
   flex-wrap: wrap;

@@ -1,5 +1,6 @@
 <template>
-  <div v-if="show" class="createevent flex flex-row m-auto mt-5 w-fit h-fit rounded-[1rem] border border-black">
+  <div v-if="show"
+    class="absolute left-[20%] right-[20%] top-[30%] bg-white flex flex-row m-auto mt-5 w-fit h-fit rounded-[1rem] border border-black">
     <div class="event flex flex-col">
       <div class="top flex-row flex items-center justify-between">
         <h2 class="h2 font-bold text-[2rem] m-8 mb-4">Schedule Meeting</h2>
@@ -82,7 +83,9 @@
           <label class="ml-2" for="notify">Notify Student via Email</label>
         </div>
         <div class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit">
-          <button type="submit" class="font-bold bg-primary-g px-4 py-2 rounded-2xl w-fit h-fit" id="save" ref="save">
+          <button type="submit"
+            class="text-[1.5rem] mb-8 duration-300 font-bold bg-primary-g px-4 py-2 rounded-2xl w-fit h-fit opacity-0.5:hover"
+            id="save" ref="save">
             Save
           </button>
         </div>
@@ -92,8 +95,7 @@
 </template>
 
 <script setup lang="ts">
-//@ts-nocheck
-import { ref, Ref, reactive, onMounted } from "vue";
+import { ref, Ref } from "vue";
 import { useUserStore } from "../../stores/user";
 import { useGuidanceStore } from "../../stores/guidance";
 import { studentGuidance } from "../../types/interface";
@@ -114,16 +116,13 @@ const timeError: Ref<boolean> = ref(false);
 const nameError: Ref<boolean> = ref(false);
 const show: Ref<boolean> = ref(true)
 
-function toggleEvent(){
-  show.value=!show.value
+function toggleEvent() {
+  show.value = !show.value
 }
 //checking for empty fields
 function empty() {
-  //@ts-ignore
-  
-  date.value === ''? dateError.value = true : dateError.value = false
-  //@ts-ignore
-  time.value ===''? timeError.value = true : timeError.value = false
+  date.value === '' ? dateError.value = true : dateError.value = false;
+  time.value === '' ? timeError.value = true : timeError.value = false;
   nameError.value = !name
   //if all required fields are filled out, proceed with submission
   if (!dateError.value && !timeError.value && !nameError.value) {
@@ -131,87 +130,36 @@ function empty() {
   }
 }
 
-function submit(meetingDate: string, studentName: string, meetingTime: string, description:string) {
+function submit(meetingDate: string, studentName: string, meetingTime: string, description: string) {
   //date conversion
-  const year = parseInt(meetingDate.slice(0, 4));
-  const month = parseInt(meetingDate.slice(6, 8)) - 1;
-  const day = parseInt(meetingDate.slice(9, 11));
-  const hour = parseInt(meetingTime.slice(0, 2));
-  const min = parseInt(meetingTime.slice(3, 5));
-  const dateTime = new Date(year, month, day, hour, min);
-  const newTime = dateTime.toISOString();
+  const meetingDateTime: Date = new Date(meetingDate + "T" + meetingTime);
+  const meetingISO: string = meetingDateTime.toISOString().slice(0, -1)
+console.log(meetingISO);
   //person locater
-  if (studentName != null || undefined) {
-    for (const student of studentList) {
-      const studentFullName =
-        student.user.lastName +
-        ", " +
-        student.user.firstName +
-        " | " +
-        student.user.email;
-      if (studentFullName == studentName) {
-        email = student.user.email;
-      }
+  for (const student of studentList) {
+    const studentFullName =
+      student.user.lastName +
+      ", " +
+      student.user.firstName +
+      " | " +
+      student.user.email;
+    if (studentFullName === studentName) {
+      email = student.user.email;
     }
   }
+
 
   save.value.innerHTML = "Saved";
   form.value.reset();
   name = ''
+  email = ''
   date = ''
   time = ''
-  userStore.changeMeeting(email, newTime, description);
-  email = ''
-}
-
-//filter out valid meetings within the guidance store
-const validMeetings = guidanceStore.allStudents.edges.filter(
-  (student) =>
-    student.node.meeting !== null && student.node.meeting !== undefined
-);
-//filter out valid meetings within the guidance store (valid as long as they are not null and undefined), and turn this into an array
-const allMeetings = validMeetings.map((student) => student.node.meeting).flat();
-console.log("All Meetings:", allMeetings);
-
-const studentInfo = []; //this array contains the name AND meeting date of the students
-
-for (const student of validMeetings) {
-  const name = `${student.node.user.firstName} ${student.node.user.lastName}`;
-  const meetingDate = student.node.meeting;
-  const studentMeetings = { //create an array with the name and meeting date
-    name,
-    meetingDate,
-  };
-  studentInfo.push(studentMeetings);
-
-  console.log("Student Info:", studentInfo);
+  userStore.changeMeeting(email, meetingISO, description);
 }
 </script>
 
 <style scoped>
-.createevent {
-  height: 35rem;
-  border-radius: 1rem;
-  position: absolute;
-  left: 20%;
-  right: 20%;
-  top: 30%;
-  margin-left: auto;
-  margin-right: auto;
-  background-color: white;
-  border: 1px black solid;
-}
-
-button {
-  font-size: 1.5rem;
-  margin-bottom: 2rem;
-  transition: 0.3s;
-}
-
-button:hover {
-  opacity: 0.5;
-}
-
 svg {
   width: 1.2rem;
   margin-right: 10px;
