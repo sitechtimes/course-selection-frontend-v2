@@ -159,9 +159,9 @@ const router = createRouter({
       }
     },
     {
-      path: '/tester',
-      name: 'tester',
-      component: () => import('../views/TesterView.vue'),
+      path: '/guidance/meetingDetails',
+      name: 'meetingDetails',
+      component: () => import('../views/meetingDetails.vue'),
     },
   ]
 })
