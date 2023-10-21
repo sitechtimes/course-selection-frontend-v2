@@ -9,18 +9,18 @@
       <div class="flex flex-row justify-between space-x-28 mb-12">
         <div class="calendar">
           <ul class="weeks bg-primary-g">
-            <li class="">Sun</li>
-            <li class="">Mon</li>
-            <li class="">Tue</li>
-            <li class="">Wed</li>
-            <li class="">Thu</li>
-            <li class="">Fri</li>
-            <li class="">Sat</li>
+            <li>Sun</li>
+            <li>Mon</li>
+            <li>Tue</li>
+            <li>Wed</li>
+            <li>Thu</li>
+            <li>Fri</li>
+            <li>Sat</li>
           </ul>
           <ul class="days">
             <li class="dayCon" v-for="h in calendarData.dateInfo" :key="h.id">
               <p class="mt-2 text-end mr-2 mb-16">{{ h.calDate }}</p>
-              <div class="">
+              <div>
                 <p class="mt-2 text-center truncate w-fit bg-[#EED7FD] text-[#2D004B] rounded-md p-1.5 my-2.5 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md"
                   v-for="meeting in h.meetings" :key="meeting.id" @click="toggleDetails">
                   {{ meeting.name }}
@@ -43,10 +43,10 @@
 </template>
 
 <script setup lang="ts">
-//@ts-nocheck
+
 import UpcomingMeetings from "../GuidanceComponents/UpcomingMeetings.vue";
 import PlusIcon from "../icons/PlusIcon.vue";
-import { ref, Ref, reactive, onMounted } from "vue";
+import { ref, Ref, reactive } from "vue";
 import { useGuidanceStore } from "../../stores/guidance";
 import CreateEvent from "./CreateEvent.vue";
 import MeetingDetails from "./MeetingDetails.vue"

@@ -158,6 +158,11 @@ const router = createRouter({
         }
       }
     },
+    {
+      path: '/tester',
+      name: 'tester',
+      component: () => import('../views/TesterView.vue'),
+    },
   ]
 })
 
