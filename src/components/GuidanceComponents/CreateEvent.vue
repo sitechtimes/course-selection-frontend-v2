@@ -116,13 +116,16 @@ const timeError: Ref<boolean> = ref(false);
 const nameError: Ref<boolean> = ref(false);
 const show: Ref<boolean> = ref(true)
 
+//toggle modal
 function toggleEvent() {
   show.value = !show.value
 }
 
+//check for empty input values before submitting form
 function empty() {
-  date.value === '' ? (dateError.value = true) : (dateError.value = false);
-  time.value === '' ? (timeError.value = true) : (timeError.value = false);
+  //if the input value is an empty string, the error is true; otherwise it is false
+  dateError.value = date === '' ? true : false;
+  timeError.value = time === '' ? true : false;
   nameError.value = !name;
   if (!dateError.value && !timeError.value && !nameError.value) {
     submit(date, name, time, description);
@@ -130,24 +133,25 @@ function empty() {
 }
 
 function submit(meetingDate: string, studentName: string, meetingTime: string, description: string) {
-  //date conversion
+  //convert meeting date to an ISO string
   const meetingDateTime: Date = new Date(meetingDate + "T" + meetingTime);
   const meetingISO: string = meetingDateTime.toISOString().slice(0, -1)
-  //person locater
-    for (const student of studentList) {
-      const studentFullName =
-        student.user.lastName +
-        ", " +
-        student.user.firstName +
-        " | " +
-        student.user.email;
-      if (studentFullName == studentName) {
-        email = student.user.email;
-      }
+  //locate student 
+  for (const student of studentList) {
+    const studentFullName =
+      student.user.lastName +
+      ", " +
+      student.user.firstName +
+      " | " +
+      student.user.email;
+    if (studentFullName == studentName) {
+      email = student.user.email;
     }
+  }
   save.value.innerHTML = "Saved";
   userStore.changeMeeting(email, meetingISO, description);
   form.value.reset();
+  //clear form input values
   name = '';
   email = '';
   date = '';
