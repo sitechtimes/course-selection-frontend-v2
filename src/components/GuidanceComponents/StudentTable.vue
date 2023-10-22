@@ -32,7 +32,8 @@
         </DeleteFlag>
         <tr>
           <td class="p-4">
-            {{ student.user.lastName }}, {{ student.user.firstName }}
+            {{ student.user.lastName.toLowerCase().charAt(0).toUpperCase() + student.user.lastName.toLowerCase().slice(1)}}, 
+            {{ student.user.firstName.toLowerCase().charAt(0).toUpperCase() + student.user.firstName.toLowerCase().slice(1) }}
           </td>
           <td class="p-4" v-if="student.grade === 'SOPHOMORE'">9</td>
           <td class="p-4" v-if="student.grade === 'JUNIOR'">10</td>
