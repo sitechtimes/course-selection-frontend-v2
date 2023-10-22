@@ -13,8 +13,8 @@
   </template>
   
   <script setup lang="ts">
+  //@ts-nocheck
   import SearchButton from "../icons/SearchButton.vue";
-  
   const props = defineProps({
     modelValue: String
   })   

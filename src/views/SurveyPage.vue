@@ -154,5 +154,3 @@ watch(() => studentStore.answeredSurvey[0], (newResponse, oldResponse) => {
     </p>
   </div>
 </template>
-
-<style scoped></style>

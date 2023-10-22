@@ -174,6 +174,7 @@ export interface calendarData {
         todaysDate: number;
         id: string;
         meetings: Array<{
+            id: string,
             name: string;
             meetingDate: Date|null;
         }>;

@@ -99,8 +99,10 @@ const renderCalendar = () => {
 
   for (let i = firstDayofMonth; i > 0; i--) {
     const dateBoxInfo = {
-      type: "inactive",
+      type: "previous",
       todaysDate: lastDateofLastMonth - i + 1,
+      id: i + "p",
+      meetings: [],
     };
     dateInfo.push(dateBoxInfo);
   }
@@ -122,9 +124,9 @@ const renderCalendar = () => {
     }
 
     const dateBoxInfo = {
-      type: "active",
+      type: "current",
       todaysDate: i,
-      id: i + "a",
+      id: i + "c",
       meetings: studentsWithMeetings,
     };
     dateInfo.push(dateBoxInfo);
@@ -132,13 +134,14 @@ const renderCalendar = () => {
 
   for (let i = lastDayofMonth; i < 6; i++) {
     const dateBoxInfo = {
-      type: "inactive",
+      type: "future",
       todaysDate: i - lastDayofMonth + 1,
-      id: i + "i",
+      id: i + "f",
       meetings: [],
     };
     dateInfo.push(dateBoxInfo);
   }
+  //@ts-ignore
   calendarData.dateInfo = dateInfo;
   calendarData.monthChanges = monthChanges.value + 1;
   monthChanges.value = calendarData.monthChanges;
@@ -164,7 +167,7 @@ const changeMonth = (next: boolean) => {
 
 onMounted(() => {
   renderCalendar();
-  console.log("Student Info:", studentInfo)
+  console.log("Student Info:", studentInfo);
 });
 </script>
 
