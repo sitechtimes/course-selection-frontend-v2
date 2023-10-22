@@ -327,13 +327,13 @@ export const useUserStore = defineStore("user", {
       }
     },
 
-    async changeMeeting(email: string, newTime: string, description: string) {
+    async changeMeeting(email: string, meetingISO: string, description: string) {
       await axios
         .post(
           `${import.meta.env.VITE_URL}/graphql/`,
           {
             query: `mutation {
-                            updateMeeting(email: "${email}", meeting:"${newTime}",  meetingDescription:"${description}") {
+                            updateMeeting(email: "${email}", meeting:"${meetingISO}",  meetingDescription:"${description}") {
                                 student{
                                     meeting
                                     meetingDescription
