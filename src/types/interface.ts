@@ -167,6 +167,20 @@ export interface studentMeetings {
     name: string;
     meetingDate: Date;
 }
+
+export interface calendarData {
+    dateInfo: Array<{
+        type: string;
+        todaysDate: number;
+        id: string;
+        meetings: Array<{
+            name: string;
+            meetingDate: Date|null;
+        }>;
+    }>;
+    monthChanges: number;
+}
+
 export interface classReferenced {
     name: string;
 }

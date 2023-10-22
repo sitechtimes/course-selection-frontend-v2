@@ -44,12 +44,13 @@ studentInfo.value.sort((a, b) => {
 });
 
 function formatDate(meetingDate: Date): string {
-  const options = { 
+  const options = {
     weekday: "long",
     month: "long",
     day: "numeric",
     year: "numeric",
   };
+  //@ts-ignore
   return meetingDate.toLocaleDateString("en-US", options);
 }
 </script>

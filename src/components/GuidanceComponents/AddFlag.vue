@@ -54,7 +54,7 @@ const props = defineProps({
 
 const selected: Ref<string> = ref("");
 
-const unaddedFlags: Ref<flag[]> = computed(() => {
+const unaddedFlags: Ref<flag[]> = computed(() => { //only push unadded flags into the dropdown
   return props.flags.filter((flag) => !props.student.flag.includes(flag.flag));
 });
 
