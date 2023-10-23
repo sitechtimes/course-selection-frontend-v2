@@ -20,6 +20,7 @@
         </svg>
         Date
       </h3>
+      <p>{{ meetingDetails.date }}</p>
       <h4 class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold" for="time">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
           <path
@@ -27,6 +28,7 @@
         </svg>
         Time
       </h4>
+      <p>{{ meetingDetails.time }}</p>
       <h5 class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold" for="emails">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
           <path
@@ -34,6 +36,7 @@
         </svg>
         Student
       </h5>
+      <p>{{ meetingDetails.student }}</p>
       <h6 class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold" for="description">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
           <path
@@ -41,7 +44,7 @@
         </svg>
         Memo
       </h6>
-
+      <p>{{ meetingDetails.memo }}</p>
       <div>
       </div>
       <!-- buttons -->
@@ -51,11 +54,6 @@
           Delete
         </button>
       </div>
-      <!-- hi Cassidy, just testing something—ignore this for now -->
-      <p>Student:{{ meetingDetails.student }}</p>
-      <p>Date: {{ meetingDetails.date }}</p>
-      <p>Time: {{ meetingDetails.time }}</p>
-      <p>Memo: {{ meetingDetails.memo }}</p>
     </div>
   </div>
   <DeleteModal v-show="showDeleteModal" />
