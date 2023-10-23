@@ -84,7 +84,7 @@
         </div>
         <div class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit">
           <button type="submit"
-            class="text-[1.5rem] mb-8 duration-300 font-bold bg-primary-g px-4 py-2 rounded-2xl w-fit h-fit opacity-0.5:hover"
+            class="text-[1.5rem] mb-8 duration-300 font-bold bg-primary-g px-4 py-2 rounded-xl w-fit h-fit opacity-0.5:hover"
             id="save" ref="save">
             Save
           </button>
