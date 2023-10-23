@@ -42,6 +42,8 @@
         Memo
       </h6>
 
+      <div>
+      </div>
       <!-- buttons -->
       <div class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit">
         <button type="submit" @click="toggleDeleteModal" class="font-bold bg-[#f28e8e] px-4 py-2 rounded-2xl w-fit h-fit"
@@ -49,6 +51,11 @@
           Delete
         </button>
       </div>
+      <!-- hi Cassidy, just testing something—ignore this for now -->
+      <p>Student:{{ meetingDetails.student }}</p>
+      <p>Date: {{ meetingDetails.date }}</p>
+      <p>Time: {{ meetingDetails.time }}</p>
+      <p>Memo: {{ meetingDetails.memo }}</p>
     </div>
   </div>
   <DeleteModal v-show="showDeleteModal" />
@@ -60,6 +67,15 @@ import DeleteModal from "./DeleteModal.vue"
 
 const show = ref(true);
 const showDeleteModal = ref(false);
+
+import { defineProps } from "vue";
+
+const props = defineProps({
+  meetingDetails: {
+    type: Object,
+    required: true,
+  },
+});
 
 const toggleShow = () => {
   show.value = !show.value;

@@ -34,7 +34,7 @@
       </div>
     </div>
     <CreateEvent v-if="showEvent" />
-    <MeetingDetails v-if="showDetails" />
+    <MeetingDetails v-if="showDetails" :meetingDetails="meetingDetails" />
   </div>
 </template>
 
@@ -47,6 +47,13 @@ import CreateEvent from "./CreateEvent.vue";
 import MeetingDetails from "./MeetingDetails.vue";
 import PlusIcon from "../icons/PlusIcon.vue";
 
+const meetingDetails = {
+  student: "John Doe",
+  date: "10/04/23",
+  time: "10:56",
+  memo: "hi"
+};
+
 const guidanceStore = useGuidanceStore()
 
 const showEvent: Ref<boolean> = ref(false);
@@ -58,6 +65,7 @@ const toggleDetails = () => {
 const toggleEvent = () => {
   showEvent.value = !showEvent.value;
 };
+
 
 const studentInfo = guidanceStore.allStudents.edges
   .filter((student) => student.node.meeting)
