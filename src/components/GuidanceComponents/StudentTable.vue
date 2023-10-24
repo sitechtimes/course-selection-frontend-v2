@@ -112,7 +112,7 @@ import MinusSign from "../icons/MinusSign.vue";
 import AddFlag from "../GuidanceComponents/AddFlag.vue";
 import DeleteFlag from "../GuidanceComponents/DeleteFlag.vue";
 
-const props = defineProps({
+defineProps({
   newstudents: Array as PropType<Array<studentGuidance>>,
 });
 

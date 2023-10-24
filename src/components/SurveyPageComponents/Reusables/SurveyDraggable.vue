@@ -21,9 +21,9 @@
 
 <script setup lang="ts">
 //@ts-nocheck
-import { ref, computed, watch, Ref, onBeforeMount, PropType } from "vue";
+import { ref, computed, Ref, PropType } from "vue";
 import { useSurveyStore } from "../../../stores/survey";
-import { preferences, course } from "../../../types/interface";
+import { preferences, } from "../../../types/interface";
 
 const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
 

@@ -16,7 +16,7 @@
 import { ref, Ref, defineProps } from "vue"
 
 const showDetails: Ref<boolean> = ref(true);
-const props = defineProps({
+defineProps({
   meetingDetails: {
     type: Object,
     required: true,
