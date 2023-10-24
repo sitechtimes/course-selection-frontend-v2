@@ -105,7 +105,7 @@ const userStore = useUserStore()
 
 let date: string;
 let time: string;
-let description: string = "";
+let description: string;
 let name: string;
 let email: string;
 const save = ref()

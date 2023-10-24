@@ -36,7 +36,7 @@
         </svg>
         Student
       </h5>
-      <p>{{ meetingDetails.student }}</p>
+      <p>{{ meetingDetails.name }}</p>
       <h6 class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold" for="description">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
           <path
@@ -56,7 +56,7 @@
       </div>
     </div>
   </div>
-  <DeleteModal v-show="showDeleteModal" />
+  <DeleteModal v-show="showDeleteModal" :meetingDetails="meetingDetails"/>
 </template>
 
 <script setup lang="ts">

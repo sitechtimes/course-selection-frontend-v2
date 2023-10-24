@@ -33,7 +33,7 @@ for (const student of validMeetings) {
   if (meetingDate > currentDate) {
     const studentMeetingsData: studentMeetings = {
       name: `${student.node.user.firstName} ${student.node.user.lastName}`, 
-      meetingDate: meetingDate
+      meetingDate: meetingDate,
     };
     studentInfo.value.push(studentMeetingsData);
   }

@@ -21,7 +21,7 @@
             <li class="dayCon" v-for="h in calendarData.dateInfo" :key="h.id">
               <p class="mt-2 text-end mr-2 mb-16">{{ h.todaysDate }}</p>
               <div>
-                <p class="mt-2 text-center truncate w-fit bg-[#EED7FD] text-[#2D004B] rounded-md p-1.5 my-2.5 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md"
+                <p class="w-[100%] text-center truncate bg-[#EED7FD] text-[#2D004B] rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md"
                   v-for="meeting in h.meetings" :key="meeting.id" @click="toggleDetails">
                   {{ meeting.name }}
                 </p>
@@ -46,12 +46,14 @@ import UpcomingMeetings from "../GuidanceComponents/UpcomingMeetings.vue";
 import CreateEvent from "./CreateEvent.vue";
 import MeetingDetails from "./MeetingDetails.vue";
 import PlusIcon from "../icons/PlusIcon.vue";
+//@ts-ignore
+import dateformat from "dateformat"
 
 const meetingDetails = {
-  student: "John Doe",
-  date: "10/04/23",
-  time: "10:56",
-  memo: "hi"
+  name: "",
+  date: "",
+  time: "",
+  memo: "",
 };
 
 const guidanceStore = useGuidanceStore()
@@ -66,12 +68,12 @@ const toggleEvent = () => {
   showEvent.value = !showEvent.value;
 };
 
-
 const studentInfo = guidanceStore.allStudents.edges
   .filter((student) => student.node.meeting)
   .map((student) => ({
     name: `${student.node.user.firstName} ${student.node.user.lastName}`,
     meetingDate: student.node.meeting,
+    description: student.node.description,
   }));
 
 let todaysDate = new Date();
@@ -130,7 +132,6 @@ const renderCalendar = () => {
         studentsWithMeetings.push(student);
       }
     }
-
     const dateBoxInfo = {
       type: "current",
       todaysDate: i,
@@ -138,8 +139,15 @@ const renderCalendar = () => {
       meetings: studentsWithMeetings,
     };
     dateInfo.push(dateBoxInfo);
-  }
 
+    for (const meeting of studentsWithMeetings) {
+      const dateObject = new Date(meeting.meetingDate as string);
+      meetingDetails.name = meeting.name;
+      meetingDetails.date = dateformat(dateObject, "shortDate");
+      meetingDetails.time = dateformat(dateObject, "shortTime");
+      meetingDetails.memo = meeting.description;
+    }
+  }
   for (let i = lastDayofMonth; i < 6; i++) {
     const dateBoxInfo = {
       type: "future",
@@ -178,6 +186,7 @@ onMounted(() => {
   console.log("Student Info:", studentInfo);
 });
 </script>
+
 
 <style scoped>
 .container {
