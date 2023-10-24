@@ -54,6 +54,12 @@
           Delete
         </button>
       </div>
+      <div class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit">
+        <button type="submit" @click="toggleDeleteModal" class="font-bold bg-[#ffffff] px-4 py-2 rounded-2xl w-fit h-fit"
+          id="save" ref="save">
+          Print
+        </button>
+      </div>
     </div>
   </div>
   <DeleteModal v-show="showDeleteModal" />
