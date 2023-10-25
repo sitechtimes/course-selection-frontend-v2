@@ -6,10 +6,12 @@ import { useRouter } from "vue-router";
 import axios from "axios";
 import { user, account_type, userData } from "../types/interface";
 import { sharedState } from "./function";
-const callFunctionInChild2 = () => {
-  sharedState.sharedFunction.value(); // Call the function in Child 2
+const callFunctionInUpcomingMeeting = () => {
+  sharedState.UpcomingMeeting.value(); // Call the function in Child 2
 };
-
+const callFunctionInGuidanceCalender = () => {
+  sharedState.GuidanceCalender.value(); // Call the function in Child 2
+};
 export const useUserStore = defineStore("user", {
   state: (): user => ({
     first_name: "",
@@ -371,7 +373,8 @@ export const useUserStore = defineStore("user", {
           guidanceStore.allStudents.edges[studentIndexAll].node.meeting =
             res.data.data.updateMeeting.student.meeting;
           guidanceStore.allStudents.edges[studentIndexAll].node.description = description;
-          callFunctionInChild2()
+          callFunctionInUpcomingMeeting()
+          callFunctionInGuidanceCalender()
         });
     },
     async addFlag(email: string, newFlag: string) {

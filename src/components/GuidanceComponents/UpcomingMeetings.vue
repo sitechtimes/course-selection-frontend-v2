@@ -59,7 +59,7 @@ function formatDate(meetingDate: Date): string {
   return meetingDate.toLocaleDateString("en-US", options);
 }
 
-sharedState.sharedFunction.value = () => {
+sharedState.UpcomingMeeting.value = () => {
   studentInfo.value = [];
   const validMeetings = guidanceStore.allStudents.edges.filter(
     (student) =>
