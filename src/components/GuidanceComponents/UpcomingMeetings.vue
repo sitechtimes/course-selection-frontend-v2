@@ -60,6 +60,7 @@ function formatDate(meetingDate: Date): string {
 }
 
 sharedState.sharedFunction.value = () => {
+  studentInfo.value = [];
   const validMeetings = guidanceStore.allStudents.edges.filter(
     (student) =>
       student.node.meeting !== null && student.node.meeting !== undefined
@@ -73,8 +74,6 @@ sharedState.sharedFunction.value = () => {
         name: `${student.node.user.firstName} ${student.node.user.lastName}`,
         meetingDate: meetingDate,
       };
-      studentInfo.value.push(studentMeetingsData);
-      studentInfo.value = [];
       studentInfo.value.push(studentMeetingsData);
     }
   }
