@@ -55,7 +55,7 @@
         </button>
       </div>
       <div class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit">
-        <button type="submit" @click="toggleDeleteModal" class="font-bold bg-[#ffffff] px-4 py-2 rounded-2xl w-fit h-fit"
+        <button type="submit" @click="togglePrintModal" class="font-bold bg-[#e5e7be] px-4 py-2 rounded-2xl w-fit h-fit"
           id="save" ref="save">
           Print
         </button>
@@ -88,6 +88,14 @@ const toggleShow = () => {
 const toggleDeleteModal = () => {
   showDeleteModal.value = !showDeleteModal.value;
   show.value = !show.value;
+};
+
+const togglePrintModal = () => {
+  // const allBody = document.body.innerHTML;
+  // const partPrint = document.querySelector("event flex flex-col").innerHTML;
+  // document.body.innerHTML = partPrint;
+  window.print();
+  // document.body.innerHTML = allBody;
 };
 </script>
 
