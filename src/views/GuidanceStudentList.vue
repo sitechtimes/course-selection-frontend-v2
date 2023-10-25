@@ -11,7 +11,7 @@
           <SearchBar class="w-2/3" type="text" v-model="input" placeholder="Search Students..." />
         </div>
     <StudentTable  :newstudents="newStudents.slice(x, y)" />
-    <div class="mt-4 flex flex-row justify-between ">
+    <div class="max-w-[80%] overflow-x-auto mt-4 flex flex-row justify-between ">
       <button class=" mx-2  bg-[#ebebeb] h-8 w-8 rounded-lg font-bold" @click="subtract" :disabled="currentPage === 1">
         ❮
       </button>
