@@ -60,15 +60,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, defineProps } from "vue";
 import DeleteModal from "./DeleteModal.vue"
 
 const show = ref(true);
 const showDeleteModal = ref(false);
 
-import { defineProps } from "vue";
-
-const props = defineProps({
+defineProps({
   meetingDetails: {
     type: Object,
     required: true,

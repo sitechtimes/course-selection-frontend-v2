@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 import { useSurveyStore } from "../../../stores/survey";
-import { watch, onBeforeMount, PropType } from "vue";
+import { watch, PropType } from "vue";
 import { surveyQuestion, preferences } from "../../../types/interface";
 
 const props = defineProps({
