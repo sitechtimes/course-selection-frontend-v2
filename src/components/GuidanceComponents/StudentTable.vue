@@ -161,9 +161,9 @@ const toggleDeleteFlag = (student: string) => {
 async function userClick(student: studentGuidance) {
   await surveyStore.setSurvey(student.user.email, student.grade);
   await router.push(
-    `/guidance/survey/${student.user.email.replace("@nycstudents.net", " ")}`
+    `/guidance/survey/${student.user.email.replace("@nycstudents.net", "")}`
   );
-  location.reload();
+//   location.reload();
 }
 </script>
 
