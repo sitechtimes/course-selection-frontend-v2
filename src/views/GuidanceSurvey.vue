@@ -103,9 +103,10 @@ watch(() => guidanceStore.allAnsweredSurveys.edges[surveyIndex].node.answers, (n
       <div class="text-2xl mb-4">
         <h1 class="font-bold text-[#37394F] text-3xl  mb-6">{{ viewedStudent.user.firstName }} {{
           viewedStudent.user.lastName }}'s Survey</h1>
-        <h2 v-if="viewedStudent.grade === 'SOPHOMORE'">Grade : 9</h2>
-        <h2 v-if="viewedStudent.grade === 'JUNIOR'">Grade : 10</h2>
-        <h2 v-if="viewedStudent.grade === 'SENIOR'">Grade : 11</h2>
+        <h2 v-if="viewedStudent.grade === 'FRESHMAN'">Grade : 9</h2>
+        <h2 v-if="viewedStudent.grade === 'SOPHOMORE'">Grade : 10</h2>
+        <h2 v-if="viewedStudent.grade === 'JUNIOR'">Grade : 11</h2>
+        <h2 v-if="viewedStudent.grade === 'SENIOR'">Grade : 12</h2>
       </div>
       <p v-if="surveyStore.loading">Setting things up...</p>
       <div v-else>
