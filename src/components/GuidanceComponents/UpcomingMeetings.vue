@@ -37,7 +37,11 @@ for (const student of validMeetings) {
   const meetingDate = new Date(student.node.meeting as string);
   if (meetingDate > currentDate) {
     const studentMeetingsData: studentMeetings = {
-      name: `${student.node.user.firstName} ${student.node.user.lastName}`,
+      name:
+        `${student.node.user.firstName} ${student.node.user.lastName}`
+          .split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+          .join(' '),
       meetingDate: meetingDate,
     };
     studentInfo.value.push(studentMeetingsData);
@@ -71,7 +75,11 @@ sharedState.UpcomingMeeting.value = () => {
     const meetingDate = new Date(student.node.meeting as string);
     if (meetingDate > currentDate) {
       const studentMeetingsData: studentMeetings = {
-        name: `${student.node.user.firstName} ${student.node.user.lastName}`,
+        name:
+          `${student.node.user.firstName} ${student.node.user.lastName}`
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(' '),
         meetingDate: meetingDate,
       };
       studentInfo.value.push(studentMeetingsData);

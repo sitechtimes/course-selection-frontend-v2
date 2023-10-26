@@ -93,7 +93,10 @@ const toggleEvent = () => {
 const studentInfo = guidanceStore.allStudents.edges
   .filter((student) => student.node.meeting)
   .map((student) => ({
-    name: `${student.node.user.firstName} ${student.node.user.lastName}`,
+    name: `${student.node.user.firstName} ${student.node.user.lastName}`
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' '),
     meetingDate: student.node.meeting,
     description: student.node.description,
   }));
