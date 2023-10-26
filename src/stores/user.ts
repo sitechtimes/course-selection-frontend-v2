@@ -308,7 +308,7 @@ export const useUserStore = defineStore("user", {
         const response = await axios.post(
           `${import.meta.env.VITE_URL}/auth/login/`,
           {
-            username: username,
+            username: username.toLowerCase(),
             password: password,
           }
         );
