@@ -163,7 +163,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
   
   if(sort.sortBy === 'nine') {
     function nine(a: { grade: string; }) {
-      if (a.grade === "SOPHOMORE") return -1;
+      if (a.grade === "FRESHMAN") return -1;
       else
       return 1;
     }
@@ -172,7 +172,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
 
   if(sort.sortBy === 'ten') {
     function ten(a: { grade: string; }) {
-      if (a.grade === "JUNIOR") return -1;
+      if (a.grade === "SOPHOMORE") return -1;
       else
       return 1;
     }
@@ -181,7 +181,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
   
   if(sort.sortBy === 'eleven') {
     function eleven(a: { grade: string; }) {
-      if (a.grade === "SENIOR") return -1;
+      if (a.grade === "JUNIOR") return -1;
       else
       return 1;
     }
