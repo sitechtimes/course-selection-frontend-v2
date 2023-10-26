@@ -21,7 +21,7 @@
         Student
       </h3>
       <p class="ml-8 p-3">{{ meetingDetails.name }}</p>
-  <div class="times flex flex-col lg:flex-row">
+  <div class=" flex item-stretch">
           <div>
             <h3 class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold" for="date">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -32,8 +32,8 @@
               Date</h3>
               <p class="ml-8 p-3">{{ meetingDetails.date }}</p>
           </div>
-          <div class="ml-20">
-            <h3 class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold" for="time">
+        
+            <div> <h3 class="formt flex flex-row  text-[#717494] ml-8 xl:text-2xl font-bold" for="time">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                 <!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                 <path
@@ -42,6 +42,7 @@
               Time</h3>
               <p class="ml-8 p-3">{{ meetingDetails.time }}</p>
           </div>
+          
     </div>
 
     <h3 class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold" for="description">
