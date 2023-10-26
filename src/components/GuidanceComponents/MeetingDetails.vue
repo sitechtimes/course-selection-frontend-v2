@@ -32,7 +32,7 @@
               Date</h3>
               <p class="ml-8 p-3">{{ meetingDetails.date }}</p>
           </div>
-          <div>
+          <div class="ml-20">
             <h3 class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold" for="time">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                 <!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
@@ -51,7 +51,7 @@
         </svg>
         Memo
       </h3>
-      <p class="ml-8 ">{{ meetingDetails.memo }}</p>
+      <p class="ml-8 p-3">{{ meetingDetails.memo }}</p>
       <div>
       </div>
       <!-- buttons -->
