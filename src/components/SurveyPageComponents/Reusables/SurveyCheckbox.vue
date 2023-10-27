@@ -65,8 +65,8 @@
 //@ts-nocheck
 import surveyDraggable from "./SurveyDraggable.vue";
 import { useSurveyStore } from "../../../stores/survey";
-import { watch, onBeforeMount, ref, Ref, computed, PropType } from "vue";
-import { surveyQuestion, preferences, checkboxAnswer, course } from "../../../types/interface";
+import { watch, ref, Ref, computed, PropType } from "vue";
+import { surveyQuestion, preferences, course } from "../../../types/interface";
 
 const props = defineProps({
   choices:{

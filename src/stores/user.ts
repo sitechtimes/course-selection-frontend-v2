@@ -5,7 +5,13 @@ import { useGuidanceStore } from "./guidance";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import { user, account_type, userData } from "../types/interface";
-
+import { sharedState } from "./function";
+const callFunctionInUpcomingMeeting = () => {
+  sharedState.UpcomingMeeting.value(); // Call the function in Child 2
+};
+const callFunctionInGuidanceCalender = () => {
+  sharedState.GuidanceCalender.value(); // Call the function in Child 2
+};
 export const useUserStore = defineStore("user", {
   state: (): user => ({
     first_name: "",
@@ -302,7 +308,7 @@ export const useUserStore = defineStore("user", {
         const response = await axios.post(
           `${import.meta.env.VITE_URL}/auth/login/`,
           {
-            username: username,
+            username: username.toLowerCase(),
             password: password,
           }
         );
@@ -326,7 +332,6 @@ export const useUserStore = defineStore("user", {
         alert("Login failed. Please check your credentials.");
       }
     },
-
     async changeMeeting(email: string, meetingISO: string, description: string) {
       await axios
         .post(
@@ -361,11 +366,15 @@ export const useUserStore = defineStore("user", {
           if (studentIndex > -1) {
             guidanceStore.guidance.students[studentIndex].meeting =
               res.data.data.updateMeeting.student.meeting;
+            guidanceStore.guidance.students[studentIndex].description = description;
           }
 
           console.log(guidanceStore.allStudents.edges[studentIndexAll].node);
           guidanceStore.allStudents.edges[studentIndexAll].node.meeting =
             res.data.data.updateMeeting.student.meeting;
+          guidanceStore.allStudents.edges[studentIndexAll].node.description = description;
+          callFunctionInUpcomingMeeting()
+          callFunctionInGuidanceCalender()
         });
     },
     async addFlag(email: string, newFlag: string) {
@@ -402,35 +411,35 @@ export const useUserStore = defineStore("user", {
     },
     async deleteFlag(email: string, flagToBeRemoved: string) {
       await axios
-      .post(
-        `${import.meta.env.VITE_URL}/graphql/`,
-        {
-          query: `mutation {
+        .post(
+          `${import.meta.env.VITE_URL}/graphql/`,
+          {
+            query: `mutation {
                           removeFlag(email: "${email}", flag:"${flagToBeRemoved}") {
                               student{
                                   flag
                               }
                           }
                       }`,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${this.access_token}`,
           },
-        }
-      )
-      .then((res) => {
-        const guidanceStore = useGuidanceStore()
-        const studentIndexAll = guidanceStore.allStudents.edges.findIndex(student => student.node.user.email === email)
-        const studentIndex = guidanceStore.guidance.students.findIndex(student => student.user.email === email)
-        if (studentIndex > -1) {
-          guidanceStore.guidance.students[studentIndex].flag = res.data.data.removeFlag.student.flag
-        }
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${this.access_token}`,
+            },
+          }
+        )
+        .then((res) => {
+          const guidanceStore = useGuidanceStore()
+          const studentIndexAll = guidanceStore.allStudents.edges.findIndex(student => student.node.user.email === email)
+          const studentIndex = guidanceStore.guidance.students.findIndex(student => student.user.email === email)
+          if (studentIndex > -1) {
+            guidanceStore.guidance.students[studentIndex].flag = res.data.data.removeFlag.student.flag
+          }
 
-        guidanceStore.allStudents.edges[studentIndexAll].node.flag = res.data.data.removeFlag.student.flag
-        console.log(res.data.data.removeFlag.student.flag)
-      });
+          guidanceStore.allStudents.edges[studentIndexAll].node.flag = res.data.data.removeFlag.student.flag
+          console.log(res.data.data.removeFlag.student.flag)
+        });
     },
   },
   persist: true,

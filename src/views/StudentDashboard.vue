@@ -37,14 +37,16 @@ if (
 <template>
   <div class="h-[75vh] w-full flex flex-row justify-center items-center">
     <div v-if="studentStore.student.homeroom === ''" id="left" class="w-5/6 flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left md:w-3/4 lg:max-w-2xl xl:max-w-3xl lg:space-y-6 lg:ml-12">
-      <h2 id="name" class="text-5xl font-bold">Welcome, {{ userStore.first_name }}.</h2>
+      <h2 id="name" class="text-5xl font-bold">Welcome, {{ userStore.first_name.toLowerCase().charAt(0).toUpperCase() + userStore.first_name.toLowerCase().slice(1)}}
+            {{ userStore.last_name.toLowerCase().charAt(0).toUpperCase() + userStore.last_name.toLowerCase().slice(1) }}.</h2>
       <div id="announcements" class="text-xl text-center flex ml-2 md:text-left">Thank you for signing up. Your account information is in the process of being updated. Please come back later.</div>
   
     </div>
     <div v-else id="left" class="w-5/6 flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left md:w-3/4 lg:max-w-2xl xl:max-w-3xl lg:space-y-6 lg:ml-12">
       <h1 id="name" class="text-3xl sm:text-4xl md:text-5xl font-bold">
         Welcome back,
-        <span>{{ userStore.first_name }} {{ userStore.last_name }}</span>
+        <span>{{userStore.first_name.toLowerCase().charAt(0).toUpperCase() + userStore.first_name.toLowerCase().slice(1)}}
+            {{ userStore.last_name.toLowerCase().charAt(0).toUpperCase() + userStore.last_name.toLowerCase().slice(1) }}</span>
       </h1>
       <div id="announcements" class="text-lg md:text-xl text-left flex justify-center items-center ml-4 lg:ml-0 lg:justify-start">
         <BellIcon />

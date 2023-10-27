@@ -61,12 +61,14 @@ export interface studentData {
     grade: grade
     homeroom: string
     meeting: string | null
+    description: string
 }
 
 // student object (guidance side)
 export interface studentGuidance extends studentData {
     user: userData
     flag: string
+    description: string
 }
 
 // guidance edges and nodes interfaces

@@ -35,9 +35,11 @@
             {{ student.user.lastName.toLowerCase().charAt(0).toUpperCase() + student.user.lastName.toLowerCase().slice(1)}}, 
             {{ student.user.firstName.toLowerCase().charAt(0).toUpperCase() + student.user.firstName.toLowerCase().slice(1) }}
           </td>
-          <td class="p-4" v-if="student.grade === 'SOPHOMORE'">9</td>
-          <td class="p-4" v-if="student.grade === 'JUNIOR'">10</td>
-          <td class="p-4" v-if="student.grade === 'SENIOR'">11</td>
+          <td class="p-4" v-if="student.grade === 'FRESHMAN'">9</td>
+          <td class="p-4" v-if="student.grade === 'SOPHOMORE'">10</td>
+          <td class="p-4" v-if="student.grade === 'JUNIOR'">11</td>
+          <td class="p-4" v-if="student.grade === 'SENIOR'">12</td>
+          <!-- <td class="p-4">{{ student.grade }}</td> -->
           <td class="p-4">{{ student.user.email }}</td>
           <td class="p-4" v-if="guidanceStore.allAnsweredSurveys.edges.find(
             (x) =>
@@ -112,7 +114,7 @@ import MinusSign from "../icons/MinusSign.vue";
 import AddFlag from "../GuidanceComponents/AddFlag.vue";
 import DeleteFlag from "../GuidanceComponents/DeleteFlag.vue";
 
-const props = defineProps({
+defineProps({
   newstudents: Array as PropType<Array<studentGuidance>>,
 });
 
@@ -159,9 +161,9 @@ const toggleDeleteFlag = (student: string) => {
 async function userClick(student: studentGuidance) {
   await surveyStore.setSurvey(student.user.email, student.grade);
   await router.push(
-    `/guidance/survey/${student.user.email.replace("@nycstudents.net", " ")}`
+    `/guidance/survey/${student.user.email.replace("@nycstudents.net", "")}`
   );
-  location.reload();
+//   location.reload();
 }
 </script>
 
