@@ -1,8 +1,8 @@
 <template>
-  <body>
-    <div v-if="show"
+<body>
+      <div v-if="show"
     class="absolute left-[20%] right-[20%] top-[30%] bg-white flex flex-row m-auto mt-5 w-fit h-fit rounded-[1rem] border border-black">
-      <div id='printPage' class="event flex flex-col">
+      <div class="event flex flex-col">
       <div class="top flex-row flex items-center justify-between">
         <h2 class="h2 font-bold text-[2rem] m-8 mb-4">Meeting Details</h2>
         <button class="mt-5 mr-12" @click="toggleShow">
@@ -69,18 +69,22 @@
         </button>
       </div>
     </div>
-   
-    
   </div>
   <DeleteModal v-show="showDeleteModal" :meetingDetails="meetingDetails"/>
+  <PrintModal v-show ='showPrintModal' :meetingDetails="meetingDetails"/>
+</body>
+
+  
 </template>
 
 <script setup lang="ts">
 import { ref, defineProps } from "vue";
 import DeleteModal from "./DeleteModal.vue"
+import PrintModal from "./PrintModal.vue"
 
 const show = ref(true);
 const showDeleteModal = ref(false);
+const showPrintModal = ref(false)
 
 defineProps({
   meetingDetails: {
@@ -99,11 +103,8 @@ const toggleDeleteModal = () => {
 };
 
 const togglePrintModal = () => {
-  const allBody = document.body.innerHTML;
-  const partPrint = document.getElementById("printPage").innerHTML;
-  document.body.innerHTML = partPrint;
-  window.print();
-  document.body.innerHTML = allBody;
+  showPrintModal.value = !showPrintModal.value;
+  show.value = !show.value;
 };
 </script>
 
