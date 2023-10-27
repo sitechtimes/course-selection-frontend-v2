@@ -9,7 +9,7 @@ document.title = 'Home | SITHS Course Selection'
         Hello!
       </h1>
       <h2 class="text-lg lg:text-xl">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus deleniti doloremque nisi at.
+        Welcome to Staten Island Technical High School's course selection Guidance platform.
       </h2>
       <div class="flex justify-start items-center space-x-4">
       <RouterLink to="/guidance/studentlist">

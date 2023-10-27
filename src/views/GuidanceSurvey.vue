@@ -1,4 +1,5 @@
 <script setup lang="ts">
+//@ts-nocheck
 import { useUserStore } from '../stores/user'
 import { useSurveyStore } from '../stores/survey';
 import { useGuidanceStore } from '../stores/guidance';
@@ -28,6 +29,11 @@ guidanceStore.allStudents.edges.forEach((el) => {
 surveyStore.missingAnswers = []
 //let guidance see all students\
 //@ts-ignore
+guidanceStore.allStudents.edges.forEach((el) => {
+    console.log(el.node.user.email)
+});
+console.log(guidanceStore.allStudents.edges.filter(student => student.node.user.email == `${route.params.email}@nycstudents.net`))
+console.log(`${route.params.email}@nycstudents.net`)
 const viewedStudent: studentGuidance = guidanceStore.allStudents.edges.filter(student => student.node.user.email === `${route.params.email}@nycstudents.net`)[0].node //looking at all students
 let surveyIndex = guidanceStore.allAnsweredSurveys.edges.findIndex(x => x.node.email === `${route.params.email}@nycstudents.net` && x.node.grade === viewedStudent.grade)
 
@@ -36,8 +42,10 @@ const indexAll = surveyStore.currentResponse.findIndex((x) => x.id === 'allChose
 const indexNote = surveyStore.currentResponse.findIndex((x) => x.id === 'noteToGuidance');
 const indexGuidance = surveyStore.currentResponse.findIndex((x) => x.id === 'guidanceFinalNote');
 
-//@ts-ignore
-surveyStore.currentSurvey = guidanceStore.allSurveys.edges.find(x => x.node.grade === viewedStudent.grade).node
+console.log(guidanceStore.allSurveys.edges)
+console.log(viewedStudent.grade)
+const years = ['FRESHMAN', 'SOPHOMORE', 'JUNIOR', 'SENIOR']
+surveyStore.currentSurvey = guidanceStore.allSurveys.edges.find(x => x.node.grade === years[years.indexOf(viewedStudent.grade) + 1]).node
 
 const getChoices = (question: surveyQuestion) => {
   const classes = viewedStudent.coursesAvailable
@@ -103,9 +111,10 @@ watch(() => guidanceStore.allAnsweredSurveys.edges[surveyIndex].node.answers, (n
       <div class="text-2xl mb-4">
         <h1 class="font-bold text-[#37394F] text-3xl  mb-6">{{ viewedStudent.user.firstName }} {{
           viewedStudent.user.lastName }}'s Survey</h1>
-        <h2 v-if="viewedStudent.grade === 'SOPHOMORE'">Grade : 9</h2>
-        <h2 v-if="viewedStudent.grade === 'JUNIOR'">Grade : 10</h2>
-        <h2 v-if="viewedStudent.grade === 'SENIOR'">Grade : 11</h2>
+        <h2 v-if="viewedStudent.grade === 'FRESHMAN'">Grade : 9</h2>
+        <h2 v-if="viewedStudent.grade === 'SOPHOMORE'">Grade : 10</h2>
+        <h2 v-if="viewedStudent.grade === 'JUNIOR'">Grade : 11</h2>
+        <h2 v-if="viewedStudent.grade === 'SENIOR'">Grade : 12</h2>
       </div>
       <p v-if="surveyStore.loading">Setting things up...</p>
       <div v-else>

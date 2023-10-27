@@ -6,14 +6,13 @@ document.title = 'Course Selection'
   <div class="h-[75vh] w-full flex flex-row justify-center items-center">
     <div
       id="left"
-      class="w-5/6 flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left md:w-3/4 max-w-md lg:max-w-2xl xl:max-w-3xl lg:space-y-6 lg:ml-12"
+      class="w-fit flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left md:w-3/4 max-w-md lg:max-w-2xl xl:max-w-3xl lg:space-y-6 lg:ml-12"
     >
-      <h1 id="heading" class="text-4xl font-bold lg:text-5xl">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+      <h1 id="heading" class="text-4xl font-bold lg:text-5xl lg:leading-normal">
+       Staten Island Technical High School Course Selection 
       </h1>
       <h2 class="text-lg lg:text-xl">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus
-        deleniti doloremque nisi at.
+        Selections made easy.
       </h2>
       <div class="flex justify-start items-center">
         <RouterLink to="/login">

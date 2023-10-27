@@ -159,17 +159,10 @@ const router = createRouter({
       }
     },
     {
-      path: '/test2',
-      name: 'testExit',
-      component: () => import('../views/ExitReminderTest.vue')
-      
+      path: '/guidance/meetingDetails',
+      name: 'meetingDetails',
+      component: () => import('../views/MeetingDetails.vue'),
     },
-    {
-      path: '/EventTest',
-      name: 'EventTest',
-      component: () => import('../views/EventTest.vue')
-      
-    }
   ]
 })
 

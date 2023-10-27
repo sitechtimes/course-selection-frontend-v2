@@ -18,7 +18,7 @@ import { ref, onMounted } from 'vue';
 import AngleDown from '../../icons/AngleDown.vue';
 import AngleUp from '../../icons/AngleUp.vue';
 
-const props = defineProps({
+defineProps({
   guidance: Boolean
 })
 

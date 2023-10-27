@@ -8,10 +8,10 @@
       </div>
       <div class="w-full flex flex-col items-center">
         <p class="my-2">
-          Add flag:
+          Delete flag:
         </p>
         <select v-model="selected" class="w-full">
-          <option v-for="flag in unaddedFlags" :value="flag.flag">
+          <option v-for="flag in addedFlags" :value="flag.flag">
             {{ flag.title }}
           </option>
         </select>
@@ -54,12 +54,12 @@ const props = defineProps({
 
 const selected: Ref<string> = ref("");
 
-const unaddedFlags: Ref<flag[]> = computed(() => { //only push unadded flags into the dropdown
-  return props.flags.filter((flag) => !props.student.flag.includes(flag.flag));
+const addedFlags: Ref<flag[]> = computed(() => { //only push added flags into the dropdown
+  return props.flags.filter((flag) => props.student.flag.includes(flag.flag));
 });
 
 const confirm = async (flag: string) => {
-  await userStore.addFlag(props.student.user.email, flag);
-    emit("exit");
+  await userStore.deleteFlag(props.student.user.email, flag);
+  emit("exit");
 };
 </script>

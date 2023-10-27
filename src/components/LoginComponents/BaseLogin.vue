@@ -17,10 +17,9 @@ const password = ref("")
             <p class="text-base text-zinc-600 font-semibold">Back</p>
         </button>
         <h1 class="text-4xl mb-4 font-bold">Login</h1>
-
         <div class="flex flex-col w-11/12 max-w-[21rem] space-y-5 rounded-md">
             <LoginInput id="email" label="email" name="email" type="email" required :value="username"
-                @update="newValue => username = newValue">Email</LoginInput>
+                @update="newValue => username = newValue">Username</LoginInput>
             <LoginInput id="password" label="password" name="password" type="password" required :value="password"
                 @update="newValue => password = newValue">Password</LoginInput>
         </div>
@@ -30,7 +29,7 @@ const password = ref("")
         </button>
         <GoogleLogin :callback="userStore.GoogleLogin" popup-type="TOKEN">
             <button
-                class="flex justify-center items-center space-x-3 bg-zinc-300 w-60 h-14 rounded-md text-xl font-semibold hover:bg-zinc-200">
+                class="flex justify-center items-center space-x-3 mt-2 bg-zinc-300 w-60 h-14 rounded-md text-xl font-semibold hover:bg-zinc-200">
                 <GoogleIcon />
                 <p class="font-bold text-lg">Sign in with Google</p>
             </button>

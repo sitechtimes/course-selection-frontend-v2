@@ -61,12 +61,14 @@ export interface studentData {
     grade: grade
     homeroom: string
     meeting: string | null
+    description: string
 }
 
 // student object (guidance side)
 export interface studentGuidance extends studentData {
     user: userData
     flag: string
+    description: string
 }
 
 // guidance edges and nodes interfaces
@@ -131,7 +133,7 @@ export interface surveyQuestion {
     questionType: question_type
     id: string
     status: question_status
-    className: string
+    classReferenced: any
 }
 
 export interface surveyAnswer {
@@ -163,9 +165,27 @@ export interface course {
     name: string
 }
 
-export interface StudentMeeting {
+export interface studentMeetings {
     name: string;
-    meetingDate: string;
+    meetingDate: Date;
+}
+
+export interface calendarData {
+    dateInfo: Array<{
+        type: string;
+        todaysDate: number;
+        id: string;
+        meetings: Array<{
+            id: string,
+            name: string;
+            meetingDate: Date|null;
+        }>;
+    }>;
+    monthChanges: number;
+}
+
+export interface classReferenced {
+    name: string;
 }
 
 export type course_type = 'MATH' | 'ENGLISH' | 'LANG' | 'SS' | 'TECH' | 'PE' | 'CAREER' | 'SCIENCE' | 'ARTS' | 'OTHER'
