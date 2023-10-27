@@ -34,15 +34,39 @@
           <ul class="days">
             <li class="dayCon" v-for="h in calendarData.dateInfo" :key="h.id">
               <p class="mt-2 text-end mr-2 mb-16">{{ h.todaysDate }}</p>
-              <div>
-                <p
-                  class="w-[100%] text-center truncate bg-[#EED7FD] text-[#2D004B] rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md"
-                  v-for="meeting in h.meetings"
-                  :key="meeting.id"
-                  @click="toggleDetails"
-                >
-                  {{ meeting.name }}
-                </p>
+              <div
+                v-for="meeting in h.meetings"
+                :key="meeting.id"
+                @click="toggleDetails"
+              >
+                <div v-if="meeting.grade === 'FRESHMAN'">
+                  <p
+                    class="w-[100%] text-center truncate bg-[#F5CDCD] text-[#590000] rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md"
+                  >
+                    {{ meeting.name }}
+                  </p>
+                </div>
+                <div v-else-if="meeting.grade === 'SOPHOMORE'">
+                  <p
+                    class="w-[100%] text-center truncate bg-[#D2F6D2] text-[#003400] rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md"
+                  >
+                    {{ meeting.name }}
+                  </p>
+                </div>
+                <div v-else-if="meeting.grade === 'JUNIOR'">
+                  <p
+                    class="w-[100%] text-center truncate bg-[#EED7FD] text-[#2D004B] rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md"
+                  >
+                    {{ meeting.name }}
+                  </p>
+                </div>
+                <div v-else-if="meeting.grade === 'SENIOR'">
+                  <p
+                    class="w-[100%] text-center truncate bg-[#CCDDF5] text-[#002254] rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md"
+                  >
+                    {{ meeting.name }}
+                  </p>
+                </div>
               </div>
               <PlusIcon
                 class="plusIcon w-3 ml-2 cursor-pointer invisible"
@@ -94,11 +118,12 @@ const studentInfo = guidanceStore.allStudents.edges
   .filter((student) => student.node.meeting)
   .map((student) => ({
     name: `${student.node.user.firstName} ${student.node.user.lastName}`
-      .split(' ')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(' '),
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" "),
     meetingDate: student.node.meeting,
     description: student.node.description,
+    grade: student.node.grade,
   }));
 
 let todaysDate = new Date();
@@ -168,7 +193,6 @@ const renderCalendar = () => {
       meetings: studentsWithMeetings,
     };
     dateInfo.push(dateBoxInfo);
-
     for (const meeting of studentsWithMeetings) {
       const dateObject = new Date(meeting.meetingDate as string);
       meetingDetails.name = meeting.name;
@@ -188,6 +212,7 @@ const renderCalendar = () => {
   }
   //@ts-ignore
   calendarData.dateInfo = dateInfo;
+  console.log(calendarData.dateInfo);
   calendarData.monthChanges = monthChanges.value + 1;
   monthChanges.value = calendarData.monthChanges;
 };
