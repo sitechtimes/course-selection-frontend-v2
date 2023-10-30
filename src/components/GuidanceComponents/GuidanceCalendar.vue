@@ -40,7 +40,7 @@
                 @click="toggleDetails"
               >
                 <p
-                  v-bind:class="activeClass"
+                  v-bind:class="activeClass(meeting.grade)"
                   v-for="meeting in h.meetings"
                   :key="meeting.id"
                   @click="toggleDetails"
@@ -94,8 +94,23 @@ const toggleEvent = () => {
   showEvent.value = !showEvent.value;
 };
 
-const activeClass =
-  "w-[100%] text-center truncate bg-[#EED7FD] text-[#2D004B] rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md";
+function activeClass(grade: string) {
+  let textClass = "";
+  if (grade === "FRESHMAN") {
+    textClass =
+      "w-[100%] text-center truncate bg-[#F5CDCD] text-[#590000] rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md";
+  } else if (grade === "SOPHOMORE") {
+    textClass =
+      "w-[100%] text-center truncate bg-[#D2F6D2] text-[#003400] rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md";
+  } else if (grade === "JUNIOR") {
+    textClass =
+      "w-[100%] text-center truncate bg-[#EED7FD] text-[#2D004B] rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md";
+  } else if (grade === "SENIOR") {
+    textClass =
+      "w-[100%] text-center truncate bg-[#CCDDF5] text-[#002254] rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md";
+  }
+  return textClass;
+}
 
 const studentInfo = guidanceStore.allStudents.edges
   .filter((student) => student.node.meeting)
