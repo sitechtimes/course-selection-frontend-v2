@@ -39,7 +39,6 @@
                   class="w-[100%] text-center truncate bg-[#EED7FD] text-[#2D004B] rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md"
                   v-for="meeting in h.meetings"
                   :key="meeting.id"
-                  @click="toggleDetails"
                 >
                   {{ meeting.name }}
                 </p>
