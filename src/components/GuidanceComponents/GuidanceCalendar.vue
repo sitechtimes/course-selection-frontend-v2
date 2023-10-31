@@ -43,7 +43,6 @@
                   v-bind:class="activeClass(meeting.grade)"
                   v-for="meeting in h.meetings"
                   :key="meeting.id"
-                  @click="toggleDetails"
                 >
                   {{ meeting.name }}
                 </p>
