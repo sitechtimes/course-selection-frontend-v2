@@ -163,6 +163,11 @@ const router = createRouter({
       name: 'meetingDetails',
       component: () => import('../views/MeetingDetails.vue'),
     },
+    {
+      path: '/guidance/PrintPage',
+      name: 'printPage',
+      component: () => import('../views/PrintPage.vue'),
+    },
   ]
 })
 

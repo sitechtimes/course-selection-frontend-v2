@@ -63,15 +63,13 @@
         </button>
       </div>
       <div class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit">
-        <button type="submit" @click="togglePrintModal" class="font-bold bg-[#e5e7be] px-4 py-2 rounded-2xl w-fit h-fit"
-          id="save" ref="save">
-          Print
-        </button>
+         <RouterLink to="/guidance/PrintPage" type="submit" @click="togglePrintModal" class="font-bold bg-[#e5e7be] px-4 py-2 rounded-2xl w-fit h-fit"
+          id="save" ref="save">Print</RouterLink>
       </div>
     </div>
   </div>
   <DeleteModal v-show="showDeleteModal" :meetingDetails="meetingDetails"/>
-  <PrintModal v-show ='showPrintModal' :meetingDetails="meetingDetails"/>
+ 
 </body>
 
   
@@ -80,7 +78,6 @@
 <script setup lang="ts">
 import { ref, defineProps } from "vue";
 import DeleteModal from "./DeleteModal.vue"
-import PrintModal from "./PrintModal.vue"
 
 const show = ref(true);
 const showDeleteModal = ref(false);
