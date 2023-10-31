@@ -179,7 +179,6 @@ export interface calendarData {
             id: string,
             name: string;
             meetingDate: Date|null;
-            grade: string
         }>;
     }>;
     monthChanges: number;
