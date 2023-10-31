@@ -1,9 +1,15 @@
 <template>
-    <h1>test</h1>
+    <div class="">
+        <PrintPage :meetingDetails="meetingDetails"/>
+    </div>
 </template>
 
+<script>
+import PrintPage from "../components/GuidanceComponents/PrintPage.vue";
+
+
+
+</script>
 <style>
-body{
-    background-color: aquamarine;
-}
+
 </style>
