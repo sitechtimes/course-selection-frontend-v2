@@ -1,10 +1,10 @@
 <template>
     <div class="">
-        <PrintPage :meetingDetails="meetingDetails"/>
+        <PrintPage/>
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import PrintPage from "../components/GuidanceComponents/PrintPage.vue";
 
 
