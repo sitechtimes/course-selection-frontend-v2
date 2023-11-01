@@ -1,5 +1,5 @@
 <template>
-  <div class="flex w-[25vw] border border-gray-500 rounded-md">
+  <div id="printPage" class="flex w-[25vw] border border-gray-500 rounded-md">
     <div class="p-4">
       <div class="overflow-y-auto max-h-100">
         <ul class="my-4" v-for="(meeting, index) in studentInfo" :key="index">
@@ -49,6 +49,18 @@ for (const student of validMeetings) {
   }
 }
 
+// const studentInfo = guidanceStore.allStudents.edges
+//   .filter((student) => student.node.meeting)
+//   .map((student) => ({
+//     name: `${student.node.user.firstName} ${student.node.user.lastName}`
+//       .split(" ")
+//       .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+//       .join(" "),
+//     meetingDate: student.node.meeting,
+//     description: student.node.description,
+//     grade: student.node.grade,
+// }));
+
 studentInfo.value.sort((a, b) => {
   return a.meetingDate.getTime() - b.meetingDate.getTime();
 });
@@ -65,12 +77,11 @@ function formatDate(meetingDate: Date): string {
 };
 
 const printMeetingTicket = () =>{
-  // const allBody = document.body.innerHTML;  
-  // const partPrint = document.getElementById("printPage").innerHTML;
-  // document.body.innerHTML = partPrint;
+  const allBody = document.body.innerHTML;  
+  const partPrint = document.getElementById("printPage").innerHTML;
+  document.body.innerHTML = partPrint;
   window.print();
-  // document.body.innerHTML = allBody;
-  // document.body.innerHTML = allBody;
+  document.body.innerHTML = allBody;
 };
 
 </script>
