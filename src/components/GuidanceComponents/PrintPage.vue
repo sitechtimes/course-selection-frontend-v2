@@ -3,13 +3,11 @@
     <div class="p-4">
       <div class="overflow-y-auto max-h-100">
         <ul class="my-4" v-for="(meeting, index) in studentInfo" :key="index">
-          <h2 class="ml-6 list-disc">Dear {{ meeting.name }},</h2>
-          <h2>Your guidance would like to speak with you regarding:
-          </h2>
-          <h2 class="font-bold text-lg">
-            {{ formatDate(meeting.meetingDate) }}
-          </h2>
-          
+          <h2 class="ml-6 ">Dear {{ meeting.name }},</h2>
+          <h2>Your guidance counselor would like to speak with you on
+            {{ formatDate(meeting.meetingDate) }} for:
+            {{ meeting.memo }}
+          </h2>        
         </ul>
       </div>
     </div>
@@ -36,6 +34,7 @@ const validMeetings = guidanceStore.allStudents.edges.filter(
 const currentDate = new Date();
 for (const student of validMeetings) {
   const meetingDate = new Date(student.node.meeting as string);
+  const meetingDescription = student.node.description
   if (meetingDate > currentDate) {
     const studentMeetingsData: studentMeetings = {
       name:
@@ -44,6 +43,7 @@ for (const student of validMeetings) {
           .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
           .join(' '),
       meetingDate: meetingDate,
+      memo: meetingDescription, 
     };
     studentInfo.value.push(studentMeetingsData);
   }
@@ -60,10 +60,6 @@ for (const student of validMeetings) {
 //     description: student.node.description,
 //     grade: student.node.grade,
 // }));
-
-studentInfo.value.sort((a, b) => {
-  return a.meetingDate.getTime() - b.meetingDate.getTime();
-});
 
 function formatDate(meetingDate: Date): string {
   const options = {

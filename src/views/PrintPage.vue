@@ -1,5 +1,5 @@
 <template>
-    <div class="">
+    <div class="flex flex-row justify-center">
         <PrintPage/>
     </div>
 </template>
