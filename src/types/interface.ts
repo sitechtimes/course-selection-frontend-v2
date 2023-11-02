@@ -179,6 +179,7 @@ export interface calendarData {
             id: string,
             name: string;
             meetingDate: Date|null;
+            email: string
         }>;
     }>;
     monthChanges: number;

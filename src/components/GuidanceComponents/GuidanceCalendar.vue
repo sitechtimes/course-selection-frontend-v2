@@ -40,7 +40,9 @@
                 @click="toggleDetails"
               >
                 <p
-                  :class="`w-[100%] text-center truncate ${classColor[meeting.grade]} rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md`"
+                  :class="`w-[100%] text-center truncate ${
+                    classColor[meeting.grade]
+                  } rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md`"
                   v-for="meeting in h.meetings"
                   :key="meeting.id"
                 >
@@ -79,6 +81,7 @@ const meetingDetails = {
   date: "",
   time: "",
   memo: "",
+  email: "",
 };
 
 const guidanceStore = useGuidanceStore();
@@ -93,12 +96,12 @@ const toggleEvent = () => {
   showEvent.value = !showEvent.value;
 };
 
-const classColor= {
+const classColor = {
   FRESHMAN: "bg-[#F5CDCD] text-[#590000]",
   SOPHOMORE: "bg-[#D2F6D2] text-[#003400]",
   JUNIOR: "bg-[#EED7FD] text-[#2D004B]",
-  SENIOR: "bg-[#CCDDF5] text-[#002254]"
-}
+  SENIOR: "bg-[#CCDDF5] text-[#002254]",
+};
 
 const studentInfo = guidanceStore.allStudents.edges
   .filter((student) => student.node.meeting)
@@ -110,6 +113,7 @@ const studentInfo = guidanceStore.allStudents.edges
     meetingDate: student.node.meeting,
     description: student.node.description,
     grade: student.node.grade,
+    email: student.node.user.email,
   }));
 
 let todaysDate = new Date();
@@ -185,6 +189,7 @@ const renderCalendar = () => {
       meetingDetails.date = dateformat(dateObject, "shortDate");
       meetingDetails.time = dateformat(dateObject, "shortTime");
       meetingDetails.memo = meeting.description;
+      meetingDetails.email = meeting.email;
     }
   }
   for (let i = lastDayofMonth; i < 6; i++) {
@@ -224,7 +229,7 @@ onMounted(() => {
   renderCalendar();
   console.log("Student Info:", studentInfo);
 });
-
+console.log(meetingDetails);
 sharedState.GuidanceCalender.value = () => {};
 </script>
 

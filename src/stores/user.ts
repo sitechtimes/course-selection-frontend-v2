@@ -377,6 +377,31 @@ export const useUserStore = defineStore("user", {
           callFunctionInGuidanceCalender()
         });
     },
+    async deleteMeeting(email: string) {
+      await axios
+        .post(
+          `${import.meta.env.VITE_URL}/graphql/`,
+          {
+            query: `mutation {
+                            deleteMeeting(email: "${email}") {
+                                student{
+                                    meeting
+                                    meetingDescription
+                                }
+                            }
+                        }`,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${this.access_token}`,
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+        });
+    },
     async addFlag(email: string, newFlag: string) {
       await axios
         .post(
