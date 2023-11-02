@@ -21,12 +21,16 @@ const password = ref("")
             <LoginInput id="email" label="email" name="email" type="email" required :value="username"
                 @update ="newValue => username = newValue">Username</LoginInput>
             <LoginInput id="password" label="password" name="password" type="password" required :value="password"
-                @update="newValue => password = newValue">Password</LoginInput>
+                @update="newValue => password = newValue"
+                @keyup.enter="userStore.EmailLogin(username, password)">Password</LoginInput>
+           
         </div>
+
         <button id="button" class="bg-zinc-300 w-32 h-12 mt-4 rounded-md text-lg font-semibold hover:bg-zinc-200"
-            @keyup.enter="userStore.EmailLogin(username, password)">
+            @click="userStore.EmailLogin(username, password)" >
             Login
         </button>
+      
         <GoogleLogin :callback="userStore.GoogleLogin" popup-type="TOKEN">
             <button
                 class="flex justify-center items-center space-x-3 mt-2 bg-zinc-300 w-60 h-14 rounded-md text-xl font-semibold hover:bg-zinc-200">
