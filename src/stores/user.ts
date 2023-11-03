@@ -380,26 +380,27 @@ export const useUserStore = defineStore("user", {
     async deleteMeeting(email: string, student: string) {
       console.log(email, student)
       await axios
-      .post(
-        `${import.meta.env.VITE_URL}/graphql/`,
-        {
-          query: `mutation {
-                        DeleteMeeting(email: "${email}", student:"${student}") {
-                            student{
-                                Meeting
+        .post(
+          `${import.meta.env.VITE_URL}/graphql/`,
+          {
+            query: `mutation {
+                            DeleteMeeting(email: "${email}", "${student}") {
+                                student{
+                                  student
+                                }
                             }
-                        }
-                    }`,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${this.access_token}`,
+                        }`,
           },
-        }
-      ).then((res) => {
-        console.log(res)
-      })
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${this.access_token}`,
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+        });
     },
     async addFlag(email: string, newFlag: string) {
       await axios

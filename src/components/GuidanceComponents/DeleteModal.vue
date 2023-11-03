@@ -41,7 +41,6 @@ const toggleDetails = () => {
 };
 
 const deleteMeeting = async (email: string, student: string) => {
-  console.log(email);
   await userStore.deleteMeeting(email, student);
 };
 </script>
