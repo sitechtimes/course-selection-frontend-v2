@@ -136,6 +136,7 @@ const months = [
   "December",
 ];
 
+//generates calendar data
 const renderCalendar = () => {
   let firstDayofMonth = new Date(todaysYear, todaysMonth, 1).getDay();
   let lastDateofMonth = new Date(todaysYear, todaysMonth + 1, 0).getDate();
@@ -149,19 +150,21 @@ const renderCalendar = () => {
 
   for (let i = firstDayofMonth; i > 0; i--) {
     const dateBoxInfo = {
-      type: "previous",
-      todaysDate: lastDateofLastMonth - i + 1,
-      id: i + "p",
-      meetings: [],
+      type: "previous", //previous to today's date
+      todaysDate: lastDateofLastMonth - i + 1, //date for the date box 
+      id: i + "p", //'p' indicates the type is previous 
+      meetings: [], //array of meetings for the data 
     };
     dateInfo.push(dateBoxInfo);
   }
 
   for (let i = 1; i <= lastDateofMonth; i++) {
-    const activeDate = new Date(todaysYear, todaysMonth, i);
-
+    //each day of the month is given an active date object
+    const activeDate = new Date(todaysYear, todaysMonth, i); 
+    //all students with meetngs for the active date 
     const studentsWithMeetings = [];
-
+    //for each student in studentInfo, a studentMeetingDate contains date&time information about the student's meeting
+    //if the student has a meeting on the active date, push the date to studentsWithMeetings
     for (const student of studentInfo) {
       const studentMeetingDate = new Date(student.meetingDate as string);
       const isMeetingDate =

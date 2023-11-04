@@ -1,16 +1,12 @@
 <template>
   <div class="w-[25vw] border border-gray-500 rounded-md">
     <div class="border-b border-gray-500">
-      <h1 class="py-2 px-4 text-center font-extrabold text-2xl">
-        Upcoming Meetings
-      </h1>
+      <h1 class="py-2 px-4 text-center font-extrabold text-2xl">Upcoming Meetings</h1>
     </div>
     <div class="p-4">
       <div class="overflow-y-auto max-h-100">
         <ul class="my-4" v-for="(meeting, index) in studentInfo" :key="index">
-          <h2 class="font-bold text-lg">
-            {{ formatDate(meeting.meetingDate) }}
-          </h2>
+          <h2 class="font-bold text-lg">{{ formatDate(meeting.meetingDate) }}</h2>
           <li class="ml-6 list-disc">{{ meeting.name }}</li>
         </ul>
       </div>
@@ -27,11 +23,13 @@ import { sharedState } from "../../stores/function";
 const guidanceStore = useGuidanceStore();
 const studentInfo: Ref<studentMeetings[]> = ref([]);
 
+//all students with a scheduled meeting 
 const validMeetings = guidanceStore.allStudents.edges.filter(
   (student) =>
     student.node.meeting !== null && student.node.meeting !== undefined
 );
 
+//if student's meeting is after today, add it to upcoming meetings
 const currentDate = new Date();
 for (const student of validMeetings) {
   const meetingDate = new Date(student.node.meeting as string);
@@ -48,6 +46,7 @@ for (const student of validMeetings) {
   }
 }
 
+//sort meetings by time
 studentInfo.value.sort((a, b) => {
   return a.meetingDate.getTime() - b.meetingDate.getTime();
 });
