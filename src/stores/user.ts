@@ -377,8 +377,8 @@ export const useUserStore = defineStore("user", {
           callFunctionInGuidanceCalender()
         });
     },
-    async deleteMeeting(email: string, student: string) {
-      console.log(email, student)
+    async deleteMeeting(email: string) {
+      console.log(email)
       await axios
         .post(
           `${import.meta.env.VITE_URL}/graphql/`,

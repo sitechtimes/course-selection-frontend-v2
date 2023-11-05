@@ -229,7 +229,6 @@ onMounted(() => {
   renderCalendar();
   console.log("Student Info:", studentInfo);
 });
-console.log(meetingDetails);
 sharedState.GuidanceCalender.value = () => {};
 </script>
 

@@ -15,7 +15,7 @@
         Cancel
       </button>
       <button
-        @click="deleteMeeting(meetingDetails.email, meetingDetails.name)"
+        @click="deleteMeeting(meetingDetails.email)"
         class="duration-300 font-bold bg-[#f28e8e] px-4 py-2 rounded-lg w-fit h-fit opacity-0.5:hover"
       >
         Delete
@@ -40,7 +40,7 @@ const toggleDetails = () => {
   showDetails.value = !showDetails.value;
 };
 
-const deleteMeeting = async (email: string, student: string) => {
-  await userStore.deleteMeeting(email, student);
+const deleteMeeting = async (email: string) => {
+  await userStore.deleteMeeting(email);
 };
 </script>
