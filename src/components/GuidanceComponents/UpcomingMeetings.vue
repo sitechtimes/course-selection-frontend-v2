@@ -5,20 +5,25 @@
     </div>
     <div class="p-4">
       <div class="overflow-y-auto max-h-100">
-        <ul class="my-4" v-for="(meeting, index) in studentInfo" :key="index">
-          <h2 class="font-bold text-lg">{{ formatDate(meeting.meetingDate) }}</h2>
-          <li class="ml-6 list-disc">{{ meeting.name }}</li>
-        </ul>
+        <div v-for="(meetings, date) in groupedStudentMeetings" :key="date">
+          <h2 class="font-bold text-lg">{{ date }}</h2>
+          <ul class="my-2">
+            <li v-for="(meeting, index) in meetings" :key="index" class="ml-6 mt-2 list-disc">
+              {{ meeting.meetingTime }} - {{ meeting.name }}
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, Ref } from "vue";
+import { ref, Ref, computed, watch, onMounted } from "vue";
 import { useGuidanceStore } from "../../stores/guidance";
 import { studentMeetings } from "../../types/interface";
-import { sharedState } from "../../stores/function";
+//@ts-ignore
+import dateformat from "dateformat";
 
 const guidanceStore = useGuidanceStore();
 const studentInfo: Ref<studentMeetings[]> = ref([]);
@@ -29,20 +34,28 @@ const validMeetings = guidanceStore.allStudents.edges.filter(
     student.node.meeting !== null && student.node.meeting !== undefined
 );
 
-//if student's meeting is after today, add it to upcoming meetings
-const currentDate = new Date();
-for (const student of validMeetings) {
-  const meetingDate = new Date(student.node.meeting as string);
-  if (meetingDate > currentDate) {
-    const studentMeetingsData: studentMeetings = {
-      name:
-        `${student.node.user.firstName} ${student.node.user.lastName}`
-          .split(' ')
-          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-          .join(' '),
-      meetingDate: meetingDate,
-    };
-    studentInfo.value.push(studentMeetingsData);
+//update upcoming meetings whenever a meeting is added
+watch(validMeetings, () => {
+  updateStudentMeetings();
+});
+
+//update upcoming meetings on load
+onMounted(() => {
+  updateStudentMeetings();
+});
+
+function updateStudentMeetings() {
+  studentInfo.value = [];
+  for (const student of validMeetings) {
+    const meetingDate = new Date(student.node.meeting as string);
+    if (meetingDate > new Date()) {
+      const studentMeetingsData: studentMeetings = {
+        name: `${student.node.user.firstName} ${student.node.user.lastName}`,
+        meetingDate: meetingDate,
+        meetingTime: dateformat(new Date(meetingDate as Date), "shortTime"),
+      };
+      studentInfo.value.push(studentMeetingsData);
+    }
   }
 }
 
@@ -62,27 +75,15 @@ function formatDate(meetingDate: Date): string {
   return meetingDate.toLocaleDateString("en-US", options);
 }
 
-sharedState.UpcomingMeeting.value = () => {
-  studentInfo.value = [];
-  const validMeetings = guidanceStore.allStudents.edges.filter(
-    (student) =>
-      student.node.meeting !== null && student.node.meeting !== undefined
-  );
-
-  const currentDate = new Date();
-  for (const student of validMeetings) {
-    const meetingDate = new Date(student.node.meeting as string);
-    if (meetingDate > currentDate) {
-      const studentMeetingsData: studentMeetings = {
-        name:
-          `${student.node.user.firstName} ${student.node.user.lastName}`
-            .split(' ')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-            .join(' '),
-        meetingDate: meetingDate,
-      };
-      studentInfo.value.push(studentMeetingsData);
+const groupedStudentMeetings = computed(() => {
+  const groupedMeetings: Record<string, studentMeetings[]> = {};
+  studentInfo.value.forEach((meeting) => {
+    const formattedDate = formatDate(meeting.meetingDate);
+    if (!groupedMeetings[formattedDate]) {
+      groupedMeetings[formattedDate] = [];
     }
-  }
-};
+    groupedMeetings[formattedDate].push(meeting);
+  });
+  return groupedMeetings;
+});
 </script>

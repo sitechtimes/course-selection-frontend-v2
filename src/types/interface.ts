@@ -168,6 +168,7 @@ export interface course {
 export interface studentMeetings {
     name: string;
     meetingDate: Date;
+    meetingTime: Date;
 }
 
 export interface calendarData {

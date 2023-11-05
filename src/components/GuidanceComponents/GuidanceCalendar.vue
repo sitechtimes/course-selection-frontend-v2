@@ -72,7 +72,6 @@ import MeetingDetails from "./MeetingDetails.vue";
 import PlusIcon from "../icons/PlusIcon.vue";
 //@ts-ignore
 import dateformat from "dateformat";
-import { sharedState } from "../../stores/function";
 
 const meetingDetails = {
   name: "",
@@ -228,7 +227,6 @@ onMounted(() => {
   console.log("Student Info:", studentInfo);
 });
 
-sharedState.GuidanceCalender.value = () => {};
 </script>
 
 <style scoped>
