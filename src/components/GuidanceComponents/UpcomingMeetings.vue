@@ -26,6 +26,7 @@ import { studentMeetings } from "../../types/interface";
 import dateformat from "dateformat";
 
 const guidanceStore = useGuidanceStore();
+
 const studentInfo: Ref<studentMeetings[]> = ref([]);
 
 //all students with a scheduled meeting 
@@ -34,51 +35,30 @@ const validMeetings = guidanceStore.allStudents.edges.filter(
     student.node.meeting !== null && student.node.meeting !== undefined
 );
 
+//update upcoming meetings on load
+onMounted(() => {
+  updateStudentMeetings();
+});
 //update upcoming meetings whenever a meeting is added
 watch(validMeetings, () => {
   updateStudentMeetings();
 });
 
-//update upcoming meetings on load
-onMounted(() => {
-  updateStudentMeetings();
-});
-
 function updateStudentMeetings() {
-  studentInfo.value = [];
-  for (const student of validMeetings) {
-    const meetingDate = new Date(student.node.meeting as string);
-    if (meetingDate > new Date()) {
-      const studentMeetingsData: studentMeetings = {
-        name: `${student.node.user.firstName} ${student.node.user.lastName}`,
-        meetingDate: meetingDate,
-        meetingTime: dateformat(new Date(meetingDate as Date), "shortTime"),
-      };
-      studentInfo.value.push(studentMeetingsData);
-    }
-  }
+  studentInfo.value = validMeetings.map(student => ({
+    name: `${student.node.user.firstName} ${student.node.user.lastName}`,
+    meetingDate: new Date(student.node.meeting as string),
+    meetingTime: dateformat(new Date(student.node.meeting as string), "shortTime"),
+  }));
+  studentInfo.value.sort((a, b) => {
+    return a.meetingDate.getTime() - b.meetingDate.getTime();
+  })
 }
-
-//sort meetings by time
-studentInfo.value.sort((a, b) => {
-  return a.meetingDate.getTime() - b.meetingDate.getTime();
-});
-
-function formatDate(meetingDate: Date): string {
-  const options = {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  };
-  //@ts-ignore
-  return meetingDate.toLocaleDateString("en-US", options);
-}
-
 const groupedStudentMeetings = computed(() => {
   const groupedMeetings: Record<string, studentMeetings[]> = {};
-  studentInfo.value.forEach((meeting) => {
-    const formattedDate = formatDate(meeting.meetingDate);
+  studentInfo.value.forEach(meeting => {
+    const formattedDate = dateformat(meeting.meetingDate, "longDate");
+    //if there are no other meetings with the same date, push into empty array
     if (!groupedMeetings[formattedDate]) {
       groupedMeetings[formattedDate] = [];
     }
