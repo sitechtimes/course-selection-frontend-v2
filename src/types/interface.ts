@@ -168,6 +168,7 @@ export interface course {
 export interface studentMeetings {
     name: string;
     meetingDate: Date;
+    meetingTime: Date;
 }
 
 export interface calendarData {
@@ -179,7 +180,7 @@ export interface calendarData {
             id: string,
             name: string;
             meetingDate: Date|null;
-            email: string
+            grade: string;
         }>;
     }>;
     monthChanges: number;
