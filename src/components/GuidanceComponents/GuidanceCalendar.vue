@@ -2,23 +2,11 @@
   <div class="grid content-center justify-center flex-wrap">
     <div class="container">
       <div class="flex flex-row mb-8 text-4xl font-bold">
-        <span
-          class="arrow cursor-pointer"
-          id="prev"
-          ref="prev"
-          @click="changeMonth(false)"
-          >&#10094;</span
-        >
+        <span class="arrow cursor-pointer" id="prev" ref="prev" @click="changeMonth(false)">&#10094;</span>
         <div class="mx-2 flex flex-row">
           {{ months[todaysMonth] }} {{ todaysYear }}
         </div>
-        <span
-          class="arrow cursor-pointer"
-          id="next"
-          ref="next"
-          @click="changeMonth(true)"
-          >&#10095;</span
-        >
+        <span class="arrow cursor-pointer" id="next" ref="next" @click="changeMonth(true)">&#10095;</span>
       </div>
       <div class="flex flex-row justify-between space-x-28 mb-12">
         <div class="calendar">
@@ -34,23 +22,13 @@
           <ul class="days">
             <li class="dayCon" v-for="h in calendarData.dateInfo" :key="h.id">
               <p class="mt-2 text-end mr-2 mb-16">{{ h.todaysDate }}</p>
-              <div
-                v-for="meeting in h.meetings"
-                :key="meeting.id"
-                @click="toggleDetails"
-              >
+              <div v-for="meeting in h.meetings" :key="meeting.id" @click="toggleDetails(meeting)">
                 <p
-                  :class="`w-[100%] text-center truncate ${classColor[meeting.grade]} rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md`"
-                  v-for="meeting in h.meetings"
-                  :key="meeting.id"
-                >
+                  :class="`w-[100%] text-center truncate ${classColor[meeting.grade]} rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md`">
                   {{ meeting.name }}
                 </p>
               </div>
-              <PlusIcon
-                class="plusIcon w-3 ml-2 cursor-pointer invisible"
-                @click="toggleEvent"
-              />
+              <PlusIcon class="plusIcon w-3 ml-2 cursor-pointer invisible" @click="toggleEvent" />
             </li>
           </ul>
         </div>
@@ -63,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, reactive, onMounted } from "vue";
+import { ref, Ref, reactive, onMounted, watch } from "vue";
 import { useGuidanceStore } from "../../stores/guidance";
 import { calendarData } from "../../types/interface";
 import UpcomingMeetings from "../GuidanceComponents/UpcomingMeetings.vue";
@@ -72,13 +50,13 @@ import MeetingDetails from "./MeetingDetails.vue";
 import PlusIcon from "../icons/PlusIcon.vue";
 //@ts-ignore
 import dateformat from "dateformat";
-import { sharedState } from "../../stores/function";
 
 const meetingDetails = {
   name: "",
   date: "",
   time: "",
   memo: "",
+  grade: "",
 };
 
 const guidanceStore = useGuidanceStore();
@@ -86,21 +64,32 @@ const guidanceStore = useGuidanceStore();
 const showEvent: Ref<boolean> = ref(false);
 const showDetails: Ref<boolean> = ref(false);
 
-const toggleDetails = () => {
+const toggleDetails = (meeting) => {
+  //populating meetingDetails
+  meetingDetails.name = meeting.meetingDetails.name;
+  meetingDetails.date = meeting.meetingDetails.date;
+  meetingDetails.time = meeting.meetingDetails.time;
+  meetingDetails.memo = meeting.meetingDetails.memo;
   showDetails.value = !showDetails.value;
 };
+
 const toggleEvent = () => {
   showEvent.value = !showEvent.value;
 };
 
-const classColor= {
+//index signature for grades
+type ClassColor = {
+  [grade: string]: string;
+};
+
+const classColor: ClassColor = {
   FRESHMAN: "bg-[#F5CDCD] text-[#590000]",
   SOPHOMORE: "bg-[#D2F6D2] text-[#003400]",
   JUNIOR: "bg-[#EED7FD] text-[#2D004B]",
-  SENIOR: "bg-[#CCDDF5] text-[#002254]"
-}
+  SENIOR: "bg-[#CCDDF5] text-[#002254]",
+};
 
-const studentInfo = guidanceStore.allStudents.edges
+const studentInfo = ref(guidanceStore.allStudents.edges
   .filter((student) => student.node.meeting)
   .map((student) => ({
     name: `${student.node.user.firstName} ${student.node.user.lastName}`
@@ -110,7 +99,17 @@ const studentInfo = guidanceStore.allStudents.edges
     meetingDate: student.node.meeting,
     description: student.node.description,
     grade: student.node.grade,
-  }));
+  })));
+
+onMounted(() => {
+  renderCalendar();
+  console.log("Student Info:", studentInfo);
+});
+
+watch(studentInfo.value, () => {
+  renderCalendar();
+
+});
 
 let todaysDate = new Date();
 let todaysYear = todaysDate.getFullYear();
@@ -136,6 +135,7 @@ const months = [
   "December",
 ];
 
+//generates calendar data
 const renderCalendar = () => {
   let firstDayofMonth = new Date(todaysYear, todaysMonth, 1).getDay();
   let lastDateofMonth = new Date(todaysYear, todaysMonth + 1, 0).getDate();
@@ -149,29 +149,42 @@ const renderCalendar = () => {
 
   for (let i = firstDayofMonth; i > 0; i--) {
     const dateBoxInfo = {
-      type: "previous",
-      todaysDate: lastDateofLastMonth - i + 1,
-      id: i + "p",
-      meetings: [],
+      type: "previous", //previous to today's date
+      todaysDate: lastDateofLastMonth - i + 1, //date for the date box 
+      id: i + "p", //'p' indicates the type is previous 
+      meetings: [], //array of meetings for the data 
     };
     dateInfo.push(dateBoxInfo);
   }
 
   for (let i = 1; i <= lastDateofMonth; i++) {
+    //each day of the month is given an active date object
     const activeDate = new Date(todaysYear, todaysMonth, i);
-
+    //all students with meetngs for the active date 
     const studentsWithMeetings = [];
-
-    for (const student of studentInfo) {
+    //for each student in studentInfo, a studentMeetingDate contains date&time information about the student's meeting
+    //if the student has a meeting on the active date, push the date to studentsWithMeetings
+    for (const student of studentInfo.value) {
       const studentMeetingDate = new Date(student.meetingDate as string);
       const isMeetingDate =
         studentMeetingDate.getDate() === activeDate.getDate() &&
         studentMeetingDate.getMonth() === activeDate.getMonth() &&
         studentMeetingDate.getFullYear() === activeDate.getFullYear();
       if (isMeetingDate) {
-        studentsWithMeetings.push(student);
+        const meetingDetails = {
+          name: student.name,
+          date: dateformat(studentMeetingDate, "shortDate"),
+          time: dateformat(studentMeetingDate, "shortTime"),
+          memo: student.description,
+          grade: student.grade
+        };
+        //create a new object that includes all the properties from the student and meetingDetails object
+        studentsWithMeetings.push({ ...student, meetingDetails });
       }
     }
+    studentsWithMeetings.sort((a, b) => {
+      return new Date(a.meetingDetails.time).getTime() - new Date(b.meetingDetails.time).getTime();
+    });
     const dateBoxInfo = {
       type: "current",
       todaysDate: i,
@@ -179,13 +192,6 @@ const renderCalendar = () => {
       meetings: studentsWithMeetings,
     };
     dateInfo.push(dateBoxInfo);
-    for (const meeting of studentsWithMeetings) {
-      const dateObject = new Date(meeting.meetingDate as string);
-      meetingDetails.name = meeting.name;
-      meetingDetails.date = dateformat(dateObject, "shortDate");
-      meetingDetails.time = dateformat(dateObject, "shortTime");
-      meetingDetails.memo = meeting.description;
-    }
   }
   for (let i = lastDayofMonth; i < 6; i++) {
     const dateBoxInfo = {
@@ -219,13 +225,6 @@ const changeMonth = (next: boolean) => {
   }
   renderCalendar();
 };
-
-onMounted(() => {
-  renderCalendar();
-  console.log("Student Info:", studentInfo);
-});
-
-sharedState.GuidanceCalender.value = () => {};
 </script>
 
 <style scoped>
@@ -276,7 +275,7 @@ sharedState.GuidanceCalender.value = () => {};
   visibility: visible;
 }
 
-.days li:hover + .plusIcon {
+.days li:hover+.plusIcon {
   display: block;
 }
 
