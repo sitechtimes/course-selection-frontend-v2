@@ -64,8 +64,11 @@
         </button>
       </div>
       <div class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit">
-         <RouterLink to="/guidance/PrintPage" type="submit" @click="togglePrintModal" class="font-bold bg-[#e5e7be] px-4 py-2 rounded-2xl w-fit h-fit"
+        <button >
+          <RouterLink to="/guidance/PrintPage" type="submit" @click="togglePrintModal" class="font-bold bg-[#e5e7be] px-4 py-2 rounded-xl w-fit h-fit"
           id="save" ref="save">Print</RouterLink>
+        </button>
+         
       </div>
     </div>
   </div>
