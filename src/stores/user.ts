@@ -384,7 +384,7 @@ export const useUserStore = defineStore("user", {
           `${import.meta.env.VITE_URL}/graphql/`,
           {
             query: `mutation {
-                            DeleteMeeting(email: "${email}") {
+                            deleteMeeting(email: "${email}") {
                                 student{
                                   email
                                 }
@@ -399,7 +399,8 @@ export const useUserStore = defineStore("user", {
           }
         )
         .then((res) => {
-          console.log(res);
+          callFunctionInGuidanceCalender()
+          callFunctionInUpcomingMeeting()   
         });
     },
     async addFlag(email: string, newFlag: string) {
