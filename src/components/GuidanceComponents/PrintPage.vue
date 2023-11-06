@@ -4,7 +4,7 @@
       <div class="overflow-y-auto max-h-100">
         <ul class="my-4" v-for="(meeting, index) in studentInfo" :key="index">
           <h2 class="ml-6 ">Dear {{ meeting.name }},</h2>
-          <h2>Your guidance counselor has scheduled a meeting with you for INPUT TIME on {{ formatDate(meeting.meetingDate) }}. 
+          <h2>Your guidance counselor has scheduled a meeting with you for {{meeting.time}} on {{ formatDate(meeting.meetingDate) }}. 
             Please meet with them during the specified time.Your guidance counselor has made the following notes:
             {{ meeting.memo }}
           </h2>        
@@ -25,6 +25,10 @@ import { useGuidanceStore } from "../../stores/guidance";
 import { studentMeetings } from "../../types/interface";
 import { sharedState } from "../../stores/function";
 import Printer from "../icons/Printer.vue";
+//@ts-ignore
+
+import dateformat from "dateformat";
+
 
 const guidanceStore = useGuidanceStore();
 const studentInfo: Ref<studentMeetings[]> = ref([]);
@@ -37,8 +41,9 @@ const validMeetings = guidanceStore.allStudents.edges.filter(
 const currentDate = new Date();
 for (const student of validMeetings) {
   const meetingDate = new Date(student.node.meeting as string);
-  // const meetingTime = 
   const meetingDescription = student.node.description
+  const meetingTime = dateformat(meetingDate, "shortTime")
+  console.log(new Date(student.node.meeting as string))
   if (meetingDate > currentDate) {
     const studentMeetingsData: studentMeetings = {
       name:
@@ -48,7 +53,7 @@ for (const student of validMeetings) {
           .join(' '),
       meetingDate: meetingDate,
       memo: meetingDescription, 
-      // time: meetingTime
+      time: meetingTime
     };
     studentInfo.value.push(studentMeetingsData);
   }
