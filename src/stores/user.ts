@@ -379,6 +379,8 @@ export const useUserStore = defineStore("user", {
                             deleteMeeting(email: "${email}") {
                                 student{
                                   email
+                                  meeting
+                                  meetingDescription
                                 }
                             }
                         }`,
@@ -391,8 +393,23 @@ export const useUserStore = defineStore("user", {
           }
         )
         .then((res) => {
-          callFunctionInGuidanceCalender()
-          callFunctionInUpcomingMeeting()   
+          const guidanceStore = useGuidanceStore();
+          const studentIndexAll = guidanceStore.allStudents.edges.findIndex(
+            (student) => student.node.user.email === email
+          );
+          const studentIndex = guidanceStore.guidance.students.findIndex(
+            (student) => student.user.email === email
+          );
+          console.log(guidanceStore.guidance.students[studentIndex])
+          if (studentIndex > -1) {
+            guidanceStore.guidance.students[studentIndex].meeting =
+              res.data.data.deleteMeeting.student.meeting;
+            guidanceStore.guidance.students[studentIndex].description = res.data.data.deleteMeeting.student.meetingDescription
+          }
+
+          guidanceStore.allStudents.edges[studentIndexAll].node.meeting =
+            res.data.data.deleteMeeting.student.meeting;
+          guidanceStore.allStudents.edges[studentIndexAll].node.description = res.data.data.deleteMeeting.student.meetingDescription
         });
     },
     async addFlag(email: string, newFlag: string) {

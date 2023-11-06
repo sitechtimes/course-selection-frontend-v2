@@ -19,6 +19,7 @@
       </button>
       <button
         class="duration-300 font-bold bg-[#f28e8e] px-4 py-2 rounded-lg w-fit h-fit opacity-0.5:hover"
+        @click="deleteMeeting(meetingDetails.email)"
       >
         Delete
       </button>

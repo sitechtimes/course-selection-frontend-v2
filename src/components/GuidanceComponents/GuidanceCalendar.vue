@@ -79,6 +79,7 @@ const meetingDetails = {
   time: "",
   memo: "",
   grade: "",
+  email: "",
 };
 
 const guidanceStore = useGuidanceStore();
@@ -92,6 +93,7 @@ const toggleDetails = (meeting) => {
   meetingDetails.date = meeting.meetingDetails.date;
   meetingDetails.time = meeting.meetingDetails.time;
   meetingDetails.memo = meeting.meetingDetails.memo;
+  meetingDetails.email = meeting.meetingDetails.email;
   showDetails.value = !showDetails.value;
 };
 
@@ -124,6 +126,7 @@ const studentInfo = ref(
       meetingDate: student.node.meeting,
       description: student.node.description,
       grade: student.node.grade,
+      email: student.node.user.email,
     }))
 );
 
@@ -202,6 +205,7 @@ const renderCalendar = () => {
           time: dateformat(studentMeetingDate, "shortTime"),
           memo: student.description,
           grade: student.grade,
+          email: student.email,
         };
         //create a new object that includes all the properties from the student and meetingDetails object
         studentsWithMeetings.push({ ...student, meetingDetails });
