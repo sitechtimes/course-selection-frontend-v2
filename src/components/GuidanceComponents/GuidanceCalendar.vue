@@ -2,11 +2,23 @@
   <div class="grid content-center justify-center flex-wrap">
     <div class="container">
       <div class="flex flex-row mb-8 text-4xl font-bold">
-        <span class="arrow cursor-pointer" id="prev" ref="prev" @click="changeMonth(false)">&#10094;</span>
+        <span
+          class="arrow cursor-pointer"
+          id="prev"
+          ref="prev"
+          @click="changeMonth(false)"
+          >&#10094;</span
+        >
         <div class="mx-2 flex flex-row">
           {{ months[todaysMonth] }} {{ todaysYear }}
         </div>
-        <span class="arrow cursor-pointer" id="next" ref="next" @click="changeMonth(true)">&#10095;</span>
+        <span
+          class="arrow cursor-pointer"
+          id="next"
+          ref="next"
+          @click="changeMonth(true)"
+          >&#10095;</span
+        >
       </div>
       <div class="flex flex-row justify-between space-x-28 mb-12">
         <div class="calendar">
@@ -22,13 +34,23 @@
           <ul class="days">
             <li class="dayCon" v-for="h in calendarData.dateInfo" :key="h.id">
               <p class="mt-2 text-end mr-2 mb-16">{{ h.todaysDate }}</p>
-              <div v-for="meeting in h.meetings" :key="meeting.id" @click="toggleDetails(meeting)">
+              <div
+                v-for="meeting in h.meetings"
+                :key="meeting.id"
+                @click="toggleDetails(meeting)"
+              >
                 <p
-                  :class="`w-[100%] text-center truncate ${classColor[meeting.grade]} rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md`">
+                  :class="`w-[100%] text-center truncate ${
+                    classColor[meeting.grade]
+                  } rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md`"
+                >
                   {{ meeting.name }}
                 </p>
               </div>
-              <PlusIcon class="plusIcon w-3 ml-2 cursor-pointer invisible" @click="toggleEvent" />
+              <PlusIcon
+                class="plusIcon w-3 ml-2 cursor-pointer invisible"
+                @click="toggleEvent"
+              />
             </li>
           </ul>
         </div>
@@ -57,6 +79,7 @@ const meetingDetails = {
   time: "",
   memo: "",
   grade: "",
+  email: "",
 };
 
 const guidanceStore = useGuidanceStore();
@@ -70,6 +93,7 @@ const toggleDetails = (meeting) => {
   meetingDetails.date = meeting.meetingDetails.date;
   meetingDetails.time = meeting.meetingDetails.time;
   meetingDetails.memo = meeting.meetingDetails.memo;
+  meetingDetails.email = meeting.meetingDetails.email;
   showDetails.value = !showDetails.value;
 };
 
@@ -89,17 +113,22 @@ const classColor: ClassColor = {
   SENIOR: "bg-[#CCDDF5] text-[#002254]",
 };
 
-const studentInfo = ref(guidanceStore.allStudents.edges
-  .filter((student) => student.node.meeting)
-  .map((student) => ({
-    name: `${student.node.user.firstName} ${student.node.user.lastName}`
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(" "),
-    meetingDate: student.node.meeting,
-    description: student.node.description,
-    grade: student.node.grade,
-  })));
+const studentInfo = ref(
+  guidanceStore.allStudents.edges
+    .filter((student) => student.node.meeting)
+    .map((student) => ({
+      name: `${student.node.user.firstName} ${student.node.user.lastName}`
+        .split(" ")
+        .map(
+          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        )
+        .join(" "),
+      meetingDate: student.node.meeting,
+      description: student.node.description,
+      grade: student.node.grade,
+      email: student.node.user.email,
+    }))
+);
 
 onMounted(() => {
   renderCalendar();
@@ -108,7 +137,6 @@ onMounted(() => {
 
 watch(studentInfo.value, () => {
   renderCalendar();
-
 });
 
 let todaysDate = new Date();
@@ -150,9 +178,9 @@ const renderCalendar = () => {
   for (let i = firstDayofMonth; i > 0; i--) {
     const dateBoxInfo = {
       type: "previous", //previous to today's date
-      todaysDate: lastDateofLastMonth - i + 1, //date for the date box 
-      id: i + "p", //'p' indicates the type is previous 
-      meetings: [], //array of meetings for the data 
+      todaysDate: lastDateofLastMonth - i + 1, //date for the date box
+      id: i + "p", //'p' indicates the type is previous
+      meetings: [], //array of meetings for the data
     };
     dateInfo.push(dateBoxInfo);
   }
@@ -160,7 +188,7 @@ const renderCalendar = () => {
   for (let i = 1; i <= lastDateofMonth; i++) {
     //each day of the month is given an active date object
     const activeDate = new Date(todaysYear, todaysMonth, i);
-    //all students with meetngs for the active date 
+    //all students with meetngs for the active date
     const studentsWithMeetings = [];
     //for each student in studentInfo, a studentMeetingDate contains date&time information about the student's meeting
     //if the student has a meeting on the active date, push the date to studentsWithMeetings
@@ -176,14 +204,18 @@ const renderCalendar = () => {
           date: dateformat(studentMeetingDate, "shortDate"),
           time: dateformat(studentMeetingDate, "shortTime"),
           memo: student.description,
-          grade: student.grade
+          grade: student.grade,
+          email: student.email,
         };
         //create a new object that includes all the properties from the student and meetingDetails object
         studentsWithMeetings.push({ ...student, meetingDetails });
       }
     }
     studentsWithMeetings.sort((a, b) => {
-      return new Date(a.meetingDetails.time).getTime() - new Date(b.meetingDetails.time).getTime();
+      return (
+        new Date(a.meetingDetails.time).getTime() -
+        new Date(b.meetingDetails.time).getTime()
+      );
     });
     const dateBoxInfo = {
       type: "current",
@@ -275,7 +307,7 @@ const changeMonth = (next: boolean) => {
   visibility: visible;
 }
 
-.days li:hover+.plusIcon {
+.days li:hover + .plusIcon {
   display: block;
 }
 
