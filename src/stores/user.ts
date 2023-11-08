@@ -369,47 +369,6 @@ export const useUserStore = defineStore("user", {
           guidanceStore.allStudents.edges[studentIndexAll].node.description = description;
         });
     },
-    async deleteMeeting(email: string) {
-      await axios
-        .post(
-          `${import.meta.env.VITE_URL}/graphql/`,
-          {
-            query: `mutation {
-                            deleteMeeting(email: "${email}") {
-                                student{
-                                  email
-                                  meeting
-                                  meetingDescription
-                                }
-                            }
-                        }`,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${this.access_token}`,
-            },
-          }
-        )
-        .then((res) => {
-          const guidanceStore = useGuidanceStore();
-          const studentIndexAll = guidanceStore.allStudents.edges.findIndex(
-            (student) => student.node.user.email === email
-          );
-          const studentIndex = guidanceStore.guidance.students.findIndex(
-            (student) => student.user.email === email
-          );
-          if (studentIndex > -1) {
-            guidanceStore.guidance.students[studentIndex].meeting =
-              res.data.data.deleteMeeting.student.meeting;
-            guidanceStore.guidance.students[studentIndex].description = res.data.data.deleteMeeting.student.meetingDescription
-          }
-
-          guidanceStore.allStudents.edges[studentIndexAll].node.meeting =
-            res.data.data.deleteMeeting.student.meeting;
-          guidanceStore.allStudents.edges[studentIndexAll].node.description = res.data.data.deleteMeeting.student.meetingDescription
-        });
-    },
     async addFlag(email: string, newFlag: string) {
       await axios
         .post(
