@@ -44,6 +44,7 @@ const toggleDetails = () => {
 };
 
 const deleteMeeting = async (email: string) => {
+  toggleDetails();
   await userStore.deleteMeeting(email);
 };
 </script>
