@@ -1,21 +1,24 @@
 <template>
-  <div id="printPage" class="flex w-[40vw] border border-gray-500 rounded-md">
+  <div class="flex flex-col">
+  <div id="printPage" class="flex w-[40vw] m-4 border border-gray-500 rounded-md">
     <div class="p-4">
       <div class="overflow-y-auto max-h-100">
         <ul class="my-4" v-for="(meeting, index) in studentInfo" :key="index">
-          <h2 class="ml-6 ">Dear {{ meeting.name }},</h2>
-          <h2>Your guidance counselor has scheduled a meeting with you for {{meeting.time}} on {{ formatDate(meeting.meetingDate) }}. 
-            Please meet with them during the specified time.Your guidance counselor has made the following notes:
+          <p class="">Dear {{ meeting.name }},</p>
+          <p class="indent-8">Your guidance counselor has scheduled a meeting with you for {{meeting.time}} on {{ formatDate(meeting.meetingDate) }}. 
+            Please meet with them during the specified time. Your guidance counselor has made the following notes:
+            <br/>
             {{ meeting.memo }}
-          </h2>        
+          </p>        
         </ul>
       </div>
     </div>
   </div>
   <div class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit">
-    <button class="flex flex-row items-center font-bold bg-[#e5e7be] px-4 py-2 rounded-2xl w-fit h-fit" type="submit" @click="printMeetingTicket">
+    <button class="flex flex-row items-center font-bold text-[1.2rem] bg-[#e5e7be] px-4 py-2 rounded-sm w-fit h-fit" type="submit" @click="printMeetingTicket">
       <Printer class="mr-3"/> Print
     </button>
+  </div>
   </div>
 </template>
 
@@ -23,10 +26,8 @@
 import { ref, Ref } from "vue";
 import { useGuidanceStore } from "../../stores/guidance";
 import { studentMeetings } from "../../types/interface";
-import { sharedState } from "../../stores/function";
 import Printer from "../icons/Printer.vue";
 //@ts-ignore
-
 import dateformat from "dateformat";
 
 
