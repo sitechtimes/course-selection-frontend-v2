@@ -5,13 +5,7 @@ import { useGuidanceStore } from "./guidance";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import { user, account_type, userData } from "../types/interface";
-import { sharedState } from "./function";
-const callFunctionInUpcomingMeeting = () => {
-  sharedState.UpcomingMeeting.value(); // Call the function in Child 2
-};
-const callFunctionInGuidanceCalender = () => {
-  sharedState.GuidanceCalender.value(); // Call the function in Child 2
-};
+
 export const useUserStore = defineStore("user", {
   state: (): user => ({
     first_name: "",
@@ -373,8 +367,47 @@ export const useUserStore = defineStore("user", {
           guidanceStore.allStudents.edges[studentIndexAll].node.meeting =
             res.data.data.updateMeeting.student.meeting;
           guidanceStore.allStudents.edges[studentIndexAll].node.description = description;
-          callFunctionInUpcomingMeeting()
-          callFunctionInGuidanceCalender()
+        });
+    },
+    async deleteMeeting(email: string) {
+      await axios
+        .post(
+          `${import.meta.env.VITE_URL}/graphql/`,
+          {
+            query: `mutation {
+                            deleteMeeting(email: "${email}") {
+                                student{
+                                  email
+                                  meeting
+                                  meetingDescription
+                                }
+                            }
+                        }`,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${this.access_token}`,
+            },
+          }
+        )
+        .then((res) => {
+          const guidanceStore = useGuidanceStore();
+          const studentIndexAll = guidanceStore.allStudents.edges.findIndex(
+            (student) => student.node.user.email === email
+          );
+          const studentIndex = guidanceStore.guidance.students.findIndex(
+            (student) => student.user.email === email
+          );
+          if (studentIndex > -1) {
+            guidanceStore.guidance.students[studentIndex].meeting =
+              res.data.data.deleteMeeting.student.meeting;
+            guidanceStore.guidance.students[studentIndex].description = res.data.data.deleteMeeting.student.meetingDescription
+          }
+
+          guidanceStore.allStudents.edges[studentIndexAll].node.meeting =
+            res.data.data.deleteMeeting.student.meeting;
+          guidanceStore.allStudents.edges[studentIndexAll].node.description = res.data.data.deleteMeeting.student.meetingDescription
         });
     },
     async addFlag(email: string, newFlag: string) {
