@@ -15,7 +15,7 @@
     </div>
   </div>
   <div class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit">
-    <button class="flex flex-row items-center font-bold text-[1.2rem] bg-[#e5e7be] px-4 py-2 rounded-sm w-fit h-fit" type="submit" @click="printMeetingTicket">
+    <button class="flex flex-row items-center font-bold text-[1.2rem] bg-[#e5e7be] px-4 py-2 rounded-lg w-fit h-fit" type="submit" @click="printMeetingTicket">
       <Printer class="mr-3"/> Print
     </button>
   </div>
