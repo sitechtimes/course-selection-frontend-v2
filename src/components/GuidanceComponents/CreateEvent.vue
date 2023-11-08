@@ -22,8 +22,8 @@
                   d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192H400V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192z" />
               </svg>
               Date</label>
-            <input class="space d rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80" type="date"
-              v-model="selectedDate" placeholder="dateBoxInfo.todaysDate" ref="date" />
+            <input class="space d rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80" type="text"
+              v-model="selectedDate" placeholder="Date" ref="date" />
             <p v-if="dateError" class="error text-red-600 ml-6 mt-1">
               Field empty/invalid
             </p>
@@ -149,12 +149,7 @@ function submit(meetingDate: string, studentName: string, meetingTime: string, d
       email = student.user.email;
     }
   }
-  const dateBoxInfo = {
-      type: "current",
-      todaysDate: i,
-      id: i + "c",
-     
-    };
+  
 
   save.value.innerHTML = "Saved";
   userStore.changeMeeting(email, meetingISO, description);

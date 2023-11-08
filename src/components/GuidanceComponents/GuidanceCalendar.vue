@@ -157,6 +157,11 @@ const renderCalendar = () => {
     dateInfo.push(dateBoxInfo);
   }
 
+const props = defineProps([todaysDate])
+
+console.log(props.dateBoxInfo)
+
+
   for (let i = 1; i <= lastDateofMonth; i++) {
     //each day of the month is given an active date object
     const activeDate = new Date(todaysYear, todaysMonth, i);
