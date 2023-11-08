@@ -370,7 +370,6 @@ export const useUserStore = defineStore("user", {
         });
     },
     async deleteMeeting(email: string) {
-      console.log(email)
       await axios
         .post(
           `${import.meta.env.VITE_URL}/graphql/`,
@@ -400,7 +399,6 @@ export const useUserStore = defineStore("user", {
           const studentIndex = guidanceStore.guidance.students.findIndex(
             (student) => student.user.email === email
           );
-          console.log(guidanceStore.guidance.students[studentIndex])
           if (studentIndex > -1) {
             guidanceStore.guidance.students[studentIndex].meeting =
               res.data.data.deleteMeeting.student.meeting;
