@@ -35,13 +35,12 @@ const guidanceStore = useGuidanceStore();
 
 const studentInfo: Ref<studentMeetings[]> = ref([]);
 
-//all students with a scheduled meeting
-const validMeetings = guidanceStore.allStudents.edges.filter(
-  (student) =>
-    student.node.meeting !== null && student.node.meeting !== undefined
-);
-
 function updateStudentMeetings() {
+  //all students with a scheduled meeting
+  const validMeetings = guidanceStore.allStudents.edges.filter(
+    (student) =>
+      student.node.meeting !== null && student.node.meeting !== undefined
+  );
   studentInfo.value = validMeetings.map((student) => ({
     name: `${student.node.user.firstName} ${student.node.user.lastName}`,
     meetingDate: new Date(student.node.meeting as string),
@@ -60,8 +59,7 @@ onMounted(() => {
   updateStudentMeetings();
 });
 //update upcoming meetings whenever a meeting is added
-watch(validMeetings, () => {
-  console.log(validMeetings);
+watch(guidanceStore.allStudents.edges, () => {
   updateStudentMeetings();
 });
 

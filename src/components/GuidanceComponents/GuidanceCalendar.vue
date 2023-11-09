@@ -113,29 +113,33 @@ const classColor: ClassColor = {
   SENIOR: "bg-[#CCDDF5] text-[#002254]",
 };
 
-const studentInfo = ref(
-  guidanceStore.allStudents.edges
-    .filter((student) => student.node.meeting)
-    .map((student) => ({
-      name: `${student.node.user.firstName} ${student.node.user.lastName}`
-        .split(" ")
-        .map(
-          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-        )
-        .join(" "),
-      meetingDate: student.node.meeting,
-      description: student.node.description,
-      grade: student.node.grade,
-      email: student.node.user.email,
-    }))
-);
+function fetchstudentInfo() {
+  const data = ref(
+    guidanceStore.allStudents.edges
+      .filter((student) => student.node.meeting)
+      .map((student) => ({
+        name: `${student.node.user.firstName} ${student.node.user.lastName}`
+          .split(" ")
+          .map(
+            (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+          )
+          .join(" "),
+        meetingDate: student.node.meeting,
+        description: student.node.description,
+        grade: student.node.grade,
+        email: student.node.user.email,
+      }))
+  );
+  return data;
+}
 
 onMounted(() => {
+  fetchstudentInfo();
   renderCalendar();
-  console.log("Student Info:", studentInfo);
 });
 
-watch(studentInfo.value, () => {
+watch(guidanceStore.allStudents.edges, () => {
+  fetchstudentInfo();
   renderCalendar();
 });
 
@@ -174,6 +178,7 @@ const renderCalendar = () => {
   ).getDay();
   let lastDateofLastMonth = new Date(todaysYear, todaysMonth, 0).getDate();
   let dateInfo = [];
+  const studentInfo = fetchstudentInfo();
 
   for (let i = firstDayofMonth; i > 0; i--) {
     const dateBoxInfo = {
