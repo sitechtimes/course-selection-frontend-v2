@@ -65,7 +65,7 @@
               ref="time"
             />
             <p v-if="timeError" class="error text-red-600 ml-6 mt-1">
-              Field empty/invalid
+              Field empty/invalid 
             </p>
           </div>
         </div>
