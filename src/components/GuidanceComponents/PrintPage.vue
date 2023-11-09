@@ -5,7 +5,7 @@
       <div class="overflow-y-auto max-h-100">
         <ul class="my-4" v-for="(meeting, index) in studentInfo" :key="index">
           <p class="">Dear {{ meeting.name }},</p>
-          <p class="indent-8">Your guidance counselor has scheduled a meeting with you for {{meeting.time}} on {{ formatDate(meeting.meetingDate) }}. 
+          <p class="indent-8">Your guidance counselor has scheduled a meeting with you for {{meeting.meetingTime}} on {{ formatDate(meeting.meetingDate) }}. 
             Please meet with them during the specified time. Your guidance counselor has made the following notes:
             <br/>
             {{ meeting.memo }}
@@ -16,20 +16,26 @@
   </div>
   <div class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit">
     <button class="flex flex-row items-center font-bold text-[1.2rem] bg-[#e5e7be] px-4 py-2 rounded-lg w-fit h-fit" type="submit" @click="printMeetingTicket">
-      <Printer class="mr-3"/> Print
+      <PrinterIcon class="mr-3"/> Print
     </button>
   </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, Ref } from "vue";
+import { ref, Ref, defineProps } from "vue";
 import { useGuidanceStore } from "../../stores/guidance";
 import { studentMeetings } from "../../types/interface";
-import Printer from "../icons/Printer.vue";
+import PrinterIcon from "../icons/PrinterIcon.vue";
 //@ts-ignore
 import dateformat from "dateformat";
 
+defineProps({
+  meetingDetails: {
+    type: Object,
+    required: true,
+  },
+});
 
 const guidanceStore = useGuidanceStore();
 const studentInfo: Ref<studentMeetings[]> = ref([]);
@@ -52,9 +58,9 @@ for (const student of validMeetings) {
           .split(' ')
           .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
           .join(' '),
-      meetingDate: meetingDate,
+      meetingDate: meetingDate,      
+      meetingTime: meetingTime,
       memo: meetingDescription, 
-      time: meetingTime
     };
     studentInfo.value.push(studentMeetingsData);
   }
@@ -92,3 +98,15 @@ const printMeetingTicket = () =>{
 };
 
 </script>
+
+<style scoped>
+button:hover {
+  opacity: 0.5;
+}
+
+svg {
+  width: 1.2rem;
+  margin-right: 10px;
+  fill: #37394F;
+}
+</style>

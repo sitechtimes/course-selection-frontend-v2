@@ -62,7 +62,7 @@
         <div class="w-[60%] ml-4 mb-8 flex flex-row items-center">         
            <div class="item xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit">
             <button>
-              <RouterLink to="/guidance/PrintPage" type="submit" @click="togglePrintModal"
+              <RouterLink to="/guidance/PrintPage" type="submit"
                 class="font-bold text-[1.2rem] px-4 py-2 rounded-xl w-fit h-fit" id="save" ref="save">Print</RouterLink>
             </button>
           </div>
@@ -86,7 +86,6 @@ import DeleteModal from "./DeleteModal.vue"
 
 const show = ref(true);
 const showDeleteModal = ref(false);
-const showPrintModal = ref(false)
 
 defineProps({
   meetingDetails: {
@@ -104,14 +103,9 @@ const toggleDeleteModal = () => {
   show.value = !show.value;
 };
 
-const togglePrintModal = () => {
-  showPrintModal.value = !showPrintModal.value;
-  show.value = !show.value;
-};
 </script>
 
 <style scoped>
-
 button:hover {
   opacity: 0.5;
 }

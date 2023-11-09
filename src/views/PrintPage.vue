@@ -6,9 +6,6 @@
 
 <script setup lang="ts">
 import PrintPage from "../components/GuidanceComponents/PrintPage.vue";
-
-
-
 </script>
 <style>
 
