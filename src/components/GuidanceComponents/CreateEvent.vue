@@ -188,7 +188,7 @@ function submit(
 ) {
   //convert meeting date to an ISO string
   const meetingDateTime: Date = new Date(meetingDate + "T" + meetingTime);
-  const meetingISO: string = meetingDateTime.toISOString().slice(0, -1);
+  const meetingISO: string = meetingDateTime.toISOString();
   //locate student
   for (const student of studentList) {
     const studentFullName =
