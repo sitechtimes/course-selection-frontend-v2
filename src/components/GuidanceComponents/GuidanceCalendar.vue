@@ -157,9 +157,6 @@ const renderCalendar = () => {
     dateInfo.push(dateBoxInfo);
   }
 
-const props = defineProps([todaysDate])
-
-console.log(props.dateBoxInfo)
 
 
   for (let i = 1; i <= lastDateofMonth; i++) {
@@ -190,7 +187,9 @@ console.log(props.dateBoxInfo)
     studentsWithMeetings.sort((a, b) => {
       return new Date(a.meetingDetails.time).getTime() - new Date(b.meetingDetails.time).getTime();
     });
-    const dateBoxInfo = {
+  
+
+const dateBoxInfo = {
       type: "current",
       todaysDate: i,
       id: i + "c",
@@ -207,6 +206,9 @@ console.log(props.dateBoxInfo)
     };
     dateInfo.push(dateBoxInfo);
   }
+  
+  
+
   //@ts-ignore
   calendarData.dateInfo = dateInfo;
   calendarData.monthChanges = monthChanges.value + 1;
