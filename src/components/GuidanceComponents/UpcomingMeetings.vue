@@ -44,6 +44,7 @@ for (const student of validMeetings) {
           .join(' '),
       meetingDate: meetingDate,
     };
+    console.log(meetingDate)
     studentInfo.value.push(studentMeetingsData);
   }
 }
