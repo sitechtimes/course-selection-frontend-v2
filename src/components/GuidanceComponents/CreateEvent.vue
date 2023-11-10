@@ -65,7 +65,7 @@
               ref="time"
             />
             <p v-if="timeError" class="error text-red-600 ml-6 mt-1">
-              Field empty/invalid
+              Field empty/invalid 
             </p>
           </div>
         </div>
@@ -188,7 +188,7 @@ function submit(
 ) {
   //convert meeting date to an ISO string
   const meetingDateTime: Date = new Date(meetingDate + "T" + meetingTime);
-  const meetingISO: string = meetingDateTime.toISOString().slice(0, -1);
+  const meetingISO: string = meetingDateTime.toISOString();
   //locate student
   for (const student of studentList) {
     const studentFullName =

@@ -116,6 +116,7 @@ defineProps({
 
 const toggleShow = () => {
   show.value = !show.value;
+  
 };
 
 const toggleDeleteModal = () => {
