@@ -54,16 +54,20 @@ function updateStudentMeetings() {
     return a.meetingDate.getTime() - b.meetingDate.getTime();
   })
 }
+
+const todaysDate = new Date();
 const groupedStudentMeetings = computed(() => {
   const groupedMeetings: Record<string, studentMeetings[]> = {};
-  studentInfo.value.forEach(meeting => {
-    const formattedDate = dateformat(meeting.meetingDate, "longDate");
-    //if there are no other meetings with the same date, push into empty array
-    if (!groupedMeetings[formattedDate]) {
-      groupedMeetings[formattedDate] = [];
-    }
-    groupedMeetings[formattedDate].push(meeting);
-  });
+  studentInfo.value
+    .filter(meeting => meeting.meetingDate > todaysDate) //only show meetings after today
+    .forEach(meeting => {
+      const formattedDate = dateformat(meeting.meetingDate, "longDate");
+      //if there are no other meetings with the same date, push into empty array
+      if (!groupedMeetings[formattedDate]) {
+        groupedMeetings[formattedDate] = [];
+      }
+      groupedMeetings[formattedDate].push(meeting);
+    });
   return groupedMeetings;
 });
 </script>
