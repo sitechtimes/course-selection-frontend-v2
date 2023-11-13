@@ -41,6 +41,9 @@
 </template>
 
 <script setup lang="ts">
+
+
+
 import { ref, Ref, reactive, onMounted, watch } from "vue";
 import { useGuidanceStore } from "../../stores/guidance";
 import { calendarData } from "../../types/interface";
@@ -187,8 +190,7 @@ const renderCalendar = () => {
     studentsWithMeetings.sort((a, b) => {
       return new Date(a.meetingDetails.time).getTime() - new Date(b.meetingDetails.time).getTime();
     });
-  
-
+ 
 const dateBoxInfo = {
       type: "current",
       todaysDate: i,
@@ -206,8 +208,9 @@ const dateBoxInfo = {
     };
     dateInfo.push(dateBoxInfo);
   }
+
   
-  
+
 
   //@ts-ignore
   calendarData.dateInfo = dateInfo;

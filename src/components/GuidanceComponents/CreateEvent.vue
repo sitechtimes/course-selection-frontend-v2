@@ -23,7 +23,7 @@
               </svg>
               Date</label>
             <input class="space d rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80" type="date"
-              v-model="meetingDate" placeholder="Date" ref="date" />
+              v-model="{{ dateBoxInfo }}" placeholder="Date" ref="date" />
             <p v-if="dateError" class="error text-red-600 ml-6 mt-1">
               Field empty/invalid
             </p>
