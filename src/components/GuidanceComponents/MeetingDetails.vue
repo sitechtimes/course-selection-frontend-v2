@@ -125,9 +125,15 @@
 
 <script setup lang="ts">
 import { ref, defineProps } from "vue";
+import { surveyStore } from "../../types/interface";
+import { useGuidanceStore } from "../../stores/guidance";
+import { useRouter } from "vue-router";
 import DeleteModal from "./DeleteModal.vue";
+
 const show = ref(true);
+const router = useRouter();
 const showDeleteModal = ref(false);
+
 defineProps({
   meetingDetails: {
     type: Object,
@@ -137,7 +143,6 @@ defineProps({
 
 const toggleShow = () => {
   show.value = !show.value;
-  
 };
 
 const toggleDeleteModal = () => {
