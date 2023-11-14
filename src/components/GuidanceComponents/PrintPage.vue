@@ -1,35 +1,79 @@
 <template>
   <div class="flex flex-col">
-  <div id="printPage" class="flex w-[40vw] m-4 border border-gray-500 rounded-md">
-    <div class="p-4">
-      <div class="overflow-y-auto max-h-100">
-        <ul class="my-4" v-for="(meeting, index) in studentInfo" :key="index">
-          <p class="">Dear {{ meeting.name }},</p>
-          <p class="indent-8">Your guidance counselor has scheduled a meeting with you for {{meeting.meetingTime}} on {{ formatDate(meeting.meetingDate) }}. 
-            Please meet with them during the specified time. Your guidance counselor has made the following notes:
-            <br/>
-            {{ meeting.memo }}
-          </p>        
-        </ul>
+    <div
+      id="printPage"
+      class="flex w-[40vw] m-4 border border-gray-500 rounded-md"
+    >
+      <div class="p-4">
+        <div class="overflow-y-auto max-h-100">
+          <ul class="my-4">
+            <p class="">Dear {{ studentName }},</p>
+            <p class="indent-8">
+              Your guidance counselor has scheduled a meeting with you for
+              {{ meetingTime }} on {{ meetingDate }}. Please meet with them
+              during the specified time. Your guidance counselor has made the
+              following notes:
+              <br />
+              {{ meetingDescription }}
+            </p>
+          </ul>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit">
-    <button class="flex flex-row items-center font-bold text-[1.2rem] bg-[#e5e7be] px-4 py-2 rounded-lg w-fit h-fit" type="submit" @click="printMeetingTicket">
-      <PrinterIcon class="mr-3"/> Print
-    </button>
-  </div>
+    <div
+      class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit"
+    >
+      <button
+        class="flex flex-row items-center font-bold text-[1.2rem] bg-[#e5e7be] px-4 py-2 rounded-lg w-fit h-fit"
+        type="submit"
+        @click="printMeetingTicket"
+      >
+        <PrinterIcon class="mr-3" /> Print
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, defineProps } from "vue";
+import { ref, Ref, defineProps, onMounted } from "vue";
 import { useGuidanceStore } from "../../stores/guidance";
 import { studentMeetings } from "../../types/interface";
 import PrinterIcon from "../icons/PrinterIcon.vue";
+import { useRoute } from "vue-router";
 //@ts-ignore
 import dateformat from "dateformat";
+const route = useRoute();
+const email = route.params.email;
 
+const guidanceStore = useGuidanceStore();
+
+const studentIndexAll = guidanceStore.allStudents.edges.findIndex(
+  (student) => student.node.user.email === email
+);
+
+const studentIndex = guidanceStore.guidance.students.findIndex(
+  (student) => student.user.email === email
+);
+
+console.log(guidanceStore.allStudents.edges[studentIndex]);
+console.log(guidanceStore.guidance.students[studentIndex]);
+
+const studentName =
+  guidanceStore.allStudents.edges[studentIndex].node.user.firstName;
+
+const DateAndTime = guidanceStore.allStudents.edges[studentIndex].node.meeting;
+
+const meetingTime = dateformat(DateAndTime, "shortTime");
+
+const meetingDate = new Date(DateAndTime as string);
+
+const meetingDescription =
+  guidanceStore.allStudents.edges[studentIndex].node.description;
+
+function printMeetingTicket() {
+  window.print();
+}
+/*
 defineProps({
   meetingDetails: {
     type: Object,
@@ -37,7 +81,7 @@ defineProps({
   },
 });
 
-const guidanceStore = useGuidanceStore();
+
 const studentInfo: Ref<studentMeetings[]> = ref([]);
 
 const validMeetings = guidanceStore.allStudents.edges.filter(
@@ -48,19 +92,20 @@ const validMeetings = guidanceStore.allStudents.edges.filter(
 const currentDate = new Date();
 for (const student of validMeetings) {
   const meetingDate = new Date(student.node.meeting as string);
-  const meetingDescription = student.node.description
-  const meetingTime = dateformat(meetingDate, "shortTime")
-  console.log(new Date(student.node.meeting as string))
+  const meetingDescription = student.node.description;
+  const meetingTime = dateformat(meetingDate, "shortTime");
+  console.log(new Date(student.node.meeting as string));
   if (meetingDate > currentDate) {
     const studentMeetingsData: studentMeetings = {
-      name:
-        `${student.node.user.firstName} ${student.node.user.lastName}`
-          .split(' ')
-          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-          .join(' '),
-      meetingDate: meetingDate,      
+      name: `${student.node.user.firstName} ${student.node.user.lastName}`
+        .split(" ")
+        .map(
+          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        )
+        .join(" "),
+      meetingDate: meetingDate,
       meetingTime: meetingTime,
-      memo: meetingDescription, 
+      memo: meetingDescription,
     };
     studentInfo.value.push(studentMeetingsData);
   }
@@ -87,16 +132,15 @@ function formatDate(meetingDate: Date): string {
   };
   //@ts-ignore
   return meetingDate.toLocaleDateString("en-US", options);
-};
+}
 
-const printMeetingTicket = () =>{
-  const allBody = document.body.innerHTML;  
+const printMeetingTicket = () => {
+  const allBody = document.body.innerHTML;
   const partPrint = document.getElementById("printPage").innerHTML;
   document.body.innerHTML = partPrint;
   window.print();
   document.body.innerHTML = allBody;
-};
-
+};*/
 </script>
 
 <style scoped>
@@ -107,6 +151,6 @@ button:hover {
 svg {
   width: 1.2rem;
   margin-right: 10px;
-  fill: #37394F;
+  fill: #37394f;
 }
 </style>

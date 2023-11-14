@@ -159,7 +159,7 @@ const router = createRouter({
       }
     },
     {
-      path: '/guidance/PrintPage',
+      path: '/guidance/PrintPage:email',
       name: 'printPage',
       component: () => import('../views/PrintPage.vue'),
       beforeEnter: (to) => {
