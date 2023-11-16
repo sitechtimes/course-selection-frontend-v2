@@ -91,9 +91,9 @@
           >
             <button>
               <RouterLink
+                @click="pushRouter(meetingDetails.email)"
                 :to="{
-                  name: 'printPage',
-                  params: { email: meetingDetails.email },
+                  path: `/guidance/PrintPage/${meetingDetails.email}`,
                 }"
                 type="submit"
                 class="font-bold text-[1.2rem] px-4 py-2 rounded-xl w-fit h-fit"
@@ -149,6 +149,9 @@ const toggleDeleteModal = () => {
   showDeleteModal.value = !showDeleteModal.value;
   show.value = !show.value;
 };
+function pushRouter(email: string) {
+  router.push(`/guidance/PrintPage/${email.replace("@nycstudents.net", "")}`);
+}
 </script>
 
 <style scoped>

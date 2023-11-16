@@ -45,7 +45,7 @@ import dateformat from "dateformat";
 
 const route = useRoute();
 const router = useRouter();
-const email = route.params.email;
+let email = `${route.params.email}@nycstudents.net`;
 
 const guidanceStore = useGuidanceStore();
 
