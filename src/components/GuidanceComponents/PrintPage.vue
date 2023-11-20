@@ -57,9 +57,6 @@ const studentIndex = guidanceStore.guidance.students.findIndex(
   (student) => student.user.email === email
 );
 
-console.log(guidanceStore.allStudents.edges[studentIndex]);
-console.log(guidanceStore.guidance.students[studentIndex]);
-
 const studentName =
   guidanceStore.allStudents.edges[studentIndex].node.user.firstName;
 
