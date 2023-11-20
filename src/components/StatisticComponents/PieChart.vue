@@ -27,16 +27,38 @@
 import { Pie } from 'vue-chartjs';
 import { useGuidanceStore } from '../../stores/guidance';
 import { ref, Ref, onMounted, computed } from 'vue';
+import { useUserStore } from '../../stores/user';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import axios from 'axios';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const loaded = ref(true);
 const guidanceStore = useGuidanceStore();
+const userStore = useUserStore();
 const selectedCourse = ref('');
 const selectedYear = ref('');
 const storedYears = guidanceStore.surveyStats.edges
 let years = storedYears.map((yearSelected)=> yearSelected.node.year);
+
+onMounted(async () => {
+  const access_token = userStore.access_token;
+  const baseURL = `${import.meta.env.VITE_URL}/guidance/stats`; 
+
+  try {
+    const response = await axios.get(baseURL, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    stats.value = JSON.parse(response.data); 
+    loaded.value = true;
+  } catch (error) {
+    console.error('Error:', error);
+  }
+});
 
 // if a new year is selected from the dropdown, find the index where the stats are located and parse it into the stats
 const stats = computed(()=>{ 
