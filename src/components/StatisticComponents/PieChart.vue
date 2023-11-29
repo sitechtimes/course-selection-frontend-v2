@@ -62,6 +62,14 @@ onMounted(async () => {
         Authorization: `Bearer ${access_token}`,
       },
     });
+
+    //////
+    const statistic = response.data;
+    console.log(statistic);
+    const obj = JSON.parse(statistic);
+    console.log(obj);
+
+    //////
     loaded.value = true;
   } catch (error) {
     console.error("Error:", error);
