@@ -62,4 +62,8 @@ const confirm = async (flag: string) => {
   await userStore.deleteFlag(props.student.user.email, flag);
   emit("exit");
 };
+const access_token = userStore.access_token;
+const baseURL = `${import.meta.env.VITE_URL}/guidance/states`;
+axios.post(baseURL, addedFlags)
+.then(response)
 </script>
