@@ -181,11 +181,33 @@ function empty() {
   }
 }
 
-function updateMeeting(email: string, meetingISO: string, description: string) {
+async function updateMeeting(
+  email: string,
+  meetingISO: string,
+  description: string
+) {
   console.log(email, meetingISO, description);
-  axios.post("https://api.siths.dev/guidance/stats/").then((res) => {
-    console.log(res);
-  });
+
+  const access_token = userStore.access_token;
+  const baseURL = `${import.meta.env.VITE_URL}/guidance/stats`;
+
+  await axios
+    .post(
+      baseURL,
+      {
+        meetingISO: meetingISO,
+        description: description,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    )
+    .then((res) => {
+      console.log(res.data);
+    });
 }
 
 function submit(
