@@ -90,7 +90,9 @@ const stats = computed(() => {
 //returns each course name
 const courses = computed(() => {
   //check if stats is defined before using Object.keys()
-  return stats.value ? Object.keys(stats.value) : [];
+  if (stats.value !== undefined) {
+    //return courses
+  }
 });
 
 const chartOptions = ref({
