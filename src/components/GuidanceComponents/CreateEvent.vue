@@ -65,7 +65,7 @@
               ref="time"
             />
             <p v-if="timeError" class="error text-red-600 ml-6 mt-1">
-              Field empty/invalid 
+              Field empty/invalid
             </p>
           </div>
         </div>
@@ -147,6 +147,7 @@ import { ref, Ref } from "vue";
 import { useUserStore } from "../../stores/user";
 import { useGuidanceStore } from "../../stores/guidance";
 import { studentGuidance } from "../../types/interface";
+import axios from "axios";
 
 const guidanceStore = useGuidanceStore();
 const userStore = useUserStore();
@@ -180,6 +181,13 @@ function empty() {
   }
 }
 
+function updateMeeting(email: string, meetingISO: string, description: string) {
+  console.log(email, meetingISO, description);
+  axios.post("https://api.siths.dev/guidance/stats/").then((res) => {
+    console.log(res);
+  });
+}
+
 function submit(
   meetingDate: string,
   studentName: string,
@@ -202,7 +210,8 @@ function submit(
     }
   }
   save.value.innerHTML = "Saved";
-  userStore.changeMeeting(email, meetingISO, description);
+  // userStore.changeMeeting(email, meetingISO, description);
+  updateMeeting(email, meetingISO, description);
   form.value.reset();
   show.value = !show.value;
   //clear form input values
