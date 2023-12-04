@@ -18,133 +18,20 @@ export const useUserStore = defineStore("user", {
     loading: false,
     expire_time: 0,
   }),
-  getters: {
-    // getStudents(name?: string): object[] | object | undefined {
-    //     if (name) {
-    //         const students = this.data.students?.filter((e) => e.first_name === name);
-    //         return students
-    //     }
-    //     return this.data.students
-    // },
-  },
   actions: {
     async init(type: account_type) {
       this.userType = type;
       if (type === "guidance") {
-        await axios
-          .post(
-            `${import.meta.env.VITE_URL}/graphql/`,
-            {
-              query: `query{
-                            user{
-                                firstName
-                                lastName
-                                email
-                            }
-                            guidance{
-                                students{
-                                    user{
-                                        firstName
-                                        lastName
-                                        email
-                                    }
-                                    homeroom
-                                    flag
-                                    grade
-                                    coursesTaken{
-                                        courseCode
-                                    }
-                                    coursesRequired{
-                                        courseCode
-                                    }
-                                    coursesAvailable{
-                                        courseCode
-                                        subject
-                                        name
-                                    }
-                                    meeting
-                                }
-                            }
-                            allSurveys {
-                                edges{
-                                    node{
-                                        grade
-                                        question{
-                                            question
-                                            questionType
-                                            id
-                                            status
-                                            classReferenced {
-                                                name
-                                            }
-                                        }
-                                        dueDate
-                                    }
-                                }
-                            }
-                            allAnsweredSurveys {
-                                edges{
-                                    node{
-                                        email
-                                        answers
-                                        status
-                                        grade
-                                    }
-                                }
-                            }
-                            surveyStats {
-                              edges {
-                                  node {
-                                      year
-                                      stats
-                                  }
-                              }
-                          }
-                            allStudents {
-                              edges{
-                                node{
-                                  user{
-                                    firstName
-                                    lastName
-                                    email
-                                  }
-                                  homeroom
-                                  flag
-                                  grade
-                                  coursesTaken{
-                                    courseCode
-                                  }
-                                  coursesRequired{
-                                    courseCode
-                                  }
-                                  coursesAvailable{
-                                    courseCode
-                                    subject
-                                    name
-                                  }
-                                  meeting
-                                }
-                              }
-                            }                       
 
-                    }`,
-            },
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${this.access_token}`,
-              },
-            }
-          )
-          .then((res) => {
+        fetch(`${import.meta.env.VITE_URL}/guidance/profiles/`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${this.access_token}`,
+          },
+        })
+        .then(async (data) => {
             const guidanceStore = useGuidanceStore();
-            guidanceStore.allAnsweredSurveys = res.data.data.allAnsweredSurveys;
-            guidanceStore.allStudents = res.data.data.allStudents;
-            guidanceStore.allSurveys = res.data.data.allSurveys;
-            guidanceStore.guidance = res.data.data.guidance;
-            guidanceStore.user = res.data.data.user;
-            guidanceStore.surveyStats = res.data.data.surveyStats;
-
+            guidanceStore.allStudents = await data.json();
             this.loading = false;
           });
       } else {
@@ -475,5 +362,7 @@ export const useUserStore = defineStore("user", {
         });
     },
   },
-  persist: true,
+  persist: {
+    storage: sessionStorage
+  },
 });

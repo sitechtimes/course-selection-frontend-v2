@@ -15,7 +15,7 @@ export interface user {
 
 export interface guidanceData {
     allAnsweredSurveys: allAnsweredSurveys
-    allStudents: allStudents
+    allStudents: studentPreview[]
     allSurveys: allSurveys
     guidance: guidanceStudentData
     user: userData
@@ -99,6 +99,15 @@ export interface answeredSurveyNodes {
 
 export interface allStudents {
     edges: allStudentNodes[]
+}
+
+export interface studentPreview {
+    name: string,
+    hr: string,
+    grade: string,
+    email: string,
+    status: string,
+    flag: string,
 }
 
 export interface allStudentNodes {

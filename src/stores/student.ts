@@ -16,5 +16,7 @@ export const useStudentStore = defineStore("student", {
     actions: {
         //
     },
-    persist: true,
+    persist: {
+        storage: sessionStorage
+    },
 });

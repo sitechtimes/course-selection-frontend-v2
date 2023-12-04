@@ -19,5 +19,7 @@ export const useGuidanceStore = defineStore("guidance", {
     actions: {
         //
     },
-    persist: true,
+    persist: {
+        storage: sessionStorage
+    },
 });
