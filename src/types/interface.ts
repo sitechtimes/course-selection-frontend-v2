@@ -14,12 +14,9 @@ export interface user {
 // guidance store interface
 
 export interface guidanceData {
-    allAnsweredSurveys: allAnsweredSurveys
     allStudents: studentPreview[]
-    allSurveys: allSurveys
-    guidance: guidanceStudentData
+    // guidance: guidanceStudentData
     user: userData
-    surveyStats: surveyStats
     currentlyViewing: studentGuidance[]
 }
 

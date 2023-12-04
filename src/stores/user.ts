@@ -22,7 +22,6 @@ export const useUserStore = defineStore("user", {
     async init(type: account_type) {
       this.userType = type;
       if (type === "guidance") {
-
         fetch(`${import.meta.env.VITE_URL}/guidance/profiles/`, {
           method: "GET",
           headers: {
@@ -60,25 +59,6 @@ export const useUserStore = defineStore("user", {
                                 name
                             }
                             meeting
-                        }
-                        survey{
-                            grade
-                            question{
-                                question
-                                questionType
-                                id
-                                status
-                                classReferenced {
-                                    name
-                                }
-                            }
-                            dueDate
-                        }
-                        answeredSurvey{
-                            email
-                            answers
-                            status
-                            grade
                         }
                         }`,
             },
@@ -132,34 +112,6 @@ export const useUserStore = defineStore("user", {
             this.loading = false;
           });
       }
-    },
-    async getUserType() {
-      await axios
-        .post(
-          `${import.meta.env.VITE_URL}/graphql/`,
-          {
-            query: `query{
-                            user{
-                                isGuidance
-                                isStudent
-                            }
-                        }`,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${this.access_token}`,
-            },
-          }
-        )
-        .then((res3: any) => {
-          if (res3.data.data.user.isGuidance) {
-            this.userType = "guidance";
-          } else {
-            this.userType = "student";
-          }
-          this.init(this.userType);
-        });
     },
     async GoogleLogin(res: any) {
       this.loading = true;
