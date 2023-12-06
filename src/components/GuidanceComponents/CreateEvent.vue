@@ -148,6 +148,7 @@ import { useUserStore } from "../../stores/user";
 import { useGuidanceStore } from "../../stores/guidance";
 import { studentGuidance } from "../../types/interface";
 import axios from "axios";
+import GuidanceCalendar from "./GuidanceCalendar.vue";
 
 const guidanceStore = useGuidanceStore();
 const userStore = useUserStore();
@@ -169,6 +170,7 @@ const show: Ref<boolean> = ref(true);
 function toggleEvent() {
   show.value = !show.value;
 }
+console.log(guidanceStore.guidance.students);
 
 //check for empty input values before submitting form
 function empty() {
@@ -190,11 +192,11 @@ async function updateMeeting(
 
   const access_token = userStore.access_token;
   const baseURL = `${import.meta.env.VITE_URL}/guidance/updateMeeting/`;
-
   await axios
     .post(
       baseURL,
       {
+        email: email,
         meetingISO: meetingISO,
         description: description,
       },
@@ -206,7 +208,7 @@ async function updateMeeting(
       }
     )
     .then((res) => {
-      console.log(res.data);
+      console.log(res);
     });
 }
 
