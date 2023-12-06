@@ -189,7 +189,7 @@ async function updateMeeting(
   console.log(email, meetingISO, description);
 
   const access_token = userStore.access_token;
-  const baseURL = `${import.meta.env.VITE_URL}/guidance/stats`;
+  const baseURL = `${import.meta.env.VITE_URL}/guidance/updateMeeting/`;
 
   await axios
     .post(
