@@ -197,8 +197,8 @@ async function updateMeeting(
       baseURL,
       {
         email: email,
-        meetingISO: meetingISO,
-        meetingDescription: description,
+        meeting: meetingISO,
+        meeting_description: description,
       },
       {
         headers: {
