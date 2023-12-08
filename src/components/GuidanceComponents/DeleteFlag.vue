@@ -31,7 +31,7 @@
 import { PropType, defineProps, defineEmits, ref, Ref, computed } from "vue";
 import { studentGuidance } from "../../types/interface";
 import { useUserStore } from "../../stores/user";
-
+import axios from "axios"
 const emit = defineEmits(["exit"]);
 const userStore = useUserStore();
 
@@ -61,9 +61,19 @@ const addedFlags: Ref<flag[]> = computed(() => { //only push added flags into th
 const confirm = async (flag: string) => {
   await userStore.deleteFlag(props.student.user.email, flag);
   emit("exit");
-};
-const access_token = userStore.access_token;
-const baseURL = `${import.meta.env.VITE_URL}/guidance/states`;
-axios.post(baseURL, addedFlags)
-.then(response)
+
+} 
+axios.post('baseUrl/updateFlag', {
+    email: 'userStore.student.user.email',
+    flag:  "flag"
+  })
+  .then((response) {
+    console.log(response);
+  })
+  .catch((error) {
+    console.log(error);
+  });
+
+    
+
 </script>
