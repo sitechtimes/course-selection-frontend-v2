@@ -106,7 +106,6 @@ async function fetchStudentInfo() {
     //GET request for meetings
     const meetingsResponse = await axios.get(`${import.meta.env.VITE_URL}/guidance/meetings`, { headers });
     const meetingsData = meetingsResponse.data
-      .filter(student => student.meeting) //filter out students with meetings
       .map(student => ({
         //titlecase name 
         name: student.name.split(',') //split name at comma (for first & last name)
@@ -115,7 +114,7 @@ async function fetchStudentInfo() {
           .join(', '), //join the first and last name back together in one string
         meetingDate: student.meeting,
         description: student.meeting_description,
-        grade: 'JUNIOR',
+        grade: student.grade,
         email: student.email,
       }));
     return meetingsData; 
@@ -144,7 +143,7 @@ const months = [
   "September",
   "October",
   "November",
-  "December",
+  "December", 
 ];
 
 //generates calendar data
