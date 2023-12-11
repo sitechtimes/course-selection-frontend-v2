@@ -35,9 +35,9 @@
             >
             <input
               class="space d rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80"
-              type="date"
+              type="text"
               v-model="date"
-              placeholder="Date"
+              placeholder=""
               ref="date"
             />
             <p v-if="dateError" class="error text-red-600 ml-6 mt-1">
