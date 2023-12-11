@@ -30,7 +30,7 @@
         <DeleteFlag v-if="showDeleteFlag === student.user.email" @exit="toggleDeleteFlag('')" :student="student"
           :flags="flags">
         </DeleteFlag>
-        <tr>
+        <tr >
           <td class="p-4">
             {{ student.user.lastName.toLowerCase().charAt(0).toUpperCase() + student.user.lastName.toLowerCase().slice(1)}}, 
             {{ student.user.firstName.toLowerCase().charAt(0).toUpperCase() + student.user.firstName.toLowerCase().slice(1) }}
@@ -39,8 +39,9 @@
           <td class="p-4" v-if="student.grade === 'SOPHOMORE'">10</td>
           <td class="p-4" v-if="student.grade === 'JUNIOR'">11</td>
           <td class="p-4" v-if="student.grade === 'SENIOR'">12</td>
+          <td v-else>&nbsp;</td>
           <!-- <td class="p-4">{{ student.grade }}</td> -->
-          <td class="p-4">{{ student.user.email }}</td>
+          <td class="p-4">{{ student.user.email ? student.user.email : '&nbsp;' }}</td>
           <td class="p-4" v-if="guidanceStore.allAnsweredSurveys.edges.find(
             (x) =>
               x.node.email === student.user.email &&
