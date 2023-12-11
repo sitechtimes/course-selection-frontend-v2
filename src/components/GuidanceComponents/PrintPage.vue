@@ -1,9 +1,6 @@
 <template>
   <div class="flex flex-col">
-    <div
-      id="printPage"
-      class="flex w-[40vw] m-4 p-2 border border-gray-500 rounded-md"
-    >
+    <div id="printPage" class="flex w-[40vw] m-4 p-2 border border-gray-500 rounded-md">
       <div class="p-4">
         <div class="overflow-y-auto max-h-100">
           <ul class="my-4">
@@ -11,23 +8,22 @@
             <p class="indent-8">
               Your guidance counselor has scheduled a meeting with you for
               {{ meetingTime }} on {{ meetingDate }}. Please meet with them
-              during the specified time. Your guidance counselor has made the
-              following notes:
+              during the specified time.
             </p>
             <br />
-            <p>{{ meetingDescription }}</p>
+            <p v-if="meetingDescription" class="indent-8">
+              Please meet with them during the specified time. Your guidance
+              counselor has made the following notes:
+              <br />
+              {{ meetingDescription }}
+            </p>
           </ul>
         </div>
       </div>
     </div>
-    <div
-      class="item submit ml-4 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit"
-    >
-      <button
-        class="flex flex-row items-center font-bold text-[1.2rem] bg-[#e5e7be] px-4 py-2 rounded-lg w-fit h-fit"
-        type="submit"
-        @click="printMeetingTicket"
-      >
+    <div class="item submit ml-4 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit">
+      <button class="flex flex-row items-center font-bold text-[1.2rem] bg-[#e5e7be] px-4 py-2 rounded-lg w-fit h-fit"
+        type="submit" @click="printMeetingTicket">
         <PrinterIcon class="mr-3" /> Print
       </button>
     </div>
