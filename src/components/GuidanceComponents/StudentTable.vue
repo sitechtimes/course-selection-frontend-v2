@@ -39,7 +39,7 @@
           <td class="p-4" v-if="student.grade === 'SOPHOMORE'">10</td>
           <td class="p-4" v-if="student.grade === 'JUNIOR'">11</td>
           <td class="p-4" v-if="student.grade === 'SENIOR'">12</td>
-          <td v-else>&nbsp;</td>
+          <td class="p-4" v-if="!student.grade.length">&nbsp;</td>
           <!-- <td class="p-4">{{ student.grade }}</td> -->
           <td class="p-4">{{ student.user.email ? student.user.email : '&nbsp;' }}</td>
           <td class="p-4" v-if="guidanceStore.allAnsweredSurveys.edges.find(

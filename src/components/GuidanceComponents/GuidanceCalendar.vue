@@ -101,7 +101,7 @@ async function fetchStudentInfo() {
   try {
     const headers = {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${access_token}`,
+      'Authorization': `Bearer ${access_token}`,
     };
     //GET request for meetings
     const meetingsResponse = await axios.get(`${import.meta.env.VITE_URL}/guidance/meetings`, { headers });
@@ -112,8 +112,7 @@ async function fetchStudentInfo() {
         name: student.name.split(',') //split name at comma (for first & last name)
           .map(part => part.trim().toLowerCase()) //change all letters to lowercase
           .map(part => part.charAt(0).toUpperCase() + part.slice(1)) //capitalise first letter of each name part
-          .reverse() //reverse name (puts name in firstName-lastName order)
-          .join(' '), //join the first and last name back together in one string
+          .join(', '), //join the first and last name back together in one string
         meetingDate: student.meeting,
         description: student.meeting_description,
         grade: 'JUNIOR',
