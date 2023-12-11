@@ -4,16 +4,16 @@
       <div class="p-4">
         <div class="overflow-y-auto max-h-100">
           <ul class="my-4">
-            <p class="">Dear {{ studentName }},</p>
-            <p class="indent-8">
+            <p v-if="studentName">Dear {{ studentName }},</p>
+            <br />
+            <p v-if="meetingTime && meetingDate">
               Your guidance counselor has scheduled a meeting with you for
               {{ meetingTime }} on {{ meetingDate }}. Please meet with them
               during the specified time.
             </p>
             <br />
-            <p v-if="meetingDescription" class="indent-8">
-              Please meet with them during the specified time. Your guidance
-              counselor has made the following notes:
+            <p v-if="meetingDescription">
+              Your guidance counselor has made the following notes:
               <br />
               {{ meetingDescription }}
             </p>
@@ -31,124 +31,87 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, defineProps, onMounted } from "vue";
-import { useGuidanceStore } from "../../stores/guidance";
-import { studentMeetings } from "../../types/interface";
+import { ref, onMounted } from "vue";
+import { useUserStore } from "../../stores/user";
 import PrinterIcon from "../icons/PrinterIcon.vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
+import axios from "axios";
 //@ts-ignore
 import dateformat from "dateformat";
 
 const route = useRoute();
-const router = useRouter();
 let email = `${route.params.email}@nycstudents.net`;
 
-const guidanceStore = useGuidanceStore();
+const studentIndex = ref(-1);
+const studentName = ref("");
+const meetingTime = ref("");
+const meetingDate = ref("");
+const meetingDescription = ref("");
 
-const studentIndexAll = guidanceStore.allStudents.edges.findIndex(
-  (student) => student.node.user.email === email
-);
+//get students and their meeting info
+async function fetchStudentInfo() {
+  const { access_token } = useUserStore();
+  try {
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${access_token}`,
+    };
+    const meetingsResponse = await axios.get(`${import.meta.env.VITE_URL}/guidance/meetings`, { headers });
+    const meetingsData = meetingsResponse.data
+      .filter(student => student.meeting)
+      .map(student => ({
+        name: student.name.split(',')
+          .map(part => part.trim().toLowerCase())
+          .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+          .reverse()
+          .join(' '),
+        meetingDate: student.meeting,
+        description: student.meeting_description,
+        grade: 'JUNIOR',
+        email: student.email,
+      }));
 
-const studentIndex = guidanceStore.guidance.students.findIndex(
-  (student) => student.user.email === email
-);
+    //find the index of the student with the specified email
+    const index = meetingsData.findIndex(student => student.email === email);
+    studentIndex.value = index;
 
-const studentName =
-  guidanceStore.allStudents.edges[studentIndex].node.user.firstName;
+    if (index > -1) {
+      studentName.value = meetingsData[index].name;
+      const DateAndTime = meetingsData[index].meeting;
+      meetingTime.value = dateformat(DateAndTime, "shortTime");
+      meetingDate.value = dateformat(DateAndTime, "shortDate");
+      meetingDescription.value = meetingsData[index].description;
+    }
+    return meetingsData;
+  } catch (error) {
+    console.log('Error:', error);
+  }
+}
 
-const DateAndTime = guidanceStore.allStudents.edges[studentIndex].node.meeting;
-
-const meetingTime = dateformat(DateAndTime, "shortTime");
-
-const meetingDate = dateformat(DateAndTime, "shortDate");
-
-const meetingDescription =
-  guidanceStore.allStudents.edges[studentIndex].node.description;
+onMounted(async () => {
+  const meetingsData = await fetchStudentInfo();
+  if (studentIndex.value < 0) {
+    console.log('Student not found');
+  }
+});
 
 const printMeetingTicket = () => {
   const partPrint = document.getElementById("printPage").innerHTML;
   const NewWindow = window.open("", "", "width=800,height=900");
 
   const printPage = `<!DOCTYPE html>
-  <head>
-  <title>Scheduled Meeting with Guidance Counseler</title>
-  </head>
-  <body>
-    <div>${partPrint}</div>
-  </body>
-</html>`;
+  <html>
+    <head>
+      <title>Scheduled Meeting with Guidance Counselor</title>
+    </head>
+    <body>
+      <div>${partPrint}</div>
+    </body>
+  </html>`;
 
   NewWindow.document.write(printPage);
   NewWindow.print();
 };
-/*
-defineProps({
-  meetingDetails: {
-    type: Object,
-    required: true,
-  },
-});
-
-
-const studentInfo: Ref<studentMeetings[]> = ref([]);
-
-const validMeetings = guidanceStore.allStudents.edges.filter(
-  (student) =>
-    student.node.meeting !== null && student.node.meeting !== undefined
-);
-
-const currentDate = new Date();
-for (const student of validMeetings) {
-  const meetingDate = new Date(student.node.meeting as string);
-  const meetingDescription = student.node.description;
-  const meetingTime = dateformat(meetingDate, "shortTime");
-  console.log(new Date(student.node.meeting as string));
-  if (meetingDate > currentDate) {
-    const studentMeetingsData: studentMeetings = {
-      name: `${student.node.user.firstName} ${student.node.user.lastName}`
-        .split(" ")
-        .map(
-          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-        )
-        .join(" "),
-      meetingDate: meetingDate,
-      meetingTime: meetingTime,
-      memo: meetingDescription,
-    };
-    studentInfo.value.push(studentMeetingsData);
-  }
-}
-
-// const studentInfo = guidanceStore.allStudents.edges
-//   .filter((student) => student.node.meeting)
-//   .map((student) => ({
-//     name: `${student.node.user.firstName} ${student.node.user.lastName}`
-//       .split(" ")
-//       .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-//       .join(" "),
-//     meetingDate: student.node.meeting,
-//     description: student.node.description,
-//     grade: student.node.grade,
-// }));
-
-function formatDate(meetingDate: Date): string {
-  const options = {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  };
-  //@ts-ignore
-  return meetingDate.toLocaleDateString("en-US", options);
-}
-
-const printMeetingTicket = () => {
-  const allBody = document.body.innerHTML;
-  const partPrint = document.getElementById("printPage").innerHTML;
-  document.body.innerHTML = partPrint;
-  window.print();
-  document.body.innerHTML = allBody;
-};*/
 </script>
 
 <style scoped>
