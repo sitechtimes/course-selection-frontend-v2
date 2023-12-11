@@ -103,26 +103,29 @@ async function fetchStudentInfo() {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${access_token}`,
     };
+    //GET request for meetings
     const meetingsResponse = await axios.get(`${import.meta.env.VITE_URL}/guidance/meetings`, { headers });
     const meetingsData = meetingsResponse.data
-      .filter(student => student.meeting)
+      .filter(student => student.meeting) //filter out students with meetings
       .map(student => ({
-        name: student.name.split(',') //formatting student name
-          .map(part => part.trim().toLowerCase())
-          .map(part => part.charAt(0).toUpperCase() + part.slice(1))
-          .reverse()
-          .join(' '),
+        //titlecase name 
+        name: student.name.split(',') //split name at comma (for first & last name)
+          .map(part => part.trim().toLowerCase()) //change all letters to lowercase
+          .map(part => part.charAt(0).toUpperCase() + part.slice(1)) //capitalise first letter of each name part
+          .reverse() //reverse name (puts name in firstName-lastName order)
+          .join(' '), //join the first and last name back together in one string
         meetingDate: student.meeting,
         description: student.meeting_description,
         grade: 'JUNIOR',
         email: student.email,
       }));
-    return meetingsData;
+    return meetingsData; 
   } catch (error) {
     console.error('Error:', error);
   }
 }
 
+//obtaining information about today's date
 let todaysDate = new Date();
 let todaysYear = todaysDate.getFullYear();
 let todaysMonth = todaysDate.getMonth();
@@ -156,7 +159,7 @@ const renderCalendar = async () => {
   ).getDay();
   let lastDateofLastMonth = new Date(todaysYear, todaysMonth, 0).getDate();
   let dateInfo = [];
-  const studentInfo = await fetchStudentInfo();
+  const studentInfo = await fetchStudentInfo(); //student info is meetingsData taken from fetchStudentInfo()
 
   for (let i = firstDayofMonth; i > 0; i--) {
     const dateBoxInfo = {
@@ -220,10 +223,6 @@ const renderCalendar = async () => {
   //@ts-ignore
   calendarData.dateInfo = dateInfo;
 };
-
-onMounted(async () => {
-  await renderCalendar();
-});
 
 watchEffect(async () => {
   await renderCalendar();
