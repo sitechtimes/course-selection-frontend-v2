@@ -54,7 +54,7 @@ async function fetchStudentInfo() {
   try {
     const headers = {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${access_token}`,
+      'Authorization': `Bearer ${access_token}`,
     };
     const meetingsResponse = await axios.get(`${import.meta.env.VITE_URL}/guidance/meetings`, { headers });
     const meetingsData = meetingsResponse.data
@@ -67,7 +67,7 @@ async function fetchStudentInfo() {
           .join(' '),
         meetingDate: student.meeting,
         description: student.meeting_description,
-        grade: 'JUNIOR',
+        grade: student.grade,
         email: student.email,
       }));
 
