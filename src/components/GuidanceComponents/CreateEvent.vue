@@ -35,10 +35,12 @@
             >
             <input
               class="space d rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80"
-              type="text"
+              :type="type"
               v-model="date"
-              placeholder=""
               ref="date"
+              :placeholder="props.todaysDate"
+              onfocus="(this.type='date')"
+              id="date"
             />
             <p v-if="dateError" class="error text-red-600 ml-6 mt-1">
               Field empty/invalid
@@ -156,6 +158,7 @@ let time: string;
 let description: string;
 let name: string;
 let email: string;
+let type = "text";
 const save = ref();
 const form = ref();
 const studentList: studentGuidance[] = guidanceStore.guidance.students;
@@ -168,7 +171,12 @@ const show: Ref<boolean> = ref(true);
 function toggleEvent() {
   show.value = !show.value;
 }
-let todaysDate = new Date();
+
+//daria's code
+
+const props = defineProps(["todaysDate"]);
+console.log(props.todaysDate);
+//daria's code ends
 
 //check for empty input values before submitting form
 function empty() {
