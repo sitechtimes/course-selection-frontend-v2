@@ -56,20 +56,22 @@ async function fetchStudentInfo() {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${access_token}`,
     };
-    const meetingsResponse = await axios.get(`${import.meta.env.VITE_URL}/guidance/meetings`, { headers });
-    const meetingsData = meetingsResponse.data
-      .filter(student => student.meeting)
-      .map(student => ({
-        name: student.name.split(',')
-          .map(part => part.trim().toLowerCase())
-          .map(part => part.charAt(0).toUpperCase() + part.slice(1))
-          .reverse()
-          .join(' '),
-        meetingDate: student.meeting,
-        description: student.meeting_description,
-        grade: student.grade,
-        email: student.email,
-      }));
+    //GET request for meetings
+    const meetingsResponse = await fetch(`${import.meta.env.VITE_URL}/guidance/meetings`, {
+      method: 'GET',
+      headers: headers,
+    });
+    const meetingsData = (await meetingsResponse.json()).map(student => ({
+      name: student.name.split(',')
+        .map(part => part.trim().toLowerCase())
+        .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+        .reverse()
+        .join(' '),
+      meetingDate: student.meeting,
+      description: student.meeting_description,
+      grade: student.grade,
+      email: student.email,
+    }));
 
     //find the index of the student with the specified email
     const index = meetingsData.findIndex(student => student.email === email);

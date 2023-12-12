@@ -104,20 +104,22 @@ async function fetchStudentInfo() {
       'Authorization': `Bearer ${access_token}`,
     };
     //GET request for meetings
-    const meetingsResponse = await axios.get(`${import.meta.env.VITE_URL}/guidance/meetings`, { headers });
-    const meetingsData = meetingsResponse.data
-      .map(student => ({
-        //titlecase name 
-        name: student.name.split(',') //split name at comma (for first & last name)
-          .map(part => part.trim().toLowerCase()) //change all letters to lowercase
-          .map(part => part.charAt(0).toUpperCase() + part.slice(1)) //capitalise first letter of each name part
-          .join(', '), //join the first and last name back together in one string
-        meetingDate: student.meeting,
-        description: student.meeting_description,
-        grade: student.grade,
-        email: student.email,
-      }));
-    return meetingsData; 
+    const meetingsResponse = await fetch(`${import.meta.env.VITE_URL}/guidance/meetings`, {
+      method: 'GET',
+      headers: headers,
+    });
+    const meetingsData = (await meetingsResponse.json()).map(student => ({
+      //titlecase name 
+      name: student.name.split(',') //split name at comma (for first & last name)
+        .map(part => part.trim().toLowerCase()) //change all letters to lowercase
+        .map(part => part.charAt(0).toUpperCase() + part.slice(1)) //capitalise first letter of each name part
+        .join(', '), //join the first and last name back together in one string
+      meetingDate: student.meeting,
+      description: student.meeting_description,
+      grade: student.grade,
+      email: student.email,
+    }));
+    return meetingsData;
   } catch (error) {
     console.error('Error:', error);
   }
@@ -143,7 +145,7 @@ const months = [
   "September",
   "October",
   "November",
-  "December", 
+  "December",
 ];
 
 //generates calendar data
