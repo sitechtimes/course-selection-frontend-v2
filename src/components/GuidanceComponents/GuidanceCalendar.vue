@@ -49,7 +49,6 @@ import UpcomingMeetings from "../GuidanceComponents/UpcomingMeetings.vue";
 import CreateEvent from "./CreateEvent.vue";
 import MeetingDetails from "./MeetingDetails.vue";
 import PlusIcon from "../icons/PlusIcon.vue";
-import axios from "axios";
 //@ts-ignore
 import dateformat from "dateformat";
 

@@ -35,7 +35,6 @@ import { ref, onMounted } from "vue";
 import { useUserStore } from "../../stores/user";
 import PrinterIcon from "../icons/PrinterIcon.vue";
 import { useRoute } from "vue-router";
-import axios from "axios";
 //@ts-ignore
 import dateformat from "dateformat";
 
@@ -76,10 +75,9 @@ async function fetchStudentInfo() {
     //find the index of the student with the specified email
     const index = meetingsData.findIndex(student => student.email === email);
     studentIndex.value = index;
-
     if (index > -1) {
       studentName.value = meetingsData[index].name;
-      const DateAndTime = meetingsData[index].meeting;
+      const DateAndTime = meetingsData[index].meetingDate;
       meetingTime.value = dateformat(DateAndTime, "shortTime");
       meetingDate.value = dateformat(DateAndTime, "shortDate");
       meetingDescription.value = meetingsData[index].description;
