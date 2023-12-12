@@ -63,16 +63,7 @@ const confirm = async (flag: string) => {
   emit("exit");
 
 } 
-axios.post('baseUrl/updateFlag', {
-    email: 'userStore.student.user.email',
-    flag:  "flag"
-  })
-  .then((response) {
-    console.log(response);
-  })
-  .catch((error) {
-    console.log(error);
-  });
+
 
     
 

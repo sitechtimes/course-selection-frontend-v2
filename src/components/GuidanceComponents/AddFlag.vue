@@ -3,13 +3,12 @@
     <div class="h-1/3 w-1/4 bg-white rounded-sm px-10 py-2 flex justify-evenly flex-col">
       <div class="flex">
         <p>
-          <b>Student:</b> {{ student.user.firstName }} {{ student.user.lastName }}
+          <b>Student:</b> {{ student.user.firstName }}
+          {{ student.user.lastName }}
         </p>
       </div>
       <div class="w-full flex flex-col items-center">
-        <p class="my-2">
-          Add flag:
-        </p>
+        <p class="my-2">Add flag:</p>
         <select v-model="selected" class="w-full">
           <option v-for="flag in unaddedFlags" :value="flag.flag">
             {{ flag.title }}
@@ -60,6 +59,29 @@ const unaddedFlags: Ref<flag[]> = computed(() => { //only push unadded flags int
 
 const confirm = async (flag: string) => {
   await userStore.addFlag(props.student.user.email, flag);
-    emit("exit");
+  emit("exit");
 };
+
+async function updateFlag() {
+  const { access_token } = useUserStore();
+  try {
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${access_token}',
+    };
+    //POST request
+    const postRequest = await fetch(`${import.meta.env.VITE_URL}/guidance/updateFlag`, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify({
+        "email": "cassidyr20@nycstudents.net",
+        "flag": "Sports"
+      })
+    })
+    const postData=(await postRequest.json())
+    console.log(postData)
+  } catch (error) {
+    console.log('Error:', error)
+
+  }
 </script>
