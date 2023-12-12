@@ -197,8 +197,8 @@ async function updateMeeting(
       baseURL,
       {
         email: email,
-        meeting: meetingISO,
-        meeting_description: description,
+        date: meetingISO,
+        memo: description,
       },
       {
         headers: {
@@ -208,7 +208,27 @@ async function updateMeeting(
       }
     )
     .then((res) => {
-      console.log(res);
+      const data = JSON.parse(res.config.data);
+      console.log(data);
+      //
+      const guidanceStore = useGuidanceStore();
+      const studentIndexAll = guidanceStore.allStudents.edges.findIndex(
+        (student) => student.node.user.email === email
+      );
+      const studentIndex = guidanceStore.guidance.students.findIndex(
+        (student) => student.user.email === email
+      );
+
+      if (studentIndex > -1) {
+        guidanceStore.guidance.students[studentIndex].meeting = data.date;
+        guidanceStore.guidance.students[studentIndex].description = data.memo;
+      }
+
+      console.log(guidanceStore.allStudents.edges[studentIndexAll].node);
+      guidanceStore.allStudents.edges[studentIndexAll].node.meeting = data.date;
+      guidanceStore.allStudents.edges[studentIndexAll].node.description =
+        data.memo;
+      //
     });
 }
 
