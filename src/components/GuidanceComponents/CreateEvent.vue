@@ -192,44 +192,23 @@ async function updateMeeting(
 
   const access_token = userStore.access_token;
   const baseURL = `${import.meta.env.VITE_URL}/guidance/updateMeeting/`;
-  await axios
-    .post(
-      baseURL,
-      {
+
+  try {
+    const response = await fetch(baseURL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+      body: JSON.stringify({
         email: email,
         date: meetingISO,
         memo: description,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
-    )
-    .then((res) => {
-      const data = JSON.parse(res.config.data);
-      console.log(data);
-      //
-      const guidanceStore = useGuidanceStore();
-      const studentIndexAll = guidanceStore.allStudents.edges.findIndex(
-        (student) => student.node.user.email === email
-      );
-      const studentIndex = guidanceStore.guidance.students.findIndex(
-        (student) => student.user.email === email
-      );
-
-      if (studentIndex > -1) {
-        guidanceStore.guidance.students[studentIndex].meeting = data.date;
-        guidanceStore.guidance.students[studentIndex].description = data.memo;
-      }
-
-      console.log(guidanceStore.allStudents.edges[studentIndexAll].node);
-      guidanceStore.allStudents.edges[studentIndexAll].node.meeting = data.date;
-      guidanceStore.allStudents.edges[studentIndexAll].node.description =
-        data.memo;
-      //
+      }),
     });
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 function submit(
