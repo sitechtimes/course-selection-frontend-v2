@@ -51,20 +51,17 @@ let data = [];
 let years = [];
 
 async function fetchStats() {
-  const access_token = userStore.access_token;
-  const baseURL = `${import.meta.env.VITE_URL}/guidance/stats`;
   try {
-    const response = await fetch(baseURL, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/guidance/stats`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${access_token}`,
+        'Authorization': `Bearer ${userStore.access_token}`,
       },
-    });
-    const data = JSON.parse(await response.json());
-    const fetchedYears = data.map((index) => index.fields.year);
+    }).then(res => res.json());
+    const data = JSON.parse(await response);
     return {
-      years: fetchedYears,
+      years: data.map((index) => index.fields.year),
       data: data,
     };
   } catch (error) {
