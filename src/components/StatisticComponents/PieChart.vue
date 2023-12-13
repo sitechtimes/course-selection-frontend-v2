@@ -4,10 +4,7 @@
       Course Rankings
     </div>
     <!-- drop-down menu for years-->
-    <select
-      v-model="selectedYear"
-      class="space rounded-md border border-solid border-zinc-400 h-10 p-2 mt-2 w-80"
-    >
+    <select v-model="selectedYear" class="space rounded-md border border-solid border-zinc-400 h-10 p-2 mt-2 w-80">
       <option v-for="year in years" :value="year" :key="year">
         {{ year }}
       </option>
@@ -16,10 +13,7 @@
       <p>Please select a year from the list above</p>
     </div>
     <!-- drop-down menu for courses-->
-    <select
-      v-model="selectedCourse"
-      class="space rounded-md border border-solid border-zinc-400 h-10 p-2 mt-2 w-80"
-    >
+    <select v-model="selectedCourse" class="space rounded-md border border-solid border-zinc-400 h-10 p-2 mt-2 w-80">
       <option v-for="course in courses" :key="course" :value="course">
         {{ course }}
       </option>
@@ -35,64 +29,64 @@
 
 <script lang="ts" setup>
 import { Pie } from "vue-chartjs";
-import { useGuidanceStore } from "../../stores/guidance";
-import { ref, Ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useUserStore } from "../../stores/user";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import axios from "axios";
-
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const loaded = ref(true);
-const guidanceStore = useGuidanceStore();
+const loaded = ref(false);
 const userStore = useUserStore();
 const selectedCourse = ref("");
 const selectedYear = ref("");
-const storedYears = guidanceStore.surveyStats.edges;
-let years = storedYears.map((yearSelected) => yearSelected.node.year);
 
-onMounted(async () => {
+let data = [];
+let years = [];
+
+async function fetchStats() {
   const access_token = userStore.access_token;
-  const baseURL = `${import.meta.env.VITE_URL}/guidance/stats`;
-
+  const statsURL = `${import.meta.env.VITE_URL}/guidance/stats`;
   try {
-    const response = await axios.get(baseURL, {
+    const response = await fetch(statsURL, {
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${access_token}`,
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${access_token}`,
       },
     });
-
-    //////
-    const statistic = response.data;
-    console.log(statistic);
-    const obj = JSON.parse(statistic);
-    console.log(obj);
-
-    //////
-    loaded.value = true;
+    const data = JSON.parse(await response.json());
+    const fetchedYears = data.map((index) => index.fields.year);
+    return {
+      years: fetchedYears,
+      data: data,
+    };
   } catch (error) {
-    console.error("Error:", error);
+    console.error('Error:', error);
+    return {
+      years: [],
+      data: [],
+    };
   }
+}
+
+onMounted(async () => {
+  const statsData = await fetchStats();
+  years = statsData.years;
+  data = statsData.data;
+  loaded.value = true;
 });
 
-// if a new year is selected from the dropdown, find the index where the stats are located and parse it into the stats
+//if a new year is selected from the dropdown, find the index where the stats are located
 const stats = computed(() => {
-  if (selectedYear.value !== "") {
-    //@ts-ignore
+  if (selectedYear !== null) {
     const indexSelectedYear = years.indexOf(selectedYear.value);
-    return JSON.parse(
-      guidanceStore.surveyStats.edges[indexSelectedYear].node.stats
-    );
+    return data[indexSelectedYear]?.fields.stats || {};
   }
 });
 
 //returns each course name
 const courses = computed(() => {
   //check if stats is defined before using Object.keys()
-  if (stats.value !== undefined) {
-    //return courses
-  }
+  return stats.value ? Object.keys(stats.value) : [];
 });
 
 const chartOptions = ref({
@@ -121,20 +115,20 @@ const getChartData = computed(() => {
 
   for (let i = 0; i < 40; i++) {
     const randomColours =
-      "#" + Math.floor(Math.random() * 16777215).toString(16); //toString(16) turns it into a hexadecimal
+      '#' + Math.floor(Math.random() * 16777215).toString(16); //toString(16) turns it into hexadecimal
     chartData.datasets[0].backgroundColor.push(randomColours);
   }
 
   if (selectedCourse.value) {
     const course = stats.value[selectedCourse.value];
-    const ranks = course.ranks;
+    const ranks = course?.ranks || [];
 
     for (let i = 0; i < ranks.length; i++) {
       chartData.labels.push(`Rank ${i + 1}`); //we must add 1 because index 0 should be rank 1, not 0
       chartData.datasets[0].data.push(ranks[i]);
     }
   }
-  loaded.value = true;
+
   return chartData;
 });
 </script>
