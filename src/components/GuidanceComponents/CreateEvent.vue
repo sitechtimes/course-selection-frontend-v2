@@ -188,13 +188,11 @@ async function updateMeeting(
   meetingISO: string,
   description: string
 ) {
-  console.log(email, meetingISO, description);
-
   const access_token = userStore.access_token;
   const baseURL = `${import.meta.env.VITE_URL}/guidance/updateMeeting/`;
 
   try {
-    const response = await fetch(baseURL, {
+    await fetch(baseURL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
