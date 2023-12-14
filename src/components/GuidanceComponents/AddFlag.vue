@@ -75,7 +75,7 @@ async function updateFlag() {
       headers: headers,
       body: JSON.stringify({
         "email": "cassidyr20@nycstudents.net",
-        "flag": "Sports"
+        "flag": "Sports",
       })
     })
     const postData=(await postRequest.json())
