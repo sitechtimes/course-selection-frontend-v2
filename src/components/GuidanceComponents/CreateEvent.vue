@@ -147,8 +147,6 @@ import { ref, Ref } from "vue";
 import { useUserStore } from "../../stores/user";
 import { useGuidanceStore } from "../../stores/guidance";
 import { studentGuidance } from "../../types/interface";
-import axios from "axios";
-import GuidanceCalendar from "./GuidanceCalendar.vue";
 
 const guidanceStore = useGuidanceStore();
 const userStore = useUserStore();
@@ -170,13 +168,12 @@ const show: Ref<boolean> = ref(true);
 function toggleEvent() {
   show.value = !show.value;
 }
-console.log(guidanceStore.guidance.students);
 
 //check for empty input values before submitting form
 function empty() {
   //if the input value is an empty string, the error is true; otherwise it is false
-  dateError.value = date === "" ? true : false;
-  timeError.value = time === "" ? true : false;
+  dateError.value = !date;
+  timeError.value = !time;
   nameError.value = !name;
   if (!dateError.value && !timeError.value && !nameError.value) {
     submit(date, name, time, description);
@@ -188,15 +185,12 @@ async function updateMeeting(
   meetingISO: string,
   description: string
 ) {
-  const access_token = userStore.access_token;
-  const baseURL = `${import.meta.env.VITE_URL}/guidance/updateMeeting/`;
-
   try {
-    await fetch(baseURL, {
+    await fetch(`${import.meta.env.VITE_URL}/guidance/updateMeeting/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${access_token}`,
+        Authorization: `Bearer ${userStore.access_token}`,
       },
       body: JSON.stringify({
         email: email,
@@ -226,12 +220,12 @@ function submit(
       student.user.firstName +
       " | " +
       student.user.email;
-    if (studentFullName == studentName) {
+    if (studentFullName === studentName) {
       email = student.user.email;
+      break;
     }
   }
-  save.value.innerHTML = "Saved";
-  // userStore.changeMeeting(email, meetingISO, description);
+  save.value = "Saved";
   updateMeeting(email, meetingISO, description);
   form.value.reset();
   show.value = !show.value;
