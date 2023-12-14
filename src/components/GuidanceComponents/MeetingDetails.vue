@@ -125,8 +125,6 @@
 
 <script setup lang="ts">
 import { ref, defineProps } from "vue";
-import { surveyStore } from "../../types/interface";
-import { useGuidanceStore } from "../../stores/guidance";
 import { useRouter } from "vue-router";
 import DeleteModal from "./DeleteModal.vue";
 
