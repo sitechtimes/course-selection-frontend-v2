@@ -71,7 +71,7 @@ async function updateFlag() {
       'Authorization': 'Bearer ${access_token}',
     };
     const body = {
-      email: 'cassidyr20@nycstudents.net',
+      email: 'student.user.email',
       flag: 'Sports'
     }
     //POST request
