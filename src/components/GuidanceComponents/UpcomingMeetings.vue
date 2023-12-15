@@ -76,8 +76,7 @@ async function updateStudentMeetings() {
         .map(part => part.trim().toLowerCase()) //change all letters to lowercase
         .map(part => part.charAt(0).toUpperCase() + part.slice(1)) //capitalise first letter of each name part
         .join(', '), //join the first and last name back together in one string
-      name: student.meeting,
-      meetingDate: student.meeting_description,
+      meetingDate: student.meeting,
       meetingTime: student.meetingTime,
 
     })    return meetingsData;
