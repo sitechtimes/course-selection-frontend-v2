@@ -2,23 +2,11 @@
   <div class="grid content-center justify-center flex-wrap">
     <div class="container">
       <div class="flex flex-row mb-8 text-4xl font-bold">
-        <span
-          class="arrow cursor-pointer"
-          id="prev"
-          ref="prev"
-          @click="changeMonth(false)"
-          >&#10094;</span
-        >
+        <span class="arrow cursor-pointer" id="prev" ref="prev" @click="changeMonth(false)">&#10094;</span>
         <div class="mx-2 flex flex-row">
           {{ months[todaysMonth] }} {{ todaysYear }}
         </div>
-        <span
-          class="arrow cursor-pointer"
-          id="next"
-          ref="next"
-          @click="changeMonth(true)"
-          >&#10095;</span
-        >
+        <span class="arrow cursor-pointer" id="next" ref="next" @click="changeMonth(true)">&#10095;</span>
       </div>
       <div class="flex flex-row justify-between space-x-28 mb-12">
         <div class="calendar">
@@ -34,23 +22,14 @@
           <ul class="days">
             <li class="dayCon" v-for="h in calendarData.dateInfo" :key="h.id">
               <p class="mt-2 text-end mr-2 mb-16">{{ h.todaysDate }}</p>
-              <div
-                v-for="meeting in h.meetings"
-                :key="meeting.id"
-                @click="toggleDetails(meeting)"
-              >
+              <div v-for="meeting in h.meetings" :key="meeting.id" @click="toggleDetails(meeting)">
                 <p
-                  :class="`w-[100%] text-center truncate ${
-                    classColor[meeting.grade]
-                  } rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md`"
-                >
+                  :class="`w-[100%] text-center truncate ${classColor[meeting.grade]
+                    } rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md`">
                   {{ meeting.name }}
                 </p>
               </div>
-              <PlusIcon
-                class="plusIcon w-3 ml-2 cursor-pointer invisible"
-                @click="toggleEvent"
-              />
+              <PlusIcon class="plusIcon w-3 ml-2 cursor-pointer invisible" @click="toggleEvent" />
             </li>
           </ul>
         </div>
@@ -63,8 +42,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, reactive, onMounted, watch } from "vue";
-import { useGuidanceStore } from "../../stores/guidance";
+import { ref, Ref, reactive, onMounted, watchEffect } from "vue";
+import { useUserStore } from "../../stores/user";
 import { calendarData } from "../../types/interface";
 import UpcomingMeetings from "../GuidanceComponents/UpcomingMeetings.vue";
 import CreateEvent from "./CreateEvent.vue";
@@ -82,7 +61,9 @@ const meetingDetails = {
   email: "",
 };
 
-const guidanceStore = useGuidanceStore();
+onMounted(async () => {
+  await renderCalendar();
+});
 
 const showEvent: Ref<boolean> = ref(false);
 const showDetails: Ref<boolean> = ref(false);
@@ -113,44 +94,43 @@ const classColor: ClassColor = {
   SENIOR: "bg-[#CCDDF5] text-[#002254]",
 };
 
-function fetchstudentInfo() {
-  const data = ref(
-    guidanceStore.allStudents.edges
-      .filter((student) => student.node.meeting)
-      .map((student) => ({
-        name: `${student.node.user.firstName} ${student.node.user.lastName}`
-          .split(" ")
-          .map(
-            (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-          )
-          .join(" "),
-        meetingDate: student.node.meeting,
-        description: student.node.description,
-        grade: student.node.grade,
-        email: student.node.user.email,
-      }))
-  );
-  return data;
+//get students and their meeting info
+async function fetchStudentInfo() {
+  const { access_token } = useUserStore();
+  try {
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${access_token}`,
+    };
+    //GET request for meetings
+    const meetingsResponse = await fetch(`${import.meta.env.VITE_URL}/guidance/meetings`, {
+      method: 'GET',
+      headers: headers,
+    });
+    const meetingsData = (await meetingsResponse.json()).map(student => ({
+      //titlecase name 
+      name: student.name.split(',') //split name at comma (for first & last name)
+        .map(part => part.trim().toLowerCase()) //change all letters to lowercase
+        .map(part => part.charAt(0).toUpperCase() + part.slice(1)) //capitalise first letter of each name part
+        .join(', '), //join the first and last name back together in one string
+      meetingDate: student.meeting,
+      description: student.meeting_description,
+      grade: student.grade,
+      email: student.email,
+    }));
+    return meetingsData;
+  } catch (error) {
+    console.error('Error:', error);
+  }
 }
 
-onMounted(() => {
-  fetchstudentInfo();
-  renderCalendar();
-});
-
-watch(guidanceStore.allStudents.edges, () => {
-  fetchstudentInfo();
-  renderCalendar();
-});
-
+//obtaining information about today's date
 let todaysDate = new Date();
 let todaysYear = todaysDate.getFullYear();
 let todaysMonth = todaysDate.getMonth();
 const calendarData: calendarData = reactive({
   dateInfo: [],
-  monthChanges: 0,
 });
-const monthChanges: Ref<number> = ref(0);
 
 const months = [
   "January",
@@ -168,7 +148,7 @@ const months = [
 ];
 
 //generates calendar data
-const renderCalendar = () => {
+const renderCalendar = async () => {
   let firstDayofMonth = new Date(todaysYear, todaysMonth, 1).getDay();
   let lastDateofMonth = new Date(todaysYear, todaysMonth + 1, 0).getDate();
   let lastDayofMonth = new Date(
@@ -178,7 +158,7 @@ const renderCalendar = () => {
   ).getDay();
   let lastDateofLastMonth = new Date(todaysYear, todaysMonth, 0).getDate();
   let dateInfo = [];
-  const studentInfo = fetchstudentInfo();
+  const studentInfo = await fetchStudentInfo(); //student info is meetingsData taken from fetchStudentInfo()
 
   for (let i = firstDayofMonth; i > 0; i--) {
     const dateBoxInfo = {
@@ -197,7 +177,7 @@ const renderCalendar = () => {
     const studentsWithMeetings = [];
     //for each student in studentInfo, a studentMeetingDate contains date&time information about the student's meeting
     //if the student has a meeting on the active date, push the date to studentsWithMeetings
-    for (const student of studentInfo.value) {
+    for (const student of studentInfo) {
       const studentMeetingDate = new Date(student.meetingDate as string);
       const isMeetingDate =
         studentMeetingDate.getDate() === activeDate.getDate() &&
@@ -241,9 +221,11 @@ const renderCalendar = () => {
   }
   //@ts-ignore
   calendarData.dateInfo = dateInfo;
-  calendarData.monthChanges = monthChanges.value + 1;
-  monthChanges.value = calendarData.monthChanges;
 };
+
+watchEffect(async () => {
+  await renderCalendar();
+});
 
 const changeMonth = (next: boolean) => {
   if (next) {
@@ -312,7 +294,7 @@ const changeMonth = (next: boolean) => {
   visibility: visible;
 }
 
-.days li:hover + .plusIcon {
+.days li:hover+.plusIcon {
   display: block;
 }
 

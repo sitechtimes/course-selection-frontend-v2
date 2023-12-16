@@ -184,7 +184,6 @@ export interface calendarData {
             grade: string;
         }>;
     }>;
-    monthChanges: number;
 }
 
 export interface classReferenced {
