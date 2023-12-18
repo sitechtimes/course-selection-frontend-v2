@@ -56,38 +56,43 @@ const studentInfo: Ref<studentMeetings[]> = ref([]);
   }); //sort the meetings chronologically.
 }
  */
+let meetingsResponse = "";
 async function updateStudentMeetings() {
   const { access_token } = useUserStore();
   try {
     const headers = {
       "Content-Type": "application/json",
-      'Authorization': `Bearer ${access_token}`,
+      Authorization: `Bearer ${access_token}`,
     };
-    const meetingsResponse = await fetch(
+    let meetingsResponse = await fetch(
       `${import.meta.env.VITE_URL}/guidance/meetings`,
       {
         method: "GET",
         headers: headers,
       }
     );
-    const meetingsData = (await meetingsResponse.json()).map(student => ({
+    const meetingsData = (await meetingsResponse.json()).map((student) => ({
       //titlecase name
-      name: student.name.split(',') //split name at comma (for first & last name)
-        .map(part => part.trim().toLowerCase()) //change all letters to lowercase
-        .map(part => part.charAt(0).toUpperCase() + part.slice(1)) //capitalise first letter of each name part
-        .join(', '), //join the first and last name back together in one string
+      name: student.name
+        .split(",") //split name at comma (for first & last name)
+        .map((part) => part.trim().toLowerCase()) //change all letters to lowercase
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1)) //capitalise first letter of each name part
+        .join(", "), //join the first and last name back together in one string
       meetingDate: student.meeting,
-      meetingTime: student.meetingTime,
-
-    })    return meetingsData;
-  } catch (error) { console.error('Error:', error);}
+      meetingTime: student.meeting.filter(),
+    }));
+    return meetingsData;
+    return meetingsResponse;
+  } catch (error) {
+    console.error("Error:", error);
+  }
 }
 //update upcoming meetings on load
 onMounted(() => {
   updateStudentMeetings();
 });
 //update upcoming meetings whenever a meeting is added
-watch(guidanceStore.allStudents.edges, () => {
+watch(meetingsResponse, () => {
   updateStudentMeetings();
 }); //change this as well
 
@@ -104,6 +109,7 @@ const groupedStudentMeetings = computed(() => {
       }
       groupedMeetings[formattedDate].push(meeting);
     });
+  console.log(groupedMeetings);
   return groupedMeetings;
 });
 </script>
