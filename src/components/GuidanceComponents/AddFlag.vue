@@ -58,7 +58,6 @@ const unaddedFlags: Ref<flag[]> = computed(() => { //only push unadded flags int
 });
 
 const confirm = async (flag: string) => {
-  await userStore.addFlag(props.student.user.email, flag);
   updateFlag()
   emit("exit");
 };
@@ -67,12 +66,12 @@ async function updateFlag() {
   const { access_token } = useUserStore();
   try {
     const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${access_token}',
+      'Content-Type': `application/json`,
+      'Authorization': `Bearer ${access_token}`,
     };
     const body = {
-      email: 'student.user.email',
-      flag: 'Sports'
+      email: props.student.user.email,
+      flag: props.flags,
     }
     //POST request
     const postRequest = await fetch(`${import.meta.env.VITE_URL}/guidance/updateFlag`, {
@@ -81,7 +80,7 @@ async function updateFlag() {
       body: JSON.stringify(body)
     })
     const postData = postRequest
-    console.log(postData)
+ 
   } catch (error) {
     console.log('Error:', error)
 
