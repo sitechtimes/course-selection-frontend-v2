@@ -5,316 +5,181 @@ import { useGuidanceStore } from "./guidance";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import { user, account_type, userData } from "../types/interface";
+import { ref } from "vue";
+import router from "../router";
 
-export const useUserStore = defineStore("user", {
-  state: (): user => ({
-    first_name: "",
-    last_name: "",
-    email: "",
-    userType: null,
-    isLoggedIn: false,
-    access_token: "",
-    refresh_token: "",
-    loading: false,
-    expire_time: 0,
-  }),
-  actions: {
-    async init(type: account_type) {
-      this.userType = type;
-      if (type === "guidance") {
-        fetch(`${import.meta.env.VITE_URL}/guidance/profiles/`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${this.access_token}`,
-          },
-        })
-        .then(async (data) => {
-            const guidanceStore = useGuidanceStore();
-            guidanceStore.allStudents = await data.json();
-            this.loading = false;
-          });
-      } else {
-        await axios
-          .post(
-            `${import.meta.env.VITE_URL}/graphql/`,
-            {
-              query: `query{
-                        user{
-                            firstName
-                            lastName
-                            email
-                        }
-                        student{
-                            homeroom
-                            grade
-                            coursesTaken{
-                                courseCode
-                            }
-                            coursesRequired{
-                                courseCode
-                            }
-                            coursesAvailable{
-                                courseCode
-                                subject
-                                name
-                            }
-                            meeting
-                        }
-                        }`,
-            },
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${this.access_token}`,
-              },
-            }
-          )
-          .then((res: any) => {
-            const studentStore = useStudentStore();
-            studentStore.answeredSurvey = res.data.data.answeredSurvey;
-            studentStore.student = res.data.data.student;
-            studentStore.survey = res.data.data.survey;
-            studentStore.user = res.data.data.user;
+export const useUserStore = defineStore("user", () => {
+    const first_name = ref("");
+    const last_name = ref("");
+    const email = ref("");
+    const userType = ref<account_type>(null);
+    const isLoggedIn = ref(false);
+    const access_token = ref("");
+    const refresh_token = ref("");
+    const loading = ref(false);
+    const expire_time = ref(0);
+    const studentSurveyPreview = ref(null);
 
-            const surveyStore = useSurveyStore();
-            const router = useRouter();
-            if (studentStore.student.homeroom === "") {
-              console.log("profile not updated");
-            } else {
-              const currentDate = new Date();
-              const closeTime = studentStore.survey.dueDate
-                .substring(0, 10)
-                .split("-");
-              if (
-                studentStore.answeredSurvey.length !== 0 &&
-                studentStore.answeredSurvey[0].status === "FINALIZED"
-              ) {
-                surveyStore.open = false;
-              }
-
-              if (Number(closeTime[0]) < currentDate.getFullYear()) {
-                surveyStore.open = false;
-              } else if (Number(closeTime[0]) === currentDate.getFullYear()) {
-                if (Number(closeTime[1]) < currentDate.getMonth() + 1) {
-                  // Get month starts at 0, not 1
-                  surveyStore.open = false;
-                } else if (
-                  Number(closeTime[1]) ===
-                  currentDate.getMonth() + 1
-                ) {
-                  if (Number(closeTime[2]) < currentDate.getDate()) {
+    async function init(type: account_type) {
+        userType.value = type;
+        if (type === "guidance") {
+            fetch(`${import.meta.env.VITE_URL}/guidance/profiles/`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${access_token.value}`,
+                },
+            }).then(async (data) => {
+                studentSurveyPreview.value = await data.json();
+                loading.value = false;
+            });
+        } else {
+            fetch(`${import.meta.env.VITE_URL}/student/surveyPreview/`, {}).then((res: any) => {
+                const router = useRouter();
+                const surveyStore = useSurveyStore();
+                const data = res.json();
+                if (data.dueDate < new Date() || data.status === "FINALIZED") {
                     surveyStore.open = false;
-                  }
                 }
-              }
-              surveyStore.currentSurvey = studentStore.survey;
-            }
-            this.loading = false;
-          });
-      }
-    },
-    async GoogleLogin(res: any) {
-      this.loading = true;
-      await axios
+                surveyStore.status = data.status;
+            });
+            loading.value = false;
+        }
+    }
+async function GoogleLogin(res: any) {
+    loading.value = true;
+    await axios
         .post(`${import.meta.env.VITE_URL}/social-login/google/`, {
-          access_token: res.access_token,
+            access_token: res.access_token,
         })
         .then((response) => {
-          this.access_token = response.data.access_token;
-          this.refresh_token = response.data.refresh_token;
-          this.email = response.data.user.email;
-          this.first_name = response.data.user.first_name;
-          this.last_name = response.data.user.last_name;
-          this.isLoggedIn = true;
+            access_token.value = response.data.access_token;
+            refresh_token.value = response.data.refresh_token;
+            email.value = response.data.user.email;
+            first_name.value = response.data.user.first_name;
+            last_name.value = response.data.user.last_name;
+            isLoggedIn.value = true;
 
-          const date = new Date();
-          const expiration = date.setHours(date.getHours() + 1);
+            const date = new Date();
+            const expiration = date.setHours(date.getHours() + 1);
 
-          this.expire_time = expiration;
+            expire_time.value = expiration;
 
-          this.getUserType(); //make dj rest auth return user type (backend) to remove this function
+            getUserType(); //make dj rest auth return user type (backend) to remove this function
         });
-    },
-    async EmailLogin(username: string, password: string) {
-      this.loading = true;
-      try {
+}
+async function EmailLogin(username: string, password: string) {
+    loading.value = true;
+    try {
         const response = await axios.post(
-          `${import.meta.env.VITE_URL}/auth/login/`,
-          {
-            username: username.toLowerCase(),
-            password: password,
-          }
+            `${import.meta.env.VITE_URL}/auth/login/`,
+            {
+                username: username.toLowerCase(),
+                password: password,
+            }
         );
 
         console.log(response);
-        this.access_token = response.data.access_token;
-        this.refresh_token = response.data.refresh_token;
-        this.email = response.data.user.email;
-        this.first_name = response.data.user.first_name;
-        this.last_name = response.data.user.last_name;
-        this.isLoggedIn = true;
+        access_token.value = response.data.access_token;
+        refresh_token.value = response.data.refresh_token;
+        email.value = response.data.user.email;
+        first_name.value = response.data.user.first_name;
+        last_name.value = response.data.user.last_name;
+        isLoggedIn.value = true;
+
 
         const date = new Date();
         const expiration = date.setHours(date.getHours() + 1);
 
-        this.expire_time = expiration;
+        expire_time.value = expiration;
+        loading.value = false;
+        await getUserType()
+        init(userType.value);
 
-        this.getUserType(); // make dj rest auth return user type (backend) to remove this function
-      } catch (error) {
-        this.loading = false;
+    } catch (error) {
+        loading.value = false;
         alert("Login failed. Please check your credentials.");
-      }
-    },
-    async changeMeeting(email: string, meetingISO: string, description: string) {
-      await axios
-        .post(
-          `${import.meta.env.VITE_URL}/graphql/`,
-          {
-            query: `mutation {
-                            updateMeeting(email: "${email}", meeting:"${meetingISO}",  meetingDescription:"${description}") {
-                                student{
-                                    meeting
-                                    meetingDescription
-                                }
-                            }
-                        }`,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${this.access_token}`,
-            },
-          }
-        )
-        .then((res) => {
-          console.log(res);
-          const guidanceStore = useGuidanceStore();
-          const studentIndexAll = guidanceStore.allStudents.edges.findIndex(
-            (student) => student.node.user.email === email
-          );
-          const studentIndex = guidanceStore.guidance.students.findIndex(
-            (student) => student.user.email === email
-          );
+    }
+}
+async function changeMeeting(
+    email: string,
+    meetingISO: string,
+    description: string
+) {
+    fetch(`${import.meta.env.VITE_URL}/guidance/meeting/`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${access_token.value}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            email: email,
+            meeting: meetingISO,
+            description: description,
+        }),
+    });
+}
+async function deleteMeeting(email: string) {
+    fetch(`${import.meta.env.VITE_URL}/guidance/meeting/`, {
+        method: "DELETE",
+        headers: {
+            Authorization: `Bearer ${access_token.value}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            email: email,
+        }),
+    });
+}
+async function addFlag(email: string, newFlag: string) {
+    const res = await fetch(`${import.meta.env.VITE_URL}/guidance/updateFlag/`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${access_token.value}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            email: email,
+            flag: newFlag,
+        }),
+    })
+    const data = await res.json()
+    if (studentSurveyPreview.value === null) return
+    // @ts-ignore
+    const student = await studentSurveyPreview.value.find((student) => student.user.email == email)
+    student.flag = data.flag
+}
 
-          if (studentIndex > -1) {
-            guidanceStore.guidance.students[studentIndex].meeting =
-              res.data.data.updateMeeting.student.meeting;
-            guidanceStore.guidance.students[studentIndex].description = description;
-          }
-
-          console.log(guidanceStore.allStudents.edges[studentIndexAll].node);
-          guidanceStore.allStudents.edges[studentIndexAll].node.meeting =
-            res.data.data.updateMeeting.student.meeting;
-          guidanceStore.allStudents.edges[studentIndexAll].node.description = description;
-        });
-    },
-    async deleteMeeting(email: string) {
-      await axios
-        .post(
-          `${import.meta.env.VITE_URL}/graphql/`,
-          {
-            query: `mutation {
-                            deleteMeeting(email: "${email}") {
-                                student{
-                                  email
-                                  meeting
-                                  meetingDescription
-                                }
-                            }
-                        }`,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${this.access_token}`,
-            },
-          }
-        )
-        .then((res) => {
-          const guidanceStore = useGuidanceStore();
-          const studentIndexAll = guidanceStore.allStudents.edges.findIndex(
-            (student) => student.node.user.email === email
-          );
-          const studentIndex = guidanceStore.guidance.students.findIndex(
-            (student) => student.user.email === email
-          );
-          if (studentIndex > -1) {
-            guidanceStore.guidance.students[studentIndex].meeting =
-              res.data.data.deleteMeeting.student.meeting;
-            guidanceStore.guidance.students[studentIndex].description = res.data.data.deleteMeeting.student.meetingDescription
-          }
-
-          guidanceStore.allStudents.edges[studentIndexAll].node.meeting =
-            res.data.data.deleteMeeting.student.meeting;
-          guidanceStore.allStudents.edges[studentIndexAll].node.description = res.data.data.deleteMeeting.student.meetingDescription
-        });
-    },
-    async addFlag(email: string, newFlag: string) {
-      await axios
-        .post(
-          `${import.meta.env.VITE_URL}/graphql/`,
-          {
-            query: `mutation {
-                            updateFlag(email: "${email}", flag:"${newFlag}") {
-                                student{
-                                    flag
-                                }
-                            }
-                        }`,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${this.access_token}`,
-            },
-          }
-        )
-        .then((res) => {
-          const guidanceStore = useGuidanceStore()
-          const studentIndexAll = guidanceStore.allStudents.edges.findIndex(student => student.node.user.email === email)
-          const studentIndex = guidanceStore.guidance.students.findIndex(student => student.user.email === email)
-          if (studentIndex > -1) {
-            guidanceStore.guidance.students[studentIndex].flag =
-              res.data.data.updateFlag.student.flag;
-          }
-          guidanceStore.allStudents.edges[studentIndexAll].node.flag = res.data.data.updateFlag.student.flag
-          console.log(res.data.data.updateFlag.student.flag)
-        });
-    },
-    async deleteFlag(email: string, flagToBeRemoved: string) {
-      await axios
-        .post(
-          `${import.meta.env.VITE_URL}/graphql/`,
-          {
-            query: `mutation {
-                          removeFlag(email: "${email}", flag:"${flagToBeRemoved}") {
-                              student{
-                                  flag
-                              }
-                          }
-                      }`,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${this.access_token}`,
-            },
-          }
-        )
-        .then((res) => {
-          const guidanceStore = useGuidanceStore()
-          const studentIndexAll = guidanceStore.allStudents.edges.findIndex(student => student.node.user.email === email)
-          const studentIndex = guidanceStore.guidance.students.findIndex(student => student.user.email === email)
-          if (studentIndex > -1) {
-            guidanceStore.guidance.students[studentIndex].flag = res.data.data.removeFlag.student.flag
-          }
-
-          guidanceStore.allStudents.edges[studentIndexAll].node.flag = res.data.data.removeFlag.student.flag
-          console.log(res.data.data.removeFlag.student.flag)
-        });
-    },
-  },
-  persist: {
-    storage: sessionStorage
-  },
+async function deleteFlag(email: string, flagToBeRemoved: string) {
+    const res = await fetch(`${import.meta.env.VITE_URL}/guidance/updateFlag/`, {
+        method: "DELETE",
+        headers: {
+            Authorization: `Bearer ${access_token.value}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            email: email,
+            flag: flagToBeRemoved,
+        }),
+    })
+    const data = await res.json()
+    if (studentSurveyPreview.value === null) return
+    // @ts-ignore
+    const student = await studentSurveyPreview.value.find((student) => student.user.email == email)
+    student.flag = data.flag
+}
+async function getUserType() {
+    const res = await fetch(`${import.meta.env.VITE_URL}/user/`, {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${access_token.value}`,
+        },
+    });
+    const data = await res.json();
+    if (data.is_guidance) {
+        userType.value = "guidance";
+    } else {
+        userType.value = "student";
+    }
+}
+return { first_name, last_name, email, userType, isLoggedIn, access_token, refresh_token, loading, expire_time, studentSurveyPreview, init, GoogleLogin, EmailLogin, changeMeeting, deleteMeeting, addFlag, deleteFlag, getUserType }
 });

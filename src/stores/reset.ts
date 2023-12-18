@@ -17,7 +17,7 @@ export function useResetStore() {
     resetStores[name] = () => store.$reset()
   })
 
-  resetStores.all = () => pinia._s.forEach((store) => store.$reset())
+  resetStores.all = () => pinia._s.forEach((store) => store.$reset)
 
   return resetStores
 }
