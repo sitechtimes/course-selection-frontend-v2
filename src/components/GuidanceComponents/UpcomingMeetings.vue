@@ -33,8 +33,10 @@ import { useUserStore } from "../../stores/user";
 import dateformat from "dateformat";
 
 const guidanceStore = useGuidanceStore();
-
-const studentInfo: Ref<studentMeetings[]> = ref([]);
+//i dont know if i need this bit
+/* const studentInfo = await fetch(
+  `${import.meta.env.VITE_URL}/guidance/students`
+); */
 
 //this is the code i have to fix i think
 /* function updateStudentMeetings1() {
@@ -56,7 +58,7 @@ const studentInfo: Ref<studentMeetings[]> = ref([]);
   }); //sort the meetings chronologically.
 }
  */
-let meetingsResponse = "";
+let meetingsData = "";
 async function updateStudentMeetings() {
   const { access_token } = useUserStore();
   try {
@@ -82,7 +84,6 @@ async function updateStudentMeetings() {
       meetingTime: student.meeting.filter(),
     }));
     return meetingsData;
-    return meetingsResponse;
   } catch (error) {
     console.error("Error:", error);
   }
@@ -90,17 +91,18 @@ async function updateStudentMeetings() {
 //update upcoming meetings on load
 onMounted(() => {
   updateStudentMeetings();
+  console.log(meetingsData);
 });
 //update upcoming meetings whenever a meeting is added
-watch(meetingsResponse, () => {
+watch(meetingsData, () => {
   updateStudentMeetings();
 }); //change this as well
 
 const todaysDate = new Date();
 const groupedStudentMeetings = computed(() => {
   const groupedMeetings: Record<string, studentMeetings[]> = {};
-  studentInfo.value
-    .filter((meeting) => meeting.meetingDate > todaysDate) //only show meetings after today
+  meetingsData //used to be studentInfo.value, cant use student info because thats in a store and thats bad
+    .filter((meeting) => meeting.meetingDate > todaysDate) //only show meetings after today,
     .forEach((meeting) => {
       const formattedDate = dateformat(meeting.meetingDate, "longDate");
       //if there are no other meetings with the same date, push into empty array
