@@ -59,6 +59,7 @@ const addedFlags: Ref<flag[]> = computed(() => { //only push added flags into th
 });
 
 const confirm = async (flag: string) => {
+  console.log(flag)
   await userStore.deleteFlag(props.student.user.email, flag);
   emit("exit");
 
