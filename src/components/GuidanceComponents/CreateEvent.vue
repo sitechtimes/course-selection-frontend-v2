@@ -181,7 +181,7 @@ async function getStudent() {
         },
       }
     );
-    console.log(response);
+    return await response.json();
   } catch (error) {
     console.log(error);
   }
