@@ -181,7 +181,8 @@ async function getStudent() {
         },
       }
     );
-    return await response.json();
+    const arrStudent = await response.json();
+    console.log(arrStudent);
   } catch (error) {
     console.log(error);
   }
