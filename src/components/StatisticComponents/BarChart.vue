@@ -30,7 +30,7 @@
 
 <script lang="ts" setup>
 import { Bar } from 'vue-chartjs'
-import { useGuidanceStore } from '../../stores/guidance';
+import { useUserStore } from '../../stores/user';
 import { ref, Ref, onMounted, computed } from 'vue';
 import {
   Chart as ChartJS,
@@ -41,23 +41,52 @@ import {
   CategoryScale,
   LinearScale
 } from 'chart.js'
-
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
-const loaded = ref(true);
-const guidanceStore = useGuidanceStore();
-
+const loaded = ref(false);
+const userStore = useUserStore();
 const selectedYear: Ref<number> = ref(0);
-const storedYears = guidanceStore.surveyStats.edges
-let years = storedYears.map((yearSelected) => yearSelected.node.year);
 
-//if a new year is selected from the dropdown, find the index where the stats are located and parse it into the
+let data = [];
+let years = [];
+
+async function fetchStats() {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_URL}/guidance/stats`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${userStore.access_token}`,
+      },
+    }).then(res => res.json());
+    const data = JSON.parse(await response);
+    return {
+      years: data.map((index) => index.fields.year),
+      data: data,
+    };
+  } catch (error) {
+    console.error('Error:', error);
+    return {
+      years: [],
+      data: [],
+    };
+  }
+}
+
+onMounted(async () => {
+  const statsData = await fetchStats();
+  years = statsData.years;
+  data = statsData.data;
+  loaded.value = true;
+});
+
+//if a new year is selected from the dropdown, find the index where the stats are located
 const stats = computed(() => {
   if (selectedYear !== null) {
-    const indexSelectedYear = years.indexOf(selectedYear.value)
-    return JSON.parse(guidanceStore.surveyStats.edges[indexSelectedYear].node.stats);
+    const indexSelectedYear = years.indexOf(selectedYear.value);
+    return data[indexSelectedYear].fields.stats;
   }
-})
+});
 
 const selectedSubject: Ref<string> = ref('')
 const subjects = [
@@ -78,23 +107,22 @@ const chartOptions = ref({
 
 const getChartData = computed(() => {
   const chartData: {
-  labels: string[];
-  datasets: {
-    data: number[];
-    backgroundColor: string[];
-    label: string;
-  }[];
-} = {
-  labels: [],
-  datasets: [
-    {
-      data: [],
-      backgroundColor: ['#C5D4A4'],
-      label: '# of students',
-    },
-  ],
-};
-
+    labels: string[];
+    datasets: {
+      data: number[];
+      backgroundColor: string[];
+      label: string;
+    }[];
+  } = {
+    labels: [],
+    datasets: [
+      {
+        data: [],
+        backgroundColor: ['#C5D4A4'],
+        label: '# of students',
+      },
+    ],
+  };
 
   if (selectedSubject.value && selectedYear.value) { //if the user has selected a subject and year from the dropdown, then do this: 
     interface targettedCourses {
