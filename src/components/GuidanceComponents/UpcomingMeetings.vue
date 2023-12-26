@@ -10,11 +10,7 @@
         <div v-for="(meetings, date) in groupedStudentMeetings" :key="date">
           <h2 class="font-bold text-lg">{{ date }}</h2>
           <ul class="my-2">
-            <li
-              v-for="(meeting, index) in meetings"
-              :key="index"
-              class="ml-6 mt-2 list-disc"
-            >
+            <li v-for="(meeting, index) in meetings" :key="index" class="ml-6 mt-2 list-disc">
               {{ meeting.meetingTime }} - {{ meeting.name }}
             </li>
           </ul>
@@ -26,92 +22,78 @@
 
 <script setup lang="ts">
 import { ref, Ref, computed, watch, onMounted } from "vue";
+import { useUserStore } from "../../stores/user";
 import { useGuidanceStore } from "../../stores/guidance";
 import { studentMeetings } from "../../types/interface";
-import { useUserStore } from "../../stores/user";
 //@ts-ignore
 import dateformat from "dateformat";
 
 const guidanceStore = useGuidanceStore();
-//i dont know if i need this bit
-/* const studentInfo = await fetch(
-  `${import.meta.env.VITE_URL}/guidance/students`
-); */
 
-//this is the code i have to fix i think
-/* function updateStudentMeetings1() {
-  //all students with a scheduled meeting
-  const validMeetings = guidanceStore.allStudents.edges.filter(
-    (student) =>
-      student.node.meeting !== null && student.node.meeting !== undefined
-  ); //dont need this
-  studentInfo.value = validMeetings.map((student) => ({
-    name: `${student.node.user.firstName} ${student.node.user.lastName}`,
-    meetingDate: new Date(student.node.meeting as string),
-    meetingTime: dateformat(
-      new Date(student.node.meeting as string),
-      "shortTime"
-    ), //pull from restapi instead of guidance store, then pull out name, meeting date, and meeting time from the api.
-  }));
-  studentInfo.value.sort((a, b) => {
-    return a.meetingDate.getTime() - b.meetingDate.getTime();
-  }); //sort the meetings chronologically.
-}
- */
-let meetingsData = "";
-async function updateStudentMeetings() {
+const meetingsData: Ref<studentMeetings[]> = ref([]);
+
+async function fetchStudentInfo() {
   const { access_token } = useUserStore();
   try {
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-    };
-    let meetingsResponse = await fetch(
+    // GET request for meetings
+    const meetingsResponse = await fetch(
       `${import.meta.env.VITE_URL}/guidance/meetings`,
       {
         method: "GET",
-        headers: headers,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access_token}`,
+        },
       }
     );
-    const meetingsData = (await meetingsResponse.json()).map((student) => ({
-      //titlecase name
+    const data = (await meetingsResponse.json()).map((student) => ({
       name: student.name
-        .split(",") //split name at comma (for first & last name)
-        .map((part) => part.trim().toLowerCase()) //change all letters to lowercase
-        .map((part) => part.charAt(0).toUpperCase() + part.slice(1)) //capitalise first letter of each name part
-        .join(", "), //join the first and last name back together in one string
+        .split(",")
+        .map((part) => part.trim().toLowerCase())
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join(", "),
       meetingDate: student.meeting,
-      meetingTime: student.meeting.filter(),
+      description: student.meeting_description,
+      grade: student.grade,
+      email: student.email,
     }));
-    return meetingsData;
+    console.log(data);
+    meetingsData.value = data;
+    return data;
   } catch (error) {
     console.error("Error:", error);
   }
 }
-//update upcoming meetings on load
+
+async function updateStudentMeetings() {
+  meetingsData.value = (await fetchStudentInfo()).map((student) => ({
+    name: `${student.name}`,
+    meetingDate: new Date(student.meetingDate as string),
+    meetingTime: dateformat(new Date(student.meetingDate as string), "shortTime"),
+  })).sort((a, b) => a.meetingDate.getTime() - b.meetingDate.getTime());
+}
+
+// update upcoming meetings on load
 onMounted(() => {
   updateStudentMeetings();
-  console.log(meetingsData);
 });
-//update upcoming meetings whenever a meeting is added
-watch(meetingsData, () => {
+// update upcoming meetings whenever a meeting is added
+watch(guidanceStore.allStudents.edges, () => {
   updateStudentMeetings();
-}); //change this as well
+});
 
 const todaysDate = new Date();
 const groupedStudentMeetings = computed(() => {
   const groupedMeetings: Record<string, studentMeetings[]> = {};
-  meetingsData //used to be studentInfo.value, cant use student info because thats in a store and thats bad
-    .filter((meeting) => meeting.meetingDate > todaysDate) //only show meetings after today,
+  meetingsData.value
+    .filter((meeting) => meeting.meetingDate > todaysDate)
     .forEach((meeting) => {
       const formattedDate = dateformat(meeting.meetingDate, "longDate");
-      //if there are no other meetings with the same date, push into empty array
       if (!groupedMeetings[formattedDate]) {
         groupedMeetings[formattedDate] = [];
       }
       groupedMeetings[formattedDate].push(meeting);
     });
-  console.log(groupedMeetings);
   return groupedMeetings;
 });
 </script>
