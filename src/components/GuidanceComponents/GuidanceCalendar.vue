@@ -2,11 +2,23 @@
   <div class="grid content-center justify-center flex-wrap">
     <div class="container">
       <div class="flex flex-row mb-8 text-4xl font-bold">
-        <span class="arrow cursor-pointer" id="prev" ref="prev" @click="changeMonth(false)">&#10094;</span>
+        <span
+          class="arrow cursor-pointer"
+          id="prev"
+          ref="prev"
+          @click="changeMonth(false)"
+          >&#10094;</span
+        >
         <div class="mx-2 flex flex-row">
           {{ months[todaysMonth] }} {{ todaysYear }}
         </div>
-        <span class="arrow cursor-pointer" id="next" ref="next" @click="changeMonth(true)">&#10095;</span>
+        <span
+          class="arrow cursor-pointer"
+          id="next"
+          ref="next"
+          @click="changeMonth(true)"
+          >&#10095;</span
+        >
       </div>
       <div class="flex flex-row justify-between space-x-28 mb-12">
         <div class="calendar">
@@ -22,14 +34,23 @@
           <ul class="days">
             <li class="dayCon" v-for="h in calendarData.dateInfo" :key="h.id">
               <p class="mt-2 text-end mr-2 mb-16">{{ h.todaysDate }}</p>
-              <div v-for="meeting in h.meetings" :key="meeting.id" @click="toggleDetails(meeting)">
+              <div
+                v-for="meeting in h.meetings"
+                :key="meeting.id"
+                @click="toggleDetails(meeting)"
+              >
                 <p
-                  :class="`w-[100%] text-center truncate ${classColor[meeting.grade]
-                    } rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md`">
+                  :class="`w-[100%] text-center truncate ${
+                    classColor[meeting.grade]
+                  } rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md`"
+                >
                   {{ meeting.name }}
                 </p>
               </div>
-              <PlusIcon class="plusIcon w-3 ml-2 cursor-pointer invisible" @click="toggleEvent" />
+              <PlusIcon
+                class="plusIcon w-3 ml-2 cursor-pointer invisible"
+                @click="toggleEvent"
+              />
             </li>
           </ul>
         </div>
@@ -99,20 +120,24 @@ async function fetchStudentInfo() {
   const { access_token } = useUserStore();
   try {
     const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${access_token}`,
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${access_token}`,
     };
     //GET request for meetings
-    const meetingsResponse = await fetch(`${import.meta.env.VITE_URL}/guidance/meetings`, {
-      method: 'GET',
-      headers: headers,
-    });
-    const meetingsData = (await meetingsResponse.json()).map(student => ({
-      //titlecase name 
-      name: student.name.split(',') //split name at comma (for first & last name)
-        .map(part => part.trim().toLowerCase()) //change all letters to lowercase
-        .map(part => part.charAt(0).toUpperCase() + part.slice(1)) //capitalise first letter of each name part
-        .join(', '), //join the first and last name back together in one string
+    const meetingsResponse = await fetch(
+      `${import.meta.env.VITE_URL}/guidance/meetings`,
+      {
+        method: "GET",
+        headers: headers,
+      }
+    );
+    const meetingsData = (await meetingsResponse.json()).map((student) => ({
+      //titlecase name
+      name: student.name
+        .split(",") //split name at comma (for first & last name)
+        .map((part) => part.trim().toLowerCase()) //change all letters to lowercase
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1)) //capitalise first letter of each name part
+        .join(", "), //join the first and last name back together in one string
       meetingDate: student.meeting,
       description: student.meeting_description,
       grade: student.grade,
@@ -120,7 +145,7 @@ async function fetchStudentInfo() {
     }));
     return meetingsData;
   } catch (error) {
-    console.error('Error:', error);
+    console.error("Error:", error);
   }
 }
 
@@ -294,7 +319,7 @@ const changeMonth = (next: boolean) => {
   visibility: visible;
 }
 
-.days li:hover+.plusIcon {
+.days li:hover + .plusIcon {
   display: block;
 }
 
