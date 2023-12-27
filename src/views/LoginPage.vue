@@ -1,27 +1,3 @@
-<script setup lang="ts">
-import BaseLogin from '../components/LoginComponents/BaseLogin.vue';
-import { useUserStore } from '../stores/user';
-import { useRouter } from 'vue-router'
-import { watch } from 'vue';
-
-document.title = 'Login | SITHS Course Selection'
-
-const userStore = useUserStore()
-const router = useRouter()
-
-watch(() => userStore.loading, (newResponse) => {
-  if(!newResponse) {
-    if(userStore.userType === 'student') {
-      router.push('/student/dashboard')
-    } else if(userStore.userType === 'guidance') {
-      router.push('/guidance/dashboard') 
-    } else {
-      console.log('error?')
-    }
-  }
-})
-</script>
-
 <template>
   <div class="w-full h-[80vh] flex justify-center items-center bg-[#fdfdfd]">
       <div v-if="userStore.loading" class="w-11/12 max-w-[32rem] max-h-[40rem] h-full border-primary-s border-[10px] rounded-xl flex justify-center items-center lg:max-w-[60rem] flex-col">
@@ -49,6 +25,29 @@ watch(() => userStore.loading, (newResponse) => {
   </div>
 </template>
 
+<script setup lang="ts">
+import BaseLogin from '../components/LoginComponents/BaseLogin.vue';
+import { useUserStore } from '../stores/user';
+import { useRouter } from 'vue-router'
+import { watch } from 'vue';
+
+document.title = 'Login | SITHS Course Selection'
+
+const userStore = useUserStore()
+const router = useRouter()
+
+watch(() => userStore.loading, (newResponse) => {
+  if(!newResponse) {
+    if(userStore.userType === 'student') {
+      router.push('/student/dashboard')
+    } else if(userStore.userType === 'guidance') {
+      router.push('/guidance/dashboard') 
+    } else {
+      console.log('error?')
+    }
+  }
+})
+</script>
 
 <style scoped>
 #loginPic {

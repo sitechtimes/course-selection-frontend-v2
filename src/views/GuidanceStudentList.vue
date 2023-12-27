@@ -29,7 +29,6 @@
 
 <script setup lang="ts">
 import SearchBar from '../components/GuidanceComponents/SearchBar.vue';
-import DownArrow from '../components/icons/DownArrow.vue';
 import Sort from '../components/GuidanceComponents/SortButton.vue';
 import StudentTable from '../components/GuidanceComponents/StudentTable.vue'
 import { useUserStore } from '../stores/user';
@@ -42,10 +41,32 @@ document.title = "Student List | SITHS Course Selection";
 const guidanceStore = useGuidanceStore();
 guidanceStore.currentlyViewing = guidanceStore.guidance.students;
 let allStudents: studentGuidance[] = [];
-
+console.log(guidanceStore.allStudents)
 guidanceStore.allStudents.edges.forEach((el) => {
   allStudents.push(el.node);
 });
+
+async function fetchStudents() {
+  const { access_token } = useUserStore();
+  try {
+    // GET request for meetings
+    const profilesResponse = await fetch(
+      `${import.meta.env.VITE_URL}/guidance/profiles`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
+    const data = await profilesResponse.json();
+    guidanceStore.currentlyViewing = data; 
+    console.log(data);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
 
 const input: Ref<string> = ref("");
 const viewAll = ref(false);
