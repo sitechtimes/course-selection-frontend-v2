@@ -45,13 +45,39 @@ export const useUserStore = defineStore("user", () => {
             loading.value = false;
         }
     }
-async function GoogleLogin(res: any) {
-    loading.value = true;
-    await axios
-        .post(`${import.meta.env.VITE_URL}/social-login/google/`, {
-            access_token: res.access_token,
-        })
-        .then((response) => {
+    async function GoogleLogin(res: any) {
+        loading.value = true;
+        await axios
+            .post(`${import.meta.env.VITE_URL}/social-login/google/`, {
+                access_token: res.access_token,
+            })
+            .then((response) => {
+                access_token.value = response.data.access_token;
+                refresh_token.value = response.data.refresh_token;
+                email.value = response.data.user.email;
+                first_name.value = response.data.user.first_name;
+                last_name.value = response.data.user.last_name;
+                isLoggedIn.value = true;
+
+                const date = new Date();
+                const expiration = date.setHours(date.getHours() + 1);
+
+                expire_time.value = expiration;
+
+                getUserType(); //make dj rest auth return user type (backend) to remove this function
+            });
+    }
+    async function EmailLogin(username: string, password: string) {
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_URL}/auth/login/`,
+                {
+                    username: username.toLowerCase(),
+                    password: password,
+                }
+            );
+
+            console.log(response);
             access_token.value = response.data.access_token;
             refresh_token.value = response.data.refresh_token;
             email.value = response.data.user.email;
@@ -59,127 +85,100 @@ async function GoogleLogin(res: any) {
             last_name.value = response.data.user.last_name;
             isLoggedIn.value = true;
 
+
             const date = new Date();
             const expiration = date.setHours(date.getHours() + 1);
 
             expire_time.value = expiration;
+            loading.value = true;
+            await getUserType()
+            init(userType.value);
 
-            getUserType(); //make dj rest auth return user type (backend) to remove this function
+        } catch (error) {
+            loading.value = false;
+            alert("Login failed. Please check your credentials.");
+        }
+    }
+    async function changeMeeting(
+        email: string,
+        meetingISO: string,
+        description: string
+    ) {
+        fetch(`${import.meta.env.VITE_URL}/guidance/updateMeeting/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${access_token.value}`
+            },
+            body: JSON.stringify({
+                email: email,
+                meeting: meetingISO,
+                description: description,
+            }),
         });
-}
-async function EmailLogin(username: string, password: string) {
-    loading.value = true;
-    try {
-        const response = await axios.post(
-            `${import.meta.env.VITE_URL}/auth/login/`,
-            {
-                username: username.toLowerCase(),
-                password: password,
-            }
-        );
-
-        console.log(response);
-        access_token.value = response.data.access_token;
-        refresh_token.value = response.data.refresh_token;
-        email.value = response.data.user.email;
-        first_name.value = response.data.user.first_name;
-        last_name.value = response.data.user.last_name;
-        isLoggedIn.value = true;
-
-
-        const date = new Date();
-        const expiration = date.setHours(date.getHours() + 1);
-
-        expire_time.value = expiration;
-        loading.value = false;
-        await getUserType()
-        init(userType.value);
-
-    } catch (error) {
-        loading.value = false;
-        alert("Login failed. Please check your credentials.");
     }
-}
-async function changeMeeting(
-    email: string,
-    meetingISO: string,
-    description: string
-) {
-    fetch(`${import.meta.env.VITE_URL}/guidance/meeting/`, {
-        method: "POST",
-        headers: {
-            Authorization: `Bearer ${access_token.value}`,
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            email: email,
-            meeting: meetingISO,
-            description: description,
-        }),
-    });
-}
-async function deleteMeeting(email: string) {
-    fetch(`${import.meta.env.VITE_URL}/guidance/meeting/`, {
-        method: "DELETE",
-        headers: {
-            Authorization: `Bearer ${access_token.value}`,
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            email: email,
-        }),
-    });
-}
-async function addFlag(email: string, newFlag: string) {
-    const res = await fetch(`${import.meta.env.VITE_URL}/guidance/updateFlag/`, {
-        method: "POST",
-        headers: {
-            Authorization: `Bearer ${access_token.value}`,
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            email: email,
-            flag: newFlag,
-        }),
-    })
-    const data = await res.json()
-    if (studentSurveyPreview.value === null) return
-    // @ts-ignore
-    const student = await studentSurveyPreview.value.find((student) => student.user.email == email)
-    student.flag = data.flag
-}
-
-async function deleteFlag(email: string, flagToBeRemoved: string) {
-    const res = await fetch(`${import.meta.env.VITE_URL}/guidance/updateFlag/`, {
-        method: "DELETE",
-        headers: {
-            Authorization: `Bearer ${access_token.value}`,
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            email: email,
-            flag: flagToBeRemoved,
-        }),
-    })
-    const data = await res.json()
-    if (studentSurveyPreview.value === null) return
-    // @ts-ignore
-    const student = await studentSurveyPreview.value.find((student) => student.user.email == email)
-    student.flag = data.flag
-}
-async function getUserType() {
-    const res = await fetch(`${import.meta.env.VITE_URL}/user/`, {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${access_token.value}`,
-        },
-    });
-    const data = await res.json();
-    if (data.is_guidance) {
-        userType.value = "guidance";
-    } else {
-        userType.value = "student";
+    async function deleteMeeting(email: string) {
+        fetch(`${import.meta.env.VITE_URL}/guidance/meeting/`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${access_token.value}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                email: email,
+            }),
+        });
     }
-}
-return { first_name, last_name, email, userType, isLoggedIn, access_token, refresh_token, loading, expire_time, studentSurveyPreview, init, GoogleLogin, EmailLogin, changeMeeting, deleteMeeting, addFlag, deleteFlag, getUserType }
+    async function addFlag(email: string, newFlag: string) {
+        const res = await fetch(`${import.meta.env.VITE_URL}/guidance/updateFlag/`, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${access_token.value}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                email: email,
+                flag: newFlag,
+            }),
+        })
+        const data = await res.json()
+        if (studentSurveyPreview.value === null) return
+        // @ts-ignore
+        const student = await studentSurveyPreview.value.find((student) => student.user.email == email)
+        student.flag = data.flag
+    }
+
+    async function deleteFlag(email: string, flagToBeRemoved: string) {
+        const res = await fetch(`${import.meta.env.VITE_URL}/guidance/updateFlag/`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${access_token.value}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                email: email,
+                flag: flagToBeRemoved,
+            }),
+        })
+        const data = await res.json()
+        if (studentSurveyPreview.value === null) return
+        // @ts-ignore
+        const student = await studentSurveyPreview.value.find((student) => student.user.email == email)
+        student.flag = data.flag
+    }
+    async function getUserType() {
+        const res = await fetch(`${import.meta.env.VITE_URL}/user/`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${access_token.value}`,
+            },
+        });
+        const data = await res.json();
+        if (data.is_guidance) {
+            userType.value = "guidance";
+        } else {
+            userType.value = "student";
+        }
+    }
+    return { first_name, last_name, email, userType, isLoggedIn, access_token, refresh_token, loading, expire_time, studentSurveyPreview, init, GoogleLogin, EmailLogin, changeMeeting, deleteMeeting, addFlag, deleteFlag, getUserType }
 });

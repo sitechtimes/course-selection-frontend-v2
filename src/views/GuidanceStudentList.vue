@@ -34,17 +34,19 @@ import StudentTable from '../components/GuidanceComponents/StudentTable.vue'
 import { useUserStore } from '../stores/user';
 import { useGuidanceStore } from '../stores/guidance';
 import { studentGuidance } from '../types/interface'
-import { ref, Ref, computed, watch } from 'vue'
+import { ref, Ref, computed, watch, onMounted } from 'vue'
 
 document.title = "Student List | SITHS Course Selection";
 
 const guidanceStore = useGuidanceStore();
-guidanceStore.currentlyViewing = guidanceStore.guidance.students;
-let allStudents: studentGuidance[] = [];
-console.log(guidanceStore.allStudents)
-guidanceStore.allStudents.edges.forEach((el) => {
-  allStudents.push(el.node);
-});
+
+// guidanceStore.currentlyViewing = guidanceStore.guidance.students;
+const allStudents = ref<studentGuidance[]>([]);
+
+// console.log(guidanceStore.allStudents)
+// guidanceStore.allStudents.edges.forEach((el) => {
+//   allStudents.push(el.node);
+// });
 
 async function fetchStudents() {
   const { access_token } = useUserStore();
@@ -62,11 +64,16 @@ async function fetchStudents() {
     );
     const data = await profilesResponse.json();
     guidanceStore.currentlyViewing = data; 
+    allStudents.value=data
     console.log(data);
   } catch (error) {
     console.error("Error:", error);
   }
 }
+
+onMounted(() => {
+  fetchStudents();
+});
 
 const input: Ref<string> = ref("");
 const viewAll = ref(false);
@@ -80,10 +87,10 @@ const newStudents = computed(() => {
   viewAll.value;
   return guidanceStore.currentlyViewing.filter(
     (student: studentGuidance) =>
-      (student.user.firstName + " " + student.user.lastName)
+      (student.name)
         .toLowerCase()
         .indexOf(input.value.toLowerCase()) != -1 ||
-      student.user.email.indexOf(input.value) != -1
+      student.email.indexOf(input.value) != -1
   );
 });
 
@@ -116,7 +123,7 @@ watch(
       guidanceStore.currentlyViewing = allStudents;
     }
     if (viewAll.value === false) {
-      guidanceStore.currentlyViewing = guidanceStore.guidance.students;
+      guidanceStore.currentlyViewing = allStudents;
     }
     updatePage(1);
   }

@@ -78,7 +78,7 @@ onMounted(() => {
   updateStudentMeetings();
 });
 // update upcoming meetings whenever a meeting is added
-watch(guidanceStore.allStudents.edges, () => {
+watch(meetingsData.value, () => {
   updateStudentMeetings();
 });
 

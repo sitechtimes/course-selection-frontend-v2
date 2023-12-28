@@ -8,10 +8,11 @@
           <th class="p-4">Email</th>
           <th class="p-4">Status</th>
           <th class="p-4">Details</th>
-          <th class="p-4 flex flex-row justify-center items-center">
+          <!-- start of Flags header -->
+          <th class="p-4 flex flex-row  items-center">
             <p class="p-2 font-bold">Flags</p>
             <div>
-              <img src="../icons/InfoCircle.png" alt="information button for flags" class="h-5"
+              <img src="../icons/InfoCircle.png" alt="hover for more information on student flags" class="h-5"
                 @mouseover="tooltip = true" @mouseout="tooltip = false" />
               <div v-show="tooltip" class="absolute h-auto w-auto bg-white border-primary-g border p-2">
                 <div v-for="flag in flags" class="flex flex-row">
@@ -21,68 +22,53 @@
               </div>
             </div>
           </th>
+          <!-- end of Flags header -->
         </tr>
       </thead>
-      <tbody v-for="student in newstudents" :key="student.user.email" class="border-2 border-black">
-        <AddFlag v-if="showFlagModal === student.user.email" @exit="toggleFlagModal('')" :student="student"
-          :flags="flags"></AddFlag>
 
-        <DeleteFlag v-if="showDeleteFlag === student.user.email" @exit="toggleDeleteFlag('')" :student="student"
+      <tbody v-for="student in newstudents" :key="student.email" class="border-2 border-black">
+        <AddFlag v-if="showFlagModal === student.email" @exit="toggleFlagModal('')" :student="student" :flags="flags">
+        </AddFlag>
+        <DeleteFlag v-if="showDeleteFlag === student.email" @exit="toggleDeleteFlag('')" :student="student"
           :flags="flags">
         </DeleteFlag>
-        <tr >
+        <tr>
+
           <td class="p-4">
-            {{ student.user.lastName.toLowerCase().charAt(0).toUpperCase() + student.user.lastName.toLowerCase().slice(1)}}, 
-            {{ student.user.firstName.toLowerCase().charAt(0).toUpperCase() + student.user.firstName.toLowerCase().slice(1) }}
+            {{ titleCase(student.name) }}
           </td>
+
           <td class="p-4" v-if="student.grade === 'FRESHMAN'">9</td>
           <td class="p-4" v-if="student.grade === 'SOPHOMORE'">10</td>
           <td class="p-4" v-if="student.grade === 'JUNIOR'">11</td>
           <td class="p-4" v-if="student.grade === 'SENIOR'">12</td>
           <td class="p-4" v-if="!student.grade.length">&nbsp;</td>
-          <!-- <td class="p-4">{{ student.grade }}</td> -->
-          <td class="p-4">{{ student.user.email ? student.user.email : '&nbsp;' }}</td>
-          <td class="p-4" v-if="guidanceStore.allAnsweredSurveys.edges.find(
-            (x) =>
-              x.node.email === student.user.email &&
-              x.node.grade === student.grade
-          ) === undefined
-            ">
+
+          <td class="p-4">{{ student.email ? student.email + '@nycstudents.net' : '&nbsp;' }}</td>
+
+          <!-- student survey statuses starts-->
+          <td class="p-4" v-if="student.status === 'NOT STARTED'">
             <p class="text-[#461616] bg-[#EA9F9F] w-[8rem] font-semibold text-center p-1 rounded-2xl">
               Not Started
             </p>
           </td>
-          <td class="p-4" v-else-if="guidanceStore.allAnsweredSurveys.edges.find(
-            (x) =>
-              x.node.email === student.user.email &&
-              x.node.grade === student.grade
-          )?.node.status === 'INCOMPLETE'
-            ">
+          <td class="p-4" v-else-if="student.status === 'INCOMPLETE'">
             <p class="text-[#322911] bg-[#F9D477] w-[8rem] font-semibold text-center p-1 rounded-2xl">
               In Progress
             </p>
           </td>
-          <td class="p-4" v-else-if="guidanceStore.allAnsweredSurveys.edges.find(
-            (x) =>
-              x.node.email === student.user.email &&
-              x.node.grade === student.grade
-          )?.node.status === 'COMPLETE'
-            ">
+          <td class="p-4" v-else-if="student.status === 'COMPLETE'">
             <p class="text-[#174616] bg-[#A8D480] w-[8rem] font-semibold text-center p-1 rounded-2xl">
               Completed
             </p>
           </td>
-          <td class="p-4" v-else-if="guidanceStore.allAnsweredSurveys.edges.find(
-            (x) =>
-              x.node.email === student.user.email &&
-              x.node.grade === student.grade
-          )?.node.status === 'FINALIZED'
-            ">
+          <td class="p-4" v-else-if="student.status === 'FINALIZED'">
             <p class="text-[#311638] bg-[#D1A4DE] w-[8rem] font-semibold text-center p-1 rounded-2xl">
               Finalized
             </p>
           </td>
-          <td @click="userClick(student)" class="p-4 hover:cursor-pointer">
+          <!-- student survey statuses end -->
+          <td @click="viewSurvey(student)" class="p-4 hover:cursor-pointer">
             View Survey
           </td>
           <td class="p-4 flex flex-row parent items-center">
@@ -92,9 +78,9 @@
                   class="m-1 rounded-full h-5 w-5"></div>
               </div>
             </div>
-            <PlusIcon @click="toggleFlagModal(student.user.email)" class="w-3 m-1 hidden child hover:cursor-pointer">
+            <PlusIcon @click="toggleFlagModal(student.email)" class="w-3 m-1 hidden child hover:cursor-pointer">
             </PlusIcon>
-            <MinusSign @click="toggleDeleteFlag(student.user.email)" class="w-3 m-1 hidden child hover:cursor-pointer">
+            <MinusSign @click="toggleDeleteFlag(student.email)" class="w-3 m-1 hidden child hover:cursor-pointer">
             </MinusSign>
           </td>
         </tr>
@@ -159,13 +145,22 @@ const toggleDeleteFlag = (student: string) => {
   showDeleteFlag.value = student;
 };
 
-async function userClick(student: studentGuidance) {
-  await surveyStore.setSurvey(student.user.email, student.grade);
-  await router.push(
-    `/guidance/survey/${student.user.email.replace("@nycstudents.net", "")}`
-  );
-//   location.reload();
+function titleCase(string: string): string {
+  return string
+    .split(",")
+    .map((part) => part.trim().toLowerCase())
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(", ");
 }
+
+async function viewSurvey(student: studentGuidance) {
+  await surveyStore.setSurvey(student.email, student.grade);
+  await router.push(
+    `/guidance/survey/${student.email.replace("@nycstudents.net", "")}`
+  );
+}
+
+
 </script>
 
 <style scoped>

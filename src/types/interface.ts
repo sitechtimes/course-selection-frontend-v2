@@ -12,7 +12,6 @@ export interface user {
 }
 
 // guidance store interface
-
 export interface guidanceData {
     allStudents: studentPreview[]
     // guidance: guidanceStudentData
@@ -21,7 +20,6 @@ export interface guidanceData {
 }
 
 // student store interface
-
 export interface studentUser {
     answeredSurvey: answeredSurvey[]
     student: studentData

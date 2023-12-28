@@ -10,7 +10,6 @@
               />
       </div>
       <div v-if="!userStore.loading" id="book" class="w-11/12 max-w-[32rem] max-h-[40rem] h-full border-primary-s border-[10px] rounded-xl flex justify-between items-center lg:max-w-[60rem]">
-      <!-- <div id="book" class="w-11/12 max-w-[32rem] max-h-[40rem] h-full border-primary-s border-[10px] rounded-xl flex justify-between items-center lg:max-w-[60rem]"> -->
           <div id="left" class="hidden w-1/2 h-full border-zinc-400 lg:border-r justify-center items-center lg:flex">
               <img
               id="loginPic"
@@ -26,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import BaseLogin from '../components/LoginComponents/BaseLogin.vue';
+import BaseLogin from '../components/LoginComponents/Baselogin.vue';
 import { useUserStore } from '../stores/user';
 import { useRouter } from 'vue-router'
 import { watch } from 'vue';
@@ -43,7 +42,7 @@ watch(() => userStore.loading, (newResponse) => {
     } else if(userStore.userType === 'guidance') {
       router.push('/guidance/dashboard') 
     } else {
-      console.log('error?')
+      console.log("Error logging in")
     }
   }
 })
