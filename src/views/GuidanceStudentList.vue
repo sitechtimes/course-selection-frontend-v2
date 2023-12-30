@@ -40,13 +40,14 @@ document.title = "Student List | SITHS Course Selection";
 
 const guidanceStore = useGuidanceStore();
 
+//this line of code seems unnecessary so long as line 125 exists
 // guidanceStore.currentlyViewing = guidanceStore.guidance.students;
-const allStudents = ref<studentGuidance[]>([]);
 
-// console.log(guidanceStore.allStudents)
-// guidanceStore.allStudents.edges.forEach((el) => {
-//   allStudents.push(el.node);
-// });
+//this chunk of code seems unnecessary
+/* const allStudents: Ref<studentGuidance[]> = ref([]);
+guidanceStore.allStudents.forEach((student) => {
+  allStudents.push(student);
+}); */
 
 async function fetchStudents() {
   const { access_token } = useUserStore();
@@ -64,7 +65,6 @@ async function fetchStudents() {
     );
     const data = await profilesResponse.json();
     guidanceStore.currentlyViewing = data; 
-    allStudents.value=data
     console.log(data);
   } catch (error) {
     console.error("Error:", error);
@@ -120,10 +120,10 @@ watch(
   () => viewAll.value,
   (newResponse) => {
     if (viewAll.value === true) {
-      guidanceStore.currentlyViewing = allStudents;
+      guidanceStore.currentlyViewing = guidanceStore.allStudents;
     }
     if (viewAll.value === false) {
-      guidanceStore.currentlyViewing = allStudents;
+      guidanceStore.currentlyViewing = guidanceStore.allStudents; //replace this line with guidance counselor's own students
     }
     updatePage(1);
   }

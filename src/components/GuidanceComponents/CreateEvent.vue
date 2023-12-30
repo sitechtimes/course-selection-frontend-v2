@@ -54,7 +54,7 @@
           </label>
           <datalist id="suggestions">
             <option v-for="student in studentList" :key="student.email">
-              {{ titleCase(student.name) }}, |
+              {{ titleCaseName(student.name) }}, |
               {{ student.email }}@nycstudents.net
             </option>
           </datalist>
@@ -129,7 +129,7 @@ async function fetchStudents() {
   try {
     // GET request for profiles
     const profilesResponse = await fetch(
-      `${import.meta.env.VITE_URL}/guidance/profiles`,
+      `${import.meta.env.VITE_URL}/guidance/profiles`, //change this to endpoint with guidance counselor's
       {
         method: "GET",
         headers: {
@@ -185,12 +185,14 @@ function submit(
   time = "";
 }
 
-function titleCase(str: string): string {
-  return str
-    .split(",")
-    .map((part) => part.trim().toLowerCase())
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(", ");
+function titleCaseName(name: string): string {
+  const titleCaseWord = (word: string): string => {
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(); 
+  };
+  const [lastName, firstName] = name.split(",", 2);
+  const titleCasedLastName = lastName.split(" ").map(titleCaseWord).join(" ");
+  const titleCasedFirstName = firstName.split(" ").map(titleCaseWord).join(" ");
+  return `${titleCasedLastName}, ${titleCasedFirstName}`;
 }
 </script>
 

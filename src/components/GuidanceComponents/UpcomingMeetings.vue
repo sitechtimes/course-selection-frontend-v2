@@ -11,7 +11,7 @@
           <h2 class="font-bold text-lg">{{ date }}</h2>
           <ul class="my-2">
             <li v-for="(meeting, index) in meetings" :key="index" class="ml-6 mt-2 list-disc">
-              {{ meeting.meetingTime }} - {{ meeting.name }}
+              {{ meeting.meetingTime }} - {{ titleCaseName(meeting.name) }}
             </li>
           </ul>
         </div>
@@ -24,7 +24,7 @@
 import { ref, Ref, computed, watch, onMounted } from "vue";
 import { useUserStore } from "../../stores/user";
 import { useGuidanceStore } from "../../stores/guidance";
-import { studentMeetings } from "../../types/interface";
+import { studentGuidance, studentMeetings } from "../../types/interface";
 //@ts-ignore
 import dateformat from "dateformat";
 
@@ -32,6 +32,15 @@ const guidanceStore = useGuidanceStore();
 
 const meetingsData: Ref<studentMeetings[]> = ref([]);
 
+function titleCaseName(name: string): string {
+  const titleCaseWord = (word: string): string => {
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(); 
+  };
+  const [lastName, firstName] = name.split(",", 2);
+  const titleCasedLastName = lastName.split(" ").map(titleCaseWord).join(" ");
+  const titleCasedFirstName = firstName.split(" ").map(titleCaseWord).join(" ");
+  return `${titleCasedLastName}, ${titleCasedFirstName}`;
+}
 async function fetchStudentInfo() {
   const { access_token } = useUserStore();
   try {
@@ -46,18 +55,10 @@ async function fetchStudentInfo() {
         },
       }
     );
-    const data = (await meetingsResponse.json()).map((student) => ({
-      name: student.name
-        .split(",")
-        .map((part) => part.trim().toLowerCase())
-        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-        .join(", "),
+    const data = (await meetingsResponse.json()).map((student:studentGuidance) => ({
+      name: student.name,
       meetingDate: student.meeting,
-      description: student.meeting_description,
-      grade: student.grade,
-      email: student.email,
     }));
-    console.log(data);
     meetingsData.value = data;
     return data;
   } catch (error) {

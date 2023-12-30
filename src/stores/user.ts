@@ -33,13 +33,21 @@ export const useUserStore = defineStore("user", () => {
                 loading.value = false;
             });
         } else {
-            fetch(`${import.meta.env.VITE_URL}/student/surveyPreview/`, {}).then((res: any) => {
+            fetch(`${import.meta.env.VITE_URL}/student/surveyPreview/`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${access_token.value}`,
+                },
+            }).then((res: any) => {
                 const router = useRouter();
                 const surveyStore = useSurveyStore();
+                const studentStore = useStudentStore();
                 const data = res.json();
                 if (data.dueDate < new Date() || data.status === "FINALIZED") {
                     surveyStore.open = false;
                 }
+                console.log(data)
+                studentStore.survey.dueDate=data.dueDate
                 surveyStore.status = data.status;
             });
             loading.value = false;
@@ -85,7 +93,6 @@ export const useUserStore = defineStore("user", () => {
             last_name.value = response.data.user.last_name;
             isLoggedIn.value = true;
 
-
             const date = new Date();
             const expiration = date.setHours(date.getHours() + 1);
 
@@ -118,7 +125,7 @@ export const useUserStore = defineStore("user", () => {
         });
     }
     async function deleteMeeting(email: string) {
-        fetch(`${import.meta.env.VITE_URL}/guidance/meeting/`, {
+        fetch(`${import.meta.env.VITE_URL}/guidance/updateMeeting/`, {
             method: "DELETE",
             headers: {
                 Authorization: `Bearer ${access_token.value}`,
@@ -144,7 +151,7 @@ export const useUserStore = defineStore("user", () => {
         const data = await res.json()
         if (studentSurveyPreview.value === null) return
         // @ts-ignore
-        const student = await studentSurveyPreview.value.find((student) => student.user.email == email)
+        const student = await studentSurveyPreview.value.find((student) => student.email + "@nycstudents.net" === email);
         student.flag = data.flag
     }
 
@@ -163,7 +170,7 @@ export const useUserStore = defineStore("user", () => {
         const data = await res.json()
         if (studentSurveyPreview.value === null) return
         // @ts-ignore
-        const student = await studentSurveyPreview.value.find((student) => student.user.email == email)
+        const student = await studentSurveyPreview.value.find((student) => student.email + "@nycstudents.net" === email);
         student.flag = data.flag
     }
     async function getUserType() {

@@ -8,7 +8,6 @@
           <th class="p-4">Email</th>
           <th class="p-4">Status</th>
           <th class="p-4">Details</th>
-          <!-- start of Flags header -->
           <th class="p-4 flex flex-row  items-center">
             <p class="p-2 font-bold">Flags</p>
             <div>
@@ -22,7 +21,6 @@
               </div>
             </div>
           </th>
-          <!-- end of Flags header -->
         </tr>
       </thead>
 
@@ -33,20 +31,15 @@
           :flags="flags">
         </DeleteFlag>
         <tr>
-
           <td class="p-4">
-            {{ titleCase(student.name) }}
+            {{ titleCaseName(student.name) }}
           </td>
-
           <td class="p-4" v-if="student.grade === 'FRESHMAN'">9</td>
           <td class="p-4" v-if="student.grade === 'SOPHOMORE'">10</td>
           <td class="p-4" v-if="student.grade === 'JUNIOR'">11</td>
           <td class="p-4" v-if="student.grade === 'SENIOR'">12</td>
           <td class="p-4" v-if="!student.grade.length">&nbsp;</td>
-
           <td class="p-4">{{ student.email ? student.email + '@nycstudents.net' : '&nbsp;' }}</td>
-
-          <!-- student survey statuses starts-->
           <td class="p-4" v-if="student.status === 'NOT STARTED'">
             <p class="text-[#461616] bg-[#EA9F9F] w-[8rem] font-semibold text-center p-1 rounded-2xl">
               Not Started
@@ -67,7 +60,6 @@
               Finalized
             </p>
           </td>
-          <!-- student survey statuses end -->
           <td @click="viewSurvey(student)" class="p-4 hover:cursor-pointer">
             View Survey
           </td>
@@ -110,6 +102,7 @@ const surveyStore = useSurveyStore();
 const guidanceStore = useGuidanceStore();
 const router = useRouter();
 
+console.log(guidanceStore.currentlyViewing)
 let tooltip: Ref<boolean> = ref(false);
 let showFlagModal: Ref<string> = ref("");
 let showDeleteFlag: Ref<string> = ref("");
@@ -145,12 +138,14 @@ const toggleDeleteFlag = (student: string) => {
   showDeleteFlag.value = student;
 };
 
-function titleCase(string: string): string {
-  return string
-    .split(",")
-    .map((part) => part.trim().toLowerCase())
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(", ");
+function titleCaseName(name: string): string {
+  const titleCaseWord = (word: string): string => {
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(); 
+  };
+  const [lastName, firstName] = name.split(",", 2);
+  const titleCasedLastName = lastName.split(" ").map(titleCaseWord).join(" ");
+  const titleCasedFirstName = firstName.split(" ").map(titleCaseWord).join(" ");
+  return `${titleCasedLastName}, ${titleCasedFirstName}`;
 }
 
 async function viewSurvey(student: studentGuidance) {
@@ -159,8 +154,6 @@ async function viewSurvey(student: studentGuidance) {
     `/guidance/survey/${student.email.replace("@nycstudents.net", "")}`
   );
 }
-
-
 </script>
 
 <style scoped>

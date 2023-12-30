@@ -3,7 +3,7 @@
     <div class="h-1/3 w-1/4 bg-white rounded-sm px-10 py-2 flex justify-evenly flex-col">
       <div class="flex">
         <p>
-          <b>Student:</b> {{ titleCase(student.name) }}
+          <b>Student:</b> {{ titleCaseName(student.name) }}
         </p>
       </div>
       <div class="w-full flex flex-col items-center">
@@ -63,11 +63,13 @@ const confirm = async (flag: string) => {
   emit("exit");
 };
 
-function titleCase(string: string): string {
-  return string
-    .split(",")
-    .map((part) => part.trim().toLowerCase())
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(", ");
+function titleCaseName(name: string): string {
+  const titleCaseWord = (word: string): string => {
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(); 
+  };
+  const [lastName, firstName] = name.split(",", 2);
+  const titleCasedLastName = lastName.split(" ").map(titleCaseWord).join(" ");
+  const titleCasedFirstName = firstName.split(" ").map(titleCaseWord).join(" ");
+  return `${titleCasedLastName}, ${titleCasedFirstName}`;
 }
 </script>

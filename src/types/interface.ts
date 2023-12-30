@@ -61,6 +61,9 @@ export interface studentData {
 
 // student object (guidance side)
 export interface studentGuidance extends studentData {
+    name: string
+    status: string
+    email: string
     user: userData
     flag: string
     description: string
