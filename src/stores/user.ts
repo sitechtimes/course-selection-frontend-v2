@@ -38,18 +38,47 @@ export const useUserStore = defineStore("user", () => {
                 headers: {
                     Authorization: `Bearer ${access_token.value}`,
                 },
-            }).then((res: any) => {
-                const router = useRouter();
-                const surveyStore = useSurveyStore();
-                const studentStore = useStudentStore();
-                const data = res.json();
-                if (data.dueDate < new Date() || data.status === "FINALIZED") {
-                    surveyStore.open = false;
-                }
-                console.log(data)
-                studentStore.survey.dueDate=data.dueDate
-                surveyStore.status = data.status;
-            });
+            })
+                .then((res) => res.json())
+                .then(async (data) => {
+                    const router = useRouter();
+                    const surveyStore = useSurveyStore();
+                    const studentStore = useStudentStore();
+
+                    if (data.dueDate < new Date() || data.status === "FINALIZED") {
+                        surveyStore.open = false;
+                    }
+
+                    studentStore.studentSurveyPreview = data
+                    surveyStore.currentAnsweredSurvey.status = data.status;
+                })
+                .catch((error) => {
+                    console.error("Error fetching surveyPreview:", error);
+                });
+            fetch(`${import.meta.env.VITE_URL}/student/survey/`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${access_token.value}`,
+                },
+            })
+                .then((res) => res.json())
+                .then(async (data) => {
+                    const router = useRouter();
+                    const surveyStore = useSurveyStore();
+                    const studentStore = useStudentStore();
+
+                    const parsedData = JSON.parse(data);
+                    
+                    studentStore.survey = parsedData.survey.fields;
+                    studentStore.answeredSurvey = parsedData.answeredSurvey.fields;
+
+                    console.log("studentStore.survey", studentStore.survey);
+                    console.log("studentStore.answeredSurvey",studentStore.answeredSurvey);
+                })
+                .catch((error) => {
+                    console.error("Error fetching survey:", error);
+                });
+
             loading.value = false;
         }
     }

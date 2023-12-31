@@ -25,6 +25,13 @@ export interface studentUser {
     student: studentData
     survey: survey
     user: userData
+    studentSurveyPreview: studentSurveyPreview
+}
+
+export interface studentSurveyPreview {
+    dueDate: string
+    grade: string
+    status: string
 }
 
 // survey store interface
@@ -187,7 +194,7 @@ export interface calendarData {
         meetings: Array<{
             id: string,
             name: string;
-            meetingDate: Date|null;
+            meetingDate: Date | null;
             grade: string;
         }>;
     }>;
