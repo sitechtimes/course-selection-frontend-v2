@@ -169,26 +169,6 @@ function toggleEvent() {
   show.value = !show.value;
 }
 
-async function getStudent() {
-  try {
-    const response = await fetch(
-      `${import.meta.env.VITE_URL}/guidance/profiles`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userStore.access_token}`,
-        },
-      }
-    );
-    const arrStudent = await response.json();
-    console.log(arrStudent);
-  } catch (error) {
-    console.log(error);
-  }
-}
-getStudent();
-
 //check for empty input values before submitting form
 function empty() {
   //if the input value is an empty string, the error is true; otherwise it is false
