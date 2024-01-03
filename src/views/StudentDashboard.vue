@@ -48,7 +48,7 @@
             </button>
           </RouterLink>
         </div>
-          <p v-if="studentStore.student.meeting != undefined || studentStore.student.meeting != null">You have a scheduled meeting with your guidance councelor on {{ date }} at {{ time }}.</p>
+          <p v-if="studentStore.student.meeting != undefined || studentStore.student.meeting != null">You have a scheduled meeting with your guidance counselor on {{ date }} at {{ time }}.</p>
           <p v-else>Your guidance counselor has not scheduled a meeting with you yet.</p>
       </div>
     </div>
