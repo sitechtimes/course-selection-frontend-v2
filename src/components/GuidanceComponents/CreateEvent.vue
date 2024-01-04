@@ -239,9 +239,11 @@ function submit(
   const meetingISO: string = meetingDateTime.toISOString();
   //locate student
   for (const student of studentList.value) {
-    const studentFullName = student.name;
-    if (studentFullName == studentName) {
-      email = student.email;
+    const studentFullName =
+      `${student.name},` + " | " + `${student.email}@nycstudents.net`;
+    if (studentFullName == studentName.replace(" ", "")) {
+      email = `${student.email}@nycstudents.net`;
+      console.log(email);
     }
   }
   save.value = "Saved";
