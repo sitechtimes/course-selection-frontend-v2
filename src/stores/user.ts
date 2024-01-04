@@ -138,7 +138,8 @@ export const useUserStore = defineStore("user", () => {
     async function changeMeeting(
         email: string,
         meetingISO: string,
-        description: string
+        description: string,
+        notify: boolean
     ) {
         fetch(`${import.meta.env.VITE_URL}/guidance/updateMeeting/`, {
             method: "POST",
@@ -150,6 +151,7 @@ export const useUserStore = defineStore("user", () => {
                 email: email,
                 meeting: meetingISO,
                 description: description,
+                notify: notify
             }),
         });
     }
