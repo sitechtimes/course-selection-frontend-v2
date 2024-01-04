@@ -114,7 +114,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
 
   if(sort.sortBy === 'ns') {
     function ns(a: { grade: string, user: userData }) {
-        if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined) return -1;
+        if (guidanceStore.currentlyViewing.status.edges.find(x => x.node.email === a.user.email) === undefined) return -1;
         else
         return 1;
     }
@@ -224,4 +224,6 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
   }
 
 }
+
+guidanceStore.currentlyViewing.forEach((status='NOT STARTED') => console.log(name))
 </script>
