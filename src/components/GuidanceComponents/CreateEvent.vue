@@ -38,7 +38,7 @@
               :type="type"
               v-model="date"
               ref="date"
-              :placeholder="props.todaysDate"
+              :placeholder="todaysDate"
               onfocus="(this.type='date')"
               id="date"
             />
@@ -173,9 +173,9 @@ function toggleEvent() {
 }
 
 //daria's code
-
-const props = defineProps(["todaysDate"]);
-console.log(props.todaysDate);
+let todaysDate = new Date();
+let todaysYear = todaysDate.getFullYear();
+let todaysMonth = todaysDate.getMonth();
 //daria's code ends
 
 //check for empty input values before submitting form
