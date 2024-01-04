@@ -29,22 +29,50 @@
 
 <script setup lang="ts">
 import SearchBar from '../components/GuidanceComponents/SearchBar.vue';
-import DownArrow from '../components/icons/DownArrow.vue';
 import Sort from '../components/GuidanceComponents/SortButton.vue';
 import StudentTable from '../components/GuidanceComponents/StudentTable.vue'
 import { useUserStore } from '../stores/user';
 import { useGuidanceStore } from '../stores/guidance';
 import { studentGuidance } from '../types/interface'
-import { ref, Ref, computed, watch } from 'vue'
+import { ref, Ref, computed, watch, onMounted } from 'vue'
 
 document.title = "Student List | SITHS Course Selection";
 
 const guidanceStore = useGuidanceStore();
-guidanceStore.currentlyViewing = guidanceStore.guidance.students;
-let allStudents: studentGuidance[] = [];
 
-guidanceStore.allStudents.edges.forEach((el) => {
-  allStudents.push(el.node);
+//this line of code seems unnecessary so long as line 125 exists
+// guidanceStore.currentlyViewing = guidanceStore.guidance.students;
+
+//this chunk of code seems unnecessary
+/* const allStudents: Ref<studentGuidance[]> = ref([]);
+guidanceStore.allStudents.forEach((student) => {
+  allStudents.push(student);
+}); */
+
+async function fetchStudents() {
+  const { access_token } = useUserStore();
+  try {
+    // GET request for meetings
+    const profilesResponse = await fetch(
+      `${import.meta.env.VITE_URL}/guidance/profiles`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
+    const data = await profilesResponse.json();
+    guidanceStore.currentlyViewing = data; 
+    console.log(data);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+onMounted(() => {
+  fetchStudents();
 });
 
 const input: Ref<string> = ref("");
@@ -59,10 +87,10 @@ const newStudents = computed(() => {
   viewAll.value;
   return guidanceStore.currentlyViewing.filter(
     (student: studentGuidance) =>
-      (student.user.firstName + " " + student.user.lastName)
+      (student.name)
         .toLowerCase()
         .indexOf(input.value.toLowerCase()) != -1 ||
-      student.user.email.indexOf(input.value) != -1
+      student.email.indexOf(input.value) != -1
   );
 });
 
@@ -92,10 +120,10 @@ watch(
   () => viewAll.value,
   (newResponse) => {
     if (viewAll.value === true) {
-      guidanceStore.currentlyViewing = allStudents;
+      guidanceStore.currentlyViewing = guidanceStore.allStudents;
     }
     if (viewAll.value === false) {
-      guidanceStore.currentlyViewing = guidanceStore.guidance.students;
+      guidanceStore.currentlyViewing = guidanceStore.allStudents; //replace this line with guidance counselor's own students
     }
     updatePage(1);
   }

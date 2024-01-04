@@ -3,7 +3,7 @@
     <div class="h-1/3 w-1/4 bg-white rounded-sm px-10 py-2 flex justify-evenly flex-col">
       <div class="flex">
         <p>
-          <b>Student:</b> {{ student.user.firstName }} {{ student.user.lastName }}
+          <b>Student:</b> {{ titleCaseName(student.name) }}
         </p>
       </div>
       <div class="w-full flex flex-col items-center">
@@ -59,7 +59,17 @@ const unaddedFlags: Ref<flag[]> = computed(() => { //only push unadded flags int
 });
 
 const confirm = async (flag: string) => {
-  await userStore.addFlag(props.student.user.email, flag);
-    emit("exit");
+  await userStore.addFlag(`${props.student.email}@nycstudents.net`, flag);
+  emit("exit");
 };
+
+function titleCaseName(name: string): string {
+  const titleCaseWord = (word: string): string => {
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(); 
+  };
+  const [lastName, firstName] = name.split(",", 2);
+  const titleCasedLastName = lastName.split(" ").map(titleCaseWord).join(" ");
+  const titleCasedFirstName = firstName.split(" ").map(titleCaseWord).join(" ");
+  return `${titleCasedLastName}, ${titleCasedFirstName}`;
+}
 </script>

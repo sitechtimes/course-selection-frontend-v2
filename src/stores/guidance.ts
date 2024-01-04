@@ -5,12 +5,8 @@ import axios from "axios";
 
 export const useGuidanceStore = defineStore("guidance", {
     state: (): guidanceData => ({
-        allAnsweredSurveys: { edges: [] },
-        allStudents: { edges: [] },
-        allSurveys: { edges: [] },
-        guidance: { students: [] },
+        allStudents: [],
         user: { email: "", firstName: "", lastName: "" },
-        surveyStats: { edges: [] }, 
         currentlyViewing: []
     }),
     getters: {
@@ -19,5 +15,7 @@ export const useGuidanceStore = defineStore("guidance", {
     actions: {
         //
     },
-    persist: true,
+    persist: {
+        storage: sessionStorage
+    },
 });

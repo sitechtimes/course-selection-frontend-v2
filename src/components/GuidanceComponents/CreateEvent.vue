@@ -83,13 +83,12 @@
             Student
           </label>
           <datalist id="suggestions">
-            <div v-for="student in studentList" :key="student.user.email">
-              <option>
-                {{ student.user.lastName }}, {{ student.user.firstName }} |
-                {{ student.user.email }}
-              </option>
-            </div>
+            <option v-for="student in studentList" :key="student.email">
+              {{ titleCaseName(student.name) }}, |
+              {{ student.email }}@nycstudents.net
+            </option>
           </datalist>
+
           <input
             class="space rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80"
             placeholder="Select Student From List"
@@ -143,7 +142,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref } from "vue";
+import { ref, Ref, onMounted } from "vue";
 import { useUserStore } from "../../stores/user";
 import { useGuidanceStore } from "../../stores/guidance";
 import { studentGuidance } from "../../types/interface";
@@ -158,15 +157,41 @@ let name: string;
 let email: string;
 const save = ref();
 const form = ref();
-const studentList: studentGuidance[] = guidanceStore.guidance.students;
+const studentList: Ref<studentGuidance[]> = ref([]);
 const dateError: Ref<boolean> = ref(false);
 const timeError: Ref<boolean> = ref(false);
 const nameError: Ref<boolean> = ref(false);
 const show: Ref<boolean> = ref(true);
 
+onMounted(() => {
+  fetchStudents();
+});
+
 //toggle modal
 function toggleEvent() {
   show.value = !show.value;
+}
+
+async function fetchStudents() {
+  const { access_token } = useUserStore();
+  try {
+    // GET request for profiles
+    const profilesResponse = await fetch(
+      `${import.meta.env.VITE_URL}/guidance/profiles`, //change this to endpoint with guidance counselor's
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
+    const data = await profilesResponse.json();
+    studentList.value = data;
+    console.log(studentList.value);
+  } catch (error) {
+    console.error("Error:", error);
+  }
 }
 
 //check for empty input values before submitting form
@@ -213,16 +238,10 @@ function submit(
   const meetingDateTime: Date = new Date(meetingDate + "T" + meetingTime);
   const meetingISO: string = meetingDateTime.toISOString();
   //locate student
-  for (const student of studentList) {
-    const studentFullName =
-      student.user.lastName +
-      ", " +
-      student.user.firstName +
-      " | " +
-      student.user.email;
-    if (studentFullName === studentName) {
-      email = student.user.email;
-      break;
+  for (const student of studentList.value) {
+    const studentFullName = student.name;
+    if (studentFullName == studentName) {
+      email = student.email;
     }
   }
   save.value = "Saved";
@@ -234,6 +253,16 @@ function submit(
   email = "";
   date = "";
   time = "";
+}
+
+function titleCaseName(name: string): string {
+  const titleCaseWord = (word: string): string => {
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+  };
+  const [lastName, firstName] = name.split(",", 2);
+  const titleCasedLastName = lastName.split(" ").map(titleCaseWord).join(" ");
+  const titleCasedFirstName = firstName.split(" ").map(titleCaseWord).join(" ");
+  return `${titleCasedLastName}, ${titleCasedFirstName}`;
 }
 </script>
 

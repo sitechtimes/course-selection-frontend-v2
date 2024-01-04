@@ -159,9 +159,15 @@ const router = createRouter({
       }
     },
     {
-      path: '/guidance/meetingDetails',
-      name: 'meetingDetails',
-      component: () => import('../views/MeetingDetails.vue'),
+      path: '/guidance/PrintPage/:email',
+      name: 'printPage',
+      component: () => import('../views/PrintPage.vue'),
+      beforeEnter: (to) => {
+        const userStore = useUserStore();
+        if (userStore.userType === 'student') {
+          return { name: "studentDash" };
+        }
+      }
     },
   ]
 })

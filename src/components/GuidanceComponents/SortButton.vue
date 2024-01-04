@@ -33,7 +33,6 @@ const selected: Ref<string> = ref("Sort By");
 const isOpen: Ref<boolean> = ref(false);
 
 watch(() => guidanceStore.currentlyViewing, (newValue) => {
-    // do something based on the new value
   selected.value = "Sort By"
 })
 
