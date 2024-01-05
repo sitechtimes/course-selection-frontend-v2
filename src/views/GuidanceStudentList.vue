@@ -65,7 +65,6 @@ async function fetchStudents() {
     );
     const data = await profilesResponse.json();
     guidanceStore.currentlyViewing = data; 
-    console.log(data);
   } catch (error) {
     console.error("Error:", error);
   }

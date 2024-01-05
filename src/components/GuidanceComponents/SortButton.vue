@@ -91,22 +91,31 @@ const menuArray = [
   },
 ]
 
+
 const sortBy = (sort: {sortBy:string, text:string}) => {
   selected.value = sort.text
   isOpen.value = false
-  if(sort.sortBy === 'lastnameaz') {
-    function lastnameaz(a: { user: { lastName: string; }; }, b: { user: { lastName: string; }; }) {
-    if (a.user.lastName < b.user.lastName) return -1;
-    if (a.user.lastName > b.user.lastName) return 1;
+  if(sort.sortBy === 'lastnameaz') { // if user selects this
+    function lastnameaz(a: { name: string; }, b: { name: string; }) {
+    if (a.name < b.name){
+       return -1;
+    }
+    if (a.name > b.name){
+      return 1; 
+    }  
     return 0;
   }
-    return (guidanceStore.currentlyViewing.sort(lastnameaz))
+    console.log(guidanceStore.currentlyViewing.sort(lastnameaz))
   }
 
   if(sort.sortBy === 'lastnameza') {
-    function lastnameza(a: { user: { lastName: string; }; }, b: { user: { lastName: string; }; }) {
-      if (a.user.lastName > b.user.lastName) return -1;
-      if (a.user.lastName < b.user.lastName) return 1;
+    function lastnameza(a: { name: string;} , b: { name: string;}) {
+      if (a.name > b.name){
+         return -1;
+      }
+      if (a.name < b.name){
+         return 1;
+      }
       return 0;
     }
     return (guidanceStore.currentlyViewing.sort(lastnameza))
