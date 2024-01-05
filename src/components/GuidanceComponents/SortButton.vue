@@ -1,23 +1,30 @@
 <template>
   <div class="w-44">
-  <div
-   class="h-10 w-full flex flex-row bg-primary-g text-black justify-evenly cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
-   id="sort"
-   @click="isOpen = !isOpen"
- >
-   <div>
-     <a class="mt-2.5 ml-4 flex">
-       <p class="font-semibold" id="sortshow">{{ selected }}</p>
-     </a>
-   </div>
-   <DownArrow class="mt-2.5"/>
-   </div>
-   <div class="sub-menu absolute shadow-[4px_3px_3px_rgba(0,0,0,0.25)] " v-if="isOpen" >
-     <div v-for="x in menuArray" :key="x.sortBy" class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
-       <button @click="sortBy(x)" class="ml-2">{{ x.text }}</button>
-     </div>
-   </div>
- </div>
+    <div
+      class="h-10 w-full flex flex-row bg-primary-g text-black justify-evenly cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
+      id="sort"
+      @click="isOpen = !isOpen"
+    >
+      <div>
+        <a class="mt-2.5 ml-4 flex">
+          <p class="font-semibold" id="sortshow">{{ selected }}</p>
+        </a>
+      </div>
+      <DownArrow class="mt-2.5" />
+    </div>
+    <div
+      class="sub-menu absolute shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
+      v-if="isOpen"
+    >
+      <div
+        v-for="x in menuArray"
+        :key="x.sortBy"
+        class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g"
+      >
+        <button @click="sortBy(x)" class="ml-2">{{ x.text }}</button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -113,12 +120,19 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
   }
 
   if(sort.sortBy === 'ns') {
-    function ns(a: { grade: string, user: userData }) {
-        if (guidanceStore.currentlyViewing.status.edges.find(x => x.node.email === a.user.email) === undefined) return -1;
-        else
-        return 1;
-    }
-    return (guidanceStore.currentlyViewing.sort(ns))
+    // function ns(a: { grade: string, user: userData }) {
+    //     if (guidanceStore.currentlyViewing.status.edges.find(x => x.node.email === a.user.email) === undefined) return -1;
+    //     else
+    //     return 1;
+    // }
+    // return (guidanceStore.currentlyViewing.sort(ns))
+    const statusFilter = guidanceStore.currentlyViewing.filter((name)=>
+  {
+guidanceStore.currentlyViewing.forEach((status)=>{
+if (status==='NOT STARTED'){
+console.log('hi')
+}})
+  })
   }
 
   if(sort.sortBy === 'ip') {
@@ -159,7 +173,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
     }
     return (guidanceStore.currentlyViewing.sort(final))
   }
-  
+
   if(sort.sortBy === 'nine') {
     function nine(a: { grade: string; }) {
       if (a.grade === "FRESHMAN") return -1;
@@ -177,7 +191,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
     }
     return (guidanceStore.currentlyViewing.sort(ten))
   }
-  
+
   if(sort.sortBy === 'eleven') {
     function eleven(a: { grade: string; }) {
       if (a.grade === "JUNIOR") return -1;
@@ -186,7 +200,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
     }
     return (guidanceStore.currentlyViewing.sort(eleven))
   }
-  
+
   if(sort.sortBy === 'transfer') {
     function transfer(a: { flag: string; }) {
       if (a.flag.includes('Transfer')) return -1;
@@ -204,7 +218,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
     }
     return (guidanceStore.currentlyViewing.sort(regents))
   }
-  
+
   if(sort.sortBy === 'sports') {
     function sports(a: { flag: string; }) {
       if (a.flag.includes('Team')) return -1;
@@ -213,7 +227,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
     }
     return (guidanceStore.currentlyViewing.sort(sports))
   }
-  
+
   if(sort.sortBy === 'enl') {
     const enl = (a: { flag: string; }) => {
       if (a.flag.includes('ENL')) return -1;
@@ -225,5 +239,20 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
 
 }
 
-guidanceStore.currentlyViewing.forEach((status='NOT STARTED') => console.log(name))
+// const statusFilter = guidanceStore.currentlyViewing.filter((name) =>
+// { guidanceStore.currentlyViewing.forEach((status) => {
+//   if (status === "NOT STARTED") {
+//     console.log( guidanceStore.currentlyViewing.name) } else {
+//       console.log('')
+//     } )
+//   })
+
+  const statusFilter = guidanceStore.currentlyViewing.filter((name)=>
+  {
+guidanceStore.currentlyViewing.forEach((status)=>{
+if (status==='NOT STARTED'){
+console.log('hi')
+}})
+  })
+
 </script>
