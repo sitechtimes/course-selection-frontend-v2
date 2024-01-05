@@ -211,18 +211,22 @@ async function updateMeeting(
   description: string
 ) {
   try {
-    await fetch(`${import.meta.env.VITE_URL}/guidance/updateMeeting/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${userStore.access_token}`,
-      },
-      body: JSON.stringify({
-        email: email,
-        date: meetingISO,
-        memo: description,
-      }),
-    });
+    const request = await fetch(
+      `${import.meta.env.VITE_URL}/guidance/updateMeeting/`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userStore.access_token}`,
+        },
+        body: JSON.stringify({
+          email: email,
+          date: meetingISO,
+          memo: description,
+        }),
+      }
+    );
+    console.log(request);
   } catch (error) {
     console.log(error);
   }
@@ -248,7 +252,7 @@ function submit(
   form.value.reset();
   show.value = !show.value;
   //clear form input values
-  name = "";
+  selectedStudentEmail = "";
   email = "";
   date = "";
   time = "";
