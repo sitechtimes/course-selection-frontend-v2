@@ -94,7 +94,7 @@
             placeholder="Select Student From List"
             autoComplete="on"
             list="suggestions"
-            v-model="name"
+            v-model="selectedStudentEmail"
             id="student"
           />
           <p v-if="nameError" class="error text-red-600 ml-6 mt-1">
@@ -153,7 +153,7 @@ const userStore = useUserStore();
 let date: string;
 let time: string;
 let description: string;
-let name: string;
+let selectedStudentEmail: string;
 let email: string;
 const save = ref();
 const form = ref();
@@ -199,9 +199,9 @@ function empty() {
   //if the input value is an empty string, the error is true; otherwise it is false
   dateError.value = !date;
   timeError.value = !time;
-  nameError.value = !name;
+  nameError.value = !selectedStudentEmail;
   if (!dateError.value && !timeError.value && !nameError.value) {
-    submit(date, name, time, description);
+    submit(date, selectedStudentEmail, time, description);
   }
 }
 
@@ -230,7 +230,7 @@ async function updateMeeting(
 
 function submit(
   meetingDate: string,
-  studentName: string,
+  studentEmail: string,
   meetingTime: string,
   description: string
 ) {
@@ -239,11 +239,8 @@ function submit(
   const meetingISO: string = meetingDateTime.toISOString();
   //locate student
   for (const student of studentList.value) {
-    const studentFullName =
-      `${student.name},` + " | " + `${student.email}@nycstudents.net`;
-    if (studentFullName == studentName.replace(" ", "")) {
+    if (studentEmail.includes(student.email)) {
       email = `${student.email}@nycstudents.net`;
-      console.log(email);
     }
   }
   save.value = "Saved";
