@@ -32,7 +32,7 @@ const guidanceStore = useGuidanceStore()
 const selected: Ref<string> = ref("Sort By");
 const isOpen: Ref<boolean> = ref(false);
 
-watch(() => guidanceStore.currentlyViewing, (newValue) => {
+watch(() => userStore.currentlyViewingStudents, (newValue) => {
   selected.value = "Sort By"
 })
 
@@ -105,7 +105,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
     }  
     return 0;
   }
-    console.log(guidanceStore.currentlyViewing.sort(lastnameaz))
+    console.log(userStore.currentlyViewingStudents.sort(lastnameaz))
   }
 
   if(sort.sortBy === 'lastnameza') {
@@ -118,7 +118,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
       }
       return 0;
     }
-    return (guidanceStore.currentlyViewing.sort(lastnameza))
+    return (userStore.currentlyViewingStudents.sort(lastnameza))
   }
 
   if(sort.sortBy === 'ns') {
@@ -127,7 +127,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
         else
         return 1;
     }
-    return (guidanceStore.currentlyViewing.sort(ns))
+    return (userStore.currentlyViewingStudents.sort(ns))
   }
 
   if(sort.sortBy === 'ip') {
@@ -140,7 +140,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
         return 1
       }
     }
-    return (guidanceStore.currentlyViewing.sort(ip))
+    return (userStore.currentlyViewingStudents.sort(ip))
   }
 
   if(sort.sortBy === 'com') {
@@ -153,7 +153,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
         return 1
       }
     }
-    return (guidanceStore.currentlyViewing.sort(com))
+    return (userStore.currentlyViewingStudents.sort(com))
   }
 
   if(sort.sortBy === 'final') {
@@ -166,7 +166,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
         return 1
       }
     }
-    return (guidanceStore.currentlyViewing.sort(final))
+    return (userStore.currentlyViewingStudents.sort(final))
   }
   
   if(sort.sortBy === 'nine') {
@@ -175,7 +175,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
       else
       return 1;
     }
-    return (guidanceStore.currentlyViewing.sort(nine))
+    return (userStore.currentlyViewingStudents.sort(nine))
   }
 
   if(sort.sortBy === 'ten') {
@@ -184,7 +184,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
       else
       return 1;
     }
-    return (guidanceStore.currentlyViewing.sort(ten))
+    return (userStore.currentlyViewingStudents.sort(ten))
   }
   
   if(sort.sortBy === 'eleven') {
@@ -193,7 +193,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
       else
       return 1;
     }
-    return (guidanceStore.currentlyViewing.sort(eleven))
+    return (userStore.currentlyViewingStudents.sort(eleven))
   }
   
   if(sort.sortBy === 'transfer') {
@@ -202,7 +202,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
       else
       return 1;
     }
-    return (guidanceStore.currentlyViewing.sort(transfer))
+    return (userStore.currentlyViewingStudents.sort(transfer))
   }
 
   if(sort.sortBy === 'regents') {
@@ -211,7 +211,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
       else
       return 1;
     }
-    return (guidanceStore.currentlyViewing.sort(regents))
+    return (userStore.currentlyViewingStudents.sort(regents))
   }
   
   if(sort.sortBy === 'sports') {
@@ -220,7 +220,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
       else
       return 1;
     }
-    return (guidanceStore.currentlyViewing.sort(sports))
+    return (userStore.currentlyViewingStudents.sort(sports))
   }
   
   if(sort.sortBy === 'enl') {
@@ -229,7 +229,7 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
       else
       return 1;
     }
-    return (guidanceStore.currentlyViewing.sort(enl))
+    return (userStore.currentlyViewingStudents.sort(enl))
   }
 
 }
