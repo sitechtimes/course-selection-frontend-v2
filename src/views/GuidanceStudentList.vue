@@ -32,27 +32,18 @@ import SearchBar from '../components/GuidanceComponents/SearchBar.vue';
 import Sort from '../components/GuidanceComponents/SortButton.vue';
 import StudentTable from '../components/GuidanceComponents/StudentTable.vue'
 import { useUserStore } from '../stores/user';
-import { useGuidanceStore } from '../stores/guidance';
 import { studentGuidance } from '../types/interface'
 import { ref, Ref, computed, watch, onMounted } from 'vue'
 
 document.title = "Student List | SITHS Course Selection";
 
-const guidanceStore = useGuidanceStore();
-
-//this line of code seems unnecessary so long as line 125 exists
-// guidanceStore.currentlyViewing = guidanceStore.guidance.students;
-
-//this chunk of code seems unnecessary
-/* const allStudents: Ref<studentGuidance[]> = ref([]);
-guidanceStore.allStudents.forEach((student) => {
-  allStudents.push(student);
-}); */
+const userStore=useUserStore();
+const allStudents: Ref<studentGuidance[]> = ref([]);
 
 async function fetchStudents() {
   const { access_token } = useUserStore();
   try {
-    // GET request for meetings
+    // GET request for all students
     const profilesResponse = await fetch(
       `${import.meta.env.VITE_URL}/guidance/profiles`,
       {
@@ -63,17 +54,13 @@ async function fetchStudents() {
         },
       }
     );
-    const data = await profilesResponse.json();
-    guidanceStore.currentlyViewing = data; 
-    console.log(data);
+    console.log('Loading all students...'); 
+    const data = JSON.parse(await profilesResponse.json());
+    allStudents.value = data; 
   } catch (error) {
     console.error("Error:", error);
   }
 }
-
-onMounted(() => {
-  fetchStudents();
-});
 
 const input: Ref<string> = ref("");
 const viewAll = ref(false);
@@ -85,7 +72,7 @@ const currentPage = ref(1);
 //sorting students to view
 const newStudents = computed(() => {
   viewAll.value;
-  return guidanceStore.currentlyViewing.filter(
+  return userStore.currentlyViewingStudents.filter(
     (student: studentGuidance) =>
       (student.name)
         .toLowerCase()
@@ -95,7 +82,7 @@ const newStudents = computed(() => {
 });
 
 const pages = computed(() => {
-  return Math.ceil(guidanceStore.currentlyViewing.length / pageCapacity);
+  return Math.ceil(userStore.currentlyViewingStudents.length / pageCapacity);
 });
 
 const add = () => {
@@ -116,14 +103,19 @@ const updatePage = (pageNumber: number) => {
   currentPage.value = pageNumber;
 };
 
+onMounted(async () => {
+  userStore.currentlyViewingStudents = userStore.guidanceStudents;
+})
+
 watch(
   () => viewAll.value,
-  (newResponse) => {
+  async (newResponse) => {
     if (viewAll.value === true) {
-      guidanceStore.currentlyViewing = guidanceStore.allStudents;
+      await fetchStudents();
+      userStore.currentlyViewingStudents = allStudents.value;
     }
     if (viewAll.value === false) {
-      guidanceStore.currentlyViewing = guidanceStore.allStudents; //replace this line with guidance counselor's own students
+      userStore.currentlyViewingStudents = userStore.guidanceStudents; 
     }
     updatePage(1);
   }

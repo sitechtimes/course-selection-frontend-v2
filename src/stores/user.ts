@@ -4,7 +4,7 @@ import { useStudentStore } from "./student";
 import { useGuidanceStore } from "./guidance";
 import { useRouter } from "vue-router";
 import axios from "axios";
-import { user, account_type, userData } from "../types/interface";
+import { user, account_type, userData, guidanceData, studentGuidance } from "../types/interface";
 import { ref } from "vue";
 import router from "../router";
 
@@ -20,6 +20,9 @@ export const useUserStore = defineStore("user", {
         loading: false,
         expire_time: 0,
         studentSurveyPreview: null,
+        currentlyViewingStudents: [],
+        guidanceStudents: [],
+
     }),
     actions: {
         async init(type: account_type) {
@@ -32,6 +35,15 @@ export const useUserStore = defineStore("user", {
                     },
                 }).then(async (data) => {
                     this.studentSurveyPreview = await data.json();
+                });
+                fetch(`${import.meta.env.VITE_URL}/guidance/getGuidanceStudents/`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${this.access_token}`,
+                    },
+                }).then(async (data) => {
+                    this.guidanceStudents = JSON.parse(await data.json());
+                    console.log('this.currentlyViewingStudents', this.guidanceStudents  )
                     this.loading = false;
                 });
             } else {
@@ -46,11 +58,11 @@ export const useUserStore = defineStore("user", {
                         const router = useRouter();
                         const surveyStore = useSurveyStore();
                         const studentStore = useStudentStore();
-    
+
                         if (data.dueDate < new Date() || data.status === "FINALIZED") {
                             surveyStore.open = false;
                         }
-    
+
                         studentStore.studentSurveyPreview = data
                         surveyStore.currentAnsweredSurvey.status = data.status;
                     })
@@ -68,19 +80,19 @@ export const useUserStore = defineStore("user", {
                         const router = useRouter();
                         const surveyStore = useSurveyStore();
                         const studentStore = useStudentStore();
-    
+
                         const parsedData = JSON.parse(data);
-                        
+
                         studentStore.survey = parsedData.survey.fields;
                         studentStore.answeredSurvey = parsedData.answeredSurvey.fields;
-    
+
                         console.log("studentStore.survey", studentStore.survey);
-                        console.log("studentStore.answeredSurvey",studentStore.answeredSurvey);
+                        console.log("studentStore.answeredSurvey", studentStore.answeredSurvey);
                     })
                     .catch((error) => {
                         console.error("Error fetching survey:", error);
                     });
-    
+
                 this.loading = false;
             }
         },
@@ -97,12 +109,12 @@ export const useUserStore = defineStore("user", {
                     this.first_name = response.data.user.first_name;
                     this.last_name = response.data.user.last_name;
                     this.isLoggedIn = true;
-    
+
                     const date = new Date();
                     const expiration = date.setHours(date.getHours() + 1);
-    
+
                     this.expire_time = expiration;
-    
+
                     this.getUserType(); //make dj rest auth return user type (backend) to remove this function
                 });
         },
@@ -115,23 +127,22 @@ export const useUserStore = defineStore("user", {
                         password: password,
                     }
                 );
-    
-                console.log(response);
+
                 this.access_token = response.data.access_token;
                 this.refresh_token = response.data.refresh_token;
                 this.email = response.data.user.email;
                 this.first_name = response.data.user.first_name;
                 this.last_name = response.data.user.last_name;
                 this.isLoggedIn = true;
-    
+
                 const date = new Date();
                 const expiration = date.setHours(date.getHours() + 1);
-    
+
                 this.expire_time = expiration;
                 this.loading = true;
                 await this.getUserType()
                 this.init(this.userType);
-    
+
             } catch (error) {
                 this.loading = false;
                 alert("Login failed. Please check your credentials.");
