@@ -1,22 +1,29 @@
 <template>
   <div class="h-auto w-full flex flex-col justify-center items-center mb-10">
     <div class="flex flex-row items-center justify-center w-5/6">
-          <div class="w-1/3 flex flex-row justify-evenly">
-            <div @click="viewAll = !viewAll" class="h-10 px-4 w-60 mx-10 flex flex-row bg-primary-g text-black justify-evenly  font-semibold items-center cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)] ">
-              <label class="cursor-pointer">View all students</label>
-              <input class="ml-2" type="checkbox" v-model="viewAll"/>
-            </div>
-            <Sort class="mr-0"/>
-          </div>
-          <SearchBar class="w-2/3" type="text" v-model="input" placeholder="Search Students..." />
+      <div class="w-1/3 flex flex-row justify-evenly">
+        <div v-if="loading">
+          Loading students...
         </div>
-    <StudentTable  :newstudents="newStudents.slice(x, y)" />
+        <div @click="viewAll = !viewAll"
+          class="h-10 px-4 w-60 mx-10 flex flex-row bg-primary-g text-black justify-evenly  font-semibold items-center cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)] ">
+          <label class="cursor-pointer">View all students</label>
+          <input class="ml-2" type="checkbox" v-model="viewAll" />
+        </div>
+        <Sort class="mr-0" />
+      </div>
+      <SearchBar class="w-2/3" type="text" v-model="input" placeholder="Search Students..." />
+    </div>
+    <StudentTable :newstudents="newStudents.slice(x, y)" />
     <div class="max-w-[80%] overflow-x-auto mt-4 flex flex-row justify-between ">
       <button class=" mx-2  bg-[#ebebeb] h-8 w-8 rounded-lg font-bold" @click="subtract" :disabled="currentPage === 1">
         ❮
       </button>
-      <button v-for="n in pages" @click="updatePage(n)" :class="{'bg-[#cdeeb4] focus:bg-[#cdeeb4]': currentPage === n, 'bg-[#ebebeb]': currentPage !== n}" class=" h-8 w-8 rounded-lg hover:opacity-75 ease-in-out duration-300 font-bold mx-2" > {{ n }} </button>
-      <button class=" mx-2  bg-[#ebebeb] h-8 w-8 rounded-lg font-bold" :disabled="currentPage === pages" @click="add">❯</button>
+      <button v-for="n in pages" @click="updatePage(n)"
+        :class="{ 'bg-[#cdeeb4] focus:bg-[#cdeeb4]': currentPage === n, 'bg-[#ebebeb]': currentPage !== n }"
+        class=" h-8 w-8 rounded-lg hover:opacity-75 ease-in-out duration-300 font-bold mx-2"> {{ n }} </button>
+      <button class=" mx-2  bg-[#ebebeb] h-8 w-8 rounded-lg font-bold" :disabled="currentPage === pages"
+        @click="add">❯</button>
     </div>
     <h5 class="mt-4">
       Page
@@ -32,27 +39,20 @@ import SearchBar from '../components/GuidanceComponents/SearchBar.vue';
 import Sort from '../components/GuidanceComponents/SortButton.vue';
 import StudentTable from '../components/GuidanceComponents/StudentTable.vue'
 import { useUserStore } from '../stores/user';
-import { useGuidanceStore } from '../stores/guidance';
 import { studentGuidance } from '../types/interface'
 import { ref, Ref, computed, watch, onMounted } from 'vue'
 
 document.title = "Student List | SITHS Course Selection";
 
-const guidanceStore = useGuidanceStore();
-
-//this line of code seems unnecessary so long as line 125 exists
-// guidanceStore.currentlyViewing = guidanceStore.guidance.students;
-
-//this chunk of code seems unnecessary
-/* const allStudents: Ref<studentGuidance[]> = ref([]);
-guidanceStore.allStudents.forEach((student) => {
-  allStudents.push(student);
-}); */
+const userStore = useUserStore();
+const allStudents: Ref<studentGuidance[]> = ref([]);
+const loading = ref(false);
 
 async function fetchStudents() {
   const { access_token } = useUserStore();
+  loading.value = true; 
   try {
-    // GET request for meetings
+    // GET request for all students
     const profilesResponse = await fetch(
       `${import.meta.env.VITE_URL}/guidance/profiles`,
       {
@@ -63,16 +63,13 @@ async function fetchStudents() {
         },
       }
     );
-    const data = await profilesResponse.json();
-    guidanceStore.currentlyViewing = data; 
+    loading.value=false
+    const data = JSON.parse(await profilesResponse.json());
+    allStudents.value = data;
   } catch (error) {
     console.error("Error:", error);
   }
 }
-
-onMounted(() => {
-  fetchStudents();
-});
 
 const input: Ref<string> = ref("");
 const viewAll = ref(false);
@@ -84,7 +81,7 @@ const currentPage = ref(1);
 //sorting students to view
 const newStudents = computed(() => {
   viewAll.value;
-  return guidanceStore.currentlyViewing.filter(
+  return userStore.currentlyViewingStudents.filter(
     (student: studentGuidance) =>
       (student.name)
         .toLowerCase()
@@ -94,19 +91,19 @@ const newStudents = computed(() => {
 });
 
 const pages = computed(() => {
-  return Math.ceil(guidanceStore.currentlyViewing.length / pageCapacity);
+  return Math.ceil(userStore.currentlyViewingStudents.length / pageCapacity);
 });
 
 const add = () => {
-    currentPage.value++;
-    x.value = x.value + pageCapacity;
-    y.value = y.value + pageCapacity;
+  currentPage.value++;
+  x.value = x.value + pageCapacity;
+  y.value = y.value + pageCapacity;
 };
 
 const subtract = () => {
-    currentPage.value--;
-    x.value = x.value - pageCapacity;
-    y.value = y.value - pageCapacity;
+  currentPage.value--;
+  x.value = x.value - pageCapacity;
+  y.value = y.value - pageCapacity;
 };
 
 const updatePage = (pageNumber: number) => {
@@ -115,14 +112,19 @@ const updatePage = (pageNumber: number) => {
   currentPage.value = pageNumber;
 };
 
+onMounted(async () => {
+  userStore.currentlyViewingStudents = userStore.guidanceStudents;
+})
+
 watch(
   () => viewAll.value,
-  (newResponse) => {
+  async (newResponse) => {
     if (viewAll.value === true) {
-      guidanceStore.currentlyViewing = guidanceStore.allStudents;
+      await fetchStudents();
+      userStore.currentlyViewingStudents = allStudents.value;
     }
     if (viewAll.value === false) {
-      guidanceStore.currentlyViewing = guidanceStore.allStudents; //replace this line with guidance counselor's own students
+      userStore.currentlyViewingStudents = userStore.guidanceStudents;
     }
     updatePage(1);
   }
