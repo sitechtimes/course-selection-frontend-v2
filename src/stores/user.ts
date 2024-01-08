@@ -98,16 +98,22 @@ export const useUserStore = defineStore("user", {
         },
         async GoogleLogin(res: any) {
             this.loading = true;
-            await axios
-                .post(`${import.meta.env.VITE_URL}/social-login/google/`, {
+            fetch(`${import.meta.env.VITE_URL}/social-login/google/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
                     access_token: res.access_token,
-                })
-                .then((response) => {
-                    this.access_token = response.data.access_token;
-                    this.refresh_token = response.data.refresh_token;
-                    this.email = response.data.user.email;
-                    this.first_name = response.data.user.first_name;
-                    this.last_name = response.data.user.last_name;
+                }),
+            })
+                .then((res) => res.json())
+                .then(async (data) => {
+                    this.access_token = data.access_token;
+                    this.refresh_token = data.refresh_token;
+                    this.email = data.user.email;
+                    this.first_name = data.user.first_name;
+                    this.last_name = data.user.last_name;
                     this.isLoggedIn = true;
 
                     const date = new Date();
@@ -120,28 +126,33 @@ export const useUserStore = defineStore("user", {
         },
         async EmailLogin(username: string, password: string) {
             try {
-                const response = await axios.post(
-                    `${import.meta.env.VITE_URL}/auth/login/`,
-                    {
+                fetch(`${import.meta.env.VITE_URL}/auth/login/`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
                         username: username.toLowerCase(),
                         password: password,
-                    }
-                );
+                    }),
+                })
+                    .then((res) => res.json())
+                    .then(async (data) => {
+                        this.access_token = data.access_token;
+                        this.refresh_token = data.refresh_token;
+                        this.email = data.user.email;
+                        this.first_name = data.user.first_name;
+                        this.last_name = data.user.last_name;
+                        this.isLoggedIn = true;
 
-                this.access_token = response.data.access_token;
-                this.refresh_token = response.data.refresh_token;
-                this.email = response.data.user.email;
-                this.first_name = response.data.user.first_name;
-                this.last_name = response.data.user.last_name;
-                this.isLoggedIn = true;
+                        const date = new Date();
+                        const expiration = date.setHours(date.getHours() + 1);
 
-                const date = new Date();
-                const expiration = date.setHours(date.getHours() + 1);
-
-                this.expire_time = expiration;
-                this.loading = true;
-                await this.getUserType()
-                this.init(this.userType);
+                        this.expire_time = expiration;
+                        this.loading = true;
+                        await this.getUserType()
+                        this.init(this.userType);
+                    });
 
             } catch (error) {
                 this.loading = false;
