@@ -176,8 +176,7 @@ router.beforeEach(async (to) => {
   const userStore = useUserStore();
   const loggedIn = userStore.isLoggedIn;
 
-  const publicPages = ["/", "/login", '/test', '/test2'];
-  console.log(to.path)
+  const publicPages = ["/", "/login"];
   const authRequired = !publicPages.includes(to.path);
 
   if (authRequired && !loggedIn) {

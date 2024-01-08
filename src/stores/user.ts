@@ -34,7 +34,7 @@ export const useUserStore = defineStore("user", {
                         Authorization: `Bearer ${this.access_token}`,
                     },
                 }).then(async (data) => {
-                    this.studentSurveyPreview = await data.json();
+                    this.studentSurveyPreview = JSON.parse(await data.json());
                 });
                 fetch(`${import.meta.env.VITE_URL}/guidance/getGuidanceStudents/`, {
                     method: "GET",
@@ -151,7 +151,8 @@ export const useUserStore = defineStore("user", {
         async changeMeeting(
             email: string,
             meetingISO: string,
-            description: string
+            description: string, 
+            notify: boolean
         ) {
             fetch(`${import.meta.env.VITE_URL}/guidance/updateMeeting/`, {
                 method: "POST",
@@ -163,6 +164,7 @@ export const useUserStore = defineStore("user", {
                     email: email,
                     meeting: meetingISO,
                     description: description,
+                    notify: notify,
                 }),
             });
         },
