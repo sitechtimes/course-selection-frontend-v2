@@ -8,8 +8,8 @@
         </div>
         <span class="arrow cursor-pointer" id="next" ref="next" @click="changeMonth(true)">&#10095;</span>
       </div>
-      <div class="flex flex-row justify-between space-x-28 mb-12">
-        <div class="calendar">
+      <div class="flex flex-row gap-[7rem] mb-12">
+        <div class="calendar w-full">
           <ul class="weeks bg-primary-g">
             <li>Sun</li>
             <li>Mon</li>
