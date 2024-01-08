@@ -159,12 +159,11 @@ const userStore = useUserStore();
 let date: string;
 let time: string;
 let description: string;
-let selectedStudentEmail: string;
-let email: string;
 let name: string;
+let email: string;
 const save = ref();
 const form = ref();
-const studentList: Ref<studentGuidance[]> = ref([]);
+let studentList: Ref<studentGuidance[]> = ref([]);
 const dateError: Ref<boolean> = ref(false);
 const timeError: Ref<boolean> = ref(false);
 const nameError: Ref<boolean> = ref(false);
@@ -185,7 +184,7 @@ async function fetchStudents() {
   try {
     // GET request for profiles
     const profilesResponse = await fetch(
-      `${import.meta.env.VITE_URL}/guidance/profiles`, //change this to endpoint with guidance counselor's
+      `${import.meta.env.VITE_URL}/guidance/getGuidanceStudents`,
       {
         method: "GET",
         headers: {
@@ -194,7 +193,7 @@ async function fetchStudents() {
         },
       }
     );
-    const data = await profilesResponse.json();
+    const data = JSON.parse(await profilesResponse.json());
     studentList.value = data;
     console.log(studentList.value);
   } catch (error) {
@@ -208,63 +207,31 @@ function empty() {
   dateError.value = !date;
   timeError.value = !time;
   nameError.value = !name;
+
   if (!dateError.value && !timeError.value && !nameError.value) {
-    submit(date, selectedStudentEmail, time, description);
-  }
-}
+    // convert meeting date to an ISO string
+    const meetingDateTime: Date = new Date(date + "T" + time);
+    const meetingISO: string = meetingDateTime.toISOString();
 
-async function updateMeeting(
-  email: string,
-  meetingISO: string,
-  description: string
-) {
-  try {
-    const request = await fetch(
-      `${import.meta.env.VITE_URL}/guidance/updateMeeting/`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userStore.access_token}`,
-        },
-        body: JSON.stringify({
-          email: email,
-          date: meetingISO,
-          memo: description,
-        }),
+    // locate student
+    for (const student of studentList.value) {
+      const studentFullName = student.name;
+      if (studentFullName == name) {
+        email = student.email;
       }
-    );
-    console.log(request);
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-function submit(
-  meetingDate: string,
-  studentName: string,
-  meetingTime: string,
-  description: string
-) {
-  //convert meeting date to an ISO string
-  const meetingDateTime: Date = new Date(meetingDate + "T" + meetingTime);
-  const meetingISO: string = meetingDateTime.toISOString();
-  //locate student
-  for (const student of studentList.value) {
-    const studentFullName = student.name;
-    if (studentFullName == studentName) {
-      email = student.email;
     }
+
+    save.value.innerHTML = "Saved";
+    userStore.changeMeeting(email, meetingISO, description, notify.value);
+    form.value.reset();
+    show.value = !show.value;
+
+    // clear form input values
+    name = "";
+    email = "";
+    date = "";
+    time = "";
   }
-  save.value.innerHTML = "Saved";
-  userStore.changeMeeting(email, meetingISO, description, notify.value);
-  form.value.reset();
-  show.value = !show.value;
-  //clear form input values
-  selectedStudentEmail = "";
-  email = "";
-  date = "";
-  time = "";
 }
 
 function titleCaseName(name: string): string {
