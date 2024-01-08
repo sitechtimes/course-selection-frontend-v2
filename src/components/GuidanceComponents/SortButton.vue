@@ -122,22 +122,20 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
   }
 
   if(sort.sortBy === 'ns') {
-    function ns(a: { grade: string, user: userData }) {
-        if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined) return -1;
+    function ns(a: {status: string}) {
+        if (a.status === 'NOT STARTED') return -1;
         else
-        return 1;
+        return 0;
     }
     return (userStore.currentlyViewingStudents.sort(ns))
   }
 
   if(sort.sortBy === 'ip') {
-    function ip(a: { grade: string, user: userData }) {
-      if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
-        return 1;
-      } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'INCOMPLETE'){
+    function ip(a: { status: string}) {
+      if(a.status === 'INCOMPLETE'){
         return -1;
-      } else {
-        return 1
+      }else{
+        return 0
       }
     }
     return (userStore.currentlyViewingStudents.sort(ip))
@@ -145,9 +143,9 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
 
   if(sort.sortBy === 'com') {
     function com(a: { grade: string, user: userData }) {
-      if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
+      if (userStore.currentlyViewingStudents.find(x => x.email === a.user.email) === undefined){
         return 1;
-      } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'COMPLETE'){
+      } else if(userStore.currentlyViewingStudents.find(x => x.email === a.user.email)?.status === 'COMPLETE'){
         return -1;
       } else {
         return 1
@@ -158,9 +156,9 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
 
   if(sort.sortBy === 'final') {
     function final(a: { grade: string, user: userData }) {
-      if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
+      if (userStore.currentlyViewingStudents.find(x => x.email === a.user.email) === undefined){
         return 1;
-      } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'FINALIZED'){
+      } else if(userStore.currentlyViewingStudents.find(x => x.email === a.user.email)?.status === 'FINALIZED'){
         return -1;
       } else {
         return 1
