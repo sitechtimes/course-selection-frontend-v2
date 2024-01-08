@@ -102,7 +102,6 @@ const surveyStore = useSurveyStore();
 const guidanceStore = useGuidanceStore();
 const router = useRouter();
 
-console.log(guidanceStore.currentlyViewing)
 let tooltip: Ref<boolean> = ref(false);
 let showFlagModal: Ref<string> = ref("");
 let showDeleteFlag: Ref<string> = ref("");

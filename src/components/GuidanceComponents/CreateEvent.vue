@@ -94,7 +94,7 @@
             placeholder="Select Student From List"
             autoComplete="on"
             list="suggestions"
-            v-model="selectedStudentEmail"
+            v-model="name"
             id="student"
           />
           <p v-if="nameError" class="error text-red-600 ml-6 mt-1">
@@ -121,7 +121,13 @@
           />
         </div>
         <div class="flex flex-row items-center ml-6 mb-6">
-          <input type="checkbox" class="ml-2" id="notify" name="notify" />
+          <input
+            type="checkbox"
+            class="ml-2"
+            id="notify"
+            name="notify"
+            v-model="notify"
+          />
           <label class="ml-2" for="notify">Notify Student via Email</label>
         </div>
         <div
@@ -155,12 +161,14 @@ let time: string;
 let description: string;
 let selectedStudentEmail: string;
 let email: string;
+let name: string;
 const save = ref();
 const form = ref();
 const studentList: Ref<studentGuidance[]> = ref([]);
 const dateError: Ref<boolean> = ref(false);
 const timeError: Ref<boolean> = ref(false);
 const nameError: Ref<boolean> = ref(false);
+const notify: Ref<boolean> = ref(false);
 const show: Ref<boolean> = ref(true);
 
 onMounted(() => {
@@ -199,7 +207,7 @@ function empty() {
   //if the input value is an empty string, the error is true; otherwise it is false
   dateError.value = !date;
   timeError.value = !time;
-  nameError.value = !selectedStudentEmail;
+  nameError.value = !name;
   if (!dateError.value && !timeError.value && !nameError.value) {
     submit(date, selectedStudentEmail, time, description);
   }
@@ -234,7 +242,7 @@ async function updateMeeting(
 
 function submit(
   meetingDate: string,
-  studentEmail: string,
+  studentName: string,
   meetingTime: string,
   description: string
 ) {
@@ -243,12 +251,13 @@ function submit(
   const meetingISO: string = meetingDateTime.toISOString();
   //locate student
   for (const student of studentList.value) {
-    if (studentEmail.includes(student.email)) {
-      email = `${student.email}@nycstudents.net`;
+    const studentFullName = student.name;
+    if (studentFullName == studentName) {
+      email = student.email;
     }
   }
-  save.value = "Saved";
-  updateMeeting(email, meetingISO, description);
+  save.value.innerHTML = "Saved";
+  userStore.changeMeeting(email, meetingISO, description, notify.value);
   form.value.reset();
   show.value = !show.value;
   //clear form input values

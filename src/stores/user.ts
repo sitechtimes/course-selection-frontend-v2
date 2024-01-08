@@ -4,217 +4,232 @@ import { useStudentStore } from "./student";
 import { useGuidanceStore } from "./guidance";
 import { useRouter } from "vue-router";
 import axios from "axios";
-import { user, account_type, userData } from "../types/interface";
+import { user, account_type, userData, guidanceData, studentGuidance } from "../types/interface";
 import { ref } from "vue";
 import router from "../router";
 
-export const useUserStore = defineStore("user", () => {
-    const first_name = ref("");
-    const last_name = ref("");
-    const email = ref("");
-    const userType = ref<account_type>(null);
-    const isLoggedIn = ref(false);
-    const access_token = ref("");
-    const refresh_token = ref("");
-    const loading = ref(false);
-    const expire_time = ref(0);
-    const studentSurveyPreview = ref(null);
+export const useUserStore = defineStore("user", {
+    state: () => ({
+        first_name: "",
+        last_name: "",
+        email: "",
+        userType: null as account_type | null,
+        isLoggedIn: false,
+        access_token: "",
+        refresh_token: "",
+        loading: false,
+        expire_time: 0,
+        studentSurveyPreview: null,
+        currentlyViewingStudents: [],
+        guidanceStudents: [],
 
-    async function init(type: account_type) {
-        userType.value = type;
-        if (type === "guidance") {
-            fetch(`${import.meta.env.VITE_URL}/guidance/profiles/`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${access_token.value}`,
-                },
-            }).then(async (data) => {
-                studentSurveyPreview.value = await data.json();
-                loading.value = false;
-            });
-        } else {
-            fetch(`${import.meta.env.VITE_URL}/student/surveyPreview/`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${access_token.value}`,
-                },
-            })
-                .then((res) => res.json())
-                .then(async (data) => {
-                    const router = useRouter();
-                    const surveyStore = useSurveyStore();
-                    const studentStore = useStudentStore();
+    }),
+    actions: {
+        async init(type: account_type) {
+            this.userType = type;
+            if (type === "guidance") {
+                fetch(`${import.meta.env.VITE_URL}/guidance/profiles/`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${this.access_token}`,
+                    },
+                }).then(async (data) => {
+                    this.studentSurveyPreview = await data.json();
+                });
+                fetch(`${import.meta.env.VITE_URL}/guidance/getGuidanceStudents/`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${this.access_token}`,
+                    },
+                }).then(async (data) => {
+                    this.guidanceStudents = JSON.parse(await data.json());
+                    console.log('this.currentlyViewingStudents', this.guidanceStudents  )
+                    this.loading = false;
+                });
+            } else {
+                fetch(`${import.meta.env.VITE_URL}/student/surveyPreview/`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${this.access_token}`,
+                    },
+                })
+                    .then((res) => res.json())
+                    .then(async (data) => {
+                        const router = useRouter();
+                        const surveyStore = useSurveyStore();
+                        const studentStore = useStudentStore();
 
-                    if (data.dueDate < new Date() || data.status === "FINALIZED") {
-                        surveyStore.open = false;
+                        if (data.dueDate < new Date() || data.status === "FINALIZED") {
+                            surveyStore.open = false;
+                        }
+
+                        studentStore.studentSurveyPreview = data
+                        surveyStore.currentAnsweredSurvey.status = data.status;
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching surveyPreview:", error);
+                    });
+                fetch(`${import.meta.env.VITE_URL}/student/survey/`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${this.access_token}`,
+                    },
+                })
+                    .then((res) => res.json())
+                    .then(async (data) => {
+                        const router = useRouter();
+                        const surveyStore = useSurveyStore();
+                        const studentStore = useStudentStore();
+
+                        const parsedData = JSON.parse(data);
+
+                        studentStore.survey = parsedData.survey.fields;
+                        studentStore.answeredSurvey = parsedData.answeredSurvey.fields;
+
+                        console.log("studentStore.survey", studentStore.survey);
+                        console.log("studentStore.answeredSurvey", studentStore.answeredSurvey);
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching survey:", error);
+                    });
+
+                this.loading = false;
+            }
+        },
+        async GoogleLogin(res: any) {
+            this.loading = true;
+            await axios
+                .post(`${import.meta.env.VITE_URL}/social-login/google/`, {
+                    access_token: res.access_token,
+                })
+                .then((response) => {
+                    this.access_token = response.data.access_token;
+                    this.refresh_token = response.data.refresh_token;
+                    this.email = response.data.user.email;
+                    this.first_name = response.data.user.first_name;
+                    this.last_name = response.data.user.last_name;
+                    this.isLoggedIn = true;
+
+                    const date = new Date();
+                    const expiration = date.setHours(date.getHours() + 1);
+
+                    this.expire_time = expiration;
+
+                    this.getUserType(); //make dj rest auth return user type (backend) to remove this function
+                });
+        },
+        async EmailLogin(username: string, password: string) {
+            try {
+                const response = await axios.post(
+                    `${import.meta.env.VITE_URL}/auth/login/`,
+                    {
+                        username: username.toLowerCase(),
+                        password: password,
                     }
+                );
 
-                    studentStore.studentSurveyPreview = data
-                    surveyStore.currentAnsweredSurvey.status = data.status;
-                })
-                .catch((error) => {
-                    console.error("Error fetching surveyPreview:", error);
-                });
-            fetch(`${import.meta.env.VITE_URL}/student/survey/`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${access_token.value}`,
-                },
-            })
-                .then((res) => res.json())
-                .then(async (data) => {
-                    const router = useRouter();
-                    const surveyStore = useSurveyStore();
-                    const studentStore = useStudentStore();
-
-                    const parsedData = JSON.parse(data);
-                    
-                    studentStore.survey = parsedData.survey.fields;
-                    studentStore.answeredSurvey = parsedData.answeredSurvey.fields;
-
-                    console.log("studentStore.survey", studentStore.survey);
-                    console.log("studentStore.answeredSurvey",studentStore.answeredSurvey);
-                })
-                .catch((error) => {
-                    console.error("Error fetching survey:", error);
-                });
-
-            loading.value = false;
-        }
-    }
-    async function GoogleLogin(res: any) {
-        loading.value = true;
-        await axios
-            .post(`${import.meta.env.VITE_URL}/social-login/google/`, {
-                access_token: res.access_token,
-            })
-            .then((response) => {
-                access_token.value = response.data.access_token;
-                refresh_token.value = response.data.refresh_token;
-                email.value = response.data.user.email;
-                first_name.value = response.data.user.first_name;
-                last_name.value = response.data.user.last_name;
-                isLoggedIn.value = true;
+                this.access_token = response.data.access_token;
+                this.refresh_token = response.data.refresh_token;
+                this.email = response.data.user.email;
+                this.first_name = response.data.user.first_name;
+                this.last_name = response.data.user.last_name;
+                this.isLoggedIn = true;
 
                 const date = new Date();
                 const expiration = date.setHours(date.getHours() + 1);
 
-                expire_time.value = expiration;
+                this.expire_time = expiration;
+                this.loading = true;
+                await this.getUserType()
+                this.init(this.userType);
 
-                getUserType(); //make dj rest auth return user type (backend) to remove this function
+            } catch (error) {
+                this.loading = false;
+                alert("Login failed. Please check your credentials.");
+            }
+        },
+        async changeMeeting(
+            email: string,
+            meetingISO: string,
+            description: string
+        ) {
+            fetch(`${import.meta.env.VITE_URL}/guidance/updateMeeting/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${this.access_token}`
+                },
+                body: JSON.stringify({
+                    email: email,
+                    meeting: meetingISO,
+                    description: description,
+                }),
             });
-    }
-    async function EmailLogin(username: string, password: string) {
-        try {
-            const response = await axios.post(
-                `${import.meta.env.VITE_URL}/auth/login/`,
-                {
-                    username: username.toLowerCase(),
-                    password: password,
-                }
-            );
-
-            console.log(response);
-            access_token.value = response.data.access_token;
-            refresh_token.value = response.data.refresh_token;
-            email.value = response.data.user.email;
-            first_name.value = response.data.user.first_name;
-            last_name.value = response.data.user.last_name;
-            isLoggedIn.value = true;
-
-            const date = new Date();
-            const expiration = date.setHours(date.getHours() + 1);
-
-            expire_time.value = expiration;
-            loading.value = true;
-            await getUserType()
-            init(userType.value);
-
-        } catch (error) {
-            loading.value = false;
-            alert("Login failed. Please check your credentials.");
+        },
+        async deleteMeeting(email: string) {
+            fetch(`${import.meta.env.VITE_URL}/guidance/updateMeeting/`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${this.access_token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: email,
+                }),
+            });
+        },
+        async addFlag(email: string, newFlag: string) {
+            const res = await fetch(`${import.meta.env.VITE_URL}/guidance/updateFlag/`, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${this.access_token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: email,
+                    flag: newFlag,
+                }),
+            })
+            const data = await res.json()
+            if (this.studentSurveyPreview === null) return
+            // @ts-ignore
+            const student = await this.studentSurveyPreview.find((student) => student.email + "@nycstudents.net" === email);
+            student.flag = data.flag
+        },
+        async deleteFlag(email: string, flagToBeRemoved: string) {
+            const res = await fetch(`${import.meta.env.VITE_URL}/guidance/updateFlag/`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${this.access_token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: email,
+                    flag: flagToBeRemoved,
+                }),
+            })
+            const data = await res.json()
+            if (this.studentSurveyPreview === null) return
+            // @ts-ignore
+            const student = await this.studentSurveyPreview.find((student) => student.email + "@nycstudents.net" === email);
+            student.flag = data.flag
+        },
+        async getUserType() {
+            const res = await fetch(`${import.meta.env.VITE_URL}/user/`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${this.access_token}`,
+                },
+            });
+            const data = await res.json();
+            if (data.is_guidance) {
+                this.userType = "guidance";
+            } else {
+                this.userType = "student";
+            }
         }
+    },
+    persist: {
+        storage: sessionStorage,
     }
-    async function changeMeeting(
-        email: string,
-        meetingISO: string,
-        description: string
-    ) {
-        fetch(`${import.meta.env.VITE_URL}/guidance/updateMeeting/`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${access_token.value}`
-            },
-            body: JSON.stringify({
-                email: email,
-                meeting: meetingISO,
-                description: description,
-            }),
-        });
-    }
-    async function deleteMeeting(email: string) {
-        fetch(`${import.meta.env.VITE_URL}/guidance/updateMeeting/`, {
-            method: "DELETE",
-            headers: {
-                Authorization: `Bearer ${access_token.value}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                email: email,
-            }),
-        });
-    }
-    async function addFlag(email: string, newFlag: string) {
-        const res = await fetch(`${import.meta.env.VITE_URL}/guidance/updateFlag/`, {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${access_token.value}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                email: email,
-                flag: newFlag,
-            }),
-        })
-        const data = await res.json()
-        if (studentSurveyPreview.value === null) return
-        // @ts-ignore
-        const student = await studentSurveyPreview.value.find((student) => student.email + "@nycstudents.net" === email);
-        student.flag = data.flag
-    }
-
-    async function deleteFlag(email: string, flagToBeRemoved: string) {
-        const res = await fetch(`${import.meta.env.VITE_URL}/guidance/updateFlag/`, {
-            method: "DELETE",
-            headers: {
-                Authorization: `Bearer ${access_token.value}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                email: email,
-                flag: flagToBeRemoved,
-            }),
-        })
-        const data = await res.json()
-        if (studentSurveyPreview.value === null) return
-        // @ts-ignore
-        const student = await studentSurveyPreview.value.find((student) => student.email + "@nycstudents.net" === email);
-        student.flag = data.flag
-    }
-    async function getUserType() {
-        const res = await fetch(`${import.meta.env.VITE_URL}/user/`, {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${access_token.value}`,
-            },
-        });
-        const data = await res.json();
-        if (data.is_guidance) {
-            userType.value = "guidance";
-        } else {
-            userType.value = "student";
-        }
-    }
-    return { first_name, last_name, email, userType, isLoggedIn, access_token, refresh_token, loading, expire_time, studentSurveyPreview, init, GoogleLogin, EmailLogin, changeMeeting, deleteMeeting, addFlag, deleteFlag, getUserType }
 });
