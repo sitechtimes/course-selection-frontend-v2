@@ -19,10 +19,9 @@ export const useUserStore = defineStore("user", {
         refresh_token: "",
         loading: false,
         expire_time: 0,
-        studentSurveyPreview: null,
+        studentSurveyPreview: [],
         currentlyViewingStudents: [],
         guidanceStudents: [],
-
     }),
     actions: {
         async init(type: account_type) {
@@ -43,7 +42,6 @@ export const useUserStore = defineStore("user", {
                     },
                 }).then(async (data) => {
                     this.guidanceStudents = JSON.parse(await data.json());
-                    console.log('this.currentlyViewingStudents', this.guidanceStudents  )
                     this.loading = false;
                 });
             } else {
@@ -162,7 +160,7 @@ export const useUserStore = defineStore("user", {
         async changeMeeting(
             email: string,
             meetingISO: string,
-            description: string, 
+            description: string,
             notify: boolean
         ) {
             fetch(`${import.meta.env.VITE_URL}/guidance/updateMeeting/`, {
@@ -204,10 +202,14 @@ export const useUserStore = defineStore("user", {
                 }),
             })
             const data = await res.json()
-            if (this.studentSurveyPreview === null) return
+            if (this.currentlyViewingStudents === null) return
             // @ts-ignore
-            const student = await this.studentSurveyPreview.find((student) => student.email + "@nycstudents.net" === email);
-            student.flag = data.flag
+            const studentIndex = this.currentlyViewingStudents.findIndex((student) => student.email + "@nycstudents.net" === email);
+            const previewIndex = this.studentSurveyPreview.findIndex((student) => student.email + "@nycstudents.net" === email);
+            if (studentIndex !== -1 && previewIndex !== -1) {
+                this.currentlyViewingStudents[studentIndex].flag = data.flag;
+                this.studentSurveyPreview[previewIndex].flag = data.flag;
+            }
         },
         async deleteFlag(email: string, flagToBeRemoved: string) {
             const res = await fetch(`${import.meta.env.VITE_URL}/guidance/updateFlag/`, {
@@ -222,10 +224,14 @@ export const useUserStore = defineStore("user", {
                 }),
             })
             const data = await res.json()
-            if (this.studentSurveyPreview === null) return
+            if (this.currentlyViewingStudents === null) return
             // @ts-ignore
-            const student = await this.studentSurveyPreview.find((student) => student.email + "@nycstudents.net" === email);
-            student.flag = data.flag
+            const studentIndex = this.currentlyViewingStudents.findIndex((student) => student.email + "@nycstudents.net" === email);
+            const previewIndex = this.studentSurveyPreview.findIndex((student) => student.email + "@nycstudents.net" === email);
+            if (studentIndex !== -1 && previewIndex !== -1) {
+                this.currentlyViewingStudents[studentIndex].flag = data.flag;
+                this.studentSurveyPreview[previewIndex].flag = data.flag;
+            }
         },
         async getUserType() {
             const res = await fetch(`${import.meta.env.VITE_URL}/user/`, {

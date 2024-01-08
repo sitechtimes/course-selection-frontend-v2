@@ -82,7 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, ref, PropType } from "vue";
+import { Ref, ref, PropType, watch } from "vue";
 import { useRouter } from "vue-router";
 import { studentGuidance } from "../../types/interface";
 import { useUserStore } from "../../stores/user";
