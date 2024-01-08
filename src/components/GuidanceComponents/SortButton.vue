@@ -128,14 +128,12 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
     return (userStore.currentlyViewingStudents.sort(lastnameza))
   }
 
-  if(sort.sortBy === 'ns') {
-    function ns(a: { grade: string, user: userData }) {
-        if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined) return -1;
-        else
-        return 1;
-    }
-    return (userStore.currentlyViewingStudents.sort(ns))
-  }
+  // if(sort.sortBy === 'ns') {
+  //   function ns(a: { grade: string, user: userData }) {
+  //       if (userStore.currentlyViewingStudents.status) === undefined) ;
+       
+  //   return (userStore.currentlyViewingStudents.sort(ns))
+  // }
 
   if(sort.sortBy === 'ip') {
     function ip(a: { grade: string, user: userData }) {
@@ -249,12 +247,8 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
 //     } )
 //   })
 
-  const statusFilter = guidanceStore.currentlyViewing.filter((name)=>
-  {
-guidanceStore.currentlyViewing.forEach((status)=>{
-if (status==='NOT STARTED'){
-console.log('hi')
-}})
-  })
+// console.log(userStore.currentlyViewingStudents[0].status)
 
+const sorter = userStore.currentlyViewingStudents.find(({ status }) => status === "INCOMPLETE")
+console.log(sorter);
 </script>
