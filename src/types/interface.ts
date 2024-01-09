@@ -12,24 +12,26 @@ export interface user {
 }
 
 // guidance store interface
-
 export interface guidanceData {
-    allAnsweredSurveys: allAnsweredSurveys
-    allStudents: allStudents
-    allSurveys: allSurveys
-    guidance: guidanceStudentData
+    allStudents: studentPreview[]
+    // guidance: guidanceStudentData
     user: userData
-    surveyStats: surveyStats
     currentlyViewing: studentGuidance[]
 }
 
 // student store interface
-
 export interface studentUser {
     answeredSurvey: answeredSurvey[]
     student: studentData
     survey: survey
     user: userData
+    studentSurveyPreview: studentSurveyPreview
+}
+
+export interface studentSurveyPreview {
+    dueDate: string
+    grade: string
+    status: string
 }
 
 // survey store interface
@@ -66,6 +68,9 @@ export interface studentData {
 
 // student object (guidance side)
 export interface studentGuidance extends studentData {
+    name: string
+    status: string
+    email: string
     user: userData
     flag: string
     description: string
@@ -99,6 +104,15 @@ export interface answeredSurveyNodes {
 
 export interface allStudents {
     edges: allStudentNodes[]
+}
+
+export interface studentPreview {
+    name: string,
+    hr: string,
+    grade: string,
+    email: string,
+    status: string,
+    flag: string,
 }
 
 export interface allStudentNodes {
@@ -180,7 +194,7 @@ export interface calendarData {
         meetings: Array<{
             id: string,
             name: string;
-            meetingDate: Date|null;
+            meetingDate: Date | null;
             grade: string;
         }>;
     }>;

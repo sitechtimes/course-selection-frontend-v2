@@ -197,5 +197,7 @@ export const useSurveyStore = defineStore("survey", {
       } 
     },
   },
-  persist: true,
+  persist: {
+    storage: sessionStorage
+  },
 });

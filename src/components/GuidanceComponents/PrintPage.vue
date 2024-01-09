@@ -97,21 +97,23 @@ onMounted(async () => {
 
 const printMeetingTicket = () => {
   const partPrint = document.getElementById("printPage").innerHTML;
-  const NewWindow = window.open("", "", "width=800,height=900");
 
-  const printPage = `<!DOCTYPE html>
-  <html>
-    <head>
-      <title>Scheduled Meeting with Guidance Counselor</title>
-    </head>
-    <body>
-      <div>${partPrint}</div>
-    </body>
-  </html>`;
+  const printPage = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Scheduled Meeting with Guidance Counselor</title>
+      </head>
+      <body>
+        <div>${partPrint}</div>
+      </body>
+    </html>`;
 
-  NewWindow.document.write(printPage);
-  NewWindow.print();
+  const newWindow = window.open("", "", "width=800,height=900");
+  newWindow.document.write(printPage);
+  window.print();
 };
+
 </script>
 
 <style scoped>

@@ -84,13 +84,12 @@
             Student
           </label>
           <datalist id="suggestions">
-            <div v-for="student in studentList" :key="student.user.email">
-              <option>
-                {{ student.user.lastName }}, {{ student.user.firstName }} |
-                {{ student.user.email }}
-              </option>
-            </div>
+            <option v-for="student in studentList" :key="student.email">
+              {{ titleCaseName(student.name) }}, |
+              {{ student.email }}@nycstudents.net
+            </option>
           </datalist>
+
           <input
             class="space rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80"
             placeholder="Select Student From List"
@@ -123,7 +122,13 @@
           />
         </div>
         <div class="flex flex-row items-center ml-6 mb-6">
-          <input type="checkbox" class="ml-2" id="notify" name="notify" />
+          <input
+            type="checkbox"
+            class="ml-2"
+            id="notify"
+            name="notify"
+            v-model="notify"
+          />
           <label class="ml-2" for="notify">Notify Student via Email</label>
         </div>
         <div
@@ -160,11 +165,16 @@ let email: string;
 let type = "text";
 const save = ref();
 const form = ref();
-const studentList: studentGuidance[] = guidanceStore.guidance.students;
+const studentList: Ref<studentGuidance[]> = ref([]);
 const dateError: Ref<boolean> = ref(false);
 const timeError: Ref<boolean> = ref(false);
 const nameError: Ref<boolean> = ref(false);
+const notify: Ref<boolean> = ref(false);
 const show: Ref<boolean> = ref(true);
+
+onMounted(() => {
+  fetchStudents();
+});
 
 //toggle modal
 function toggleEvent() {
@@ -173,7 +183,6 @@ function toggleEvent() {
 
 const dateElement = ref()
 
-// edwin code
 const props = defineProps({
   todaysDate: String
 })
@@ -182,45 +191,59 @@ onMounted(() => {
   dateElement.value.type = 'date'
   dateElement.value.value = props.todaysDate!
 })
-//end edwin code
 
-//daria's code
-// let todaysDate = new Date();
-// let todaysYear = todaysDate.getFullYear();
-// let todaysMonth = todaysDate.getMonth();
-//daria's code ends
+async function fetchStudents() {
+  const { access_token } = useUserStore();
+  try {
+    // GET request for profiles
+    const profilesResponse = await fetch(
+      `${import.meta.env.VITE_URL}/guidance/getGuidanceStudents`, 
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
+    const data = JSON.parse(await profilesResponse.json());
+    studentList.value = data;
+    console.log(studentList.value);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
 
 //check for empty input values before submitting form
 function empty() {
   //if the input value is an empty string, the error is true; otherwise it is false
-  dateError.value = date === "" ? true : false;
-  timeError.value = time === "" ? true : false;
+  dateError.value = !date;
+  timeError.value = !time;
   nameError.value = !name;
-  if (!dateError.value && !timeError.value && !nameError.value) {
-    submit(date, name, time, description);
-  }
-}
 
-function submit(
-  meetingDate: string,
-  studentName: string,
-  meetingTime: string,
-  description: string
-) {
-  //convert meeting date to an ISO string
-  const meetingDateTime: Date = new Date(meetingDate + "T" + meetingTime);
-  const meetingISO: string = meetingDateTime.toISOString();
-  //locate student
-  for (const student of studentList) {
-    const studentFullName =
-      student.user.lastName +
-      ", " +
-      student.user.firstName +
-      " | " +
-      student.user.email;
-    if (studentFullName == studentName) {
-      email = student.user.email;
+  if (!dateError.value && !timeError.value && !nameError.value) {
+    // convert meeting date to an ISO string
+    const meetingDateTime: Date = new Date(date + "T" + time);
+    const meetingISO: string = meetingDateTime.toISOString();
+
+    // locate student
+    for (const student of studentList.value) {
+      const studentFullName = student.name;
+      if (studentFullName == name) {
+        email = student.email;
+      }
     }
+
+    save.value.innerHTML = "Saved";
+    userStore.changeMeeting(email, meetingISO, description, notify.value);
+    form.value.reset();
+    show.value = !show.value;
+    
+    // clear form input values
+    name = "";
+    email = "";
+    date = "";
+    time = "";
   }
 
   save.value.innerHTML = "Saved";
@@ -231,6 +254,16 @@ function submit(
   email = "";
   date = "";
   time = "";
+}
+
+function titleCaseName(name: string): string {
+  const titleCaseWord = (word: string): string => {
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+  };
+  const [lastName, firstName] = name.split(",", 2);
+  const titleCasedLastName = lastName.split(" ").map(titleCaseWord).join(" ");
+  const titleCasedFirstName = firstName.split(" ").map(titleCaseWord).join(" ");
+  return `${titleCasedLastName}, ${titleCasedFirstName}`;
 }
 </script>
 
