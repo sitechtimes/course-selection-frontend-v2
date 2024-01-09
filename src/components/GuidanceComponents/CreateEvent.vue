@@ -6,7 +6,7 @@
     <div class="event flex flex-col">
       <div class="top flex-row flex items-center justify-between">
         <h2 class="h2 font-bold text-[2rem] m-8 mb-4">Schedule Meeting</h2>
-        <button class="mt-5 mr-12" @click="toggleEvent()">
+        <button class="mt-5 mr-12" @click="toggleEvent">
           <svg
             class="x fill-current text-37394f transition duration-300 mt-4 hover:opacity-80 cursor-pointer"
             xmlns="http://www.w3.org/2000/svg"
@@ -35,7 +35,7 @@
             >
             <input
               class="space d rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80"
-              :type="date"
+              :type="type"
               v-model="date"
               ref="date"
               :placeholder="todaysDate"
@@ -166,27 +166,16 @@ const dateError: Ref<boolean> = ref(false);
 const timeError: Ref<boolean> = ref(false);
 const nameError: Ref<boolean> = ref(false);
 const show: Ref<boolean> = ref(true);
-const showEvent: Ref<boolean> = ref(true);
+
 //toggle modal
-function toggleEvent(e) {
-  showEvent.value = !showEvent.value;
+function toggleEvent() {
+  show.value = !show.value;
 }
 
 //daria's code
-/* let todaysDate = new Date();
+let todaysDate = new Date();
 let todaysYear = todaysDate.getFullYear();
-let todaysMonth = todaysDate.getMonth(); */
-defineProps({
-  todaysDate: {
-    type: Number,
-    required: true,
-  },
-  // placeholder: {
-  //   type: Number,
-  //   required: true,
-  // },
-});
-
+let todaysMonth = todaysDate.getMonth();
 //daria's code ends
 
 //check for empty input values before submitting form
