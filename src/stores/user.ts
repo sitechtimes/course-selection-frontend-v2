@@ -19,10 +19,9 @@ export const useUserStore = defineStore("user", {
         refresh_token: "",
         loading: false,
         expire_time: 0,
-        studentSurveyPreview: null,
+        studentSurveyPreview: [],
         currentlyViewingStudents: [],
         guidanceStudents: [],
-
     }),
     actions: {
         async init(type: account_type) {
@@ -34,7 +33,7 @@ export const useUserStore = defineStore("user", {
                         Authorization: `Bearer ${this.access_token}`,
                     },
                 }).then(async (data) => {
-                    this.studentSurveyPreview = await data.json();
+                    this.studentSurveyPreview = JSON.parse(await data.json());
                 });
                 fetch(`${import.meta.env.VITE_URL}/guidance/getGuidanceStudents/`, {
                     method: "GET",
@@ -43,7 +42,6 @@ export const useUserStore = defineStore("user", {
                     },
                 }).then(async (data) => {
                     this.guidanceStudents = JSON.parse(await data.json());
-                    console.log('this.currentlyViewingStudents', this.guidanceStudents  )
                     this.loading = false;
                 });
             } else {
@@ -64,6 +62,8 @@ export const useUserStore = defineStore("user", {
                         }
 
                         studentStore.studentSurveyPreview = data
+                        this.studentSurveyPreview =data
+                        console.log(this.studentSurveyPreview)
                         surveyStore.currentAnsweredSurvey.status = data.status;
                     })
                     .catch((error) => {
@@ -85,9 +85,6 @@ export const useUserStore = defineStore("user", {
 
                         studentStore.survey = parsedData.survey.fields;
                         studentStore.answeredSurvey = parsedData.answeredSurvey.fields;
-
-                        console.log("studentStore.survey", studentStore.survey);
-                        console.log("studentStore.answeredSurvey", studentStore.answeredSurvey);
                     })
                     .catch((error) => {
                         console.error("Error fetching survey:", error);
@@ -98,16 +95,22 @@ export const useUserStore = defineStore("user", {
         },
         async GoogleLogin(res: any) {
             this.loading = true;
-            await axios
-                .post(`${import.meta.env.VITE_URL}/social-login/google/`, {
+            fetch(`${import.meta.env.VITE_URL}/social-login/google/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
                     access_token: res.access_token,
-                })
-                .then((response) => {
-                    this.access_token = response.data.access_token;
-                    this.refresh_token = response.data.refresh_token;
-                    this.email = response.data.user.email;
-                    this.first_name = response.data.user.first_name;
-                    this.last_name = response.data.user.last_name;
+                }),
+            })
+                .then((res) => res.json())
+                .then(async (data) => {
+                    this.access_token = data.access_token;
+                    this.refresh_token = data.refresh_token;
+                    this.email = data.user.email;
+                    this.first_name = data.user.first_name;
+                    this.last_name = data.user.last_name;
                     this.isLoggedIn = true;
 
                     const date = new Date();
@@ -120,28 +123,33 @@ export const useUserStore = defineStore("user", {
         },
         async EmailLogin(username: string, password: string) {
             try {
-                const response = await axios.post(
-                    `${import.meta.env.VITE_URL}/auth/login/`,
-                    {
+                fetch(`${import.meta.env.VITE_URL}/auth/login/`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
                         username: username.toLowerCase(),
                         password: password,
-                    }
-                );
+                    }),
+                })
+                    .then((res) => res.json())
+                    .then(async (data) => {
+                        this.access_token = data.access_token;
+                        this.refresh_token = data.refresh_token;
+                        this.email = data.user.email;
+                        this.first_name = data.user.first_name;
+                        this.last_name = data.user.last_name;
+                        this.isLoggedIn = true;
 
-                this.access_token = response.data.access_token;
-                this.refresh_token = response.data.refresh_token;
-                this.email = response.data.user.email;
-                this.first_name = response.data.user.first_name;
-                this.last_name = response.data.user.last_name;
-                this.isLoggedIn = true;
+                        const date = new Date();
+                        const expiration = date.setHours(date.getHours() + 1);
 
-                const date = new Date();
-                const expiration = date.setHours(date.getHours() + 1);
-
-                this.expire_time = expiration;
-                this.loading = true;
-                await this.getUserType()
-                this.init(this.userType);
+                        this.expire_time = expiration;
+                        this.loading = true;
+                        await this.getUserType()
+                        this.init(this.userType);
+                    });
 
             } catch (error) {
                 this.loading = false;
@@ -151,7 +159,8 @@ export const useUserStore = defineStore("user", {
         async changeMeeting(
             email: string,
             meetingISO: string,
-            description: string
+            description: string,
+            notify: boolean
         ) {
             fetch(`${import.meta.env.VITE_URL}/guidance/updateMeeting/`, {
                 method: "POST",
@@ -163,6 +172,7 @@ export const useUserStore = defineStore("user", {
                     email: email,
                     meeting: meetingISO,
                     description: description,
+                    notify: notify,
                 }),
             });
         },
@@ -191,10 +201,14 @@ export const useUserStore = defineStore("user", {
                 }),
             })
             const data = await res.json()
-            if (this.studentSurveyPreview === null) return
+            if (this.currentlyViewingStudents === null) return
             // @ts-ignore
-            const student = await this.studentSurveyPreview.find((student) => student.email + "@nycstudents.net" === email);
-            student.flag = data.flag
+            const studentIndex = this.currentlyViewingStudents.findIndex((student) => student.email + "@nycstudents.net" === email);
+            const previewIndex = this.studentSurveyPreview.findIndex((student) => student.email + "@nycstudents.net" === email);
+            if (studentIndex !== -1 && previewIndex !== -1) {
+                this.currentlyViewingStudents[studentIndex].flag = data.flag;
+                this.studentSurveyPreview[previewIndex].flag = data.flag;
+            }
         },
         async deleteFlag(email: string, flagToBeRemoved: string) {
             const res = await fetch(`${import.meta.env.VITE_URL}/guidance/updateFlag/`, {
@@ -209,10 +223,14 @@ export const useUserStore = defineStore("user", {
                 }),
             })
             const data = await res.json()
-            if (this.studentSurveyPreview === null) return
+            if (this.currentlyViewingStudents === null) return
             // @ts-ignore
-            const student = await this.studentSurveyPreview.find((student) => student.email + "@nycstudents.net" === email);
-            student.flag = data.flag
+            const studentIndex = this.currentlyViewingStudents.findIndex((student) => student.email + "@nycstudents.net" === email);
+            const previewIndex = this.studentSurveyPreview.findIndex((student) => student.email + "@nycstudents.net" === email);
+            if (studentIndex !== -1 && previewIndex !== -1) {
+                this.currentlyViewingStudents[studentIndex].flag = data.flag;
+                this.studentSurveyPreview[previewIndex].flag = data.flag;
+            }
         },
         async getUserType() {
             const res = await fetch(`${import.meta.env.VITE_URL}/user/`, {

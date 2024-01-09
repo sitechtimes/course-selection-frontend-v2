@@ -129,4 +129,5 @@ watch(
     updatePage(1);
   }
 );
+
 </script>

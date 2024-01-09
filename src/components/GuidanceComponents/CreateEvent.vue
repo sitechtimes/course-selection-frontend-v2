@@ -184,7 +184,7 @@ async function fetchStudents() {
   try {
     // GET request for profiles
     const profilesResponse = await fetch(
-      `${import.meta.env.VITE_URL}/guidance/profiles`, //change this to endpoint with guidance counselor's
+      `${import.meta.env.VITE_URL}/guidance/getGuidanceStudents`, 
       {
         method: "GET",
         headers: {
@@ -193,7 +193,7 @@ async function fetchStudents() {
         },
       }
     );
-    const data = await profilesResponse.json();
+    const data = JSON.parse(await profilesResponse.json());
     studentList.value = data;
     console.log(studentList.value);
   } catch (error) {
@@ -207,36 +207,31 @@ function empty() {
   dateError.value = !date;
   timeError.value = !time;
   nameError.value = !name;
-  if (!dateError.value && !timeError.value && !nameError.value) {
-    submit(date, name, time, description);
-  }
-}
 
-function submit(
-  meetingDate: string,
-  studentName: string,
-  meetingTime: string,
-  description: string
-) {
-  //convert meeting date to an ISO string
-  const meetingDateTime: Date = new Date(meetingDate + "T" + meetingTime);
-  const meetingISO: string = meetingDateTime.toISOString();
-  //locate student
-  for (const student of studentList.value) {
-    const studentFullName = student.name;
-    if (studentFullName == studentName) {
-      email = student.email;
+  if (!dateError.value && !timeError.value && !nameError.value) {
+    // convert meeting date to an ISO string
+    const meetingDateTime: Date = new Date(date + "T" + time);
+    const meetingISO: string = meetingDateTime.toISOString();
+
+    // locate student
+    for (const student of studentList.value) {
+      const studentFullName = student.name;
+      if (studentFullName == name) {
+        email = student.email;
+      }
     }
+
+    save.value.innerHTML = "Saved";
+    userStore.changeMeeting(email, meetingISO, description, notify.value);
+    form.value.reset();
+    show.value = !show.value;
+    
+    // clear form input values
+    name = "";
+    email = "";
+    date = "";
+    time = "";
   }
-  save.value.innerHTML = "Saved";
-  userStore.changeMeeting(email, meetingISO, description, notify.value);
-  form.value.reset();
-  show.value = !show.value;
-  //clear form input values
-  name = "";
-  email = "";
-  date = "";
-  time = "";
 }
 
 function titleCaseName(name: string): string {
