@@ -49,15 +49,15 @@
               </div>
               <PlusIcon
                 class="plusIcon w-3 ml-2 cursor-pointer invisible"
-                @click="toggleEvent"
-              />
+                @click="toggleEvent(h.todaysDate)"
+              /><CreateEvent :todaysDate="h.todaysDate" v-if="showEvent" />
             </li>
           </ul>
         </div>
         <UpcomingMeetings />
       </div>
     </div>
-    <CreateEvent v-if="showEvent" />
+
     <MeetingDetails v-if="showDetails" :meetingDetails="meetingDetails" />
   </div>
 </template>
@@ -99,8 +99,11 @@ const toggleDetails = (meeting) => {
   showDetails.value = !showDetails.value;
 };
 
-const toggleEvent = () => {
+const toggleEvent = (e) => {
   showEvent.value = !showEvent.value;
+  console.log(e);
+  let specificDate = e;
+  return specificDate;
 };
 
 //index signature for grades
