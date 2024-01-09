@@ -50,14 +50,14 @@
               <PlusIcon
                 class="plusIcon w-3 ml-2 cursor-pointer invisible"
                 @click="toggleEvent(h.todaysDate)"
-              /><CreateEvent :todaysDate="h.todaysDate" v-if="showEvent" />
+              />
             </li>
           </ul>
         </div>
         <UpcomingMeetings />
       </div>
     </div>
-
+    <CreateEvent v-if="showEvent" :todaysDate="createEventDate" />
     <MeetingDetails v-if="showDetails" :meetingDetails="meetingDetails" />
   </div>
 </template>
@@ -99,7 +99,11 @@ const toggleDetails = (meeting) => {
   showDetails.value = !showDetails.value;
 };
 
-const toggleEvent = (e) => {
+const createEventDate = ref("");
+const toggleEvent = (date: number) => {
+  createEventDate.value = `${todaysYear}-${(todaysMonth + 1)
+    .toString()
+    .padStart(2, "0")}-${date.toString().padStart(2, "0")}`;
   showEvent.value = !showEvent.value;
   console.log(e);
   let specificDate = e;
