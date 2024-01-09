@@ -37,7 +37,8 @@
               class="space d rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80"
               :type="date"
               v-model="date"
-              ref="dateElement"
+              ref="date"
+              :placeholder="todaysDate"
               onfocus="(this.type='date')"
               id="date"
             />
@@ -144,7 +145,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, defineProps, onMounted } from "vue";
+import { ref, Ref, defineProps } from "vue";
 import { useUserStore } from "../../stores/user";
 import { useGuidanceStore } from "../../stores/guidance";
 import { studentGuidance } from "../../types/interface";
@@ -160,7 +161,6 @@ let email: string;
 let type = "text";
 const save = ref();
 const form = ref();
-const dateElement = ref();
 const studentList: studentGuidance[] = guidanceStore.guidance.students;
 const dateError: Ref<boolean> = ref(false);
 const timeError: Ref<boolean> = ref(false);
@@ -172,22 +172,21 @@ function toggleEvent(e) {
   showEvent.value = !showEvent.value;
 }
 
-// edwin code
-const props = defineProps({
-  todaysDate: String,
-});
-onMounted(() => {
-  date = props.todaysDate!;
-  dateElement.value.type = "date";
-  dateElement.value.value = props.todaysDate!;
-});
-//end edwin code
-
 //daria's code
-// edwin thinks we dont need this
-// let todaysDate = new Date();
-// let todaysYear = todaysDate.getFullYear();
-// let todaysMonth = todaysDate.getMonth();
+/* let todaysDate = new Date();
+let todaysYear = todaysDate.getFullYear();
+let todaysMonth = todaysDate.getMonth(); */
+defineProps({
+  todaysDate: {
+    type: Number,
+    required: true,
+  },
+  // placeholder: {
+  //   type: Number,
+  //   required: true,
+  // },
+});
+
 //daria's code ends
 
 //check for empty input values before submitting form
