@@ -62,6 +62,8 @@ export const useUserStore = defineStore("user", {
                         }
 
                         studentStore.studentSurveyPreview = data
+                        this.studentSurveyPreview =data
+                        console.log(this.studentSurveyPreview)
                         surveyStore.currentAnsweredSurvey.status = data.status;
                     })
                     .catch((error) => {
@@ -83,9 +85,6 @@ export const useUserStore = defineStore("user", {
 
                         studentStore.survey = parsedData.survey.fields;
                         studentStore.answeredSurvey = parsedData.answeredSurvey.fields;
-
-                        console.log("studentStore.survey", studentStore.survey);
-                        console.log("studentStore.answeredSurvey", studentStore.answeredSurvey);
                     })
                     .catch((error) => {
                         console.error("Error fetching survey:", error);
