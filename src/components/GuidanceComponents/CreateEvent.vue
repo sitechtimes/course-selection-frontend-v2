@@ -37,8 +37,7 @@
               class="space d rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80"
               :type="type"
               v-model="date"
-              ref="date"
-              :placeholder="todaysDate"
+              ref="dateElement"
               onfocus="(this.type='date')"
               id="date"
             />
@@ -145,7 +144,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, defineProps } from "vue";
+import { ref, Ref, defineProps, onMounted } from "vue";
 import { useUserStore } from "../../stores/user";
 import { useGuidanceStore } from "../../stores/guidance";
 import { studentGuidance } from "../../types/interface";
@@ -172,10 +171,23 @@ function toggleEvent() {
   show.value = !show.value;
 }
 
+const dateElement = ref()
+
+// edwin code
+const props = defineProps({
+  todaysDate: String
+})
+onMounted(() => {
+  date = props.todaysDate!
+  dateElement.value.type = 'date'
+  dateElement.value.value = props.todaysDate!
+})
+//end edwin code
+
 //daria's code
-let todaysDate = new Date();
-let todaysYear = todaysDate.getFullYear();
-let todaysMonth = todaysDate.getMonth();
+// let todaysDate = new Date();
+// let todaysYear = todaysDate.getFullYear();
+// let todaysMonth = todaysDate.getMonth();
 //daria's code ends
 
 //check for empty input values before submitting form

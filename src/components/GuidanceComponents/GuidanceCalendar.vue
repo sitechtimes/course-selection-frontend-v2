@@ -57,7 +57,7 @@
         <UpcomingMeetings />
       </div>
     </div>
-    <CreateEvent v-if="showEvent" />
+    <CreateEvent v-if="showEvent" :todaysDate="createEventDate" />
     <MeetingDetails v-if="showDetails" :meetingDetails="meetingDetails" />
   </div>
 </template>
