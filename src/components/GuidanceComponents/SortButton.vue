@@ -136,17 +136,12 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
   // }
 
   if(sort.sortBy === 'ip') {
-    function ip(a: { grade: string, user: userData }) {
-      if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
-        return 1;
-      } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'INCOMPLETE'){
-        return -1;
-      } else {
-        return 1
-      }
-    }
-    return (userStore.currentlyViewingStudents.sort(ip))
+    const ip = userStore.currentlyViewingStudents.find(({ status }) => status === "INCOMPLETE")
+
+    console.log(ip)
+    return(ip)
   }
+
 
   if(sort.sortBy === 'com') {
     function com(a: { grade: string, user: userData }) {
@@ -247,8 +242,8 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
 //     } )
 //   })
 
-// console.log(userStore.currentlyViewingStudents[0].status)
 
-const sorter = userStore.currentlyViewingStudents.find(({ status }) => status === "INCOMPLETE")
-console.log(sorter);
+
+// const sorter = userStore.currentlyViewingStudents.find(({ status }) => status === "COMPLETE")
+// console.log(sorter);
 </script>
