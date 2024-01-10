@@ -214,8 +214,10 @@ function empty() {
     // locate student
     for (const student of studentList.value) {
       const studentEmail = student.email;
-      if (selectedStudent.includes(studentEmail)) {
+      if (selectedStudent.includes(`${studentEmail}@nycstudents.net`)) {
+        //keep the @nycstudents.net
         email = `${student.email}@nycstudents.net`;
+        console.log(email);
       }
     }
     save.value.innerHTML = "Saved";
