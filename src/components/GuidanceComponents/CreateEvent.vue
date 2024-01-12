@@ -153,6 +153,7 @@ import { ref, Ref, defineProps, onMounted } from "vue";
 import { useUserStore } from "../../stores/user";
 import { useGuidanceStore } from "../../stores/guidance";
 import { studentGuidance } from "../../types/interface";
+import showEvent from "../GuidanceComponents/GuidanceCalendar.vue";
 
 const guidanceStore = useGuidanceStore();
 const userStore = useUserStore();
@@ -179,25 +180,28 @@ onMounted(() => {
 //toggle modal
 function toggleEvent() {
   show.value = !show.value;
+  // showEvent.value = false;
+  // console.log(showEvent.value);
+  // return showEvent.value;
 }
 
-const dateElement = ref()
+const dateElement = ref();
 
 const props = defineProps({
-  todaysDate: String
-})
+  todaysDate: String,
+});
 onMounted(() => {
-  date = props.todaysDate!
-  dateElement.value.type = 'date'
-  dateElement.value.value = props.todaysDate!
-})
+  date = props.todaysDate!;
+  dateElement.value.type = "date";
+  dateElement.value.value = props.todaysDate!;
+});
 
 async function fetchStudents() {
   const { access_token } = useUserStore();
   try {
     // GET request for profiles
     const profilesResponse = await fetch(
-      `${import.meta.env.VITE_URL}/guidance/getGuidanceStudents`, 
+      `${import.meta.env.VITE_URL}/guidance/getGuidanceStudents`,
       {
         method: "GET",
         headers: {
@@ -238,7 +242,7 @@ function empty() {
     userStore.changeMeeting(email, meetingISO, description, notify.value);
     form.value.reset();
     show.value = !show.value;
-    
+
     // clear form input values
     name = "";
     email = "";
