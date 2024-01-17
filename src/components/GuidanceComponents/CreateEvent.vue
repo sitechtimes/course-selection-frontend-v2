@@ -230,7 +230,6 @@ function empty() {
       if (selectedStudent.includes(`${studentEmail}@nycstudents.net`)) {
         //keep the @nycstudents.net
         email = `${student.email}@nycstudents.net`;
-        console.log(email);
       }
     }
     save.value.innerHTML = "Saved";
