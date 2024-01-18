@@ -95,7 +95,7 @@
             placeholder="Select Student From List"
             autoComplete="on"
             list="suggestions"
-            v-model="name"
+            v-model="selectedStudent"
             id="student"
           />
           <p v-if="nameError" class="error text-red-600 ml-6 mt-1">
@@ -126,7 +126,7 @@
             type="checkbox"
             class="ml-2"
             id="notify"
-            name="notify"
+            selectedStudent="notify"
             v-model="notify"
           />
           <label class="ml-2" for="notify">Notify Student via Email</label>
@@ -160,7 +160,7 @@ const userStore = useUserStore();
 let date: string;
 let time: string;
 let description: string;
-let name: string;
+let selectedStudent: string;
 let email: string;
 let type = "text";
 const save = ref();
@@ -206,7 +206,7 @@ async function fetchStudents() {
         },
       }
     );
-    const data = JSON.parse(await profilesResponse.json());
+    const data = await profilesResponse.json();
     studentList.value = data;
     console.log(studentList.value);
   } catch (error) {
@@ -219,18 +219,19 @@ function empty() {
   //if the input value is an empty string, the error is true; otherwise it is false
   dateError.value = !date;
   timeError.value = !time;
-  nameError.value = !name;
+  nameError.value = !selectedStudent;
 
   if (!dateError.value && !timeError.value && !nameError.value) {
     // convert meeting date to an ISO string
     const meetingDateTime: Date = new Date(date + "T" + time);
+    console.log(meetingDateTime)
     const meetingISO: string = meetingDateTime.toISOString();
 
     // locate student
     for (const student of studentList.value) {
-      const studentFullName = student.name;
-      if (studentFullName == name) {
-        email = student.email;
+      const studentEmail = student.email;
+      if (selectedStudent.includes(`${studentEmail}@nycstudents.net`)) {
+        email = `${student.email}@nycstudents.net`
       }
     }
 
@@ -240,27 +241,18 @@ function empty() {
     show.value = !show.value;
     
     // clear form input values
-    name = "";
+    selectedStudent = "";
     email = "";
     date = "";
     time = "";
   }
-
-  save.value.innerHTML = "Saved";
-  userStore.changeMeeting(email, meetingISO, description);
-  form.value.reset();
-  //clear form input values
-  name = "";
-  email = "";
-  date = "";
-  time = "";
 }
 
-function titleCaseName(name: string): string {
+function titleCaseName(selectedStudent: string): string {
   const titleCaseWord = (word: string): string => {
     return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
   };
-  const [lastName, firstName] = name.split(",", 2);
+  const [lastName, firstName] = selectedStudent.split(",", 2);
   const titleCasedLastName = lastName.split(" ").map(titleCaseWord).join(" ");
   const titleCasedFirstName = firstName.split(" ").map(titleCaseWord).join(" ");
   return `${titleCasedLastName}, ${titleCasedFirstName}`;

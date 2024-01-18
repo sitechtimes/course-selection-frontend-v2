@@ -33,7 +33,7 @@ export const useUserStore = defineStore("user", {
                         Authorization: `Bearer ${this.access_token}`,
                     },
                 }).then(async (data) => {
-                    this.studentSurveyPreview = JSON.parse(await data.json());
+                    this.studentSurveyPreview = await data.json();
                 });
                 fetch(`${import.meta.env.VITE_URL}/guidance/getGuidanceStudents/`, {
                     method: "GET",
@@ -41,7 +41,7 @@ export const useUserStore = defineStore("user", {
                         Authorization: `Bearer ${this.access_token}`,
                     },
                 }).then(async (data) => {
-                    this.guidanceStudents = JSON.parse(await data.json());
+                    this.guidanceStudents = await data.json();
                     this.loading = false;
                 });
             } else {
@@ -162,6 +162,12 @@ export const useUserStore = defineStore("user", {
             description: string,
             notify: boolean
         ) {
+            console.log(JSON.stringify({
+                email: email,
+                date: meetingISO,
+                memo: description,
+                notify: notify,
+            }),)
             fetch(`${import.meta.env.VITE_URL}/guidance/updateMeeting/`, {
                 method: "POST",
                 headers: {
@@ -170,8 +176,8 @@ export const useUserStore = defineStore("user", {
                 },
                 body: JSON.stringify({
                     email: email,
-                    meeting: meetingISO,
-                    description: description,
+                    date: meetingISO,
+                    memo: description,
                     notify: notify,
                 }),
             });
