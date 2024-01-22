@@ -2,18 +2,16 @@
 import checkboxComponent from "../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue";
 import booleanComponent from "../components/SurveyPageComponents/Reusables/SurveyBoolean.vue";
 import generalComponent from "../components/SurveyPageComponents/Reusables/SurveyGeneral.vue";
-import { ref, reactive, Ref, onBeforeMount, watch } from "vue";
+import { ref, reactive, Ref, watch } from "vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
-import { useStudentStore } from "../stores/student";
-import { surveyQuestion, course, surveyAnswer } from "../types/interface";
+import { surveyQuestion } from "../types/interface";
 import { onBeforeRouteLeave } from "vue-router";
 
-document.title = 'Survey | SITHS Course Selection'
+document.title = "Survey | SITHS Course Selection";
 
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
-const studentStore = useStudentStore();
 
 const currentIndex: Ref<number> = ref(0);
 let currentQuestion: surveyQuestion = reactive(
@@ -21,13 +19,6 @@ let currentQuestion: surveyQuestion = reactive(
 );
 const min: Ref<boolean> = ref(true);
 const max: Ref<boolean> = ref(false);
-
-surveyStore.setSurvey(
-  studentStore.user.email,
-  surveyStore.currentSurvey.question,
-  //@ts-ignore
-  studentStore.student.grade 
-);
 
 const previousQuestion = () => {
   currentIndex.value--;
@@ -50,45 +41,58 @@ const nextQuestion = () => {
 };
 
 const getChoices = () => {
-  const classes = studentStore.student.coursesAvailable;
-  return classes.filter((x) => x.subject === currentQuestion.questionType);
+  const classes = surveyStore.student.coursesAvailable;
+  console.log("choices", classes, currentQuestion);
+  return classes.filter((x) => x["name"] === currentQuestion.questionType);
 };
 
 onBeforeRouteLeave((to, from, next) => {
-    if(JSON.stringify(surveyStore.currentResponse) === studentStore.answeredSurvey[0].answers || to.path === '/student/survey/review') {
-      window.removeEventListener('beforeunload', reminder)
-      next()
+  if (
+    JSON.stringify(surveyStore.currentResponse) ===
+      surveyStore.currentAnswers.answers ||
+    to.path === "/student/survey/review"
+  ) {
+    window.removeEventListener("beforeunload", reminder);
+    next();
+  } else {
+    const answer = window.confirm("Changes you made might not be saved.");
+    if (answer) {
+      window.removeEventListener("beforeunload", reminder);
+      next();
     } else {
-      const answer = window.confirm('Changes you made might not be saved.')
-      if (answer) {
-        window.removeEventListener('beforeunload', reminder)
-        next()
-      } else {
-        next(false)
+      next(false);
     }
-    }
-})
+  }
+});
 
-const reminder = (e: { preventDefault: () => void; returnValue: string; }) => {
-    e.preventDefault(); 
-    e.returnValue = '';
+const reminder = (e: { preventDefault: () => void; returnValue: string }) => {
+  e.preventDefault();
+  e.returnValue = "";
 };
 
-watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
-  if(JSON.stringify(newResponse) === studentStore.answeredSurvey[0].answers) {
-    window.removeEventListener('beforeunload', reminder)
-  } else {
-    window.addEventListener('beforeunload', reminder);
-  }
-}, { deep:true })
+watch(
+  () => surveyStore.currentResponse,
+  (newResponse, oldResponse) => {
+    if (JSON.stringify(newResponse) === surveyStore.currentAnswers.answers) {
+      window.removeEventListener("beforeunload", reminder);
+    } else {
+      window.addEventListener("beforeunload", reminder);
+    }
+  },
+  { deep: true }
+);
 
-watch(() => studentStore.answeredSurvey[0], (newResponse, oldResponse) => {
-  if(newResponse.answers === JSON.stringify(surveyStore.currentResponse)) {
-    window.removeEventListener('beforeunload', reminder)
-  } else {
-    window.addEventListener('beforeunload', reminder);
-  }
-}, { deep:true })
+watch(
+  () => surveyStore.currentAnswers,
+  (newResponse, oldResponse) => {
+    if (newResponse.answers === JSON.stringify(surveyStore.currentResponse)) {
+      window.removeEventListener("beforeunload", reminder);
+    } else {
+      window.addEventListener("beforeunload", reminder);
+    }
+  },
+  { deep: true }
+);
 </script>
 
 <template>
@@ -100,7 +104,7 @@ watch(() => studentStore.answeredSurvey[0], (newResponse, oldResponse) => {
     >
       <div class="mt-5">
         <h1 class="text-4xl font-semibold mb-6">
-        {{ surveyStore.currentSurvey.grade }} Year Survey
+          {{ surveyStore.currentSurvey.grade }} Year Survey
         </h1>
       </div>
       <div class="h-5/6 flex items-center">

@@ -13,7 +13,7 @@ export interface user {
 
 // guidance store interface
 export interface guidanceData {
-    allStudents: studentPreview[]
+    allStudents: guidanceSurveyPreview[]
     // guidance: guidanceStudentData
     user: userData
     currentlyViewing: studentGuidance[]
@@ -31,18 +31,18 @@ export interface studentUser {
 export interface studentSurveyPreview {
     dueDate: string
     grade: string
-    status: string
+    status: status
 }
 
-// survey store interface
-export interface surveyStore {
-    currentAnsweredSurvey: answeredSurvey
-    currentResponse: surveyAnswer[]
-    currentSurvey: survey
-    loading: boolean
-    open: boolean
-    submit: boolean
-    missingAnswers: string[]
+
+
+export interface guidanceSurveyPreview {
+    name: string,
+    hr: string,
+    grade: string,
+    email: string,
+    status: status,
+    flag: string,
 }
 
 // user object
@@ -106,14 +106,7 @@ export interface allStudents {
     edges: allStudentNodes[]
 }
 
-export interface studentPreview {
-    name: string,
-    hr: string,
-    grade: string,
-    email: string,
-    status: string,
-    flag: string,
-}
+
 
 export interface allStudentNodes {
     node: studentGuidance
@@ -140,6 +133,29 @@ export interface survey {
     dueDate: string
     grade: grade
     question: surveyQuestion[]
+}
+
+export interface getStudentSurvey {
+    survey: survey,
+    answeredSurvey: answeredSurvey
+    coursesTaken: Array<course>,
+    coursesAvailable: Array<course>
+}
+
+export interface studentCourses {
+    coursesTaken: Array<course>,
+    coursesAvailable: Array<course>
+}
+
+export interface student {
+    homeroom: string | null,
+    meeting: null | string,
+    meeting_description: string,
+}
+
+export interface flagAPI {
+    email:string,
+    flag: string,
 }
 
 export interface surveyQuestion {
@@ -174,8 +190,9 @@ export interface preferences {
 
 // course interfaces
 export interface course {
-    courseCode: string
-    subject: course_type
+    id: number,
+    courseCode: string,
+    subject: course_type,
     name: string
 }
 
