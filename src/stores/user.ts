@@ -171,11 +171,14 @@ export const useUserStore = defineStore("user", {
                 },
                 body: JSON.stringify({
                     email: email,
-                    meeting: meetingISO,
-                    description: description,
+                    date: meetingISO,
+                    memo: description,
                     notify: notify,
                 }),
-            });
+            }).then(async (res) => {
+                const data = await res.json()
+                console.log(data)
+            })
         },
         async deleteMeeting(email: string) {
             fetch(`${import.meta.env.VITE_URL}/guidance/updateMeeting/`, {
