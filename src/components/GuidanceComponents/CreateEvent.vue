@@ -224,7 +224,6 @@ function empty() {
     // convert meeting date to an ISO string
     const meetingDateTime: Date = new Date(date + "T" + time);
     const meetingISO: string = meetingDateTime.toISOString();
-    console.log(meetingISO);
     // locate student
     for (const student of studentList.value) {
       const studentEmail = student.email;
