@@ -136,10 +136,10 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
   // }
 
   if(sort.sortBy === 'ip') {
-    const ip = userStore.currentlyViewingStudents.find(({ status }) => status === "INCOMPLETE")
+    const label = computed(() => {
+      return text.value;
+    });
 
-    console.log(ip)
-    return(ip)
   }
 
 

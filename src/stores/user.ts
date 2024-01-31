@@ -34,7 +34,7 @@ export const useUserStore = defineStore("user", {
                         Authorization: `Bearer ${this.access_token}`,
                     },
                 }).then(async (data) => {
-                    this.studentSurveyPreview = await data.json();
+                    this.studentSurveyPreview = (await data.json());
                 });
                 fetch(`${import.meta.env.VITE_URL}/guidance/getGuidanceStudents/`, {
                     method: "GET",
@@ -42,8 +42,7 @@ export const useUserStore = defineStore("user", {
                         Authorization: `Bearer ${this.access_token}`,
                     },
                 }).then(async (data) => {
-                    this.guidanceStudents = JSON.parse(await data.json());
-                    console.log('this.currentlyViewingStudents', this.guidanceStudents  )
+                    this.guidanceStudents = (await data.json());
                     this.loading = false;
                 });
             } else {
