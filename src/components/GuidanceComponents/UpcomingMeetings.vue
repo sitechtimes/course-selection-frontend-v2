@@ -23,12 +23,9 @@
 <script setup lang="ts">
 import { ref, Ref, computed, watch, onMounted } from "vue";
 import { useUserStore } from "../../stores/user";
-import { useGuidanceStore } from "../../stores/guidance";
 import { studentGuidance, studentMeetings } from "../../types/interface";
 //@ts-ignore
 import dateformat from "dateformat";
-
-const guidanceStore = useGuidanceStore();
 
 const meetingsData: Ref<studentMeetings[]> = ref([]);
 

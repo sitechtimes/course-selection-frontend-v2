@@ -21,14 +21,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, Ref, watch } from "vue";
+import { ref, Ref, watch } from "vue";
 import { useUserStore } from '../../stores/user';
-import { useGuidanceStore } from "../../stores/guidance";
 import DownArrow from '../icons/DownArrow.vue';
 import { userData } from "../../types/interface";
 
 const userStore = useUserStore()
-const guidanceStore = useGuidanceStore()
 const selected: Ref<string> = ref("Sort By");
 const isOpen: Ref<boolean> = ref(false);
 

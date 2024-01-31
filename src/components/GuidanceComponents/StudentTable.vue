@@ -87,7 +87,6 @@ import { useRouter } from "vue-router";
 import { studentGuidance } from "../../types/interface";
 import { useUserStore } from "../../stores/user";
 import { useSurveyStore } from "../../stores/survey";
-import { useGuidanceStore } from "../../stores/guidance";
 import PlusIcon from "../icons/PlusIcon.vue";
 import MinusSign from "../icons/MinusSign.vue";
 import AddFlag from "../GuidanceComponents/AddFlag.vue";
@@ -99,7 +98,6 @@ defineProps({
 
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
-const guidanceStore = useGuidanceStore();
 const router = useRouter();
 
 let tooltip: Ref<boolean> = ref(false);
