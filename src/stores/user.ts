@@ -81,7 +81,7 @@ export const useUserStore = defineStore("user", {
                         const surveyStore = useSurveyStore();
                         const studentStore = useStudentStore();
 
-                        const parsedData = JSON.parse(data);
+                        const parsedData = data;
 
                         studentStore.survey = parsedData.survey.fields;
                         studentStore.answeredSurvey = parsedData.answeredSurvey.fields;
