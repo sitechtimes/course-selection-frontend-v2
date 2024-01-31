@@ -32,9 +32,8 @@ export const useUserStore = defineStore("user", {
                     headers: {
                         Authorization: `Bearer ${this.access_token}`,
                     },
-                }).then(res => res.json())
-                .then(async (data) => {
-                    this.studentSurveyPreview = await data;
+                }).then(async (data) => {
+                    this.studentSurveyPreview = await data.json();
                 });
                 fetch(`${import.meta.env.VITE_URL}/guidance/getGuidanceStudents/`, {
                     method: "GET",

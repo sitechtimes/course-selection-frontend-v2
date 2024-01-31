@@ -53,8 +53,8 @@ async function fetchStats() {
         'Authorization': `Bearer ${access_token}`,
       },
     });
-    const data = JSON.parse(await response.json());
-    const fetchedYears = data.map((index) => index.fields.year);
+    const data = await response.json();
+    const fetchedYears = data.map((index) => index.year);
     return {
       years: fetchedYears,
       data: data,
@@ -79,7 +79,7 @@ onMounted(async () => {
 const stats = computed(() => {
   if (selectedYear !== null) {
     const indexSelectedYear = years.indexOf(selectedYear.value);
-    return data[indexSelectedYear]?.fields.stats || {};
+    return data[indexSelectedYear]?.stats || {};
   }
 });
 

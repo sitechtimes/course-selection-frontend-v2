@@ -49,7 +49,7 @@
               </div>
               <PlusIcon
                 class="plusIcon w-3 ml-2 cursor-pointer invisible"
-                @click="toggleEvent"
+                @click="toggleEvent(h)"
               />
             </li>
           </ul>
@@ -57,7 +57,7 @@
         <UpcomingMeetings />
       </div>
     </div>
-    <CreateEvent v-if="showEvent" />
+    <CreateEvent v-if="showEvent" :todaysDate="createEventDate" />
     <MeetingDetails v-if="showDetails" :meetingDetails="meetingDetails" />
   </div>
 </template>
@@ -99,7 +99,21 @@ const toggleDetails = (meeting) => {
   showDetails.value = !showDetails.value;
 };
 
-const toggleEvent = () => {
+const createEventDate = ref('')
+const toggleEvent = (date: any) => {
+  let year = todaysYear
+  let month = date.type == "previous" ? todaysMonth-1 
+    : date.type == "future" ? todaysMonth+1 
+    : todaysMonth
+  if (month == -1) {
+    month = 11
+    year = todaysYear-1
+  } else if (month == 12) {
+    month = 0
+    year = todaysYear+1
+  }
+  console.log(month)
+  createEventDate.value = `${year}-${(month + 1).toString().padStart(2, '0')}-${(date.todaysDate).toString().padStart(2, '0')}`
   showEvent.value = !showEvent.value;
 };
 
@@ -227,6 +241,7 @@ const renderCalendar = async () => {
         new Date(b.meetingDetails.time).getTime()
       );
     });
+
     const dateBoxInfo = {
       type: "current",
       todaysDate: i,
@@ -244,6 +259,7 @@ const renderCalendar = async () => {
     };
     dateInfo.push(dateBoxInfo);
   }
+
   //@ts-ignore
   calendarData.dateInfo = dateInfo;
 };

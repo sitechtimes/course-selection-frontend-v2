@@ -35,10 +35,11 @@
             >
             <input
               class="space d rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80"
-              type="date"
+              :type="type"
               v-model="date"
-              placeholder="Date"
-              ref="date"
+              ref="dateElement"
+              onfocus="(this.type='date')"
+              id="date"
             />
             <p v-if="dateError" class="error text-red-600 ml-6 mt-1">
               Field empty/invalid
@@ -148,7 +149,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, onMounted } from "vue";
+import { ref, Ref, defineProps, onMounted } from "vue";
 import { useUserStore } from "../../stores/user";
 import { studentGuidance } from "../../types/interface";
 
@@ -159,6 +160,7 @@ let time: string;
 let description: string;
 let name: string;
 let email: string;
+let type = "text";
 const save = ref();
 const form = ref();
 const studentList: Ref<studentGuidance[]> = ref([]);
@@ -176,6 +178,17 @@ onMounted(() => {
 function toggleEvent() {
   show.value = !show.value;
 }
+
+const dateElement = ref()
+
+const props = defineProps({
+  todaysDate: String
+})
+onMounted(() => {
+  date = props.todaysDate!
+  dateElement.value.type = 'date'
+  dateElement.value.value = props.todaysDate!
+})
 
 async function fetchStudents() {
   const { access_token } = useUserStore();
@@ -230,6 +243,15 @@ function empty() {
     date = "";
     time = "";
   }
+
+  save.value.innerHTML = "Saved";
+  userStore.changeMeeting(email, meetingISO, description);
+  form.value.reset();
+  //clear form input values
+  name = "";
+  email = "";
+  date = "";
+  time = "";
 }
 
 function titleCaseName(name: string): string {
