@@ -114,7 +114,7 @@ const sortBy = (sort: { sortBy: string, text: string }) => {
       }
       return 0;
     }
-    console.log(userStore.currentlyViewingStudents.sort(lastnameaz))
+    return (userStore.currentlyViewingStudents.sort(lastnameaz))
   }
 
   if (sort.sortBy === 'lastnameza') {
@@ -132,11 +132,11 @@ const sortBy = (sort: { sortBy: string, text: string }) => {
 
   if (sort.sortBy === 'ns') {
     function ns(a: { status: string }) {
-      if (a.status === 'NOT STARTED') return -1;
-      else
-        return 0;
+      return (a.status === 'NOT STARTED')
+
     }
-    return (userStore.currentlyViewingStudents.sort(ns))
+    console.log(userStore.currentlyViewingStudents.filter(ns))
+    // return ()
   }
 
   if (sort.sortBy === 'ip') {
