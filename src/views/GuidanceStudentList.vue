@@ -64,7 +64,7 @@ async function fetchStudents() {
       }
     );
     loading.value=false
-    const data = JSON.parse(await profilesResponse.json());
+    const data =(await profilesResponse.json());
     allStudents.value = data;
   } catch (error) {
     console.error("Error:", error);

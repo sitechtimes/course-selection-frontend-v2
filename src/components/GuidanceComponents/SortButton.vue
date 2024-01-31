@@ -128,6 +128,8 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
     return (userStore.currentlyViewingStudents.sort(lastnameza))
   }
 
+
+  
   // if(sort.sortBy === 'ns') {
   //   function ns(a: { grade: string, user: userData }) {
   //       if (userStore.currentlyViewingStudents.status) === undefined) ;
@@ -135,104 +137,103 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
   //   return (userStore.currentlyViewingStudents.sort(ns))
   // }
 
-  if(sort.sortBy === 'ip') {
-    const label = computed(() => {
-      return text.value;
-    });
+//   if(sort.sortBy === 'ip') {
+ 
+    
 
-  }
+//   }
 
 
-  if(sort.sortBy === 'com') {
-    function com(a: { grade: string, user: userData }) {
-      if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
-        return 1;
-      } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'COMPLETE'){
-        return -1;
-      } else {
-        return 1
-      }
-    }
-    return (userStore.currentlyViewingStudents.sort(com))
-  }
+//   if(sort.sortBy === 'com') {
+//     function com(a: { grade: string, user: userData }) {
+//       if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
+//         return 1;
+//       } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'COMPLETE'){
+//         return -1;
+//       } else {
+//         return 1
+//       }
+//     }
+//     return (userStore.currentlyViewingStudents.sort(com))
+//   }
 
-  if(sort.sortBy === 'final') {
-    function final(a: { grade: string, user: userData }) {
-      if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
-        return 1;
-      } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'FINALIZED'){
-        return -1;
-      } else {
-        return 1
-      }
-    }
-    return (userStore.currentlyViewingStudents.sort(final))
-  }
+//   if(sort.sortBy === 'final') {
+//     function final(a: { grade: string, user: userData }) {
+//       if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
+//         return 1;
+//       } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'FINALIZED'){
+//         return -1;
+//       } else {
+//         return 1
+//       }
+//     }
+//     return (userStore.currentlyViewingStudents.sort(final))
+//   }
 
-  if(sort.sortBy === 'nine') {
-    function nine(a: { grade: string; }) {
-      if (a.grade === "FRESHMAN") return -1;
-      else
-      return 1;
-    }
-    return (userStore.currentlyViewingStudents.sort(nine))
-  }
+//   if(sort.sortBy === 'nine') {
+//     function nine(a: { grade: string; }) {
+//       if (a.grade === "FRESHMAN") return -1;
+//       else
+//       return 1;
+//     }
+//     return (userStore.currentlyViewingStudents.sort(nine))
+//   }
 
-  if(sort.sortBy === 'ten') {
-    function ten(a: { grade: string; }) {
-      if (a.grade === "SOPHOMORE") return -1;
-      else
-      return 1;
-    }
-    return (userStore.currentlyViewingStudents.sort(ten))
-  }
+//   if(sort.sortBy === 'ten') {
+//     function ten(a: { grade: string; }) {
+//       if (a.grade === "SOPHOMORE") return -1;
+//       else
+//       return 1;
+//     }
+//     return (userStore.currentlyViewingStudents.sort(ten))
+//   }
 
-  if(sort.sortBy === 'eleven') {
-    function eleven(a: { grade: string; }) {
-      if (a.grade === "JUNIOR") return -1;
-      else
-      return 1;
-    }
-    return (userStore.currentlyViewingStudents.sort(eleven))
-  }
+//   if(sort.sortBy === 'eleven') {
+//     function eleven(a: { grade: string; }) {
+//       if (a.grade === "JUNIOR") return -1;
+//       else
+//       return 1;
+//     }
+//     return (userStore.currentlyViewingStudents.sort(eleven))
+//   }
 
-  if(sort.sortBy === 'transfer') {
-    function transfer(a: { flag: string; }) {
-      if (a.flag.includes('Transfer')) return -1;
-      else
-      return 1;
-    }
-    return (userStore.currentlyViewingStudents.sort(transfer))
-  }
+//   if(sort.sortBy === 'transfer') {
+//     function transfer(a: { flag: string; }) {
+//       if (a.flag.includes('Transfer')) return -1;
+//       else
+//       return 1;
+//     }
+//     return (userStore.currentlyViewingStudents.sort(transfer))
+//   }
 
-  if(sort.sortBy === 'regents') {
-    function regents(a: { flag: string; }) {
-      if (a.flag.includes('Regents')) return -1;
-      else
-      return 1;
-    }
-    return (userStore.currentlyViewingStudents.sort(regents))
-  }
+//   if(sort.sortBy === 'regents') {
+//     function regents(a: { flag: string; }) {
+//       if (a.flag.includes('Regents')) return -1;
+//       else
+//       return 1;
+//     }
+//     return (userStore.currentlyViewingStudents.sort(regents))
+//   }
 
-  if(sort.sortBy === 'sports') {
-    function sports(a: { flag: string; }) {
-      if (a.flag.includes('Team')) return -1;
-      else
-      return 1;
-    }
-    return (userStore.currentlyViewingStudents.sort(sports))
-  }
+//   if(sort.sortBy === 'sports') {
+//     function sports(a: { flag: string; }) {
+//       if (a.flag.includes('Team')) return -1;
+//       else
+//       return 1;
+//     }
+//     return (userStore.currentlyViewingStudents.sort(sports))
+//   }
 
-  if(sort.sortBy === 'enl') {
-    const enl = (a: { flag: string; }) => {
-      if (a.flag.includes('ENL')) return -1;
-      else
-      return 1;
-    }
-    return (userStore.currentlyViewingStudents.sort(enl))
-  }
+//   if(sort.sortBy === 'enl') {
+//     const enl = (a: { flag: string; }) => {
+//       if (a.flag.includes('ENL')) return -1;
+//       else
+//       return 1;
+//     }
+//     return (userStore.currentlyViewingStudents.sort(enl))
+//   }
 
-}
+// }
 
 // const statusFilter = guidanceStore.currentlyViewing.filter((name) =>
 // { guidanceStore.currentlyViewing.forEach((status) => {
