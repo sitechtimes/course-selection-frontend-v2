@@ -59,9 +59,9 @@ async function fetchStats() {
         'Authorization': `Bearer ${userStore.access_token}`,
       },
     }).then(res => res.json());
-    const data = JSON.parse(await response);
+    const data = await response;
     return {
-      years: data.map((index) => index.fields.year),
+      years: data.map((index) => index.year),
       data: data,
     };
   } catch (error) {
@@ -84,7 +84,7 @@ onMounted(async () => {
 const stats = computed(() => {
   if (selectedYear !== null) {
     const indexSelectedYear = years.indexOf(selectedYear.value);
-    return data[indexSelectedYear].fields.stats;
+    return data[indexSelectedYear].stats;
   }
 });
 
