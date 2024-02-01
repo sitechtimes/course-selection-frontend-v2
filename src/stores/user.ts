@@ -25,7 +25,7 @@ export const useUserStore = defineStore("user", {
     }),
     actions: {
         async init(type: account_type) {
-            this.userType = type;
+            //@ts-ignore
             if (type === "guidance") {
                 fetch(`${import.meta.env.VITE_URL}/guidance/profiles/`, {
                     method: "GET",
@@ -33,15 +33,11 @@ export const useUserStore = defineStore("user", {
                         Authorization: `Bearer ${this.access_token}`,
                     },
                 }).then(async (data) => {
-                    this.studentSurveyPreview = await data.json();
-                });
-                fetch(`${import.meta.env.VITE_URL}/guidance/getGuidanceStudents/`, {
-                    method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${this.access_token}`,
-                    },
-                }).then(async (data) => {
-                    this.guidanceStudents = await data.json();
+                    const json = await data.json();
+                    console.log(json)
+                    this.studentSurveyPreview = json
+                    this.guidanceStudents = await json.filter(student => student.ownStudent === true)
+                    console.log(this.guidanceStudents)
                     this.loading = false;
                 });
             } else {
@@ -228,7 +224,7 @@ export const useUserStore = defineStore("user", {
                 this.studentSurveyPreview[previewIndex].flag = data.flag;
             }
 
-        }
+         }
     },
     persist: {
         storage: sessionStorage,
