@@ -14,19 +14,13 @@
       </div>
       <SearchBar class="w-2/3" type="text" v-model="input" placeholder="Search Students..." />
     </div>
-<<<<<<< Updated upstream
-    <StudentTable :newstudents="newStudents.slice(x, y)" />
-    <div class="max-w-[80%] overflow-x-auto mt-4 flex flex-row justify-between ">
-      <button class=" mx-2  bg-[#ebebeb] h-8 w-8 rounded-lg font-bold" @click="subtract" :disabled="currentPage === 1">
-=======
     <StudentTable :newstudents="sortView" />
-    <div class="max-w-[80%] overflow-x-auto mt-4 flex flex-row justify-between">
+    <div class="max-w-[80%] overflow-x-auto mt-4 flex flex-row justify-between ">
       <button
         class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold"
         @click="subtract"
         :disabled="currentPage === 1"
       >
->>>>>>> Stashed changes
         ❮
       </button>
       <button v-for="n in pages" @click="updatePage(n)"
@@ -42,6 +36,8 @@
       <span class="font-bold m-1">{{ pages }}</span>
     </h5>
   </div>
+
+
 </template>
 
 <script setup lang="ts">
@@ -57,12 +53,8 @@ document.title = "Student List | SITHS Course Selection";
 const userStore = useUserStore();
 const allStudents: Ref<studentGuidance[]> = ref([]);
 const loading = ref(false);
-<<<<<<< Updated upstream
-
-=======
-const sortBy = "eleven";
+const sortBy = "lastnameza";
 const guidanceStudents = userStore.currentlyViewingStudents;
->>>>>>> Stashed changes
 async function fetchStudents() {
   const { access_token } = useUserStore();
   loading.value = true; 
@@ -85,35 +77,33 @@ async function fetchStudents() {
     console.error("Error:", error);
   }
 }
-<<<<<<< Updated upstream
-=======
+
 //handles the sorting view
 const sortView = computed(() => {
-  // if (sortBy === 'lastnameaz') { // if user selects this
-  //   function lastnameaz(a: { name: string; }, b: { name: string; }) {
-  //     if (a.name < b.name) {
-  //       return -1;
-  //     }
-  //     if (a.name > b.name) {
-  //       return 1;
-  //     }
-  //     return 0;
-  //   }
-  //   return (guidanceStudents.sort(lastnameaz))
-  // } else 
-  // if (sortBy === 'lastnameza') {
-  //   function lastnameza(a: { name: string; }, b: { name: string; }) {
-  //     if (a.name > b.name) {
-  //       return -1;
-  //     }
-  //     if (a.name < b.name) {
-  //       return 1;
-  //     }
-  //     return 0;
-  //   }
-  //   return (guidanceStudents.sort(lastnameza))
-  // } else
-   if (sortBy === "ns") {
+  if (sortBy === 'lastnameaz') { // if user selects this
+    console.log('selectedaz')
+    function lastnameaz(a: { name: string; }, b: { name: string; }) {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    }
+    return (guidanceStudents.sort(lastnameaz))
+  } else if (sortBy === 'lastnameza') {
+    function lastnameza(a: { name: string; }, b: { name: string; }) {
+      if (a.name > b.name) {
+        return -1;
+      }
+      if (a.name < b.name) {
+        return 1;
+      }
+      return 0;
+    }
+    return (guidanceStudents.sort(lastnameza))
+  } else if (sortBy === "ns") {
     return guidanceStudents.filter(
       (student) => student.status === "NOT STARTED"
     );
@@ -133,36 +123,32 @@ const sortView = computed(() => {
     return guidanceStudents.filter(
       (student)=> student.grade === "FRESHMAN"
     )
-  }
-  else if(sortBy === "ten"){
+  } else if(sortBy === "ten"){
     return guidanceStudents.filter(
       (student)=> student.grade === "SOPHOMORE"
     )
-  }
-  else if(sortBy === "eleven"){
+  } else if(sortBy === "eleven"){
     return guidanceStudents.filter(
       (student)=> student.grade === "JUNIOR"
     )
-  }
-  else if(sortBy === "transfer"){
+  } else if(sortBy === "transfer"){
     return guidanceStudents.filter(
       (student)=> student.grade === "Transfer"
     )
-  }else if(sortBy === "regents"){
+  } else if(sortBy === "regents"){
     return guidanceStudents.filter(
       (student)=> student.grade === "Regents"
     )
-  }else if(sortBy === "sports"){
+  } else if(sortBy === "sports"){
     return guidanceStudents.filter(
       (student)=> student.grade === "Team"
     )
-  }else if(sortBy === "enl"){
+  } else if(sortBy === "enl"){
     return guidanceStudents.filter(
       (student)=> student.grade === "ENL"
     )
   }
 });
->>>>>>> Stashed changes
 
 const input: Ref<string> = ref("");
 const viewAll = ref(false);

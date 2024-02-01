@@ -101,6 +101,7 @@ const menuArray = [
   },
 ]
 
+
 const sortBy = (sort: { sortBy: string, text: string }) => {
   selected.value = sort.text
   isOpen.value = false
@@ -116,7 +117,6 @@ const sortBy = (sort: { sortBy: string, text: string }) => {
     }
     return (userStore.currentlyViewingStudents.sort(lastnameaz))
   }
-<<<<<<< Updated upstream
 
   if (sort.sortBy === 'lastnameza') {
     function lastnameza(a: { name: string; }, b: { name: string; }) {
@@ -130,117 +130,5 @@ const sortBy = (sort: { sortBy: string, text: string }) => {
     }
     return (userStore.currentlyViewingStudents.sort(lastnameza))
   }
-
-  if (sort.sortBy === 'ns') {
-    function ns(a: { status: string }) {
-      return (a.status === 'NOT STARTED')
-
-    }
-    console.log(userStore.currentlyViewingStudents.filter(ns))
-    // return ()
-  }
-
-  if (sort.sortBy === 'ip') {
-    function ip(a: { status: string }) {
-      if (a.status === 'INCOMPLETE') {
-        return -1;
-      } else {
-        return 0
-      }
-    }
-    return (userStore.currentlyViewingStudents.sort(ip))
-  }
-
-  if (sort.sortBy === 'com') {
-    function com(a: { grade: string, user: userData }) {
-      if (userStore.currentlyViewingStudents.find(x => x.email === a.user.email) === undefined) {
-        return 1;
-      } else if (userStore.currentlyViewingStudents.find(x => x.email === a.user.email)?.status === 'COMPLETE') {
-        return -1;
-      } else {
-        return 1
-      }
-    }
-    return (userStore.currentlyViewingStudents.sort(com))
-  }
-
-  if (sort.sortBy === 'final') {
-    function final(a: { grade: string, user: userData }) {
-      if (userStore.currentlyViewingStudents.find(x => x.email === a.user.email) === undefined) {
-        return 1;
-      } else if (userStore.currentlyViewingStudents.find(x => x.email === a.user.email)?.status === 'FINALIZED') {
-        return -1;
-      } else {
-        return 1
-      }
-    }
-    return (userStore.currentlyViewingStudents.sort(final))
-  }
-
-  if (sort.sortBy === 'nine') {
-    function nine(a: { grade: string; }) {
-      if (a.grade === "FRESHMAN") return -1;
-      else
-        return 1;
-    }
-    return (userStore.currentlyViewingStudents.sort(nine))
-  }
-
-  if (sort.sortBy === 'ten') {
-    function ten(a: { grade: string; }) {
-      if (a.grade === "SOPHOMORE") return -1;
-      else
-        return 1;
-    }
-    return (userStore.currentlyViewingStudents.sort(ten))
-  }
-
-  if (sort.sortBy === 'eleven') {
-    function eleven(a: { grade: string; }) {
-      if (a.grade === "JUNIOR") return -1;
-      else
-        return 1;
-    }
-    return (userStore.currentlyViewingStudents.sort(eleven))
-  }
-
-  if (sort.sortBy === 'transfer') {
-    function transfer(a: { flag: string; }) {
-      if (a.flag.includes('Transfer')) return -1;
-      else
-        return 1;
-    }
-    return (userStore.currentlyViewingStudents.sort(transfer))
-  }
-
-  if (sort.sortBy === 'regents') {
-    function regents(a: { flag: string; }) {
-      if (a.flag.includes('Regents')) return -1;
-      else
-        return 1;
-    }
-    return (userStore.currentlyViewingStudents.sort(regents))
-  }
-
-  if (sort.sortBy === 'sports') {
-    function sports(a: { flag: string; }) {
-      if (a.flag.includes('Team')) return -1;
-      else
-        return 1;
-    }
-    return (userStore.currentlyViewingStudents.sort(sports))
-  }
-
-  if (sort.sortBy === 'enl') {
-    const enl = (a: { flag: string; }) => {
-      if (a.flag.includes('ENL')) return -1;
-      else
-        return 1;
-    }
-    return (userStore.currentlyViewingStudents.sort(enl))
-  }
-
-=======
->>>>>>> Stashed changes
 }
 </script>
