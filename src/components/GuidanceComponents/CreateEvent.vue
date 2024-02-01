@@ -35,7 +35,7 @@
             >
             <input
               class="space d rounded-md border border-solid border-zinc-400 h-10 p-2 ml-6 mt-1 w-80"
-              :type="type"
+              type="text"
               v-model="date"
               ref="dateElement"
               onfocus="(this.type='date')"
@@ -63,7 +63,6 @@
               type="time"
               v-model="time"
               placeholder="Time"
-              ref="time"
             />
             <p v-if="timeError" class="error text-red-600 ml-6 mt-1">
               Field empty/invalid
@@ -95,7 +94,7 @@
             placeholder="Select Student From List"
             autoComplete="on"
             list="suggestions"
-            v-model="name"
+            v-model="selectedStudent"
             id="student"
           />
           <p v-if="nameError" class="error text-red-600 ml-6 mt-1">
@@ -126,7 +125,7 @@
             type="checkbox"
             class="ml-2"
             id="notify"
-            name="notify"
+            selectedStudent="notify"
             v-model="notify"
           />
           <label class="ml-2" for="notify">Notify Student via Email</label>
@@ -155,14 +154,16 @@ import { studentGuidance } from "../../types/interface";
 
 const userStore = useUserStore();
 
-let date: string;
-let time: string;
-let description: string;
-let name: string;
+const date: Ref<string> = ref("");
+const time: Ref<string> = ref("");
+const description: Ref<string> = ref("");
+const selectedStudent: Ref<string> = ref("");
+
 let email: string;
-let type = "text";
+
 const save = ref();
 const form = ref();
+
 const studentList: Ref<studentGuidance[]> = ref([]);
 const dateError: Ref<boolean> = ref(false);
 const timeError: Ref<boolean> = ref(false);
@@ -185,7 +186,7 @@ const props = defineProps({
   todaysDate: String
 })
 onMounted(() => {
-  date = props.todaysDate!
+  date.value = props.todaysDate!
   dateElement.value.type = 'date'
   dateElement.value.value = props.todaysDate!
 })
@@ -204,9 +205,8 @@ async function fetchStudents() {
         },
       }
     );
-    const data = JSON.parse(await profilesResponse.json());
+    const data = await profilesResponse.json();
     studentList.value = data;
-    console.log(studentList.value);
   } catch (error) {
     console.error("Error:", error);
   }
@@ -215,50 +215,41 @@ async function fetchStudents() {
 //check for empty input values before submitting form
 function empty() {
   //if the input value is an empty string, the error is true; otherwise it is false
-  dateError.value = !date;
-  timeError.value = !time;
-  nameError.value = !name;
+  dateError.value = !date.value;
+  timeError.value = !time.value;
+  nameError.value = !selectedStudent.value;
 
   if (!dateError.value && !timeError.value && !nameError.value) {
     // convert meeting date to an ISO string
-    const meetingDateTime: Date = new Date(date + "T" + time);
+    const meetingDateTime: Date = new Date(date.value + "T" + time.value);
     const meetingISO: string = meetingDateTime.toISOString();
 
     // locate student
     for (const student of studentList.value) {
-      const studentFullName = student.name;
-      if (studentFullName == name) {
-        email = student.email;
+      const studentEmail = student.email;
+      if (selectedStudent.value.includes(`${studentEmail}@nycstudents.net`)) {
+        email = `${student.email}@nycstudents.net`
       }
     }
 
     save.value.innerHTML = "Saved";
-    userStore.changeMeeting(email, meetingISO, description, notify.value);
+    userStore.changeMeeting(email, meetingISO, description.value, notify.value);
     form.value.reset();
     show.value = !show.value;
     
     // clear form input values
-    name = "";
+    selectedStudent.value = "";
     email = "";
-    date = "";
-    time = "";
+    date.value = "";
+    time.value = "";
   }
-
-  save.value.innerHTML = "Saved";
-  userStore.changeMeeting(email, meetingISO, description);
-  form.value.reset();
-  //clear form input values
-  name = "";
-  email = "";
-  date = "";
-  time = "";
 }
 
-function titleCaseName(name: string): string {
+function titleCaseName(selectedStudent: string): string {
   const titleCaseWord = (word: string): string => {
     return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
   };
-  const [lastName, firstName] = name.split(",", 2);
+  const [lastName, firstName] = selectedStudent.split(",", 2);
   const titleCasedLastName = lastName.split(" ").map(titleCaseWord).join(" ");
   const titleCasedFirstName = firstName.split(" ").map(titleCaseWord).join(" ");
   return `${titleCasedLastName}, ${titleCasedFirstName}`;

@@ -142,6 +142,12 @@ export const useUserStore = defineStore("user", {
             description: string,
             notify: boolean
         ) {
+            console.log(JSON.stringify({
+                email: email,
+                date: meetingISO,
+                memo: description,
+                notify: notify,
+            }),)
             fetch(`${import.meta.env.VITE_URL}/guidance/updateMeeting/`, {
                 method: "POST",
                 headers: {
@@ -150,8 +156,8 @@ export const useUserStore = defineStore("user", {
                 },
                 body: JSON.stringify({
                     email: email,
-                    meeting: meetingISO,
-                    description: description,
+                    date: meetingISO,
+                    memo: description,
                     notify: notify,
                 }),
             });
