@@ -116,6 +116,7 @@ const sortBy = (sort: { sortBy: string, text: string }) => {
     }
     return (userStore.currentlyViewingStudents.sort(lastnameaz))
   }
+<<<<<<< Updated upstream
 
   if (sort.sortBy === 'lastnameza') {
     function lastnameza(a: { name: string; }, b: { name: string; }) {
@@ -239,5 +240,7 @@ const sortBy = (sort: { sortBy: string, text: string }) => {
     return (userStore.currentlyViewingStudents.sort(enl))
   }
 
+=======
+>>>>>>> Stashed changes
 }
 </script>
