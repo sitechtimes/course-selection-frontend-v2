@@ -22,8 +22,10 @@ export const useUserStore = defineStore("user", {
         studentSurveyPreview: [],
         currentlyViewingStudents: [],
         guidanceStudents: [],
+        guidanceMeetings: [],
     }),
     actions: {
+        //add error handling
         async init(type: account_type) {
             this.userType = type;
             if (type === "guidance") {
@@ -42,8 +44,29 @@ export const useUserStore = defineStore("user", {
                     },
                 }).then(async (data) => {
                     this.guidanceStudents = await data.json();
-                    this.loading = false;
                 });
+                fetch(`${import.meta.env.VITE_URL}/guidance/meetings`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${this.access_token}`,
+                    },
+                }).then(async (data) => {
+                    const meetingsData = (await data.json()).map((student) => ({
+                        name: student.name
+                          .split(",")
+                          .map((part) => part.trim().toLowerCase())
+                          .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+                          .join(", "),
+                        meetingDate: student.meeting,
+                        description: student.meeting_description,
+                        grade: student.grade,
+                        email: student.email,
+                    }));
+                    this.guidanceMeetings = meetingsData;
+                    // this.guidanceMeetings = await data.json()
+                    this.loading = false;
+                    //add meeting to store after creation with a check for if it already exists in change meeting function
+                })
             } else {
                 fetch(`${import.meta.env.VITE_URL}/student/surveyPreview/`, {
                     method: "GET",
@@ -181,6 +204,24 @@ export const useUserStore = defineStore("user", {
                     notify: notify,
                 }),
             });
+            const meetingExists = this.guidanceMeetings.filter((meeting: object) => meeting.email === email).length > 0
+            if(!meetingExists) {
+                const student = this.guidanceStudents.find((student) => 
+                    student.email === email.split("@")[0]
+                )
+                const meetingData = {
+                    name: student.name
+                        .split(",")
+                        .map((part) => part.trim().toLowerCase())
+                        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+                        .join(", "),
+                    meetingDate: meetingISO,
+                    description: description,
+                    email: email,
+                    grade: student.grade,
+                };
+                this.guidanceMeetings.push(meetingData);
+            }
         },
         async deleteMeeting(email: string) {
             fetch(`${import.meta.env.VITE_URL}/guidance/updateMeeting/`, {
