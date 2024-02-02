@@ -23,12 +23,13 @@
 <script setup lang="ts">
 import { ref, Ref, computed, watch, onMounted } from "vue";
 import { useUserStore } from "../../stores/user";
-import { studentGuidance, studentMeetings } from "../../types/interface";
+import { studentMeetings } from "../../types/interface";
 //@ts-ignore
 import dateformat from "dateformat";
 
 const userStore = useUserStore();
 const meetingsData: Ref<studentMeetings[]> = ref([]);
+const todaysDate = new Date();
 
 async function updateStudentMeetings() {
   meetingsData.value = userStore.guidanceMeetings.map((student: studentMeetings) => ({
@@ -40,17 +41,6 @@ async function updateStudentMeetings() {
   .sort((a, b) => a.meetingDate.getTime() - b.meetingDate.getTime());
 }
 
-// update upcoming meetings on load
-onMounted(() => {
-  updateStudentMeetings();
-});
-
-// update upcoming meetings whenever a meeting is added
-watch(userStore.guidanceMeetings, () => {
-  updateStudentMeetings();
-});
-
-const todaysDate = new Date();
 const groupedStudentMeetings = computed(() => {
   const groupedMeetings: Record<string, studentMeetings[]> = {};
   meetingsData.value
@@ -64,4 +54,14 @@ const groupedStudentMeetings = computed(() => {
     });
   return groupedMeetings;
 });
+
+// update upcoming meetings on load
+onMounted(() => {
+  updateStudentMeetings();
+});
+
+// update upcoming meetings whenever a meeting is added
+userStore.$subscribe(() => {
+  updateStudentMeetings();
+})
 </script>
