@@ -181,9 +181,6 @@ onMounted(() => {
 //toggle modal
 function toggleEvent() {
   show.value = !show.value;
-  // showEvent.value = false;
-  // console.log(showEvent.value);
-  // return showEvent.value;
 }
 
 const dateElement = ref();
