@@ -184,7 +184,7 @@ const renderCalendar = async () => {
     //for each student in studentInfo, a studentMeetingDate contains date&time information about the student's meeting
     //if the student has a meeting on the active date, push the date to studentsWithMeetings
     for (const student of userStore.guidanceMeetings) {
-      const studentMeetingDate = new Date(student.meetingDate as string);
+      const studentMeetingDate = new Date(student.meetingDate);
       const isMeetingDate =
         studentMeetingDate.getDate() === activeDate.getDate() &&
         studentMeetingDate.getMonth() === activeDate.getMonth() &&
