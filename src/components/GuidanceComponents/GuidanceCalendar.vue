@@ -124,11 +124,9 @@ const toggleEvent = (date: any) => {
     month = 0;
     year = todaysYear + 1;
   }
-  console.log(month);
   createEventDate.value = `${year}-${(month + 1)
     .toString()
     .padStart(2, "0")}-${date.todaysDate.toString().padStart(2, "0")}`;
-  console.log(showEvent.value);
 };
 
 //index signature for grades
