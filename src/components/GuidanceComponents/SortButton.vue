@@ -102,6 +102,13 @@ const menuArray = [
 ]
 
 
+
+const emit = defineEmits(['menuArray', 'value'])
+
+function watch() {
+  emit('value')
+}; 
+
 const sortBy = (sort: { sortBy: string, text: string }) => {
   selected.value = sort.text
   isOpen.value = false
@@ -131,4 +138,7 @@ const sortBy = (sort: { sortBy: string, text: string }) => {
     return (userStore.currentlyViewingStudents.sort(lastnameza))
   }
 }
+
+
+
 </script>
