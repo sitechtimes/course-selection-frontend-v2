@@ -58,9 +58,7 @@
       </div>
     </div>
     <CreateEvent
-      v-for="h in calendarData.dateInfo"
-      :key="h.id"
-      @click="toggleEvent(h)"
+      @click="fixBoolean"
       v-if="showEvent"
       :todaysDate="createEventDate"
     />
@@ -109,7 +107,6 @@ const toggleDetails = (meeting) => {
 
 const createEventDate = ref("");
 const toggleEvent = (date: any) => {
-  showEvent.value = !showEvent.value;
   let year = todaysYear;
   let month =
     date.type == "previous"
@@ -127,7 +124,12 @@ const toggleEvent = (date: any) => {
   createEventDate.value = `${year}-${(month + 1)
     .toString()
     .padStart(2, "0")}-${date.todaysDate.toString().padStart(2, "0")}`;
+  showEvent.value = !showEvent.value;
 };
+
+function fixBoolean() {
+  showEvent.value = !showEvent.value;
+}
 
 //index signature for grades
 type ClassColor = {
