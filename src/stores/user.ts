@@ -4,7 +4,7 @@ import { useStudentStore } from "./student";
 import { useGuidanceStore } from "./guidance";
 import { useRouter } from "vue-router";
 import axios from "axios";
-import { user, account_type, userData, guidanceData, studentGuidance } from "../types/interface";
+import { user, account_type, userData, guidanceData, studentGuidance, studentMeetings } from "../types/interface";
 import { ref } from "vue";
 import router from "../router";
 
@@ -22,7 +22,7 @@ export const useUserStore = defineStore("user", {
         studentSurveyPreview: [],
         currentlyViewingStudents: [],
         guidanceStudents: [],
-        guidanceMeetings: [],
+        guidanceMeetings: [] as studentMeetings[],
     }),
     actions: {
         //add error handling
