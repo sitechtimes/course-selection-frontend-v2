@@ -11,7 +11,7 @@
           <h2 class="font-bold text-lg">{{ date }}</h2>
           <ul class="my-2">
             <li v-for="(meeting, index) in meetings" :key="index" class="ml-6 mt-2 list-disc">
-              {{ meeting.meetingTime }} - {{ titleCaseName(meeting.name) }}
+              {{ meeting.meetingTime }} - {{ meeting.name }}
             </li>
           </ul>
         </div>
@@ -28,20 +28,7 @@ import { studentGuidance, studentMeetings } from "../../types/interface";
 import dateformat from "dateformat";
 
 const userStore = useUserStore();
-console.log(userStore.guidanceMeetings);
-
 const meetingsData: Ref<studentMeetings[]> = ref([]);
-
-//this function is not needed
-function titleCaseName(name: string): string {
-  const titleCaseWord = (word: string): string => {
-    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(); 
-  };
-  const [lastName, firstName] = name.split(",", 2);
-  const titleCasedLastName = lastName.split(" ").map(titleCaseWord).join(" ");
-  const titleCasedFirstName = firstName.split(" ").map(titleCaseWord).join(" ");
-  return `${titleCasedLastName}, ${titleCasedFirstName}`;
-}
 
 async function updateStudentMeetings() {
   meetingsData.value = userStore.guidanceMeetings.map((student: studentMeetings) => ({
