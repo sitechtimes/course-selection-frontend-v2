@@ -121,9 +121,10 @@ const printMeetingTicket = () => {
       </body>
     </html>`;
 
-  const newWindow = window.open("", "", "width=800,height=900");
+  const newWindow = window.open(" ", "", "width=800,height=900");
   newWindow.document.write(printPage);
   newWindow.print();
+  newWindow.close();
 };
 </script>
 
