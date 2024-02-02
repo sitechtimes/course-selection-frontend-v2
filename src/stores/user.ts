@@ -4,7 +4,7 @@ import { useStudentStore } from "./student";
 import { useGuidanceStore } from "./guidance";
 import { useRouter } from "vue-router";
 import axios from "axios";
-import { user, account_type, userData, guidanceData, studentGuidance } from "../types/interface";
+import { user, account_type, userData, guidanceData, studentGuidance, studentMeetings } from "../types/interface";
 import { ref } from "vue";
 import router from "../router";
 
@@ -22,8 +22,10 @@ export const useUserStore = defineStore("user", {
         studentSurveyPreview: [],
         currentlyViewingStudents: [],
         guidanceStudents: [],
+        guidanceMeetings: [] as studentMeetings[],
     }),
     actions: {
+        //add error handling
         async init(type: account_type) {
             this.userType = type;
             if (type === "guidance") {
@@ -42,8 +44,27 @@ export const useUserStore = defineStore("user", {
                     },
                 }).then(async (data) => {
                     this.guidanceStudents = await data.json();
-                    this.loading = false;
                 });
+                fetch(`${import.meta.env.VITE_URL}/guidance/meetings`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${this.access_token}`,
+                    },
+                }).then(async (data) => {
+                    const meetingsData = (await data.json()).map((student) => ({
+                        name: student.name
+                          .split(",")
+                          .map((part) => part.trim().toLowerCase())
+                          .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+                          .join(", "),
+                        meetingDate: student.meeting,
+                        description: student.meeting_description,
+                        grade: student.grade,
+                        email: student.email,
+                    }));
+                    this.guidanceMeetings = meetingsData;
+                    this.loading = false;
+                })
             } else {
                 fetch(`${import.meta.env.VITE_URL}/student/surveyPreview/`, {
                     method: "GET",
@@ -181,6 +202,24 @@ export const useUserStore = defineStore("user", {
                     notify: notify,
                 }),
             });
+            const meetingExists = this.guidanceMeetings.filter((meeting: object) => meeting.email === email).length > 0
+            if(!meetingExists) {
+                const student = this.guidanceStudents.find((student) => 
+                    student.email === email.split("@")[0]
+                )
+                const meetingData = {
+                    name: student.name
+                        .split(",")
+                        .map((part) => part.trim().toLowerCase())
+                        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+                        .join(", "),
+                    meetingDate: meetingISO,
+                    description: description,
+                    email: email,
+                    grade: student.grade,
+                };
+                this.guidanceMeetings.push(meetingData);
+            }
         },
         async deleteMeeting(email: string) {
             fetch(`${import.meta.env.VITE_URL}/guidance/updateMeeting/`, {
@@ -193,6 +232,8 @@ export const useUserStore = defineStore("user", {
                     email: email,
                 }),
             });
+            const updatedMeetings = this.guidanceMeetings.filter((meeting) => meeting.email !== email);
+            this.guidanceMeetings = updatedMeetings;
         },
         async addFlag(email: string, newFlag: string) {
             const res = await fetch(`${import.meta.env.VITE_URL}/guidance/updateFlag/`, {
