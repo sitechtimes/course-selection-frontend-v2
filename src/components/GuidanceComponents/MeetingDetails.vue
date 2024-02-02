@@ -147,6 +147,7 @@ const toggleDeleteModal = () => {
   showDeleteModal.value = !showDeleteModal.value;
   show.value = !show.value;
 };
+
 function pushRouter(email: string) {
   router.push(`/guidance/PrintPage/${email.replace("@nycstudents.net", "")}`);
 }

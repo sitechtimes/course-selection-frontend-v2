@@ -63,9 +63,7 @@ export const useUserStore = defineStore("user", {
                         email: student.email,
                     }));
                     this.guidanceMeetings = meetingsData;
-                    // this.guidanceMeetings = await data.json()
                     this.loading = false;
-                    //add meeting to store after creation with a check for if it already exists in change meeting function
                 })
             } else {
                 fetch(`${import.meta.env.VITE_URL}/student/surveyPreview/`, {
@@ -234,6 +232,8 @@ export const useUserStore = defineStore("user", {
                     email: email,
                 }),
             });
+            const updatedMeetings = this.guidanceMeetings.filter((meeting) => meeting.email !== email);
+            this.guidanceMeetings = updatedMeetings;
         },
         async addFlag(email: string, newFlag: string) {
             const res = await fetch(`${import.meta.env.VITE_URL}/guidance/updateFlag/`, {
