@@ -152,7 +152,6 @@ import { ref, Ref, defineProps, onMounted } from "vue";
 import { useUserStore } from "../../stores/user";
 import { useGuidanceStore } from "../../stores/guidance";
 import { studentGuidance } from "../../types/interface";
-import showEvent from "../GuidanceComponents/GuidanceCalendar.vue";
 
 const guidanceStore = useGuidanceStore();
 const userStore = useUserStore();
@@ -183,23 +182,23 @@ function toggleEvent() {
   show.value = !show.value;
 }
 
-const dateElement = ref();
+const dateElement = ref()
 
 const props = defineProps({
-  todaysDate: String,
-});
+  todaysDate: String
+})
 onMounted(() => {
-  date.value = props.todaysDate!;
-  dateElement.value.type = "date";
-  dateElement.value.value = props.todaysDate!;
-});
+  date.value = props.todaysDate!
+  dateElement.value.type = 'date'
+  dateElement.value.value = props.todaysDate!
+})
 
 async function fetchStudents() {
   const { access_token } = useUserStore();
   try {
     // GET request for profiles
     const profilesResponse = await fetch(
-      `${import.meta.env.VITE_URL}/guidance/getGuidanceStudents`,
+      `${import.meta.env.VITE_URL}/guidance/getGuidanceStudents`, 
       {
         method: "GET",
         headers: {
@@ -231,7 +230,7 @@ function empty() {
     for (const student of studentList.value) {
       const studentEmail = student.email;
       if (selectedStudent.value.includes(`${studentEmail}@nycstudents.net`)) {
-        email = `${student.email}@nycstudents.net`;
+        email = `${student.email}@nycstudents.net`
       }
     }
 
@@ -239,7 +238,7 @@ function empty() {
     userStore.changeMeeting(email, meetingISO, description.value, notify.value);
     form.value.reset();
     show.value = !show.value;
-
+    
     // clear form input values
     selectedStudent.value = "";
     email = "";
