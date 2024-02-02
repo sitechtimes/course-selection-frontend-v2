@@ -5,7 +5,7 @@
       id="sort" @click="isOpen = !isOpen">
       <div>
         <a class="mt-2.5 ml-4 flex">
-          <p class="font-semibold" id="sortshow">{{ selected }}</p>
+          <p class="font-semibold" id="sortshow" @change="$emit('filter-selected', selected)">{{ selected }}</p>
         </a>
       </div>
       <DownArrow class="mt-2.5" />
@@ -30,6 +30,7 @@ const userStore = useUserStore()
 const guidanceStore = useGuidanceStore()
 const selected: Ref<string> = ref("Sort By");
 const isOpen: Ref<boolean> = ref(false);
+const emit = defineEmits(['filter-selected'])
 
 //default sorting is last names a-z
 const defaultSort = { sortBy: 'lastnameaz', text: 'Sort By' };
