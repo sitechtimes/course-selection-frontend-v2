@@ -45,7 +45,6 @@ import { ref, Ref, computed, watch, onMounted } from 'vue'
 document.title = "Student List | SITHS Course Selection";
 
 const userStore = useUserStore();
-const allStudents: Ref<studentGuidance[]> = ref([]);
 const loading = ref(true);
 
 const input: Ref<string> = ref("");
