@@ -46,30 +46,7 @@ document.title = "Student List | SITHS Course Selection";
 
 const userStore = useUserStore();
 const allStudents: Ref<studentGuidance[]> = ref([]);
-const loading = ref(false);
-
-async function fetchStudents() {
-  const { access_token } = useUserStore();
-  loading.value = true; 
-  try {
-    // GET request for all students
-    const profilesResponse = await fetch(
-      `${import.meta.env.VITE_URL}/guidance/profiles`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
-    );
-    loading.value=false
-    const data = await profilesResponse.json();
-    allStudents.value = data;
-  } catch (error) {
-    console.error("Error:", error);
-  }
-}
+const loading = ref(true);
 
 const input: Ref<string> = ref("");
 const viewAll = ref(false);
@@ -120,8 +97,8 @@ watch(
   () => viewAll.value,
   async (newResponse) => {
     if (viewAll.value === true) {
-      await fetchStudents();
-      userStore.currentlyViewingStudents = allStudents.value;
+      userStore.currentlyViewingStudents = userStore.studentSurveyPreview;
+      loading.value = false;
     }
     if (viewAll.value === false) {
       userStore.currentlyViewingStudents = userStore.guidanceStudents;
