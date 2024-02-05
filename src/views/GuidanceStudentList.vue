@@ -10,11 +10,11 @@
           <label class="cursor-pointer">View all students</label>
           <input class="ml-2" type="checkbox" v-model="viewAll" />
         </div>
-        <Sort class="mr-0" />
+        <Sort class="mr-0"/>
       </div>
       <SearchBar class="w-2/3" type="text" v-model="input" placeholder="Search Students..." />
     </div>
-    <StudentTable :newstudents="sortView" />
+    <StudentTable :newstudents="sortView"  />
     <div class="max-w-[80%] overflow-x-auto mt-4 flex flex-row justify-between ">
       <button
         class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold"
@@ -53,7 +53,10 @@ document.title = "Student List | SITHS Course Selection";
 const userStore = useUserStore();
 const allStudents: Ref<studentGuidance[]> = ref([]);
 const loading = ref(false);
-const sortBy = "lastnameza";
+// const sortBy = (selected: string)=>{
+//   if(selected === 'ns') return 'ns'
+//   if(selected === 'ip') return 'ip'
+// };
 const guidanceStudents = userStore.currentlyViewingStudents;
 async function fetchStudents() {
   const { access_token } = useUserStore();
@@ -77,7 +80,7 @@ async function fetchStudents() {
     console.error("Error:", error);
   }
 }
-
+const sortBy = 'lastnameaz'
 //handles the sorting view
 const sortView = computed(() => {
   if (sortBy === 'lastnameaz') { // if user selects this
@@ -133,19 +136,19 @@ const sortView = computed(() => {
     )
   } else if(sortBy === "transfer"){
     return guidanceStudents.filter(
-      (student)=> student.grade === "Transfer"
+      (student)=> student.flag.includes === "Transfer"
     )
   } else if(sortBy === "regents"){
     return guidanceStudents.filter(
-      (student)=> student.grade === "Regents"
+      (student)=> student.flag.includes === "Regents"
     )
   } else if(sortBy === "sports"){
     return guidanceStudents.filter(
-      (student)=> student.grade === "Team"
+      (student)=> student.flag.includes === "Team"
     )
   } else if(sortBy === "enl"){
     return guidanceStudents.filter(
-      (student)=> student.grade === "ENL"
+      (student)=> student.flag.includes === "ENL"
     )
   }
 });
