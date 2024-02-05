@@ -58,9 +58,7 @@
       </div>
     </div>
     <CreateEvent
-      v-for="h in calendarData.dateInfo"
-      :key="h.id"
-      @click="toggleEvent(h)"
+      @x-click="fixBoolean"
       v-if="showEvent"
       :todaysDate="createEventDate"
     />
@@ -87,8 +85,6 @@ const meetingDetails = {
   grade: "",
   email: "",
 };
-
-const userStore = useUserStore();
 
 onMounted(async () => {
   await renderCalendar();
@@ -128,6 +124,9 @@ const toggleEvent = (date: any) => {
     .toString()
     .padStart(2, "0")}-${date.todaysDate.toString().padStart(2, "0")}`;
 };
+function fixBoolean() {
+  showEvent.value = !showEvent.value;
+}
 
 //index signature for grades
 type ClassColor = {
@@ -140,6 +139,40 @@ const classColor: ClassColor = {
   JUNIOR: "bg-[#EED7FD] text-[#2D004B]",
   SENIOR: "bg-[#CCDDF5] text-[#002254]",
 };
+
+//get students and their meeting info
+async function fetchStudentInfo() {
+  const { access_token } = useUserStore();
+  try {
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${access_token}`,
+    };
+    //GET request for meetings
+    const meetingsResponse = await fetch(
+      `${import.meta.env.VITE_URL}/guidance/meetings`,
+      {
+        method: "GET",
+        headers: headers,
+      }
+    );
+    const meetingsData = (await meetingsResponse.json()).map((student) => ({
+      //titlecase name
+      name: student.name
+        .split(",") //split name at comma (for first & last name)
+        .map((part) => part.trim().toLowerCase()) //change all letters to lowercase
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1)) //capitalise first letter of each name part
+        .join(", "), //join the first and last name back together in one string
+      meetingDate: student.meeting,
+      description: student.meeting_description,
+      grade: student.grade,
+      email: student.email,
+    }));
+    return meetingsData;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
 
 //obtaining information about today's date
 let todaysDate = new Date();
@@ -175,6 +208,7 @@ const renderCalendar = async () => {
   ).getDay();
   let lastDateofLastMonth = new Date(todaysYear, todaysMonth, 0).getDate();
   let dateInfo = [];
+  const studentInfo = await fetchStudentInfo(); //student info is meetingsData taken from fetchStudentInfo()
 
   for (let i = firstDayofMonth; i > 0; i--) {
     const dateBoxInfo = {
@@ -193,8 +227,8 @@ const renderCalendar = async () => {
     const studentsWithMeetings = [];
     //for each student in studentInfo, a studentMeetingDate contains date&time information about the student's meeting
     //if the student has a meeting on the active date, push the date to studentsWithMeetings
-    for (const student of userStore.guidanceMeetings) {
-      const studentMeetingDate = new Date(student.meetingDate);
+    for (const student of studentInfo) {
+      const studentMeetingDate = new Date(student.meetingDate as string);
       const isMeetingDate =
         studentMeetingDate.getDate() === activeDate.getDate() &&
         studentMeetingDate.getMonth() === activeDate.getMonth() &&

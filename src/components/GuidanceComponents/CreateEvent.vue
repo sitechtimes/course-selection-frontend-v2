@@ -6,7 +6,14 @@
     <div class="event flex flex-col">
       <div class="top flex-row flex items-center justify-between">
         <h2 class="h2 font-bold text-[2rem] m-8 mb-4">Schedule Meeting</h2>
-        <button class="mt-5 mr-12" @click="toggleEvent">
+        <button
+          class="mt-5 mr-12"
+          @click="
+            {
+              toggleEvent, $emit(`x-click`);
+            }
+          "
+        >
           <svg
             class="x fill-current text-37394f transition duration-300 mt-4 hover:opacity-80 cursor-pointer"
             xmlns="http://www.w3.org/2000/svg"
@@ -152,7 +159,6 @@ import { ref, Ref, defineProps, onMounted } from "vue";
 import { useUserStore } from "../../stores/user";
 import { useGuidanceStore } from "../../stores/guidance";
 import { studentGuidance } from "../../types/interface";
-import showEvent from "../GuidanceComponents/GuidanceCalendar.vue";
 
 const guidanceStore = useGuidanceStore();
 const userStore = useUserStore();
