@@ -53,8 +53,9 @@ document.title = "Student List | SITHS Course Selection";
 const userStore = useUserStore();
 const allStudents: Ref<studentGuidance[]> = ref([]);
 const loading = ref(false);
-const sortBy = ()=>{
-  
+const sortBy = (selected: string)=>{
+  if(selected === 'ns') return 'ns'
+  if(selected === 'ip') return 'ip'
 };
 const guidanceStudents = userStore.currentlyViewingStudents;
 async function fetchStudents() {
