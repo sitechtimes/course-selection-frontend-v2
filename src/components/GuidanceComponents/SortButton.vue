@@ -31,9 +31,7 @@ const guidanceStore = useGuidanceStore()
 const selected: Ref<string> = ref("Sort By");
 const isOpen: Ref<boolean> = ref(false);
 
-  const emit = defineEmits{
- (e: 'filter-selected', value: number): void 
-}
+
 //default sorting is last names a-z
 const defaultSort = { sortBy: 'lastnameaz', text: 'Sort By' };
 
@@ -48,7 +46,6 @@ watch(
 
 onMounted(() => {
   sortBy(defaultSort);
-    emit("filter-selected")
 
 });
 

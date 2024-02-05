@@ -10,7 +10,7 @@
           <label class="cursor-pointer">View all students</label>
           <input class="ml-2" type="checkbox" v-model="viewAll" />
         </div>
-        <Sort class="mr-0" @filter-selected="sortBy"/>
+        <Sort class="mr-0"/>
       </div>
       <SearchBar class="w-2/3" type="text" v-model="input" placeholder="Search Students..." />
     </div>
@@ -53,10 +53,10 @@ document.title = "Student List | SITHS Course Selection";
 const userStore = useUserStore();
 const allStudents: Ref<studentGuidance[]> = ref([]);
 const loading = ref(false);
-const sortBy = (selected: string)=>{
-  if(selected === 'ns') return 'ns'
-  if(selected === 'ip') return 'ip'
-};
+// const sortBy = (selected: string)=>{
+//   if(selected === 'ns') return 'ns'
+//   if(selected === 'ip') return 'ip'
+// };
 const guidanceStudents = userStore.currentlyViewingStudents;
 async function fetchStudents() {
   const { access_token } = useUserStore();
@@ -80,7 +80,7 @@ async function fetchStudents() {
     console.error("Error:", error);
   }
 }
-
+const sortBy = 'lastnameaz'
 //handles the sorting view
 const sortView = computed(() => {
   if (sortBy === 'lastnameaz') { // if user selects this
