@@ -57,11 +57,7 @@
         <UpcomingMeetings />
       </div>
     </div>
-    <CreateEvent
-      @click="fixBoolean"
-      v-if="showEvent"
-      :todaysDate="createEventDate"
-    />
+    <CreateEvent v-if="showEvent" :todaysDate="createEventDate" />
     <MeetingDetails v-if="showDetails" :meetingDetails="meetingDetails" />
   </div>
 </template>
@@ -105,33 +101,23 @@ const toggleDetails = (meeting) => {
   showDetails.value = !showDetails.value;
 };
 
-const createEventDate = ref("");
+const createEventDate = ref('')
 const toggleEvent = (date: any) => {
-  let year = todaysYear;
-  let month =
-    date.type == "previous"
-      ? todaysMonth - 1
-      : date.type == "future"
-      ? todaysMonth + 1
-      : todaysMonth;
+  let year = todaysYear
+  let month = date.type == "previous" ? todaysMonth-1 
+    : date.type == "future" ? todaysMonth+1 
+    : todaysMonth
   if (month == -1) {
-    month = 11;
-    year = todaysYear - 1;
+    month = 11
+    year = todaysYear-1
   } else if (month == 12) {
-    month = 0;
-    year = todaysYear + 1;
+    month = 0
+    year = todaysYear+1
   }
-  console.log(month);
-  createEventDate.value = `${year}-${(month + 1)
-    .toString()
-    .padStart(2, "0")}-${date.todaysDate.toString().padStart(2, "0")}`;
-
+  console.log(month)
+  createEventDate.value = `${year}-${(month + 1).toString().padStart(2, '0')}-${(date.todaysDate).toString().padStart(2, '0')}`
   showEvent.value = !showEvent.value;
 };
-
-function fixBoolean() {
-  showEvent.value = !showEvent.value;
-}
 
 //index signature for grades
 type ClassColor = {
