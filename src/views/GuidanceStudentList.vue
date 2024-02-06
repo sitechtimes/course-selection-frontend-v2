@@ -99,6 +99,7 @@ let x = ref(0);
 let y = ref(10);
 const pageCapacity = 10;
 const currentPage = ref(1);
+const pages = ref(1);
 
 //sorting students to view
 const newStudents = computed(() => {
@@ -110,9 +111,14 @@ const newStudents = computed(() => {
   );
 });
 
-const pages = computed(() => {
-  //problem here
-  return Math.ceil(userStore.currentlyViewingStudents.length / pageCapacity);
+watch(newStudents, () => {
+  const studentList = JSON.parse(JSON.stringify(newStudents.value));
+  if (studentList.length < 1) {
+    pages.value = 1;
+  } else {
+    pages.value = Math.ceil(studentList.length / pageCapacity);
+  }
+  currentPage.value = 1;
 });
 
 const add = () => {
