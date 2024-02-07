@@ -13,7 +13,7 @@
     <div class="sub-menu absolute shadow-[4px_3px_3px_rgba(0,0,0,0.25)] " v-if="isOpen">
       <div v-for="x in menuArray" :key="x.sortBy"
         class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
-        <button @click="sortBy(x)" class="ml-2">{{ x.text }}</button>
+        <button @click="filter(x.sortBy)" class="ml-2">{{ x.text }}</button>
       </div>
     </div>
   </div>
@@ -30,6 +30,7 @@ const userStore = useUserStore()
 const guidanceStore = useGuidanceStore()
 const selected: Ref<string> = ref("Sort By");
 const isOpen: Ref<boolean> = ref(false);
+const emit = defineEmits(['filter-selected'])
 
 //default sorting is last names a-z
 const defaultSort = { sortBy: 'lastnameaz', text: 'Sort By' };
@@ -38,13 +39,18 @@ watch(
   () => userStore.currentlyViewingStudents,
   () => {
     selected.value = defaultSort.text; 
-    sortBy(defaultSort);
+    //sortBy(defaultSort);
   }
 );
 
-onMounted(() => {
+
+const filter = (sortBy: string) => {  
+  emit('filter-selected', sortBy) 
+  isOpen.value = false
+}
+/* onMounted(() => {
   sortBy(defaultSort);
-});
+}); */
 
 const menuArray = [
   {
@@ -101,15 +107,7 @@ const menuArray = [
   },
 ]
 
-
-
-const emit = defineEmits(['menuArray', 'value'])
-
-function watch() {
-  emit('value')
-}; 
-
-const sortBy = (sort: { sortBy: string, text: string }) => {
+/* const sortBy = (sort: { sortBy: string, text: string }) => {
   selected.value = sort.text
   isOpen.value = false
   if (sort.sortBy === 'lastnameaz') { // if user selects this
@@ -137,7 +135,7 @@ const sortBy = (sort: { sortBy: string, text: string }) => {
     }
     return (userStore.currentlyViewingStudents.sort(lastnameza))
   }
-}
+} */
 
 
 

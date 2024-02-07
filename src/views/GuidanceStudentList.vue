@@ -10,11 +10,11 @@
           <label class="cursor-pointer">View all students</label>
           <input class="ml-2" type="checkbox" v-model="viewAll" />
         </div>
-        <Sort class="mr-0" />
+        <Sort class="mr-0" @filter-selected="filterType"/>
       </div>
       <SearchBar class="w-2/3" type="text" v-model="input" placeholder="Search Students..." />
     </div>
-    <StudentTable :newstudents="sortView" />
+    <StudentTable :newstudents="sortView"  />
     <div class="max-w-[80%] overflow-x-auto mt-4 flex flex-row justify-between ">
       <button
         class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold"
@@ -53,7 +53,8 @@ document.title = "Student List | SITHS Course Selection";
 const userStore = useUserStore();
 const allStudents: Ref<studentGuidance[]> = ref([]);
 const loading = ref(false);
-const sortBy = "lastnameza";
+
+const sortBy: Ref<string> =  ref("lastnameaz");
 const guidanceStudents = userStore.currentlyViewingStudents;
 async function fetchStudents() {
   const { access_token } = useUserStore();
@@ -78,9 +79,13 @@ async function fetchStudents() {
   }
 }
 
+const filterType = (selected: string)=>{
+  console.log(selected)
+  sortBy.value = selected
+}
 //handles the sorting view
 const sortView = computed(() => {
-  if (sortBy === 'lastnameaz') { // if user selects this
+  if (sortBy.value === 'lastnameaz') { // if user selects this
     console.log('selectedaz')
     function lastnameaz(a: { name: string; }, b: { name: string; }) {
       if (a.name < b.name) {
@@ -92,7 +97,7 @@ const sortView = computed(() => {
       return 0;
     }
     return (guidanceStudents.sort(lastnameaz))
-  } else if (sortBy === 'lastnameza') {
+  } else if (sortBy.value === 'lastnameza') {
     function lastnameza(a: { name: string; }, b: { name: string; }) {
       if (a.name > b.name) {
         return -1;
@@ -103,53 +108,58 @@ const sortView = computed(() => {
       return 0;
     }
     return (guidanceStudents.sort(lastnameza))
-  } else if (sortBy === "ns") {
+  } else if (sortBy.value === "ns") {
     return guidanceStudents.filter(
       (student) => student.status === "NOT STARTED"
     );
-  } else if(sortBy === "ip"){
+  } else if(sortBy.value === "ip"){
     return guidanceStudents.filter(
       (student) => student.status === "INCOMPLETE"
     );
-  } else if(sortBy === "com"){
+  } else if(sortBy.value === "com"){
     return guidanceStudents.filter(
       (student)=> student.status === "COMPLETE"
     );
-  } else if(sortBy === 'final'){
+  } else if(sortBy.value === 'final'){
     return guidanceStudents.filter(
       (student)=> student.status === "FINALIZED"
     );
-  } else if(sortBy === "nine"){
+  } else if(sortBy.value === "nine"){
     return guidanceStudents.filter(
       (student)=> student.grade === "FRESHMAN"
     )
-  } else if(sortBy === "ten"){
+  } else if(sortBy.value === "ten"){
     return guidanceStudents.filter(
       (student)=> student.grade === "SOPHOMORE"
     )
-  } else if(sortBy === "eleven"){
+  } else if(sortBy.value === "eleven"){
     return guidanceStudents.filter(
       (student)=> student.grade === "JUNIOR"
     )
-  } else if(sortBy === "transfer"){
+  } else if(sortBy.value === "transfer"){
     return guidanceStudents.filter(
       (student)=> student.grade === "Transfer"
     )
-  } else if(sortBy === "regents"){
+  } else if(sortBy.value === "regents"){
     return guidanceStudents.filter(
       (student)=> student.grade === "Regents"
     )
-  } else if(sortBy === "sports"){
+  } else if(sortBy.value === "sports"){
     return guidanceStudents.filter(
       (student)=> student.grade === "Team"
     )
-  } else if(sortBy === "enl"){
+  } else if(sortBy.value === "enl"){
     return guidanceStudents.filter(
       (student)=> student.grade === "ENL"
     )
   }
 });
+///Whalen copied
+//watch(sortBy, ()=> sortView)
 
+
+
+//////
 const input: Ref<string> = ref("");
 const viewAll = ref(false);
 let x = ref(0);
