@@ -118,7 +118,7 @@ watch(newStudents, () => {
   } else {
     pages.value = Math.ceil(studentList.length / pageCapacity);
   }
-  currentPage.value = 1;
+  updatePage(1);
 });
 
 const add = () => {
