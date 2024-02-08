@@ -22,12 +22,10 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, Ref, watch } from "vue";
 import { useUserStore } from '../../stores/user';
-import { useGuidanceStore } from "../../stores/guidance";
 import DownArrow from '../icons/DownArrow.vue';
 import { userData } from "../../types/interface";
 
 const userStore = useUserStore()
-const guidanceStore = useGuidanceStore()
 const selected: Ref<string> = ref("Sort By");
 const isOpen: Ref<boolean> = ref(false);
 const emit = defineEmits(['filter-selected'])
@@ -48,9 +46,6 @@ const filter = (sortBy: string) => {
   emit('filter-selected', sortBy) 
   isOpen.value = false
 }
-/* onMounted(() => {
-  sortBy(defaultSort);
-}); */
 
 const menuArray = [
   {
@@ -106,37 +101,4 @@ const menuArray = [
     text: "ENL"
   },
 ]
-
-/* const sortBy = (sort: { sortBy: string, text: string }) => {
-  selected.value = sort.text
-  isOpen.value = false
-  if (sort.sortBy === 'lastnameaz') { // if user selects this
-    function lastnameaz(a: { name: string; }, b: { name: string; }) {
-      if (a.name < b.name) {
-        return -1;
-      }
-      if (a.name > b.name) {
-        return 1;
-      }
-      return 0;
-    }
-    return (userStore.currentlyViewingStudents.sort(lastnameaz))
-  }
-
-  if (sort.sortBy === 'lastnameza') {
-    function lastnameza(a: { name: string; }, b: { name: string; }) {
-      if (a.name > b.name) {
-        return -1;
-      }
-      if (a.name < b.name) {
-        return 1;
-      }
-      return 0;
-    }
-    return (userStore.currentlyViewingStudents.sort(lastnameza))
-  }
-} */
-
-
-
 </script>

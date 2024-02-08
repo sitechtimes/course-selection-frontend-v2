@@ -3,47 +3,27 @@
     <div class="flex flex-row items-center justify-center w-5/6">
       <div class="w-1/3 flex flex-row justify-evenly">
         <div v-if="loading">Loading students...</div>
-        <div
-          @click="viewAll = !viewAll"
-          class="h-10 px-4 w-60 mx-10 flex flex-row bg-primary-g text-black justify-evenly font-semibold items-center cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
-        >
+        <div @click="viewAll = !viewAll"
+          class="h-10 px-4 w-60 mx-10 flex flex-row bg-primary-g text-black justify-evenly font-semibold items-center cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]">
           <label class="cursor-pointer">View all students</label>
           <input class="ml-2" type="checkbox" v-model="viewAll" />
         </div>
-        <Sort class="mr-0" @filter-selected="filterType"/>
+        <Sort class="mr-0" @filter-selected="filterType" />
       </div>
-      <SearchBar
-        class="w-2/3"
-        type="text"
-        v-model="input"
-        placeholder="Search Students..."
-      />
+      <SearchBar class="w-2/3" type="text" v-model="input" placeholder="Search Students..." />
     </div>
-    <StudentTable :newstudents="guidanceStudents.slice(x,y)" />
+    <StudentTable :newstudents="sortView.slice(x, y)" />
     <div class="max-w-[80%] overflow-x-auto mt-4 flex flex-row justify-between">
-      <button
-        class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold"
-        @click="subtract"
-        :disabled="currentPage === 1"
-      >
+      <button class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold" @click="subtract" :disabled="currentPage === 1">
         ❮
       </button>
-      <button
-        v-for="n in pages"
-        @click="updatePage(n)"
-        :class="{
-          'bg-[#cdeeb4] focus:bg-[#cdeeb4]': currentPage === n,
-          'bg-[#ebebeb]': currentPage !== n,
-        }"
-        class="h-8 w-8 rounded-lg hover:opacity-75 ease-in-out duration-300 font-bold mx-2"
-      >
+      <button v-for="n in pages" @click="updatePage(n)" :class="{
+        'bg-[#cdeeb4] focus:bg-[#cdeeb4]': currentPage === n,
+        'bg-[#ebebeb]': currentPage !== n,
+      }" class="h-8 w-8 rounded-lg hover:opacity-75 ease-in-out duration-300 font-bold mx-2">
         {{ n }}
       </button>
-      <button
-        class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold"
-        :disabled="currentPage === pages"
-        @click="add"
-      >
+      <button class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold" :disabled="currentPage === pages" @click="add">
         ❯
       </button>
     </div>
@@ -70,8 +50,9 @@ const userStore = useUserStore();
 const allStudents: Ref<studentGuidance[]> = ref([]);
 const loading = ref(false);
 
-const sortBy: Ref<string> =  ref("lastnameaz");
+const sortBy: Ref<string> = ref("lastnameaz");
 const guidanceStudents = userStore.currentlyViewingStudents;
+
 async function fetchStudents() {
   const { access_token } = useUserStore();
   loading.value = true;
@@ -95,83 +76,41 @@ async function fetchStudents() {
   }
 }
 
-const filterType = (selected: string)=>{
-  console.log(selected)
+const filterType = (selected: string) => {
   sortBy.value = selected
 }
-//handles the sorting view
-const sortView = computed(() => {
-  if (sortBy.value === 'lastnameaz') { // if user selects this
-    console.log('selectedaz')
-    function lastnameaz(a: { name: string; }, b: { name: string; }) {
-      if (a.name < b.name) {
-        return -1;
-      }
-      if (a.name > b.name) {
-        return 1;
-      }
-      return 0;
-    }
-    return (guidanceStudents.sort(lastnameaz))
+
+const sortView = computed(() => { 
+  if (sortBy.value === 'lastnameaz') {
+    return guidanceStudents.sort((a:studentGuidance, b:studentGuidance) => a.name.localeCompare(b.name));
   } else if (sortBy.value === 'lastnameza') {
-    function lastnameza(a: { name: string; }, b: { name: string; }) {
-      if (a.name > b.name) {
-        return -1;
-      }
-      if (a.name < b.name) {
-        return 1;
-      }
-      return 0;
-    }
-    return (guidanceStudents.sort(lastnameza))
-  } else if (sortBy.value === "ns") {
-    return guidanceStudents.filter(
-      (student) => student.status === "NOT STARTED"
-    );
-  } else if(sortBy.value === "ip"){
-    return guidanceStudents.filter(
-      (student) => student.status === "INCOMPLETE"
-    );
-  } else if(sortBy.value === "com"){
-    return guidanceStudents.filter(
-      (student)=> student.status === "COMPLETE"
-    );
-  } else if(sortBy.value === 'final'){
-    return guidanceStudents.filter(
-      (student)=> student.status === "FINALIZED"
-    );
-  } else if(sortBy.value === "nine"){
-    return guidanceStudents.filter(
-      (student)=> student.grade === "FRESHMAN"
-    )
-  } else if(sortBy.value === "ten"){
-    return guidanceStudents.filter(
-      (student)=> student.grade === "SOPHOMORE"
-    )
-  } else if(sortBy.value === "eleven"){
-    return guidanceStudents.filter(
-      (student)=> student.grade === "JUNIOR"
-    )
-  } else if(sortBy.value === "transfer"){
-    return guidanceStudents.filter(
-      (student)=> student.grade === "Transfer"
-    )
-  } else if(sortBy.value === "regents"){
-    return guidanceStudents.filter(
-      (student)=> student.grade === "Regents"
-    )
-  } else if(sortBy.value === "sports"){
-    return guidanceStudents.filter(
-      (student)=> student.grade === "Team"
-    )
-  } else if(sortBy.value === "enl"){
-    return guidanceStudents.filter(
-      (student)=> student.grade === "ENL"
-    )
+    return guidanceStudents.sort((a:studentGuidance, b:studentGuidance) => b.name.localeCompare(a.name));
+  } else if (sortBy.value === 'ns') {
+    return guidanceStudents.filter((student:studentGuidance) => student.status === 'NOT STARTED');
+  } else if (sortBy.value === 'ip') {
+    return guidanceStudents.filter((student:studentGuidance) => student.status === 'INCOMPLETE');
+  } else if (sortBy.value === 'com') {
+    return guidanceStudents.filter((student:studentGuidance) => student.status === 'COMPLETE');
+  } else if (sortBy.value === 'final') {
+    return guidanceStudents.filter((student:studentGuidance) => student.status === 'FINALIZED');
+  } else if (sortBy.value === 'nine') {
+    return guidanceStudents.filter((student:studentGuidance) => student.grade === 'FRESHMAN');
+  } else if (sortBy.value === 'ten') {
+    return guidanceStudents.filter((student:studentGuidance) => student.grade === 'SOPHOMORE');
+  } else if (sortBy.value === 'eleven') {
+    return guidanceStudents.filter((student:studentGuidance) => student.grade === 'JUNIOR');
+  } else if (sortBy.value === 'transfer') {
+    return guidanceStudents.filter((student:studentGuidance) => student.flag === 'Transfer');
+  } else if (sortBy.value === 'regents') {
+    return guidanceStudents.filter((student:studentGuidance) => student.flag === 'Regents');
+  } else if (sortBy.value === 'sports') {
+    return guidanceStudents.filter((student:studentGuidance) => student.flag === 'Team');
+  } else if (sortBy.value === 'enl') {
+    return guidanceStudents.filter((student:studentGuidance) => student.flag === 'ENL');
+  } else {
+    return guidanceStudents;
   }
 });
-///Whalen copied
-//watch(sortBy, ()=> sortView)
 
 const input: Ref<string> = ref("");
 const viewAll = ref(false);
