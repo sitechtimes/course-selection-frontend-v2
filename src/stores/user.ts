@@ -177,7 +177,7 @@ export const useUserStore = defineStore("user", {
                         this.loading = true;
                         await this.getUserType()
                         this.init(this.userType);
-                        this.savePersistentTokens();
+                        this.savePersistentSession();
                     })
                     .catch((error) => {
                         throw new Error('Error fetching login:', error.message);
@@ -318,7 +318,7 @@ export const useUserStore = defineStore("user", {
                 console.error('Error fetching user:', error);
             };
         },
-        savePersistentTokens() {
+        savePersistentSession() {
             const persistentData = JSON.stringify({
                 email: this.email,
                 first_name: this.first_name,
