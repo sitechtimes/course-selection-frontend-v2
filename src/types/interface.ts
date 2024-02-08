@@ -184,6 +184,9 @@ export interface studentMeetings {
     meetingDate: Date;
     meetingTime: Date;
     memo: string;
+    description?: string;
+    grade?: string;
+    email?: string;
 }
 
 export interface calendarData {
@@ -196,6 +199,7 @@ export interface calendarData {
             name: string;
             meetingDate: Date | null;
             grade: string;
+            meetingDetails: object;
         }>;
     }>;
 }

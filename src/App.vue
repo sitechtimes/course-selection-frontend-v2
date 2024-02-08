@@ -10,7 +10,10 @@ const resetStore = useResetStore()
 
 const currentTime = new Date()
 
-if(currentTime.getTime() > userStore.expire_time) {
+const session = localStorage.getItem('session');
+const sessionExpiration = session ? (JSON.parse(session).expire_time) : null;
+
+if(currentTime.getTime() > userStore.expire_time && currentTime > sessionExpiration) {
   resetStore.all()
 }
 </script>

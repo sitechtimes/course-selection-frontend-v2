@@ -28,10 +28,12 @@ defineProps({
 });
 
 const toggleDetails = () => {
-  showDetails.value = !showDetails.value
+  showDetails.value = !showDetails.value;
 }
+
 function deleteMeeting(email: string) {
-  userStore.deleteMeeting(email)
+  userStore.deleteMeeting(email);
+  showDetails.value = !showDetails.value;
 }
 </script>
 
