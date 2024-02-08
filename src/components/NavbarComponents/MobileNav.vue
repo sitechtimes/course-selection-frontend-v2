@@ -11,7 +11,6 @@ import router from '../../router';
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
 const resetStore = useResetStore();
-const studentStore = useStudentStore();
 
 onMounted(() => {
     const tl = gsap.timeline({
@@ -38,6 +37,7 @@ const surveyNav = () => {
 
 const logout = async () => {
     await resetStore.all()
+    localStorage.clear();
     router.push('/')
 }
 

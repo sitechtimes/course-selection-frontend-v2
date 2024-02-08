@@ -25,7 +25,6 @@ export const useUserStore = defineStore("user", {
         guidanceMeetings: [] as studentMeetings[],
     }),
     actions: {
-        //add error handling
         async init(type: account_type) {
             this.userType = type;
             if (type === "guidance") {
@@ -178,6 +177,7 @@ export const useUserStore = defineStore("user", {
                         this.loading = true;
                         await this.getUserType()
                         this.init(this.userType);
+                        this.savePersistentTokens();
                     })
                     .catch((error) => {
                         throw new Error('Error fetching login:', error.message);
@@ -317,7 +317,20 @@ export const useUserStore = defineStore("user", {
             } catch (error) {
                 console.error('Error fetching user:', error);
             };
-        }
+        },
+        savePersistentTokens() {
+            const persistentData = JSON.stringify({
+                email: this.email,
+                first_name: this.first_name,
+                last_name: this.last_name,
+                account_type: this.userType,
+                access_token: this.access_token,
+                refresh_token: this.refresh_token,
+                expire_time: this.expire_time,
+            });
+
+            localStorage.setItem('session', persistentData);
+        },
     },
     persist: {
         storage: sessionStorage,

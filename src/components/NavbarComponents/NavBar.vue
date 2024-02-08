@@ -56,6 +56,7 @@ const toggleSave = () => {
 
 const logout = async () => {
     await resetStore.all()
+    localStorage.clear();
     router.push('/')
 }
 
