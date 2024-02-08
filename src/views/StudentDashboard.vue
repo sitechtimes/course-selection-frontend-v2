@@ -97,14 +97,16 @@ const studentStore = useStudentStore();
 
 let time: String;
 let date: String;
-let closeTime: string[]
 
-if (studentStore.student.homeroom === '') {
-  console.log('Student profile not updated; no homeroom')
-} else {
-  //formatting for due date
-  closeTime = studentStore.studentSurveyPreview.dueDate.substring(0, 10).split("-")
-}
+const closeTime = computed((): string[] => {
+  if (!(studentStore.student.homeroom.length === 0) && userStore.studentSurveyPreview.dueDate) {
+    const ISOString = userStore.studentSurveyPreview.dueDate.substring(0, 10).split('-');
+    return ISOString;
+  } else {
+    console.log('Student profile not updated; no homeroom');
+    return [];
+  }
+});
 
 if (
   studentStore.student.meeting != undefined ||
