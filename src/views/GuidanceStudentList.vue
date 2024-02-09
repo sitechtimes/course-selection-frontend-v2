@@ -123,7 +123,7 @@ const sortAndFilterStudents = computed(() => {
 
   return sortedStudents.filter((student: studentGuidance) =>
     student.name.toLowerCase().includes(input.value.toLowerCase()) ||
-    student.email.includes(input.value)
+    student.email.toLowerCase().includes(input.value.toLowerCase())
   );
 });
 
