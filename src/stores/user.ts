@@ -97,10 +97,9 @@ export const useUserStore = defineStore("user", {
                     .then((res) => res.json())
                     .then(async (data) => {
                         const studentStore = useStudentStore();
-                        const parsedData = JSON.parse(data);
 
-                        studentStore.survey = parsedData.survey.fields;
-                        studentStore.answeredSurvey = parsedData.answeredSurvey.fields;
+                        studentStore.survey = data.survey.fields;
+                        studentStore.answeredSurvey = data.answeredSurvey.fields;
                     })
                     .catch((error) => {
                         console.error("Error fetching survey:", error);
