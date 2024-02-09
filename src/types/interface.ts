@@ -29,10 +29,9 @@ export interface studentUser {
 }
 
 export interface studentSurveyPreview {
+    dueDate: string
     grade: string
     status: string
-    dueDate: string
-    meetingDate: string
 }
 
 // survey store interface

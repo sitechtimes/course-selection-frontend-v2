@@ -28,7 +28,16 @@ export const useUserStore = defineStore("user", {
         async init(type: account_type) {
             this.userType = type;
             if (type === "guidance") {
-                try {
+                    fetch(`${import.meta.env.VITE_URL}/guidance/profiles/`, {
+                        method: "GET",
+                        headers: {
+                            Authorization: `Bearer ${this.access_token}`,
+                        },
+                    }).then(async (data) => {
+                        this.studentSurveyPreview = await data.json();
+                    }).catch((error) => {
+                        throw new Error('Error fetching profiles:', error.message);
+                    });
                     fetch(`${import.meta.env.VITE_URL}/guidance/getGuidanceStudents/`, {
                         method: "GET",
                         headers: {
@@ -36,54 +45,6 @@ export const useUserStore = defineStore("user", {
                         },
                     }).then(async (data) => {
                         this.guidanceStudents = await data.json();
-                    }).catch((error) => {
-                        throw new Error('Error fetching getGuidanceStudents:', error.message);
-                    });
-                    fetch(`${import.meta.env.VITE_URL}/guidance/meetings`, {
-                        method: "GET",
-                        headers: {
-                            Authorization: `Bearer ${this.access_token}`,
-                        },
-                    }).then(async (data) => {
-                        const meetingsData = (await data.json()).map((student) => ({
-                            name: student.name
-                              .split(",")
-                              .map((part) => part.trim().toLowerCase())
-                              .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-                              .join(", "),
-                            meetingDate: student.meeting,
-                            description: student.meeting_description,
-                            grade: student.grade,
-                            email: student.email,
-                        }));
-                        this.guidanceMeetings = meetingsData;
-                        this.loading = false;
-                    }).catch((error) => {
-                        throw new Error('Error fetching meetings:', error.message);
-                    });
-                } catch(error) {
-                    console.error('Error in init:', error);
-                };
-            } else {
-                fetch(`${import.meta.env.VITE_URL}/student/surveyPreview/`, {
-                    method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${this.access_token}`,
-                    },
-                })
-                    .then((res) => res.json())
-                    .then(async (data) => {
-                        const surveyStore = useSurveyStore();
-                        const studentStore = useStudentStore();
-
-                        if (data.dueDate < new Date() || data.status === "FINALIZED") {
-                            surveyStore.open = false;
-                        }
-
-                        studentStore.studentSurveyPreview = data
-                        this.studentSurveyPreview =data
-                        console.log(this.studentSurveyPreview)
-                        surveyStore.currentAnsweredSurvey.status = data.status;
                     })
                     .catch((error) => {
                         console.error("Error fetching surveyPreview:", error);
@@ -97,9 +58,10 @@ export const useUserStore = defineStore("user", {
                     .then((res) => res.json())
                     .then(async (data) => {
                         const studentStore = useStudentStore();
+                        const parsedData = data;
 
-                        studentStore.survey = data.survey.fields;
-                        studentStore.answeredSurvey = data.answeredSurvey.fields;
+                        studentStore.survey = parsedData.survey.fields;
+                        studentStore.answeredSurvey = parsedData.answeredSurvey.fields;
                     })
                     .catch((error) => {
                         console.error("Error fetching survey:", error);
