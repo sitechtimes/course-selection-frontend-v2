@@ -49,9 +49,19 @@ document.title = "Student List | SITHS Course Selection";
 const userStore = useUserStore();
 const allStudents: Ref<studentGuidance[]> = ref([]);
 const loading = ref(false);
-
 const sortBy: Ref<string> = ref("lastnameaz");
 const guidanceStudents = userStore.currentlyViewingStudents;
+const input: Ref<string> = ref("");
+const viewAll = ref(false);
+let x = ref(0);
+let y = ref(10);
+const pageCapacity = 10;
+const currentPage = ref(1);
+const pages = ref(1);
+
+onMounted(async () => {
+  userStore.currentlyViewingStudents = userStore.guidanceStudents;
+});
 
 async function fetchStudents() {
   const { access_token } = useUserStore();
@@ -77,58 +87,63 @@ async function fetchStudents() {
 }
 
 const filterType = (selected: string) => {
-  sortBy.value = selected
-}
+  sortBy.value = selected;
+};
 
-const sortView = computed(() => { 
+const sortView = computed(() => {
   if (sortBy.value === 'lastnameaz') {
-    return guidanceStudents.sort((a:studentGuidance, b:studentGuidance) => a.name.localeCompare(b.name));
+    return guidanceStudents.sort((a: studentGuidance, b: studentGuidance) => a.name.localeCompare(b.name));
   } else if (sortBy.value === 'lastnameza') {
-    return guidanceStudents.sort((a:studentGuidance, b:studentGuidance) => b.name.localeCompare(a.name));
+    return guidanceStudents.sort((a: studentGuidance, b: studentGuidance) => b.name.localeCompare(a.name));
   } else if (sortBy.value === 'ns') {
-    return guidanceStudents.filter((student:studentGuidance) => student.status === 'NOT STARTED');
+    return guidanceStudents.filter((student: studentGuidance) => student.status === 'NOT STARTED');
   } else if (sortBy.value === 'ip') {
-    return guidanceStudents.filter((student:studentGuidance) => student.status === 'INCOMPLETE');
+    return guidanceStudents.filter((student: studentGuidance) => student.status === 'INCOMPLETE');
   } else if (sortBy.value === 'com') {
-    return guidanceStudents.filter((student:studentGuidance) => student.status === 'COMPLETE');
+    return guidanceStudents.filter((student: studentGuidance) => student.status === 'COMPLETE');
   } else if (sortBy.value === 'final') {
-    return guidanceStudents.filter((student:studentGuidance) => student.status === 'FINALIZED');
+    return guidanceStudents.filter((student: studentGuidance) => student.status === 'FINALIZED');
   } else if (sortBy.value === 'nine') {
-    return guidanceStudents.filter((student:studentGuidance) => student.grade === 'FRESHMAN');
+    return guidanceStudents.filter((student: studentGuidance) => student.grade === 'FRESHMAN');
   } else if (sortBy.value === 'ten') {
-    return guidanceStudents.filter((student:studentGuidance) => student.grade === 'SOPHOMORE');
+    return guidanceStudents.filter((student: studentGuidance) => student.grade === 'SOPHOMORE');
   } else if (sortBy.value === 'eleven') {
-    return guidanceStudents.filter((student:studentGuidance) => student.grade === 'JUNIOR');
+    return guidanceStudents.filter((student: studentGuidance) => student.grade === 'JUNIOR');
   } else if (sortBy.value === 'transfer') {
-    return guidanceStudents.filter((student:studentGuidance) => student.flag === 'Transfer');
+    return guidanceStudents.filter((student: studentGuidance) => student.flag === 'Transfer');
   } else if (sortBy.value === 'regents') {
-    return guidanceStudents.filter((student:studentGuidance) => student.flag === 'Regents');
+    return guidanceStudents.filter((student: studentGuidance) => student.flag === 'Regents');
   } else if (sortBy.value === 'sports') {
-    return guidanceStudents.filter((student:studentGuidance) => student.flag === 'Team');
+    return guidanceStudents.filter((student: studentGuidance) => student.flag === 'Team');
   } else if (sortBy.value === 'enl') {
-    return guidanceStudents.filter((student:studentGuidance) => student.flag === 'ENL');
+    return guidanceStudents.filter((student: studentGuidance) => student.flag === 'ENL');
   } else {
     return guidanceStudents;
   }
 });
 
-const input: Ref<string> = ref("");
-const viewAll = ref(false);
-let x = ref(0);
-let y = ref(10);
-const pageCapacity = 10;
-const currentPage = ref(1);
-const pages = ref(1);
-
 //sorting students to view
 const newStudents = computed(() => {
-  viewAll.value;
   return userStore.currentlyViewingStudents.filter(
     (student: studentGuidance) =>
-      student.name.toLowerCase().indexOf(input.value.toLowerCase()) != -1 ||
-      student.email.indexOf(input.value) != -1
+      student.name.toLowerCase().indexOf(input.value.toLowerCase()) !== -1 ||
+      student.email.indexOf(input.value) !== -1
   );
 });
+
+watch(
+  () => viewAll.value,
+  async (newResponse) => {
+    if (viewAll.value === true) {
+      await fetchStudents();
+      userStore.currentlyViewingStudents = allStudents.value;
+    }
+    if (viewAll.value === false) {
+      userStore.currentlyViewingStudents = userStore.guidanceStudents;
+    }
+    updatePage(1);
+  }
+);
 
 watch(newStudents, () => {
   const studentList = JSON.parse(JSON.stringify(newStudents.value));
@@ -157,22 +172,5 @@ const updatePage = (pageNumber: number) => {
   y.value = pageNumber * pageCapacity;
   currentPage.value = pageNumber;
 };
-
-onMounted(async () => {
-  userStore.currentlyViewingStudents = userStore.guidanceStudents;
-});
-
-watch(
-  () => viewAll.value,
-  async (newResponse) => {
-    if (viewAll.value === true) {
-      await fetchStudents();
-      userStore.currentlyViewingStudents = allStudents.value;
-    }
-    if (viewAll.value === false) {
-      userStore.currentlyViewingStudents = userStore.guidanceStudents;
-    }
-    updatePage(1);
-  }
-);
 </script>
+
