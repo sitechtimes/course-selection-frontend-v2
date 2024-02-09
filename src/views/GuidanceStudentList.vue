@@ -207,6 +207,16 @@ watch(newStudents, () => {
   updatePage(1);
 });
 
+watch(sortAndFilterStudents, () => {
+  const studentList = sortAndFilterStudents.value;
+  if (studentList.length < 1) {
+    pages.value = 1;
+  } else {
+    pages.value = Math.ceil(studentList.length / pageCapacity);
+  }
+  updatePage(1);
+});
+
 const add = () => {
   currentPage.value++;
   x.value = x.value + pageCapacity;
