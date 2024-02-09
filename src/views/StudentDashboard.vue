@@ -1,19 +1,19 @@
 <template>
   <div class="h-[75vh] w-full flex flex-row justify-center items-center">
-    <div v-if="studentStore.student.homeroom === ''" id="left"
+    <div v-if="!userStore.studentSurveyPreview.grade || userStore.studentSurveyPreview.grade === '' || userStore.studentSurveyPreview.grade === null" id="left">
       class="w-5/6 flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left md:w-3/4 lg:max-w-2xl xl:max-w-3xl lg:space-y-6 lg:ml-12">
       <h2 id="name" class="text-5xl font-bold">Welcome, {{ userStore.first_name.toLowerCase().charAt(0).toUpperCase() +
         userStore.first_name.toLowerCase().slice(1) }}
         {{ userStore.last_name.toLowerCase().charAt(0).toUpperCase() + userStore.last_name.toLowerCase().slice(1) }}.</h2>
       <div id="announcements" class="text-xl text-center flex ml-2 md:text-left">Thank you for signing up. Your account
         information is in the process of being updated. Please come back later.</div>
-
     </div>
     <div v-else id="left"
       class="w-5/6 flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left md:w-3/4 lg:max-w-2xl xl:max-w-3xl lg:space-y-6 lg:ml-12">
       <h1 id="name" class="text-3xl sm:text-4xl md:text-5xl font-bold">
         Welcome back,
-        <span>{{ userStore.first_name.toLowerCase().charAt(0).toUpperCase() + userStore.first_name.toLowerCase().slice(1) }}
+        <span>{{ userStore.first_name.toLowerCase().charAt(0).toUpperCase() + userStore.first_name.toLowerCase().slice(1)
+        }}
           {{ userStore.last_name.toLowerCase().charAt(0).toUpperCase() + userStore.last_name.toLowerCase().slice(1)
           }}</span>
       </h1>
@@ -27,7 +27,7 @@
       </div>
 
       <!-- survey status -->
-      <div v-if="studentStore.answeredSurvey.length === 0"
+      <div v-if="userStore.studentSurveyPreview.length === 0"
         class="text-[#461616] bg-[#EA9F9F] font-semibold text-center p-3 lg:px-6 lg:text-base text-sm rounded-md">Survey
         Status:
         <span class="font-medium">Not Started</span>
@@ -97,14 +97,16 @@ const studentStore = useStudentStore();
 
 let time: String;
 let date: String;
-let closeTime: string[]
 
-if (studentStore.student.homeroom === '') {
-  console.log('Student profile not updated; no homeroom')
-} else {
-  //formatting for due date
-  closeTime = studentStore.studentSurveyPreview.dueDate.substring(0, 10).split("-")
-}
+const closeTime = computed((): string[] => {
+  if (!(studentStore.student.homeroom.length === 0) && userStore.studentSurveyPreview.dueDate) {
+    const ISOString = userStore.studentSurveyPreview.dueDate.substring(0, 10).split('-');
+    return ISOString;
+  } else {
+    console.log('Student profile not updated; no homeroom');
+    return [];
+  }
+});
 
 if (
   studentStore.student.meeting != undefined ||
