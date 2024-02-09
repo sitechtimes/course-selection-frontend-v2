@@ -29,16 +29,6 @@ export const useUserStore = defineStore("user", {
             this.userType = type;
             if (type === "guidance") {
                 try {
-                    fetch(`${import.meta.env.VITE_URL}/guidance/profiles/`, {
-                        method: "GET",
-                        headers: {
-                            Authorization: `Bearer ${this.access_token}`,
-                        },
-                    }).then(async (data) => {
-                        this.studentSurveyPreview = await data.json();
-                    }).catch((error) => {
-                        throw new Error('Error fetching profiles:', error.message);
-                    });
                     fetch(`${import.meta.env.VITE_URL}/guidance/getGuidanceStudents/`, {
                         method: "GET",
                         headers: {
