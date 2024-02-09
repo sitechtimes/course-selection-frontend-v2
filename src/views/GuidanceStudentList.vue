@@ -12,7 +12,7 @@
       </div>
       <SearchBar class="w-2/3" type="text" v-model="input" placeholder="Search Students..." />
     </div>
-    <StudentTable :newstudents="sortView.slice(x, y)" />
+    <StudentTable :newstudents="sortAndFilterStudents.slice(x, y)" />
     <div class="max-w-[80%] overflow-x-auto mt-4 flex flex-row justify-between">
       <button class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold" @click="subtract" :disabled="currentPage === 1">
         ❮
@@ -90,36 +90,41 @@ const filterType = (selected: string) => {
   sortBy.value = selected;
 };
 
-const sortView = computed(() => {
+const sortAndFilterStudents = computed(() => {
+  let sortedStudents = [...guidanceStudents]; //create a copy to avoid modifying the original array
+
   if (sortBy.value === 'lastnameaz') {
-    return guidanceStudents.sort((a: studentGuidance, b: studentGuidance) => a.name.localeCompare(b.name));
+    sortedStudents = sortedStudents.sort((a: studentGuidance, b: studentGuidance) => a.name.localeCompare(b.name));
   } else if (sortBy.value === 'lastnameza') {
-    return guidanceStudents.sort((a: studentGuidance, b: studentGuidance) => b.name.localeCompare(a.name));
+    sortedStudents = sortedStudents.sort((a: studentGuidance, b: studentGuidance) => b.name.localeCompare(a.name));
   } else if (sortBy.value === 'ns') {
-    return guidanceStudents.filter((student: studentGuidance) => student.status === 'NOT STARTED');
+    sortedStudents = sortedStudents.filter((student: studentGuidance) => student.status === 'NOT STARTED');
   } else if (sortBy.value === 'ip') {
-    return guidanceStudents.filter((student: studentGuidance) => student.status === 'INCOMPLETE');
+    sortedStudents = sortedStudents.filter((student: studentGuidance) => student.status === 'INCOMPLETE');
   } else if (sortBy.value === 'com') {
-    return guidanceStudents.filter((student: studentGuidance) => student.status === 'COMPLETE');
+    sortedStudents = sortedStudents.filter((student: studentGuidance) => student.status === 'COMPLETE');
   } else if (sortBy.value === 'final') {
-    return guidanceStudents.filter((student: studentGuidance) => student.status === 'FINALIZED');
+    sortedStudents = sortedStudents.filter((student: studentGuidance) => student.status === 'FINALIZED');
   } else if (sortBy.value === 'nine') {
-    return guidanceStudents.filter((student: studentGuidance) => student.grade === 'FRESHMAN');
+    sortedStudents = sortedStudents.filter((student: studentGuidance) => student.grade === 'FRESHMAN');
   } else if (sortBy.value === 'ten') {
-    return guidanceStudents.filter((student: studentGuidance) => student.grade === 'SOPHOMORE');
+    sortedStudents = sortedStudents.filter((student: studentGuidance) => student.grade === 'SOPHOMORE');
   } else if (sortBy.value === 'eleven') {
-    return guidanceStudents.filter((student: studentGuidance) => student.grade === 'JUNIOR');
+    sortedStudents = sortedStudents.filter((student: studentGuidance) => student.grade === 'JUNIOR');
   } else if (sortBy.value === 'transfer') {
-    return guidanceStudents.filter((student: studentGuidance) => student.flag === 'Transfer');
+    sortedStudents = sortedStudents.filter((student: studentGuidance) => student.flag === 'Transfer');
   } else if (sortBy.value === 'regents') {
-    return guidanceStudents.filter((student: studentGuidance) => student.flag === 'Regents');
+    sortedStudents = sortedStudents.filter((student: studentGuidance) => student.flag === 'Regents');
   } else if (sortBy.value === 'sports') {
-    return guidanceStudents.filter((student: studentGuidance) => student.flag === 'Team');
+    sortedStudents = sortedStudents.filter((student: studentGuidance) => student.flag === 'Team');
   } else if (sortBy.value === 'enl') {
-    return guidanceStudents.filter((student: studentGuidance) => student.flag === 'ENL');
-  } else {
-    return guidanceStudents;
+    sortedStudents = sortedStudents.filter((student: studentGuidance) => student.flag === 'ENL');
   }
+
+  return sortedStudents.filter((student: studentGuidance) =>
+    student.name.toLowerCase().includes(input.value.toLowerCase()) ||
+    student.email.includes(input.value)
+  );
 });
 
 //sorting students to view
