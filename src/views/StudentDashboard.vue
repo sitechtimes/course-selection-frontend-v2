@@ -27,7 +27,7 @@
       </div>
 
       <!-- survey status -->
-      <div v-if="studentStore.answeredSurvey.length === 0"
+      <div v-if="userStore.studentSurveyPreview.length === 0"
         class="text-[#461616] bg-[#EA9F9F] font-semibold text-center p-3 lg:px-6 lg:text-base text-sm rounded-md">Survey
         Status:
         <span class="font-medium">Not Started</span>
