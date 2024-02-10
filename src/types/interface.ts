@@ -182,11 +182,9 @@ export interface course {
 export interface studentMeetings {
     name: string;
     meetingDate: Date;
-    meetingTime: Date;
-    memo: string;
-    description?: string;
-    grade?: string;
-    email?: string;
+    description: string;
+    grade: string;
+    email: string;
 }
 
 export interface calendarData {
