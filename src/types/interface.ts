@@ -188,18 +188,17 @@ export interface studentMeetings {
     email: string;
 }
 
+export interface calendarMeetings extends studentMeetings {
+    id: string;
+    meetingDetails: studentMeetings
+}
+
 export interface calendarData {
     dateInfo: Array<{
         type: string;
         todaysDate: number;
         id: string;
-        meetings: Array<{
-            id: string,
-            name: string;
-            meetingDate: Date | null;
-            grade: string;
-            meetingDetails: object;
-        }>;
+        meetings: calendarMeetings[];
     }>;
 }
 
