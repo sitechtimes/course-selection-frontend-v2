@@ -45,6 +45,7 @@ import PrinterIcon from "../icons/PrinterIcon.vue";
 import { useRoute } from "vue-router";
 //@ts-ignore
 import dateformat from "dateformat";
+import { studentMeetings } from "../../types/interface";
 
 const route = useRoute();
 let email = `${route.params.email}@nycstudents.net`;
@@ -71,21 +72,21 @@ async function fetchStudentInfo() {
         headers: headers,
       }
     );
-    const meetingsData = (await meetingsResponse.json()).map((student) => ({
+    const meetingsData = (await meetingsResponse.json()).map((student: studentMeetings) => ({
       name: student.name
         .split(",")
         .map((part) => part.trim().toLowerCase())
         .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
         .reverse()
         .join(" "),
-      meetingDate: student.meeting,
-      description: student.meeting_description,
+      meetingDate: student.meetingDate,
+      description: student.description,
       grade: student.grade,
       email: student.email,
     }));
 
     //find the index of the student with the specified email
-    const index = meetingsData.findIndex((student) => student.email === email);
+    const index = meetingsData.findIndex((student: studentMeetings) => student.email === email);
     studentIndex.value = index;
     if (index > -1) {
       studentName.value = meetingsData[index].name;
@@ -108,7 +109,12 @@ onMounted(async () => {
 });
 
 const printMeetingTicket = () => {
-  const partPrint = document.getElementById("printPage").innerHTML;
+  const printElement = document.getElementById("printPage");
+  if(!printElement) {
+    console.error("Elemented with ID printPage not found.");
+    return
+  }
+  const partPrint = printElement.innerHTML;
 
   const printPage = `
     <!DOCTYPE html>
@@ -119,9 +125,14 @@ const printMeetingTicket = () => {
       <body>
         <div>${partPrint}</div>
       </body>
-    </html>`;
+    </html>
+  `;
 
-  const newWindow = window.open(" ", "", "width=800,height=900");
+  const newWindow = window.open("", "", "width=800,height=900");
+  if(!newWindow) {
+    console.error("Failed to open new window. Popup blocker might be enabled.");
+    return
+  }
   newWindow.document.write(printPage);
   newWindow.print();
   newWindow.close();
