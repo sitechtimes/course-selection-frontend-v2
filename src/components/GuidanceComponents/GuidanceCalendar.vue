@@ -37,7 +37,7 @@
               <div
                 v-for="meeting in h.meetings"
                 :key="meeting.id"
-                @click="toggleDetails(meeting)"
+                @click="toggleDetails(meeting.meetingDetails)"
               >
                 <p
                   :class="`w-[100%] text-center truncate ${
@@ -65,7 +65,7 @@
 <script setup lang="ts">
 import { ref, Ref, reactive, onMounted, watchEffect } from "vue";
 import { useUserStore } from "../../stores/user";
-import { calendarData } from "../../types/interface";
+import { studentMeetings, calendarMeetings, calendarData } from "../../types/interface";
 import UpcomingMeetings from "../GuidanceComponents/UpcomingMeetings.vue";
 import CreateEvent from "./CreateEvent.vue";
 import MeetingDetails from "./MeetingDetails.vue";
@@ -73,71 +73,45 @@ import PlusIcon from "../icons/PlusIcon.vue";
 //@ts-ignore
 import dateformat from "dateformat";
 
-const meetingDetails = {
+const calendarData: calendarData = reactive({
+  dateInfo: [],
+});
+
+const meetingDetails: calendarMeetings = reactive({
   name: "",
-  date: "",
-  time: "",
-  memo: "",
+  meetingDate: new Date(),
+  meetingTime: new Date(),
+  meetingDetails: {
+    name: "",
+    meetingDate: new Date(),
+    meetingTime: new Date(),
+    description: "",
+    grade: "",
+    email: "",
+  },
+  description: "",
   grade: "",
   email: "",
-};
-
-const userStore = useUserStore();
-
-onMounted(async () => {
-  await renderCalendar();
+  id: "",
 });
 
 const showEvent: Ref<boolean> = ref(false);
 const showDetails: Ref<boolean> = ref(false);
+const createEventDate: Ref<string> = ref("");
 
-const toggleDetails = (meeting) => {
-  //populating meetingDetails
-  meetingDetails.name = meeting.meetingDetails.name;
-  meetingDetails.date = meeting.meetingDetails.date;
-  meetingDetails.time = meeting.meetingDetails.time;
-  meetingDetails.memo = meeting.meetingDetails.memo;
-  meetingDetails.email = meeting.meetingDetails.email;
-  showDetails.value = !showDetails.value;
-};
+const userStore = useUserStore();
 
-const createEventDate = ref('')
-const toggleEvent = (date: any) => {
-  let year = todaysYear
-  let month = date.type == "previous" ? todaysMonth-1 
-    : date.type == "future" ? todaysMonth+1 
-    : todaysMonth
-  if (month == -1) {
-    month = 11
-    year = todaysYear-1
-  } else if (month == 12) {
-    month = 0
-    year = todaysYear+1
-  }
-  console.log(month)
-  createEventDate.value = `${year}-${(month + 1).toString().padStart(2, '0')}-${(date.todaysDate).toString().padStart(2, '0')}`
-  showEvent.value = !showEvent.value;
-};
-
-//index signature for grades
-type ClassColor = {
+// index signature for grades
+type classColor = {
   [grade: string]: string;
 };
 
-const classColor: ClassColor = {
+const classColor: classColor = {
   FRESHMAN: "bg-[#F5CDCD] text-[#590000]",
   SOPHOMORE: "bg-[#D2F6D2] text-[#003400]",
   JUNIOR: "bg-[#EED7FD] text-[#2D004B]",
   SENIOR: "bg-[#CCDDF5] text-[#002254]",
 };
-
-//obtaining information about today's date
-let todaysDate = new Date();
-let todaysYear = todaysDate.getFullYear();
-let todaysMonth = todaysDate.getMonth();
-const calendarData: calendarData = reactive({
-  dateInfo: [],
-});
 
 const months = [
   "January",
@@ -153,6 +127,44 @@ const months = [
   "November",
   "December",
 ];
+
+let todaysDate = new Date();
+let todaysYear = todaysDate.getFullYear();
+let todaysMonth = todaysDate.getMonth();
+
+onMounted(async () => {
+  await renderCalendar();
+});
+
+
+const toggleDetails = (meeting: studentMeetings) => {
+  console.log(meeting)
+  meetingDetails.name = meeting.name;
+  meetingDetails.meetingDate = meeting.meetingDate;
+  meetingDetails.meetingTime = meeting.meetingTime;
+
+  meetingDetails.description = meeting.description;
+  meetingDetails.email = meeting.email;
+
+  showDetails.value = !showDetails.value;
+};
+
+const toggleEvent = (date: any) => {
+  let year = todaysYear
+  let month = date.type == "previous" ? todaysMonth-1 
+    : date.type == "future" ? todaysMonth+1 
+    : todaysMonth
+  if (month == -1) {
+    month = 11
+    year = todaysYear-1
+  } else if (month == 12) {
+    month = 0
+    year = todaysYear+1
+  }
+  // console.log(month)
+  createEventDate.value = `${year}-${(month + 1).toString().padStart(2, '0')}-${(date.todaysDate).toString().padStart(2, '0')}`
+  showEvent.value = !showEvent.value;
+};
 
 //generates calendar data
 const renderCalendar = async () => {
@@ -180,6 +192,7 @@ const renderCalendar = async () => {
     //each day of the month is given an active date object
     const activeDate = new Date(todaysYear, todaysMonth, i);
     //all students with meetngs for the active date
+    //could create a new interface for studentsWithMeetings if needed, but no errors currently
     const studentsWithMeetings = [];
     //for each student in studentInfo, a studentMeetingDate contains date&time information about the student's meeting
     //if the student has a meeting on the active date, push the date to studentsWithMeetings
@@ -192,9 +205,9 @@ const renderCalendar = async () => {
       if (isMeetingDate) {
         const meetingDetails = {
           name: student.name,
-          date: dateformat(studentMeetingDate, "shortDate"),
-          time: dateformat(studentMeetingDate, "shortTime"),
-          memo: student.description,
+          meetingDate: dateformat(studentMeetingDate, "shortDate"),
+          meetingTime: dateformat(studentMeetingDate, "shortTime"),
+          description: student.description,
           grade: student.grade,
           email: student.email,
         };
@@ -204,8 +217,8 @@ const renderCalendar = async () => {
     }
     studentsWithMeetings.sort((a, b) => {
       return (
-        new Date(a.meetingDetails.time).getTime() -
-        new Date(b.meetingDetails.time).getTime()
+        new Date(a.meetingDetails.meetingTime).getTime() -
+        new Date(b.meetingDetails.meetingTime).getTime()
       );
     });
 
