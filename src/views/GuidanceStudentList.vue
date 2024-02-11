@@ -70,7 +70,6 @@ const userStore = useUserStore();
 const allStudents: Ref<studentGuidance[]> = ref([]);
 const loading = ref(false);
 const sortBy: Ref<string> = ref("lastnameaz");
-const guidanceStudents = userStore.guidanceStudents;
 const input: Ref<string> = ref("");
 const viewAll = ref(false);
 let x = ref(0);
