@@ -127,20 +127,17 @@
 import { ref, defineProps } from "vue";
 import { useRouter } from "vue-router";
 import DeleteModal from "./DeleteModal.vue";
-import { studentMeetings } from "../../types/interface";
 
 const show = ref(true);
 const router = useRouter();
 const showDeleteModal = ref(false);
 
-const props = defineProps({
+defineProps({
   meetingDetails: {
     type: Object,
     required: true,
   },
 });
-
-// console.log(props.meetingDetails);
 
 const toggleShow = () => {
   show.value = !show.value;
