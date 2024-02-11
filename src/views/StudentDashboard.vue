@@ -21,28 +21,28 @@
         class="text-lg md:text-xl text-left flex justify-center items-center ml-4 lg:ml-0 lg:justify-start">
         <BellIcon />
         <h2 v-if="surveyStore.open">Surveys are closing on {{ closeTime[1] }}/{{ closeTime[2] }}/{{ closeTime[0] }}.</h2>
-        <h2 v-else-if="userStore.studentSurveyPreview.status === 'FINALIZED'">Your guidance counselor has finalised
+        <h2 v-else-if="userStore.studentSurveyPreview[0].status === 'FINALIZED'">Your guidance counselor has finalised
           your survey. If you wish to make changes, please contact them.</h2>
         <h2 v-else>The due date for completion has passed. Please contact your guidance counselor to request changes.</h2>
       </div>
 
       <!-- survey status -->
-      <div v-if="userStore.studentSurveyPreview.length === 0"
+      <div v-if="studentStore.answeredSurvey === undefined"
         class="text-[#461616] bg-[#EA9F9F] font-semibold text-center p-3 lg:px-6 lg:text-base text-sm rounded-md">Survey
         Status:
         <span class="font-medium">Not Started</span>
       </div>
-      <div v-else-if="userStore.studentSurveyPreview.status === 'COMPLETE'"
+      <div v-else-if="userStore.studentSurveyPreview[0].status === 'COMPLETE'"
         class="text-[#174616] bg-[#A8D480]  font-semibold text-center p-3 lg:px-6 lg:text-base text-sm rounded-md">Survey
         Status:
         <span class="font-medium">Submitted</span>
       </div>
-      <div v-else-if="userStore.studentSurveyPreview.status === 'INCOMPLETE'"
+      <div v-else-if="userStore.studentSurveyPreview[0].status === 'INCOMPLETE'"
         class="text-[#461616] bg-[#F9D477] font-semibold text-center p-3 lg:px-6 lg:text-base text-sm rounded-md">Survey
         Status:
         <span class="font-medium">In Progress</span>
       </div>
-      <div v-else-if="userStore.studentSurveyPreview.status === 'FINALIZED'"
+      <div v-else-if="userStore.studentSurveyPreview[0].status === 'FINALIZED'"
         class="text-[#461616] bg-[#D1A4DE] font-semibold text-center p-3 lg:px-6 lg:text-base text-sm rounded-md">Survey
         Status:
         <span class="font-medium">Finalized</span>
@@ -87,7 +87,7 @@ import { useSurveyStore } from "../stores/survey";
 import { useStudentStore } from "../stores/student";
 //@ts-ignore
 import dateFormat from "dateformat";
-import { computed } from "vue";
+import { onMounted, Ref, ref } from "vue";
 
 document.title = 'Dashboard | SITHS Course Selection'
 
@@ -95,18 +95,19 @@ const userStore = useUserStore();
 const surveyStore = useSurveyStore();
 const studentStore = useStudentStore();
 
+const closeTime: Ref<string[]> = ref([]);
 let time: String;
 let date: String;
 
-const closeTime = computed((): string[] => {
-  if (!(studentStore.student.homeroom.length === 0) && userStore.studentSurveyPreview.dueDate) {
-    const ISOString = userStore.studentSurveyPreview.dueDate.substring(0, 10).split('-');
-    return ISOString;
+onMounted(() => {
+  if (!(studentStore.student.homeroom.length === 0) && userStore.studentSurveyPreview[0].dueDate) {
+    const ISOString = userStore.studentSurveyPreview[0].dueDate.substring(0, 10).split('-');
+    closeTime.value = ISOString;
   } else {
     console.log('Student profile not updated; no homeroom');
-    return [];
+    closeTime.value = [];
   }
-});
+})
 
 if (
   studentStore.student.meeting != undefined ||
