@@ -97,9 +97,7 @@ defineProps({
   newstudents: Array as PropType<Array<studentGuidance>>,
 });
 
-const userStore = useUserStore();
 const surveyStore = useSurveyStore();
-const guidanceStore = useGuidanceStore();
 const router = useRouter();
 
 let tooltip: Ref<boolean> = ref(false);
