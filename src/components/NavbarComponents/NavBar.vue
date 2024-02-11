@@ -81,7 +81,7 @@ const submit = async () => {
         <div v-if="userStore.isLoggedIn && userStore.userType === 'student' && viewingSurvey() === false"
             class="hidden justify-center items-center space-x-12 md:flex">
             <p><a href="https://siths-catalog.netlify.app/" target="_blank" rel="noopener">Courses</a></p>
-            <p v-if="studentStore.student.homeroom != ''" @click="surveyNav()" class="cursor-pointer hover:text-gray-500">
+            <p v-if="studentStore.student.hr != ''" @click="surveyNav()" class="cursor-pointer hover:text-gray-500">
                 Survey</p>
             <RouterLink to="/">
                 <p @click="logout()" id="name-link" class="text-base text-red-500 cursor-pointer hover:text-red-400">Logout
