@@ -41,13 +41,13 @@ import SearchBar from "../components/GuidanceComponents/SearchBar.vue";
 import Sort from "../components/GuidanceComponents/SortButton.vue";
 import StudentTable from "../components/GuidanceComponents/StudentTable.vue";
 import { useUserStore } from "../stores/user";
-import { studentGuidance } from "../types/interface";
+import { studentGuidance, studentPreview } from "../types/interface";
 import { ref, Ref, computed, watch, onMounted } from "vue";
 
 document.title = "Student List | SITHS Course Selection";
 
 const userStore = useUserStore();
-const allStudents: Ref<studentGuidance[]> = ref([]);
+const allStudents: Ref<studentPreview[]> = ref([]);
 const loading = ref(false);
 const sortBy: Ref<string> = ref("lastnameaz");
 const guidanceStudents = userStore.guidanceStudents;
@@ -60,6 +60,7 @@ const currentPage = ref(1);
 const pages = ref(1);
 
 onMounted(async () => {
+  //@ts-ignore
   userStore.currentlyViewingStudents = userStore.guidanceStudents;
 });
 
@@ -130,7 +131,8 @@ const sortAndFilterStudents = computed(() => {
 //sorting students to view
 const newStudents = computed(() => {
   return userStore.currentlyViewingStudents.filter(
-    (student: studentGuidance) =>
+    (student: studentPreview) =>
+
       student.name.toLowerCase().indexOf(input.value.toLowerCase()) !== -1 ||
       student.email.indexOf(input.value) !== -1
   );
@@ -144,6 +146,7 @@ watch(
       userStore.currentlyViewingStudents = allStudents.value;
     }
     if (viewAll.value === false) {
+      //@ts-ignore
       userStore.currentlyViewingStudents = userStore.guidanceStudents;
     }
     updatePage(1);

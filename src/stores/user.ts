@@ -4,7 +4,7 @@ import { useStudentStore } from "./student";
 import { useGuidanceStore } from "./guidance";
 import { useRouter } from "vue-router";
 import axios from "axios";
-import { user, account_type, userData, guidanceData, studentGuidance, studentMeetings } from "../types/interface";
+import { user, account_type, userData, guidanceData, studentGuidance, studentMeetings, studentPreview } from "../types/interface";
 import { ref } from "vue";
 import router from "../router";
 
@@ -19,9 +19,9 @@ export const useUserStore = defineStore("user", {
         refresh_token: "",
         loading: false,
         expire_time: 0,
-        studentSurveyPreview: [],
-        currentlyViewingStudents: [],
-        guidanceStudents: [],
+        studentSurveyPreview: [] as studentPreview[],
+        currentlyViewingStudents: [] as studentPreview[],
+        guidanceStudents: [] as studentGuidance[],
         guidanceMeetings: [] as studentMeetings[],
     }),
     actions: {
@@ -45,14 +45,14 @@ export const useUserStore = defineStore("user", {
                             Authorization: `Bearer ${this.access_token}`,
                         },
                     }).then(async (data) => {
-                        const meetingsData = (await data.json()).map((student) => ({
+                        const meetingsData = (await data.json()).map((student: studentMeetings) => ({
                             name: student.name
                               .split(",")
                               .map((part) => part.trim().toLowerCase())
                               .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
                               .join(", "),
-                            meetingDate: student.meeting,
-                            description: student.meeting_description,
+                            meetingDate: student.meetingDate,
+                            description: student.description,
                             grade: student.grade,
                             email: student.email,
                         }));
@@ -193,29 +193,29 @@ export const useUserStore = defineStore("user", {
                     },
                     body: JSON.stringify({
                         email: email,
-                        date: meetingISO,
-                        memo: description,
+                        description: description,
                         notify: notify,
+                        date: meetingISO,
                     }),
                 });
-                const meetingExists = this.guidanceMeetings.filter((meeting: object) => meeting.email === email).length > 0
+                const meetingExists = this.guidanceMeetings.some((meeting) => meeting.email === email);
                 if(!meetingExists) {
-                    const student = this.guidanceStudents.find((student) => 
-                        student.email === email.split("@")[0]
-                    )
-                    const meetingData = {
-                        name: student.name
-                            .split(",")
-                            .map((part) => part.trim().toLowerCase())
-                            .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-                            .join(", "),
-                        meetingDate: meetingISO,
-                        description: description,
-                        email: email,
-                        grade: student.grade,
+                    const student = this.guidanceStudents.find((student: studentGuidance) => student.email === email.split('@')[0]);
+                    if(student !== undefined) {
+                        const meetingData: studentMeetings = {
+                            name: student.name
+                                .split(",")
+                                .map((part) => part.trim().toLowerCase())
+                                .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+                                .join(", "),
+                            meetingDate: new Date(meetingISO),
+                            description: description,
+                            email: email,
+                            grade: student.grade,
+                        };
+                        this.guidanceMeetings.push(meetingData);
                     };
-                    this.guidanceMeetings.push(meetingData);
-                }
+                };
             } catch (error) {
                 console.error('Error fetching updateMeeting:', error);
             };
@@ -250,11 +250,15 @@ export const useUserStore = defineStore("user", {
                         flag: newFlag,
                     }),
                 })
-                const data = await res.json()
+                const data = await res.json();
                 if (this.currentlyViewingStudents === null) return
-                // @ts-ignore
-                const studentIndex = this.currentlyViewingStudents.findIndex((student) => student.email + "@nycstudents.net" === email);
-                const previewIndex = this.studentSurveyPreview.findIndex((student) => student.email + "@nycstudents.net" === email);
+                const studentIndex = this.currentlyViewingStudents.findIndex((student: studentPreview) => {
+                    student.email + '@nycstudents.net' === email
+                });
+                const previewIndex = this.studentSurveyPreview.findIndex((student: studentPreview) => {
+                    student.email + 'nycstudents.net' === email
+                });
+                
                 if (studentIndex !== -1 && previewIndex !== -1) {
                     this.currentlyViewingStudents[studentIndex].flag = data.flag;
                     this.studentSurveyPreview[previewIndex].flag = data.flag;
@@ -276,11 +280,15 @@ export const useUserStore = defineStore("user", {
                         flag: flagToBeRemoved,
                     }),
                 })
-                const data = await res.json()
+                const data = await res.json();
                 if (this.currentlyViewingStudents === null) return
-                // @ts-ignore
-                const studentIndex = this.currentlyViewingStudents.findIndex((student) => student.email + "@nycstudents.net" === email);
-                const previewIndex = this.studentSurveyPreview.findIndex((student) => student.email + "@nycstudents.net" === email);
+                const studentIndex = this.currentlyViewingStudents.findIndex((student: studentPreview) => {
+                    student.email + '@nycstudents.net' === email
+                });
+                const previewIndex = this.studentSurveyPreview.findIndex((student: studentPreview) => {
+                    student.email + 'nycstudents.net' === email
+                });
+
                 if (studentIndex !== -1 && previewIndex !== -1) {
                     this.currentlyViewingStudents[studentIndex].flag = data.flag;
                     this.studentSurveyPreview[previewIndex].flag = data.flag;

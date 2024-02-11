@@ -50,7 +50,7 @@
               </svg>
               Date
             </h3>
-            <p class="ml-4 p-4">{{ meetingDetails.date }}</p>
+            <p class="ml-4 p-4">{{ meetingDetails.meetingDate }}</p>
           </div>
           <div class="pl-16">
             <h3
@@ -65,7 +65,7 @@
               </svg>
               Time
             </h3>
-            <p class="ml-4 p-4">{{ meetingDetails.time }}</p>
+            <p class="ml-4 p-4">{{ meetingDetails.meetingTime }}</p>
           </div>
         </div>
 
@@ -81,7 +81,7 @@
           Memo
         </h3>
         <p class="ml-4 p-4">
-          {{ meetingDetails.memo }}
+          {{ meetingDetails.description }}
         </p>
         <div></div>
         <!-- buttons -->
@@ -127,17 +127,20 @@
 import { ref, defineProps } from "vue";
 import { useRouter } from "vue-router";
 import DeleteModal from "./DeleteModal.vue";
+import { studentMeetings } from "../../types/interface";
 
 const show = ref(true);
 const router = useRouter();
 const showDeleteModal = ref(false);
 
-defineProps({
+const props = defineProps({
   meetingDetails: {
     type: Object,
     required: true,
   },
 });
+
+// console.log(props.meetingDetails);
 
 const toggleShow = () => {
   show.value = !show.value;

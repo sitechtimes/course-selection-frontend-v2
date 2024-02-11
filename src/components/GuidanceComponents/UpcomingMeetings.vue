@@ -33,10 +33,12 @@ const todaysDate = new Date();
 
 async function updateStudentMeetings() {
   meetingsData.value = userStore.guidanceMeetings.map((student: studentMeetings) => ({
-    name: `${student.name}`,
+    name: student.name,
     meetingDate: new Date(student.meetingDate),
     meetingTime: dateformat(new Date(student.meetingDate), "shortTime"),
-    memo: student.memo,
+    description: student.description,
+    email: student.email,
+    grade: student.grade,
   }))
   .sort((a, b) => a.meetingDate.getTime() - b.meetingDate.getTime());
 }
