@@ -19,7 +19,7 @@
         placeholder="Search Students..."
       />
     </div>
-    <StudentTable :newstudents="sortAndFilterStudents.slice(x, y)" />
+    <StudentTable :newStudents="sortAndFilterStudents.slice(x, y)" />
     <div class="max-w-[80%] overflow-x-auto mt-4 flex flex-row justify-between">
       <button
         class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold"
@@ -82,7 +82,8 @@ const pages: Ref<number> = ref(1);
 const pageCapacity: number = 10;
 
 onMounted(async () => {
-  //@ts-ignore
+  // load in batches following changes in backend
+  // esentially studentGuidance type is studentPreview + more data
   userStore.currentlyViewingStudents = userStore.guidanceStudents;
 });
 
@@ -114,39 +115,50 @@ const filterType = (selected: string) => {
 };
 
 const sortAndFilterStudents = computed(() => {
-  //@ts-ignore
-  let sortedStudents = userStore.currentlyViewingStudents;
+  let sortedStudents: studentGuidance[] = userStore.guidanceStudents;
   switch(sortBy.value) {
     case 'lastnameaz':
-      sortedStudents.toSorted((a: studentGuidance, b: studentGuidance) => a.name.localeCompare(b.name));
+      sortedStudents = sortedStudents.sort((a: studentPreview, b: studentPreview) => a.name.localeCompare(b.name));
+      break;
     case 'lastnameza':
-      sortedStudents = sortedStudents.sort((a: studentGuidance, b: studentGuidance) => b.name.localeCompare(a.name));
+      sortedStudents = sortedStudents.sort((a: studentPreview, b: studentPreview) => b.name.localeCompare(a.name));
+      break;
     case 'ns':
-      sortedStudents = sortedStudents.filter((student: studentGuidance) => student.status === 'NOT STARTED');
+      sortedStudents = sortedStudents.filter((student: studentPreview) => student.status === 'NOT STARTED');
+      break;
     case 'ip':
-      sortedStudents = sortedStudents.filter((student: studentGuidance) => student.status === 'INCOMPLETE');
+      sortedStudents = sortedStudents.filter((student: studentPreview) => student.status === 'INCOMPLETE');
+      break;
     case 'com':
-      sortedStudents = sortedStudents.filter((student: studentGuidance) => student.status === 'COMPLETE');
+      sortedStudents = sortedStudents.filter((student: studentPreview) => student.status === 'COMPLETE');
+      break;
     case 'final':
-      sortedStudents = sortedStudents.filter((student: studentGuidance) => student.status === 'FINALIZED');
+      sortedStudents = sortedStudents.filter((student: studentPreview) => student.status === 'FINALIZED');
+      break;
     case 'nine':
-      sortedStudents = sortedStudents.filter((student: studentGuidance) => student.grade === 'FRESHMAN');
+      sortedStudents = sortedStudents.filter((student: studentPreview) => student.grade === 'FRESHMAN');
+      break;
     case 'ten':
-      sortedStudents = sortedStudents.filter((student: studentGuidance) => student.grade === 'SOPHOMORE');
+      sortedStudents = sortedStudents.filter((student: studentPreview) => student.grade === 'SOPHOMORE');
+      break;
     case 'eleven':
-      sortedStudents = sortedStudents.filter((student: studentGuidance) => student.grade === 'JUNIOR');
+      sortedStudents = sortedStudents.filter((student: studentPreview) => student.grade === 'JUNIOR');
+      break;
     case 'transfer':
-      sortedStudents = sortedStudents.filter((student: studentGuidance) => student.flag === 'Transfer');
+      sortedStudents = sortedStudents.filter((student: studentPreview) => student.flag === 'Transfer');
+      break;
     case 'regents':
-      sortedStudents = sortedStudents.filter((student: studentGuidance) => student.flag === 'Regents');
+      sortedStudents = sortedStudents.filter((student: studentPreview) => student.flag === 'Regents');
+      break;
     case 'sports':
-      sortedStudents = sortedStudents.filter((student: studentGuidance) => student.flag === 'Team');
+      sortedStudents = sortedStudents.filter((student: studentPreview) => student.flag === 'Team');
+      break;
     case 'enl':
-      sortedStudents = sortedStudents.filter((student: studentGuidance) => student.flag === 'ENL');
-  }
-
+      sortedStudents = sortedStudents.filter((student: studentPreview) => student.flag === 'ENL');
+      break;
+  };
   return sortedStudents.filter(
-    (student: studentGuidance) =>
+    (student: studentPreview) =>
       student.name.toLowerCase().includes(input.value.toLowerCase()) ||
       student.email.toLowerCase().includes(input.value.toLowerCase())
   );
