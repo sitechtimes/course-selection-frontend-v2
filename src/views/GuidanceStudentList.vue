@@ -68,15 +68,18 @@ document.title = "Student List | SITHS Course Selection";
 
 const userStore = useUserStore();
 const allStudents: Ref<studentPreview[]> = ref([]);
-const loading = ref(false);
-const sortBy: Ref<string> = ref("lastnameaz");
+
+const loading: Ref<boolean> = ref(false);
+const viewAll: Ref<boolean> = ref(false);
 const input: Ref<string> = ref("");
-const viewAll = ref(false);
-let x = ref(0);
-let y = ref(10);
-const pageCapacity = 10;
-const currentPage = ref(1);
-const pages = ref(1);
+const sortBy: Ref<string> = ref("lastnameaz");
+
+const x: Ref<number> = ref(0);
+const y: Ref<number> = ref(10);
+
+const currentPage: Ref<number> = ref(1);
+const pages: Ref<number> = ref(1);
+const pageCapacity: number = 10;
 
 onMounted(async () => {
   //@ts-ignore
@@ -111,60 +114,35 @@ const filterType = (selected: string) => {
 };
 
 const sortAndFilterStudents = computed(() => {
-  let sortedStudents = userStore.currentlyViewingStudents; //create a copy to avoid modifying the original array
-
-  if (sortBy.value === "lastnameaz") {
-    sortedStudents = sortedStudents.sort(
-      (a: studentGuidance, b: studentGuidance) => a.name.localeCompare(b.name)
-    );
-  } else if (sortBy.value === "lastnameza") {
-    sortedStudents = sortedStudents.sort(
-      (a: studentGuidance, b: studentGuidance) => b.name.localeCompare(a.name)
-    );
-  } else if (sortBy.value === "ns") {
-    sortedStudents = sortedStudents.filter(
-      (student: studentGuidance) => student.status === "NOT STARTED"
-    );
-  } else if (sortBy.value === "ip") {
-    sortedStudents = sortedStudents.filter(
-      (student: studentGuidance) => student.status === "INCOMPLETE"
-    );
-  } else if (sortBy.value === "com") {
-    sortedStudents = sortedStudents.filter(
-      (student: studentGuidance) => student.status === "COMPLETE"
-    );
-  } else if (sortBy.value === "final") {
-    sortedStudents = sortedStudents.filter(
-      (student: studentGuidance) => student.status === "FINALIZED"
-    );
-  } else if (sortBy.value === "nine") {
-    sortedStudents = sortedStudents.filter(
-      (student: studentGuidance) => student.grade === "FRESHMAN"
-    );
-  } else if (sortBy.value === "ten") {
-    sortedStudents = sortedStudents.filter(
-      (student: studentGuidance) => student.grade === "SOPHOMORE"
-    );
-  } else if (sortBy.value === "eleven") {
-    sortedStudents = sortedStudents.filter(
-      (student: studentGuidance) => student.grade === "JUNIOR"
-    );
-  } else if (sortBy.value === "transfer") {
-    sortedStudents = sortedStudents.filter(
-      (student: studentGuidance) => student.flag === "Transfer"
-    );
-  } else if (sortBy.value === "regents") {
-    sortedStudents = sortedStudents.filter(
-      (student: studentGuidance) => student.flag === "Regents"
-    );
-  } else if (sortBy.value === "sports") {
-    sortedStudents = sortedStudents.filter(
-      (student: studentGuidance) => student.flag === "Team"
-    );
-  } else if (sortBy.value === "enl") {
-    sortedStudents = sortedStudents.filter(
-      (student: studentGuidance) => student.flag === "ENL"
-    );
+  //@ts-ignore
+  let sortedStudents = userStore.currentlyViewingStudents;
+  switch(sortBy.value) {
+    case 'lastnameaz':
+      sortedStudents.toSorted((a: studentGuidance, b: studentGuidance) => a.name.localeCompare(b.name));
+    case 'lastnameza':
+      sortedStudents = sortedStudents.sort((a: studentGuidance, b: studentGuidance) => b.name.localeCompare(a.name));
+    case 'ns':
+      sortedStudents = sortedStudents.filter((student: studentGuidance) => student.status === 'NOT STARTED');
+    case 'ip':
+      sortedStudents = sortedStudents.filter((student: studentGuidance) => student.status === 'INCOMPLETE');
+    case 'com':
+      sortedStudents = sortedStudents.filter((student: studentGuidance) => student.status === 'COMPLETE');
+    case 'final':
+      sortedStudents = sortedStudents.filter((student: studentGuidance) => student.status === 'FINALIZED');
+    case 'nine':
+      sortedStudents = sortedStudents.filter((student: studentGuidance) => student.grade === 'FRESHMAN');
+    case 'ten':
+      sortedStudents = sortedStudents.filter((student: studentGuidance) => student.grade === 'SOPHOMORE');
+    case 'eleven':
+      sortedStudents = sortedStudents.filter((student: studentGuidance) => student.grade === 'JUNIOR');
+    case 'transfer':
+      sortedStudents = sortedStudents.filter((student: studentGuidance) => student.flag === 'Transfer');
+    case 'regents':
+      sortedStudents = sortedStudents.filter((student: studentGuidance) => student.flag === 'Regents');
+    case 'sports':
+      sortedStudents = sortedStudents.filter((student: studentGuidance) => student.flag === 'Team');
+    case 'enl':
+      sortedStudents = sortedStudents.filter((student: studentGuidance) => student.flag === 'ENL');
   }
 
   return sortedStudents.filter(
