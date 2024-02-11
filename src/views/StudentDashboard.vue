@@ -27,7 +27,7 @@
       </div>
 
       <!-- survey status -->
-      <div v-if="studentStore.answeredSurvey.length === 0"
+      <div v-if="userStore.studentSurveyPreview.length === 0"
         class="text-[#461616] bg-[#EA9F9F] font-semibold text-center p-3 lg:px-6 lg:text-base text-sm rounded-md">Survey
         Status:
         <span class="font-medium">Not Started</span>
@@ -87,7 +87,7 @@ import { useSurveyStore } from "../stores/survey";
 import { useStudentStore } from "../stores/student";
 //@ts-ignore
 import dateFormat from "dateformat";
-import { computed, ref, Ref, watch } from "vue";
+import { computed } from "vue";
 
 document.title = 'Dashboard | SITHS Course Selection'
 
@@ -97,14 +97,16 @@ const studentStore = useStudentStore();
 
 let time: String;
 let date: String;
-let closeTime: string[]
 
-if (studentStore.student.homeroom === '') {
-  console.log('Student profile not updated; no homeroom')
-} else {
-  //formatting for due date
-  closeTime = studentStore.studentSurveyPreview.dueDate.substring(0, 10).split("-")
-}
+const closeTime = computed((): string[] => {
+  if (!(studentStore.student.homeroom.length === 0) && userStore.studentSurveyPreview.dueDate) {
+    const ISOString = userStore.studentSurveyPreview.dueDate.substring(0, 10).split('-');
+    return ISOString;
+  } else {
+    console.log('Student profile not updated; no homeroom');
+    return [];
+  }
+});
 
 if (
   studentStore.student.meeting != undefined ||
