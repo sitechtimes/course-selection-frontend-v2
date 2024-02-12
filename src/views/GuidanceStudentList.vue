@@ -82,8 +82,6 @@ const pages: Ref<number> = ref(1);
 const pageCapacity: number = 10;
 
 onMounted(async () => {
-  // load in batches following changes in backend
-  // esentially studentGuidance type is studentPreview + more data
   userStore.currentlyViewingStudents = userStore.guidanceStudents;
 });
 
@@ -174,15 +172,14 @@ const newStudents = computed(() => {
   );
 });
 
-watch(
-  () => viewAll.value,
-  async (newResponse) => {
-    if (viewAll.value === true) {
+watch(viewAll, async (newResponse) => {
+  if (viewAll.value === true) {
+      input.value = '';
+      sortBy.value = 'lastnameaz';
       await fetchStudents();
       userStore.currentlyViewingStudents = allStudents.value;
     }
     if (viewAll.value === false) {
-      //@ts-ignore
       userStore.currentlyViewingStudents = userStore.guidanceStudents;
     }
     updatePage(1);
@@ -190,12 +187,14 @@ watch(
 );
 
 watch(newStudents, () => {
-  const studentList = JSON.parse(JSON.stringify(newStudents.value));
+  const studentList = newStudents.value;
   if (studentList.length < 1) {
     pages.value = 1;
   } else {
     pages.value = Math.ceil(studentList.length / pageCapacity);
   }
+  // const totalStudents = viewAll.value ? allStudents.value.length : userStore.guidanceStudents.length;
+  // pages.value = Math.ceil(totalStudents / pageCapacity);
   updatePage(1);
 });
 
