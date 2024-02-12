@@ -58,13 +58,9 @@ const router = createRouter({
 
         if (userStore.userType === 'guidance') {
           return { name: "guidanceStudentlist" };
-        }
-
-        if (userStore.userType === 'student' && surveyStore.currentAnswers.status === "COMPLETE") {
+        } else if (userStore.userType === 'student' && surveyStore.currentAnswers.status === "COMPLETE") {
           return { name: "reviewSurvey" };
-        }
-
-        if(!surveyStore.open) {
+        } else if(!surveyStore.open) {
           return { name: "closedSurvey" }
         }
       }

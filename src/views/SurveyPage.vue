@@ -1,16 +1,14 @@
 <script setup lang="ts">
-import checkboxComponent from "../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue";
-import booleanComponent from "../components/SurveyPageComponents/Reusables/SurveyBoolean.vue";
-import generalComponent from "../components/SurveyPageComponents/Reusables/SurveyGeneral.vue";
+import checkboxComponent from "../components/SurveyPageComponents/SurveyCheckbox.vue";
+import booleanComponent from "../components/SurveyPageComponents/SurveyBoolean.vue";
+import generalComponent from "../components/SurveyPageComponents/SurveyGeneral.vue";
 import { ref, reactive, Ref, watch } from "vue";
-import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
 import { surveyQuestion } from "../types/interface";
 import { onBeforeRouteLeave } from "vue-router";
 
 document.title = "Survey | SITHS Course Selection";
 
-const userStore = useUserStore();
 const surveyStore = useSurveyStore();
 
 const currentIndex: Ref<number> = ref(0);
@@ -41,9 +39,14 @@ const nextQuestion = () => {
 };
 
 const getChoices = () => {
-  const classes = surveyStore.student.coursesAvailable;
-  console.log("choices", classes, currentQuestion);
-  return classes.filter((x) => x["name"] === currentQuestion.questionType);
+  const classes = surveyStore.student.coursesAvailable.filter(
+    (x) => x["subject"] === currentQuestion.questionType
+  );
+  //@ts-ignore
+  surveyStore.currentResponse[currentIndex.value].answer.courses = classes.map(
+    (course) => course["name"]
+  );
+  return classes;
 };
 
 onBeforeRouteLeave((to, from, next) => {
@@ -112,16 +115,19 @@ watch(
           v-if="currentQuestion.questionType === 'GENERAL'"
           :question="currentQuestion"
           :key="currentQuestion.id"
+          :index="currentIndex"
         ></generalComponent>
         <booleanComponent
           v-else-if="currentQuestion.questionType === 'BOOLEAN'"
           :question="currentQuestion"
+          :index="currentIndex"
           :key="currentQuestion.question"
         ></booleanComponent>
         <checkboxComponent
           v-else
           :question="currentQuestion"
           :choices="getChoices()"
+          :index="currentIndex"
           :key="currentQuestion.questionType"
           :color="'D6EEFF'"
         ></checkboxComponent>

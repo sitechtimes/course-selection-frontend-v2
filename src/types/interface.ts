@@ -136,15 +136,15 @@ export interface survey {
 }
 
 export interface getStudentSurvey {
-    survey: survey,
+    survey: survey
     answeredSurvey: answeredSurvey
-    coursesTaken: Array<course>,
-    coursesAvailable: Array<course>
+    coursesTaken: course[]
+    coursesAvailable: course[]
 }
 
 export interface studentCourses {
-    coursesTaken: Array<course>,
-    coursesAvailable: Array<course>
+    coursesTaken: course[],
+    coursesAvailable: course[]
 }
 
 export interface student {
@@ -169,7 +169,7 @@ export interface surveyQuestion {
 export interface surveyAnswer {
     id: string
     question?: string
-    answer: checkboxAnswer
+    answer: checkboxAnswer | string | boolean
 }
 
 export interface surveyStringAnswer {

@@ -175,6 +175,7 @@ if (userStore.student.homeroom === null) {
   console.log("Student profile not updated; no homeroom");
 } else {
   //formatting for due date
+  console.log(surveyStore.currentSurvey.dueDate);
   closeTime = surveyStore.currentSurvey.dueDate.substring(0, 10).split("-");
 }
 

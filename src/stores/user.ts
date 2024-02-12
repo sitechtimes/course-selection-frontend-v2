@@ -36,11 +36,14 @@ export const useUserStore = defineStore("user", {
                     const json = await data.json();
                     console.log(json)
                     this.studentSurveyPreview = json
-                    this.guidanceStudents = await json.filter(student => student.ownStudent === true)
+                    //@ts-ignore
+                    this.guidanceStudents = await json.filter(student => student.ownStudent)
                     console.log(this.guidanceStudents)
                     this.loading = false;
                 });
             } else {
+                const surveyStore = useSurveyStore();
+                surveyStore.getSurvey()
                 fetch(`${import.meta.env.VITE_URL}/student/surveyPreview/`, {
                     method: "GET",
                     headers: {
@@ -50,6 +53,7 @@ export const useUserStore = defineStore("user", {
                     .then((res) => res.json())
                     .then(async (data:studentSurveyPreview) => {
                         const surveyStore = useSurveyStore();
+                        console.log(surveyStore.currentSurvey)
 
                         if (new Date(data.dueDate) < new Date() || data.status === "FINALIZED") {
                             surveyStore.open = false;
@@ -60,12 +64,10 @@ export const useUserStore = defineStore("user", {
                     })
                     .catch((error) => {
                         console.error("Error fetching surveyPreview:", error);
-                    });
-                const surveyStore = useSurveyStore();
-                console.log(surveyStore.currentAnswers)
-                await surveyStore.setSurvey().then(() => {
-                    this.loading = false;
-                })
+                    }).then(() => this.loading = false)
+                
+    
+                
                 
 
                

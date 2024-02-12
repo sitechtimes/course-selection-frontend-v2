@@ -2,7 +2,7 @@
   <section class="flex justify-center items-center flex-col">
     <div class="lg:w-2/3 w-11/12">
       <div
-        v-for="question in surveyStore.currentSurvey.question"
+        v-for="(question, index) in surveyStore.currentSurvey.question"
         :key="question.id"
         class="flex justify-center"
       >
@@ -20,15 +20,18 @@
             class="mb-2"
             v-if="question.questionType === 'BOOLEAN'"
             :question="question"
+            :index="index"
           ></booleanComponent>
           <generalComponent
             class="mb-6"
             v-else-if="question.questionType === 'GENERAL'"
             :question="question"
+            :index="index"
           ></generalComponent>
           <checkboxComponent
             v-else
             class="mb-6"
+            :index="indexAll"
             :question="question"
             :choices="getChoices(question)"
             :color="'D6EEFF'"
@@ -85,12 +88,12 @@
 <script setup lang="ts">
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
-import booleanComponent from "../components/SurveyPageComponents/Reusables/SurveyBoolean.vue";
-import generalComponent from "../components/SurveyPageComponents/Reusables/SurveyGeneral.vue";
-import checkboxComponent from "../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue";
-import surveyDraggable from "../components/SurveyPageComponents/Reusables/SurveyDraggable.vue";
+import booleanComponent from "../components/SurveyPageComponents/SurveyBoolean.vue";
+import generalComponent from "../components/SurveyPageComponents/SurveyGeneral.vue";
+import checkboxComponent from "../components/SurveyPageComponents/SurveyCheckbox.vue";
+import surveyDraggable from "../components/SurveyPageComponents/SurveyDraggable.vue";
 import exclamationMark from "../components/icons/ExclamationMark.vue";
-import ScrollPage from "../components/SurveyPageComponents/Reusables/ScrollPage.vue";
+import ScrollPage from "../components/SurveyPageComponents/ScrollPage.vue";
 import { surveyQuestion, course } from "../types/interface";
 import { watch, ref, Ref } from "vue";
 import { useRouter, onBeforeRouteLeave } from "vue-router";

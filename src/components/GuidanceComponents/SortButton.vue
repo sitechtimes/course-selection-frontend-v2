@@ -103,7 +103,6 @@ const sortBy = (sort: {sortBy:string, text:string}) => {
     }  
     return 0;
   }
-    console.log(userStore.currentlyViewingStudents.sort(lastnameaz))
   }
 
   if(sort.sortBy === 'lastnameza') {
