@@ -1,6 +1,6 @@
 <template>
   <div class="h-[75vh] w-full flex flex-row justify-center items-center">
-    <div v-if="studentStore.student.homeroom === ''" id="left"
+    <div v-if="studentStore.student.hr === ''" id="left"
       class="w-5/6 flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left md:w-3/4 lg:max-w-2xl xl:max-w-3xl lg:space-y-6 lg:ml-12">
       <h2 id="name" class="text-5xl font-bold">Welcome, {{ userStore.first_name.toLowerCase().charAt(0).toUpperCase() +
         userStore.first_name.toLowerCase().slice(1) }}
@@ -100,7 +100,7 @@ let time: String;
 let date: String;
 
 onMounted(() => {
-  if (!(studentStore.student.homeroom.length === 0) && userStore.studentSurveyPreview[0].dueDate) {
+  if (!(studentStore.student.hr.length === 0) && userStore.studentSurveyPreview[0].dueDate) {
     const ISOString = userStore.studentSurveyPreview[0].dueDate.substring(0, 10).split('-');
     closeTime.value = ISOString;
   } else {

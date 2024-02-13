@@ -10,7 +10,7 @@
           <label class="cursor-pointer">View all students</label>
           <input class="ml-2" type="checkbox" v-model="viewAll" />
         </div>
-        <Sort class="mr-0" @filter-selected="filterType" />
+        <Sort class="mr-0" @filter-selected="updateSortOption" />
       </div>
       <SearchBar
         class="w-2/3"
@@ -19,18 +19,18 @@
         placeholder="Search Students..."
       />
     </div>
-    <StudentTable :newstudents="sortAndFilterStudents.slice(x, y)" />
+    <StudentTable :newStudents="sortedAndFilteredStudents.slice(x, y)" />
     <div class="max-w-[80%] overflow-x-auto mt-4 flex flex-row justify-between">
       <button
         class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold"
-        @click="subtract"
+        @click="previousPage"
         :disabled="currentPage === 1"
       >
         ❮
       </button>
       <button
-        v-for="n in pages"
-        @click="updatePage(n)"
+        v-for="n in totalPages"
+        @click="updatePagination(n)"
         :class="{
           'bg-[#cdeeb4] focus:bg-[#cdeeb4]': currentPage === n,
           'bg-[#ebebeb]': currentPage !== n,
@@ -41,8 +41,8 @@
       </button>
       <button
         class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold"
-        :disabled="currentPage === pages"
-        @click="add"
+        :disabled="currentPage === totalPages"
+        @click="nextPage"
       >
         ❯
       </button>
@@ -51,7 +51,7 @@
       Page
       <span class="font-bold m-1"> {{ currentPage }}</span>
       of
-      <span class="font-bold m-1">{{ pages }}</span>
+      <span class="font-bold m-1">{{ totalPages }}</span>
     </h5>
   </div>
 </template>
@@ -62,32 +62,31 @@ import Sort from "../components/GuidanceComponents/SortButton.vue";
 import StudentTable from "../components/GuidanceComponents/StudentTable.vue";
 import { useUserStore } from "../stores/user";
 import { studentGuidance, studentPreview } from "../types/interface";
-import { ref, Ref, computed, watch, onMounted } from "vue";
+import { ref, Ref, computed, watch, onMounted, useTransitionState } from "vue";
 
 document.title = "Student List | SITHS Course Selection";
 
 const userStore = useUserStore();
 const allStudents: Ref<studentPreview[]> = ref([]);
-const loading = ref(false);
-const sortBy: Ref<string> = ref("lastnameaz");
-const input: Ref<string> = ref("");
-const viewAll = ref(false);
-let x = ref(0);
-let y = ref(10);
-const pageCapacity = 10;
-const currentPage = ref(1);
-const pages = ref(1);
 
-onMounted(async () => {
-  //@ts-ignore
-  userStore.currentlyViewingStudents = userStore.guidanceStudents;
-});
+const loading: Ref<boolean> = ref(false);
+const viewAll: Ref<boolean> = ref(false);
+const input: Ref<string> = ref("");
+const sortBy: Ref<string> = ref("lastnameaz");
+
+const x: Ref<number> = ref(0);
+const y: Ref<number> = ref(10);
+
+const currentPage: Ref<number> = ref(1);
+const pageCapacity: number = 10;
+
+userStore.currentlyViewingStudents = userStore.guidanceStudents;
 
 async function fetchStudents() {
   const { access_token } = useUserStore();
-  loading.value = true;
   try {
     // GET request for all students
+    loading.value = true;
     const profilesResponse = await fetch(
       `${import.meta.env.VITE_URL}/guidance/profiles`,
       {
@@ -106,134 +105,146 @@ async function fetchStudents() {
   }
 }
 
-const filterType = (selected: string) => {
+const updateSortOption = (selected: string) => {
   sortBy.value = selected;
 };
 
-const sortAndFilterStudents = computed(() => {
-  let sortedStudents = userStore.currentlyViewingStudents; //create a copy to avoid modifying the original array
+const sortedAndFilteredStudents = computed(() => {
+  return applyFiltersAndSort(userStore.guidanceStudents, sortBy.value, input.value);
+})
 
-  if (sortBy.value === "lastnameaz") {
-    sortedStudents = sortedStudents.sort(
-      (a: studentGuidance, b: studentGuidance) => a.name.localeCompare(b.name)
-    );
-  } else if (sortBy.value === "lastnameza") {
-    sortedStudents = sortedStudents.sort(
-      (a: studentGuidance, b: studentGuidance) => b.name.localeCompare(a.name)
-    );
-  } else if (sortBy.value === "ns") {
-    sortedStudents = sortedStudents.filter(
-      (student: studentGuidance) => student.status === "NOT STARTED"
-    );
-  } else if (sortBy.value === "ip") {
-    sortedStudents = sortedStudents.filter(
-      (student: studentGuidance) => student.status === "INCOMPLETE"
-    );
-  } else if (sortBy.value === "com") {
-    sortedStudents = sortedStudents.filter(
-      (student: studentGuidance) => student.status === "COMPLETE"
-    );
-  } else if (sortBy.value === "final") {
-    sortedStudents = sortedStudents.filter(
-      (student: studentGuidance) => student.status === "FINALIZED"
-    );
-  } else if (sortBy.value === "nine") {
-    sortedStudents = sortedStudents.filter(
-      (student: studentGuidance) => student.grade === "FRESHMAN"
-    );
-  } else if (sortBy.value === "ten") {
-    sortedStudents = sortedStudents.filter(
-      (student: studentGuidance) => student.grade === "SOPHOMORE"
-    );
-  } else if (sortBy.value === "eleven") {
-    sortedStudents = sortedStudents.filter(
-      (student: studentGuidance) => student.grade === "JUNIOR"
-    );
-  } else if (sortBy.value === "transfer") {
-    sortedStudents = sortedStudents.filter(
-      (student: studentGuidance) => student.flag === "Transfer"
-    );
-  } else if (sortBy.value === "regents") {
-    sortedStudents = sortedStudents.filter(
-      (student: studentGuidance) => student.flag === "Regents"
-    );
-  } else if (sortBy.value === "sports") {
-    sortedStudents = sortedStudents.filter(
-      (student: studentGuidance) => student.flag === "Team"
-    );
-  } else if (sortBy.value === "enl") {
-    sortedStudents = sortedStudents.filter(
-      (student: studentGuidance) => student.flag === "ENL"
-    );
+function filterStudentsByCategory(students: studentGuidance[], sortBy: string) {
+  let categorizedStudents: studentGuidance[] = students;
+  switch(sortBy) {
+    case 'lastnameaz':
+      categorizedStudents = categorizedStudents.sort((a: studentPreview, b: studentPreview) => a.name.localeCompare(b.name));
+      break;
+    case 'lastnameza':
+      categorizedStudents = categorizedStudents.sort((a: studentPreview, b: studentPreview) => b.name.localeCompare(a.name));
+      break;
+    case 'ns':
+      categorizedStudents = categorizedStudents.filter((student: studentPreview) => student.status === 'NOT STARTED');
+      break;
+    case 'ip':
+      categorizedStudents = categorizedStudents.filter((student: studentPreview) => student.status === 'INCOMPLETE');
+      break;
+    case 'com':
+      categorizedStudents = categorizedStudents.filter((student: studentPreview) => student.status === 'COMPLETE');
+      break;
+    case 'final':
+      categorizedStudents = categorizedStudents.filter((student: studentPreview) => student.status === 'FINALIZED');
+      break;
+    case 'nine':
+      categorizedStudents = categorizedStudents.filter((student: studentPreview) => student.grade === 'FRESHMAN');
+      break;
+    case 'ten':
+      categorizedStudents = categorizedStudents.filter((student: studentPreview) => student.grade === 'SOPHOMORE');
+      break;
+    case 'eleven':
+      categorizedStudents = categorizedStudents.filter((student: studentPreview) => student.grade === 'JUNIOR');
+      break;
+    case 'transfer':
+      categorizedStudents = categorizedStudents.filter((student: studentPreview) => student.flag === 'Transfer');
+      break;
+    case 'regents':
+      categorizedStudents = categorizedStudents.filter((student: studentPreview) => student.flag === 'Regents');
+      break;
+    case 'sports':
+      categorizedStudents = categorizedStudents.filter((student: studentPreview) => student.flag === 'Team');
+      break;
+    case 'enl':
+      categorizedStudents = categorizedStudents.filter((student: studentPreview) => student.flag === 'ENL');
+      break;
   }
+  return categorizedStudents;
+}
 
-  return sortedStudents.filter(
-    (student: studentGuidance) =>
-      student.name.toLowerCase().includes(input.value.toLowerCase()) ||
-      student.email.toLowerCase().includes(input.value.toLowerCase())
+function filterStudentBySearch(students: studentGuidance[], query: string) {
+  if (query.length === 0) {
+    return students;
+  }
+  const lowerCaseQuery = query.toLowerCase();
+  return students.filter((student: studentGuidance) => 
+    student.name.toLowerCase().includes(lowerCaseQuery) ||
+    student.email.toLowerCase().includes(lowerCaseQuery)
   );
-});
+}
 
-//sorting students to view
-const newStudents = computed(() => {
-  return userStore.currentlyViewingStudents.filter(
-    (student: studentPreview) =>
+function applyFiltersAndSort(students: studentGuidance[], sortBy: string, searchQuery: string): studentGuidance[] {
+  // filter by category -> filter by name or email -> return result
+  const categorizedStudents = filterStudentsByCategory(students, sortBy);
+  const searchedStudents = filterStudentBySearch(categorizedStudents, searchQuery);
+  return searchedStudents;
+}
 
-      student.name.toLowerCase().indexOf(input.value.toLowerCase()) !== -1 ||
-      student.email.indexOf(input.value) !== -1
-  );
-});
+watch(viewAll, async (newValue) => {
+  handleViewAllChange(newValue);
+})
 
-watch(
-  () => viewAll.value,
-  async (newResponse) => {
-    if (viewAll.value === true) {
-      await fetchStudents();
-      userStore.currentlyViewingStudents = allStudents.value;
-    }
-    if (viewAll.value === false) {
-      //@ts-ignore
-      userStore.currentlyViewingStudents = userStore.guidanceStudents;
-    }
-    updatePage(1);
-  }
-);
+async function handleViewAllChange(isEnabled: boolean) {
+  input.value = '';
+  sortBy.value = 'lastnameaz';
 
-watch(newStudents, () => {
-  const studentList = JSON.parse(JSON.stringify(newStudents.value));
-  if (studentList.length < 1) {
-    pages.value = 1;
+  if (isEnabled) {
+    await fetchStudents();
+    userStore.currentlyViewingStudents = allStudents.value;
+    // const numPages = Math.ceil(allStudents.value.length / pageCapacity);
+    // totalPages.value = numPages;
   } else {
-    pages.value = Math.ceil(studentList.length / pageCapacity);
+    userStore.currentlyViewingStudents = userStore.guidanceStudents;
   }
-  updatePage(1);
-});
 
-watch(sortAndFilterStudents, () => {
-  const studentList = sortAndFilterStudents.value;
-  if (studentList.length < 1) {
-    pages.value = 1;
+  updatePagination(1);
+}
+
+const totalPages = computed(() => {
+  const numStudents = sortedAndFilteredStudents.value.length;
+  if(numStudents < 1) {
+    return 1;
   } else {
-    pages.value = Math.ceil(studentList.length / pageCapacity);
+    return Math.ceil(numStudents / pageCapacity);
   }
-  updatePage(1);
-});
+})
 
-const add = () => {
-  currentPage.value++;
-  x.value = x.value + pageCapacity;
-  y.value = y.value + pageCapacity;
+watch([sortedAndFilteredStudents], (currentValue, previousValue) => {
+  // adjust pagination after students are filtered and categorized
+  const displayedStudents = sortedAndFilteredStudents.value;
+  userStore.currentlyViewingStudents = displayedStudents;
+  updatePagination(1);
+}, { deep: true })
+
+function changePage(increment: number) {
+  if (increment > 0) {
+    currentPage.value += increment;
+    x.value += pageCapacity;
+    y.value += pageCapacity;
+  }
+  else if (increment < 0) {
+    currentPage.value += increment;
+    x.value -= pageCapacity;
+    y.value -= pageCapacity;
+  } else {
+    console.error('Invalid increment; Unable to change pages.');
+    return
+  }
+  updatePagination(currentPage.value)
+}
+
+function nextPage() {
+  changePage(1);
 };
 
-const subtract = () => {
-  currentPage.value--;
-  x.value = x.value - pageCapacity;
-  y.value = y.value - pageCapacity;
-};
+function previousPage() {
+  changePage(-1);
+}
 
-const updatePage = (pageNumber: number) => {
-  x.value = pageNumber * pageCapacity - pageCapacity;
-  y.value = pageNumber * pageCapacity;
+function updatePagination(pageNumber: number) {
+  const startIndex = (pageNumber * pageCapacity) - pageCapacity;
+  const endIndex = pageNumber * pageCapacity;
+  x.value = startIndex;
+  y.value = endIndex;
+
   currentPage.value = pageNumber;
 };
+
 </script>
