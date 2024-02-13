@@ -61,7 +61,7 @@ export interface studentData {
     coursesRequired: course[]
     coursesTaken: course[]
     grade: grade
-    homeroom: string
+    hr: string
     meeting: string | null
     description: string
 }

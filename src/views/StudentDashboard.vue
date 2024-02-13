@@ -1,6 +1,6 @@
 <template>
   <div class="h-[75vh] w-full flex flex-row justify-center items-center">
-    <div v-if="studentStore.student.homeroom === ''" id="left"
+    <div v-if="studentStore.student.hr === ''" id="left"
       class="w-5/6 flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left md:w-3/4 lg:max-w-2xl xl:max-w-3xl lg:space-y-6 lg:ml-12">
       <h2 id="name" class="text-5xl font-bold">Welcome, {{ userStore.first_name.toLowerCase().charAt(0).toUpperCase() +
         userStore.first_name.toLowerCase().slice(1) }}
@@ -99,7 +99,7 @@ let time: String;
 let date: String;
 let closeTime: string[]
 
-if (studentStore.student.homeroom === '') {
+if (studentStore.student.hr === '') {
   console.log('Student profile not updated; no homeroom')
 } else {
   //formatting for due date
