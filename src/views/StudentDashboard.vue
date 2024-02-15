@@ -32,17 +32,17 @@
         Status:
         <span class="font-medium">Not Started</span>
       </div>
-      <div v-else-if="userStore.studentSurveyPreview[0].status === 'COMPLETE'"
+      <div v-else-if="studentSurveyInfo.status === 'COMPLETE'"
         class="text-[#174616] bg-[#A8D480]  font-semibold text-center p-3 lg:px-6 lg:text-base text-sm rounded-md">Survey
         Status:
         <span class="font-medium">Submitted</span>
       </div>
-      <div v-else-if="userStore.studentSurveyPreview[0].status === 'INCOMPLETE'"
+      <div v-else-if="studentSurveyInfo.status === 'INCOMPLETE'"
         class="text-[#461616] bg-[#F9D477] font-semibold text-center p-3 lg:px-6 lg:text-base text-sm rounded-md">Survey
         Status:
         <span class="font-medium">In Progress</span>
       </div>
-      <div v-else-if="userStore.studentSurveyPreview[0].status === 'FINALIZED'"
+      <div v-else-if="studentSurveyInfo.status === 'FINALIZED'"
         class="text-[#461616] bg-[#D1A4DE] font-semibold text-center p-3 lg:px-6 lg:text-base text-sm rounded-md">Survey
         Status:
         <span class="font-medium">Finalized</span>
@@ -87,7 +87,7 @@ import { useSurveyStore } from "../stores/survey";
 import { useStudentStore } from "../stores/student";
 //@ts-ignore
 import dateFormat from "dateformat";
-import { onMounted, Ref, ref } from "vue";
+import { onMounted, reactive, Ref, ref } from "vue";
 
 document.title = 'Dashboard | SITHS Course Selection'
 
@@ -95,20 +95,26 @@ const userStore = useUserStore();
 const surveyStore = useSurveyStore();
 const studentStore = useStudentStore();
 
+// create a reactive object with only the data we need
+const studentSurveyInfo = reactive({
+  status: userStore.studentSurveyPreview[0].status,
+  dueDate: userStore.studentSurveyPreview[0].dueDate,
+})
+
 const closeTime: Ref<string[]> = ref([]);
 let time: String;
 let date: String;
 
 onMounted(() => {
-  if (!(studentStore.student.hr.length === 0) && userStore.studentSurveyPreview[0].dueDate) {
-    const ISOString = userStore.studentSurveyPreview[0].dueDate.substring(0, 10).split('-');
+  if (!(studentStore.student.hr.length === 0) && studentSurveyInfo.dueDate) {
+    const ISOString = studentSurveyInfo.dueDate.substring(0, 10).split('-');
     closeTime.value = ISOString;
   } else {
     console.log('Student profile not updated; no homeroom');
-    closeTime.value = [];
   }
 })
 
+// component should be revised again after removel of studentStore
 if (
   studentStore.student.meeting != undefined ||
   studentStore.student.meeting != null
