@@ -250,16 +250,16 @@ export const useUserStore = defineStore("user", {
                 })
                 const data = await res.json();
                 if (this.currentlyViewingStudents === null) return
-                const studentIndex = this.currentlyViewingStudents.findIndex((student: studentPreview) => {
+                const studentIndex = this.currentlyViewingStudents.findIndex((student: studentPreview) => 
                     student.email + '@nycstudents.net' === email
-                });
-                const previewIndex = this.studentSurveyPreview.findIndex((student: studentPreview) => {
-                    student.email + 'nycstudents.net' === email
-                });
+                );
+                const previewIndex = this.guidanceStudents.findIndex((student: studentPreview) => 
+                    student.email + '@nycstudents.net' === email
+                );
                 
                 if (studentIndex !== -1 && previewIndex !== -1) {
                     this.currentlyViewingStudents[studentIndex].flag = data.flag;
-                    this.studentSurveyPreview[previewIndex].flag = data.flag;
+                    this.guidanceStudents[previewIndex].flag = data.flag;
                 }
             } catch (error) {
                 console.error('Error fetching updateFlag:', error);
@@ -280,16 +280,15 @@ export const useUserStore = defineStore("user", {
                 })
                 const data = await res.json();
                 if (this.currentlyViewingStudents === null) return
-                const studentIndex = this.currentlyViewingStudents.findIndex((student: studentPreview) => {
+                const studentIndex = this.currentlyViewingStudents.findIndex((student: studentPreview) => 
                     student.email + '@nycstudents.net' === email
-                });
-                const previewIndex = this.studentSurveyPreview.findIndex((student: studentPreview) => {
-                    student.email + 'nycstudents.net' === email
-                });
-
+                );
+                const previewIndex = this.guidanceStudents.findIndex((student: studentPreview) => 
+                    student.email + '@nycstudents.net' === email
+                );
                 if (studentIndex !== -1 && previewIndex !== -1) {
                     this.currentlyViewingStudents[studentIndex].flag = data.flag;
-                    this.studentSurveyPreview[previewIndex].flag = data.flag;
+                    this.guidanceStudents[previewIndex].flag = data.flag;
                 }
             } catch (error) {
                 console.error('Error fetching updateFlag:', error);
