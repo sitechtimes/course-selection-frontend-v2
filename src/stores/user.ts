@@ -19,7 +19,7 @@ export const useUserStore = defineStore("user", {
         refresh_token: "",
         loading: false,
         expire_time: 0,
-        studentSurveyPreview: [] as studentPreview[],
+        studentSurveyPreview: {} as studentPreview,
         currentlyViewingStudents: [] as studentPreview[],
         guidanceStudents: [] as studentGuidance[],
         guidanceMeetings: [] as studentMeetings[],
@@ -80,7 +80,7 @@ export const useUserStore = defineStore("user", {
                             surveyStore.open = false;
                         }
                         studentStore.studentSurveyPreview = data;
-                        this.studentSurveyPreview = [data];
+                        this.studentSurveyPreview = data;
                         surveyStore.currentAnsweredSurvey.status = data.status;
                     })
                     .catch((error) => {

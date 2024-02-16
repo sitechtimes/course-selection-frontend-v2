@@ -21,7 +21,7 @@
         class="text-lg md:text-xl text-left flex justify-center items-center ml-4 lg:ml-0 lg:justify-start">
         <BellIcon />
         <h2 v-if="surveyStore.open">Surveys are closing on {{ closeTime[1] }}/{{ closeTime[2] }}/{{ closeTime[0] }}.</h2>
-        <h2 v-else-if="userStore.studentSurveyPreview[0].status === 'FINALIZED'">Your guidance counselor has finalised
+        <h2 v-else-if="userStore.studentSurveyPreview.status === 'FINALIZED'">Your guidance counselor has finalised
           your survey. If you wish to make changes, please contact them.</h2>
         <h2 v-else>The due date for completion has passed. Please contact your guidance counselor to request changes.</h2>
       </div>
@@ -96,10 +96,7 @@ const surveyStore = useSurveyStore();
 const studentStore = useStudentStore();
 
 // create a reactive object with only the data we need
-const studentSurveyInfo = reactive({
-  status: userStore.studentSurveyPreview[0].status,
-  dueDate: userStore.studentSurveyPreview[0].dueDate,
-})
+const studentSurveyInfo = reactive(userStore.studentSurveyPreview);
 
 const closeTime: Ref<string[]> = ref([]);
 let time: String;
