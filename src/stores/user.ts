@@ -1,6 +1,11 @@
 import { defineStore } from "pinia";
 import { useSurveyStore } from "./survey";
-import { account_type, student, studentSurveyPreview, guidanceSurveyPreview, flagAPI } from "../types/interface";
+import { useStudentStore } from "./student";
+import { useRouter } from "vue-router";
+import axios from "axios";
+import { user, account_type, userData, guidanceData, studentGuidance, studentMeetings, studentPreview } from "../types/interface";
+import { ref } from "vue";
+import router from "../router";
 
 export const useUserStore = defineStore("user", {
     state: () => ({
@@ -22,6 +27,10 @@ export const useUserStore = defineStore("user", {
         studentSurveyPreview: [] as Array<studentSurveyPreview|guidanceSurveyPreview>,
         currentlyViewingStudents: [],
         guidanceStudents: [],
+        studentSurveyPreview: [] as studentPreview[],
+        currentlyViewingStudents: [] as studentPreview[],
+        guidanceStudents: [] as studentGuidance[],
+        guidanceMeetings: [] as studentMeetings[],
     }),
     actions: {
         async init(type: account_type) {
@@ -51,7 +60,7 @@ export const useUserStore = defineStore("user", {
                     },
                 })
                     .then((res) => res.json())
-                    .then(async (data:studentSurveyPreview) => {
+                    .then(async (data) => {
                         const surveyStore = useSurveyStore();
                         console.log(surveyStore.currentSurvey)
 
@@ -64,13 +73,7 @@ export const useUserStore = defineStore("user", {
                     })
                     .catch((error) => {
                         console.error("Error fetching surveyPreview:", error);
-                    }).then(() => this.loading = false)
-                
-    
-                
-                
-
-               
+                    }).then(() => this.loading = false)      
             }
         },
         async GoogleLogin(res: any) {
@@ -99,6 +102,8 @@ export const useUserStore = defineStore("user", {
                     this.expire_time = expiration;
 
                     this.getUserType(); //make dj rest auth return user type (backend) to remove this function
+                }).catch((error) => {
+                    console.error('Error fetching GoogleLogin:', error);
                 });
         },
         async EmailLogin(username: string, password: string) {
@@ -131,12 +136,17 @@ export const useUserStore = defineStore("user", {
                         this.loading = true;
                         await this.getUserType()
                         this.init(this.userType);
+                        this.savePersistentSession();
+                    })
+                    .catch((error) => {
+                        throw new Error('Error fetching login:', error.message);
                     });
 
             } catch (error) {
+                console.error(error);
                 this.loading = false;
                 alert("Login failed. Please check your credentials.");
-            }
+            };
         },
         async changeMeeting(
             email: string,
@@ -144,25 +154,41 @@ export const useUserStore = defineStore("user", {
             description: string,
             notify: boolean
         ) {
-            console.log(JSON.stringify({
-                email: email,
-                date: meetingISO,
-                memo: description,
-                notify: notify,
-            }),)
-            fetch(`${import.meta.env.VITE_URL}/guidance/updateMeeting/`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${this.access_token}`
-                },
-                body: JSON.stringify({
-                    email: email,
-                    date: meetingISO,
-                    memo: description,
-                    notify: notify,
-                }),
-            });
+            try {
+                await fetch(`${import.meta.env.VITE_URL}/guidance/updateMeeting/`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${this.access_token}`
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        description: description,
+                        notify: notify,
+                        date: meetingISO,
+                    }),
+                });
+                const meetingExists = this.guidanceMeetings.some((meeting) => meeting.email === email);
+                if(!meetingExists) {
+                    const student = this.guidanceStudents.find((student: studentGuidance) => student.email === email.split('@')[0]);
+                    if(student !== undefined) {
+                        const meetingData: studentMeetings = {
+                            name: student.name
+                                .split(",")
+                                .map((part) => part.trim().toLowerCase())
+                                .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+                                .join(", "),
+                            meetingDate: new Date(meetingISO),
+                            description: description,
+                            email: email,
+                            grade: student.grade,
+                        };
+                        this.guidanceMeetings.push(meetingData);
+                    };
+                };
+            } catch (error) {
+                console.error('Error fetching updateMeeting:', error);
+            };
         },
         async deleteMeeting(email: string) {
             fetch(`${import.meta.env.VITE_URL}/guidance/updateMeeting/`, {
@@ -174,65 +200,103 @@ export const useUserStore = defineStore("user", {
                 body: JSON.stringify({
                     email: email,
                 }),
+            }).then(() => {
+                const updatedMeetings = this.guidanceMeetings.filter((meeting) => meeting.email !== email);
+                this.guidanceMeetings = updatedMeetings;
+            }).catch((error) => {
+                console.error('Error fetching updateMeeting:', error);
             });
         },
         async addFlag(email: string, newFlag: string) {
-            const res:flagAPI = await fetch(`${import.meta.env.VITE_URL}/guidance/updateFlag/`, {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${this.access_token}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    email: email,
-                    flag: newFlag,
-                }),
-            }).then(res => res.json())
-            this.updatePreview(res)
+            try {
+                const res = await fetch(`${import.meta.env.VITE_URL}/guidance/updateFlag/`, {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${this.access_token}`,
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        flag: newFlag,
+                    }),
+                })
+                const data = await res.json();
+                if (this.currentlyViewingStudents === null) return
+                const studentIndex = this.currentlyViewingStudents.findIndex((student: studentPreview) => 
+                    student.email + '@nycstudents.net' === email
+                );
+                const previewIndex = this.guidanceStudents.findIndex((student: studentPreview) => 
+                    student.email + '@nycstudents.net' === email
+                );
+                
+                if (studentIndex !== -1 && previewIndex !== -1) {
+                    this.currentlyViewingStudents[studentIndex].flag = data.flag;
+                    this.guidanceStudents[previewIndex].flag = data.flag;
+                }
+            } catch (error) {
+                console.error('Error fetching updateFlag:', error);
+            };
         },
         async deleteFlag(email: string, flagToBeRemoved: string) {
-            const res:flagAPI = await fetch(`${import.meta.env.VITE_URL}/guidance/updateFlag/`, {
-                method: "DELETE",
-                headers: {
-                    Authorization: `Bearer ${this.access_token}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    email: email,
-                    flag: flagToBeRemoved,
-                }),
-            }).then(res =>res.json())
-            this.updatePreview(res)
+            try {
+                const res = await fetch(`${import.meta.env.VITE_URL}/guidance/updateFlag/`, {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${this.access_token}`,
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        flag: flagToBeRemoved,
+                    }),
+                })
+                const data = await res.json();
+                if (this.currentlyViewingStudents === null) return
+                const studentIndex = this.currentlyViewingStudents.findIndex((student: studentPreview) => 
+                    student.email + '@nycstudents.net' === email
+                );
+                const previewIndex = this.guidanceStudents.findIndex((student: studentPreview) => 
+                    student.email + '@nycstudents.net' === email
+                );
+                if (studentIndex !== -1 && previewIndex !== -1) {
+                    this.currentlyViewingStudents[studentIndex].flag = data.flag;
+                    this.guidanceStudents[previewIndex].flag = data.flag;
+                }
+            } catch (error) {
+                console.error('Error fetching updateFlag:', error);
+            };
         },
         async getUserType() {
-            const res = await fetch(`${import.meta.env.VITE_URL}/user/`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${this.access_token}`,
-                },
-            });
-            const data = await res.json();
-            if (data.is_guidance) {
-                this.userType = "guidance";
-            } else {
-                this.userType = "student";
-                this.student = data.studentProfile
-            }
+            try {
+                const res = await fetch(`${import.meta.env.VITE_URL}/user/`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${this.access_token}`,
+                    },
+                });
+                const data = await res.json();
+                if (data.is_guidance) {
+                    this.userType = "guidance";
+                } else {
+                    this.userType = "student";
+                }
+            } catch (error) {
+                console.error('Error fetching user:', error);
+            };
         },
-        updatePreview(data:flagAPI) {
-            if (this.currentlyViewingStudents === null) return
-            // @ts-ignore
-            const studentIndex = this.currentlyViewingStudents.findIndex((student) => student.email + "@nycstudents.net" === email);
-            //@ts-ignore
-            const previewIndex = this.studentSurveyPreview.findIndex((student:guidanceSurveyPreview) => student.email + "@nycstudents.net" === email);
-            if (studentIndex !== -1 && previewIndex !== -1) {
-                //@ts-ignore
-                this.currentlyViewingStudents[studentIndex].flag = data.flag;
-                //@ts-ignore
-                this.studentSurveyPreview[previewIndex].flag = data.flag;
-            }
+        savePersistentSession() {
+            const persistentData = JSON.stringify({
+                email: this.email,
+                first_name: this.first_name,
+                last_name: this.last_name,
+                account_type: this.userType,
+                access_token: this.access_token,
+                refresh_token: this.refresh_token,
+                expire_time: this.expire_time,
+            });
 
-         }
+            localStorage.setItem('session', persistentData);
+        },
     },
     persist: {
         storage: sessionStorage,

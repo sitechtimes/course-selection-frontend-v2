@@ -50,7 +50,7 @@
               </svg>
               Date
             </h3>
-            <p class="ml-4 p-4">{{ meetingDetails.date }}</p>
+            <p class="ml-4 p-4">{{ meetingDetails.meetingDate }}</p>
           </div>
           <div class="pl-16">
             <h3
@@ -65,7 +65,7 @@
               </svg>
               Time
             </h3>
-            <p class="ml-4 p-4">{{ meetingDetails.time }}</p>
+            <p class="ml-4 p-4">{{ meetingDetails.meetingTime }}</p>
           </div>
         </div>
 
@@ -81,7 +81,7 @@
           Memo
         </h3>
         <p class="ml-4 p-4">
-          {{ meetingDetails.memo }}
+          {{ meetingDetails.description }}
         </p>
         <div></div>
         <!-- buttons -->
@@ -147,6 +147,7 @@ const toggleDeleteModal = () => {
   showDeleteModal.value = !showDeleteModal.value;
   show.value = !show.value;
 };
+
 function pushRouter(email: string) {
   router.push(`/guidance/PrintPage/${email.replace("@nycstudents.net", "")}`);
 }

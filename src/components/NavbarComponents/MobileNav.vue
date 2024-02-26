@@ -39,9 +39,11 @@ const surveyNav = () => {
 };
 
 const logout = async () => {
-  await resetStore.all();
-  router.push("/");
-};
+    await resetStore.all()
+    localStorage.clear();
+    router.push('/')
+}
+
 </script>
 
 <template>

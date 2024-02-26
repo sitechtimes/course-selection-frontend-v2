@@ -61,7 +61,7 @@ export interface studentData {
     coursesRequired: course[]
     coursesTaken: course[]
     grade: grade
-    homeroom: string
+    hr: string
     meeting: string | null
     description: string
 }
@@ -199,8 +199,15 @@ export interface course {
 export interface studentMeetings {
     name: string;
     meetingDate: Date;
-    meetingTime: Date;
-    memo: string;
+    meetingTime?: Date;
+    description: string;
+    grade: string;
+    email: string;
+}
+
+export interface calendarMeetings extends studentMeetings {
+    id: string;
+    meetingDetails: studentMeetings
 }
 
 export interface calendarData {
@@ -208,12 +215,7 @@ export interface calendarData {
         type: string;
         todaysDate: number;
         id: string;
-        meetings: Array<{
-            id: string,
-            name: string;
-            meetingDate: Date | null;
-            grade: string;
-        }>;
+        meetings: calendarMeetings[];
     }>;
 }
 

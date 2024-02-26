@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { RouteComponent, createRouter, createWebHistory } from "vue-router";
 import { useUserStore } from "../../src/stores/user";
 import { useSurveyStore } from "../stores/survey";
 
@@ -8,7 +8,7 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      component: () => import("../views/LandingPage.vue"),
+      component: (): Promise<RouteComponent> => import("../views/LandingPage.vue"),
       beforeEnter: (to) => {
         const userStore = useUserStore();
 
@@ -22,7 +22,7 @@ const router = createRouter({
     {
       path: "/guidance/dashboard",
       name: "guidanceDash",
-      component: () => import("../views/GuidanceHome.vue"),
+      component: (): Promise<RouteComponent> => import("../views/GuidanceHome.vue"),
       beforeEnter: (to) => {
         const userStore = useUserStore();
 
@@ -34,7 +34,7 @@ const router = createRouter({
     {
       path: '/guidance/studentlist',
       name: 'guidanceStudentlist',
-      component: () => import('../views/GuidanceStudentList.vue'),
+      component: (): Promise<RouteComponent> => import('../views/GuidanceStudentList.vue'),
       beforeEnter: (to) => {
         const userStore = useUserStore();
 
@@ -46,12 +46,12 @@ const router = createRouter({
     {
       path: "/login",
       name: "login",
-      component: () => import("../views/LoginPage.vue"),
+      component: (): Promise<RouteComponent> => import("../views/LoginPage.vue"),
     },
     {
       path: "/student/survey",
       name: "studentSurvey",
-      component: () => import("../views/SurveyPage.vue"),
+      component: (): Promise<RouteComponent> => import("../views/SurveyPage.vue"),
       beforeEnter: (to) => {
         const userStore = useUserStore();
         const surveyStore = useSurveyStore();
@@ -68,7 +68,7 @@ const router = createRouter({
     {
       path: '/student/survey/closed',
       name: 'closedSurvey',
-      component: () => import('../views/ClosedSurvey.vue'),
+      component: (): Promise<RouteComponent> => import('../views/ClosedSurvey.vue'),
       beforeEnter: (to) => {
         const userStore = useUserStore();
         const surveyStore = useSurveyStore()
@@ -85,7 +85,7 @@ const router = createRouter({
     {
       path: '/student/survey/review',
       name: 'reviewSurvey',
-      component: () => import('../views/ReviewSurvey.vue'),
+      component: (): Promise<RouteComponent> => import('../views/ReviewSurvey.vue'),
       beforeEnter: (to) => {
         const userStore = useUserStore();
         const surveyStore = useSurveyStore()
@@ -102,12 +102,12 @@ const router = createRouter({
     {
       path: '/guidanceCalendar',
       name: 'guidanceCalendar',
-      component: () => import('../views/GuidanceCalendar.vue')
+      component: (): Promise<RouteComponent> => import('../views/GuidanceCalendar.vue')
     },
     {
       path: '/student/dashboard',
       name: 'studentDash',
-      component: () => import('../views/StudentDashboard.vue'),
+      component: (): Promise<RouteComponent> => import('../views/StudentDashboard.vue'),
       beforeEnter: (to) => {
         const userStore = useUserStore();
 
@@ -119,7 +119,7 @@ const router = createRouter({
     {
       path: '/guidance/survey/:email',
       name: 'guidanceSurvey',
-      component: () => import('../views/GuidanceSurvey.vue'),
+      component: (): Promise<RouteComponent> => import('../views/GuidanceSurvey.vue'),
       beforeEnter: (to) => {
         const userStore = useUserStore();
 
@@ -131,7 +131,7 @@ const router = createRouter({
     {
       path: '/guidance/calendar',
       name: 'calendar',
-      component: () => import('../views/GuidanceCalendar.vue'),
+      component: (): Promise<RouteComponent> => import('../views/GuidanceCalendar.vue'),
       beforeEnter: (to) => {
         const userStore = useUserStore();
 
@@ -143,7 +143,7 @@ const router = createRouter({
     {
       path: '/guidance/statistics',
       name: 'statistics',
-      component: () => import('../views/GuidanceStatistics.vue'),
+      component: (): Promise<RouteComponent> => import('../views/GuidanceStatistics.vue'),
       beforeEnter: (to) => {
         const userStore = useUserStore();
 
@@ -155,7 +155,7 @@ const router = createRouter({
     {
       path: '/guidance/PrintPage/:email',
       name: 'printPage',
-      component: () => import('../views/PrintPage.vue'),
+      component: (): Promise<RouteComponent> => import('../views/PrintPage.vue'),
       beforeEnter: (to) => {
         const userStore = useUserStore();
         if (userStore.userType === 'student') {
@@ -172,6 +172,28 @@ router.beforeEach(async (to) => {
 
   const publicPages = ["/", "/login"];
   const authRequired = !publicPages.includes(to.path);
+  const sessionExists = localStorage.getItem('session') !== null;
+
+  if (sessionExists && !loggedIn) {
+    const sessionItem = localStorage.getItem('session');
+    const session = sessionItem !== null ? JSON.parse(sessionItem) : null;
+    //Check for CRSF
+    userStore.email = session.email;
+    userStore.first_name = session.first_name;
+    userStore.last_name = session.last_name;
+    userStore.refresh_token = session.refresh_token;
+    userStore.access_token = session.access_token;
+    userStore.expire_time = session.expire_time;
+
+    userStore.isLoggedIn = true;
+    try {
+      userStore.init(session.account_type);
+    } catch (error) {
+      console.error('Unable to load user session');
+    }
+    router.push(to);
+    return
+  }
 
   if (authRequired && !loggedIn) {
     return { name: "login" };

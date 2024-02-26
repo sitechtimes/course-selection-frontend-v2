@@ -35,17 +35,8 @@
         </tr>
       </thead>
 
-      <tbody
-        v-for="student in newstudents"
-        :key="student.email"
-        class="border-2 border-black"
-      >
-        <AddFlag
-          v-if="showFlagModal === student.email"
-          @exit="toggleFlagModal('')"
-          :student="student"
-          :flags="flags"
-        >
+      <tbody v-for="student in newStudents" :key="student.email" class="border-2 border-black">
+        <AddFlag v-if="showFlagModal === student.email" @exit="toggleFlagModal('')" :student="student" :flags="flags">
         </AddFlag>
         <DeleteFlag
           v-if="showDeleteFlag === student.email"
@@ -129,7 +120,7 @@
 <script setup lang="ts">
 import { Ref, ref, PropType, watch } from "vue";
 import { useRouter } from "vue-router";
-import { studentGuidance } from "../../types/interface";
+import { studentGuidance, studentPreview } from "../../types/interface";
 import { useUserStore } from "../../stores/user";
 import { useSurveyStore } from "../../stores/survey";
 import PlusIcon from "../icons/PlusIcon.vue";
@@ -137,11 +128,10 @@ import MinusSign from "../icons/MinusSign.vue";
 import AddFlag from "../GuidanceComponents/AddFlag.vue";
 import DeleteFlag from "../GuidanceComponents/DeleteFlag.vue";
 
-defineProps({
-  newstudents: Array as PropType<Array<studentGuidance>>,
+const props = defineProps({
+  newStudents: Array as PropType<Array<studentGuidance>>,
 });
 
-const userStore = useUserStore();
 const surveyStore = useSurveyStore();
 const router = useRouter();
 

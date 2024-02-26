@@ -1,233 +1,106 @@
 <template>
   <div class="w-44">
-  <div
-   class="h-10 w-full flex flex-row bg-primary-g text-black justify-evenly cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
-   id="sort"
-   @click="isOpen = !isOpen"
- >
-   <div>
-     <a class="mt-2.5 ml-4 flex">
-       <p class="font-semibold" id="sortshow">{{ selected }}</p>
-     </a>
-   </div>
-   <DownArrow class="mt-2.5"/>
-   </div>
-   <div class="sub-menu absolute shadow-[4px_3px_3px_rgba(0,0,0,0.25)] " v-if="isOpen" >
-     <div v-for="x in menuArray" :key="x.sortBy" class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g">
-       <button @click="sortBy(x)" class="ml-2">{{ x.text }}</button>
-     </div>
-   </div>
- </div>
+    <div
+      class="h-10 w-full flex flex-row bg-primary-g text-black justify-evenly cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
+      id="sort"
+      @click="isOpen = !isOpen"
+    >
+      <div>
+        <a class="mt-2.5 ml-4 flex">
+          <p class="font-semibold" id="sortshow">{{ selected }}</p>
+        </a>
+      </div>
+      <DownArrow class="mt-2.5" />
+    </div>
+    <div
+      class="sub-menu absolute shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
+      v-if="isOpen"
+    >
+      <div
+        v-for="x in menuArray"
+        :key="x.sortBy"
+        class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g"
+      >
+        <button @click="filter(x.sortBy, x.text)" class="ml-2">
+          {{ x.text }}
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, watch } from "vue";
-import { useUserStore } from '../../stores/user';
-import DownArrow from '../icons/DownArrow.vue';
+import { computed, onMounted, ref, Ref, watch } from "vue";
+import { useUserStore } from "../../stores/user";
+import DownArrow from "../icons/DownArrow.vue";
 import { userData } from "../../types/interface";
 
-const userStore = useUserStore()
+const userStore = useUserStore();
 const selected: Ref<string> = ref("Sort By");
 const isOpen: Ref<boolean> = ref(false);
+const emit = defineEmits(["filter-selected"]);
 
-watch(() => userStore.currentlyViewingStudents, (newValue) => {
-  selected.value = "Sort By"
-})
+//default sorting is last names a-z
+const defaultSort = { sortBy: "lastnameaz", text: "Sort By" };
+
+const filter = (sortBy: string, text: string) => {
+  emit("filter-selected", sortBy);
+  isOpen.value = false;
+  selected.value = text;
+};
 
 const menuArray = [
   {
     sortBy: "lastnameaz",
-    text: "Last Name (A-Z)"
+    text: "Last Name (A-Z)",
   },
   {
     sortBy: "lastnameza",
-    text: "Last Name (Z-A)"
+    text: "Last Name (Z-A)",
   },
   {
     sortBy: "ns",
-    text: "Not Started"
+    text: "Not Started",
   },
   {
     sortBy: "ip",
-    text: "In Progress"
+    text: "In Progress",
   },
   {
     sortBy: "com",
-    text: "Completed"
+    text: "Completed",
   },
   {
     sortBy: "final",
-    text: "Finalized"
+    text: "Finalized",
   },
   {
     sortBy: "nine",
-    text: "Grade 9"
+    text: "Grade 9",
   },
   {
     sortBy: "ten",
-    text: "Grade 10"
+    text: "Grade 10",
   },
   {
     sortBy: "eleven",
-    text: "Grade 11"
+    text: "Grade 11",
   },
   {
     sortBy: "transfer",
-    text: "Transfer"
+    text: "Transfer",
   },
   {
     sortBy: "regents",
-    text: "Missing Regents"
+    text: "Missing Regents",
   },
   {
     sortBy: "sports",
-    text: "Sports Team"
+    text: "Sports Team",
   },
   {
     sortBy: "enl",
-    text: "ENL"
+    text: "ENL",
   },
-]
-
-
-const sortBy = (sort: {sortBy:string, text:string}) => {
-  selected.value = sort.text
-  isOpen.value = false
-  if(sort.sortBy === 'lastnameaz') { // if user selects this
-    function lastnameaz(a: { name: string; }, b: { name: string; }) {
-    if (a.name < b.name){
-       return -1;
-    }
-    if (a.name > b.name){
-      return 1; 
-    }  
-    return 0;
-  }
-  }
-
-  if(sort.sortBy === 'lastnameza') {
-    function lastnameza(a: { name: string;} , b: { name: string;}) {
-      if (a.name > b.name){
-         return -1;
-      }
-      if (a.name < b.name){
-         return 1;
-      }
-      return 0;
-    }
-    return (userStore.currentlyViewingStudents.sort(lastnameza))
-  }
-
-  if(sort.sortBy === 'ns') {
-    function ns(a: { grade: string, user: userData }) {
-        if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined) return -1;
-        else
-        return 1;
-    }
-    return (userStore.currentlyViewingStudents.sort(ns))
-  }
-
-  if(sort.sortBy === 'ip') {
-    function ip(a: { grade: string, user: userData }) {
-      if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
-        return 1;
-      } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'INCOMPLETE'){
-        return -1;
-      } else {
-        return 1
-      }
-    }
-    return (userStore.currentlyViewingStudents.sort(ip))
-  }
-
-  if(sort.sortBy === 'com') {
-    function com(a: { grade: string, user: userData }) {
-      if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
-        return 1;
-      } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'COMPLETE'){
-        return -1;
-      } else {
-        return 1
-      }
-    }
-    return (userStore.currentlyViewingStudents.sort(com))
-  }
-
-  if(sort.sortBy === 'final') {
-    function final(a: { grade: string, user: userData }) {
-      if (guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email) === undefined){
-        return 1;
-      } else if(guidanceStore.allAnsweredSurveys.edges.find(x => x.node.email === a.user.email)?.node.status === 'FINALIZED'){
-        return -1;
-      } else {
-        return 1
-      }
-    }
-    return (userStore.currentlyViewingStudents.sort(final))
-  }
-  
-  if(sort.sortBy === 'nine') {
-    function nine(a: { grade: string; }) {
-      if (a.grade === "FRESHMAN") return -1;
-      else
-      return 1;
-    }
-    return (userStore.currentlyViewingStudents.sort(nine))
-  }
-
-  if(sort.sortBy === 'ten') {
-    function ten(a: { grade: string; }) {
-      if (a.grade === "SOPHOMORE") return -1;
-      else
-      return 1;
-    }
-    return (userStore.currentlyViewingStudents.sort(ten))
-  }
-  
-  if(sort.sortBy === 'eleven') {
-    function eleven(a: { grade: string; }) {
-      if (a.grade === "JUNIOR") return -1;
-      else
-      return 1;
-    }
-    return (userStore.currentlyViewingStudents.sort(eleven))
-  }
-  
-  if(sort.sortBy === 'transfer') {
-    function transfer(a: { flag: string; }) {
-      if (a.flag.includes('Transfer')) return -1;
-      else
-      return 1;
-    }
-    return (userStore.currentlyViewingStudents.sort(transfer))
-  }
-
-  if(sort.sortBy === 'regents') {
-    function regents(a: { flag: string; }) {
-      if (a.flag.includes('Regents')) return -1;
-      else
-      return 1;
-    }
-    return (userStore.currentlyViewingStudents.sort(regents))
-  }
-  
-  if(sort.sortBy === 'sports') {
-    function sports(a: { flag: string; }) {
-      if (a.flag.includes('Team')) return -1;
-      else
-      return 1;
-    }
-    return (userStore.currentlyViewingStudents.sort(sports))
-  }
-  
-  if(sort.sortBy === 'enl') {
-    const enl = (a: { flag: string; }) => {
-      if (a.flag.includes('ENL')) return -1;
-      else
-      return 1;
-    }
-    return (userStore.currentlyViewingStudents.sort(enl))
-  }
-
-}
+];
 </script>
