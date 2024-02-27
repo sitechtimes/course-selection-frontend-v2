@@ -172,7 +172,7 @@ const notify: Ref<boolean> = ref(false);
 const show: Ref<boolean> = ref(true);
 
 onMounted(() => {
-  fetchStudents();
+  studentList.value=userStore.guidanceStudents
 });
 
 //toggle modal
@@ -191,27 +191,6 @@ onMounted(() => {
   dateElement.value.value = props.todaysDate!
 })
 
-async function fetchStudents() {
-  const { access_token } = useUserStore();
-  try {
-    // GET request for profiles
-    const profilesResponse = await fetch(
-      `${import.meta.env.VITE_URL}/guidance/getGuidanceStudents`, 
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
-    );
-    const data = await profilesResponse.json();
-    studentList.value = data;
-  } catch (error) {
-    console.error("Error:", error);
-  }
-}
-
 //check for empty input values before submitting form
 function empty() {
   //if the input value is an empty string, the error is true; otherwise it is false
@@ -226,12 +205,11 @@ function empty() {
 
     // locate student
     for (const student of studentList.value) {
-      const studentEmail = student.email;
-      if (selectedStudent.value.includes(`${studentEmail}@nycstudents.net`)) {
+      const studentEmail = student.email;    
+      if (selectedStudent.value.includes(`${studentEmail}`)) {
         email = `${student.email}@nycstudents.net`
       }
     }
-
     save.value.innerHTML = "Saved";
     userStore.changeMeeting(email, meetingISO, description.value, notify.value);
     form.value.reset();
