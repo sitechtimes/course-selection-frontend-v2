@@ -10,7 +10,7 @@ export const useSurveyStore = defineStore("survey", () => {
     let open: Ref<boolean> = ref(true);
     let student:Ref<studentCourses> = ref({coursesTaken: [], coursesAvailable: []})
     let currentResponse: Ref<surveyAnswer[]> = ref([{id: '', question: '', answer:{courses:[], preference: []}}]);
-    //@ts-expect-error
+    //@ts-expect-error 
     let currentSurvey: Ref<survey> = 
       ref({
         dueDate: "", 
