@@ -17,16 +17,13 @@ export const useUserStore = defineStore("user", {
             homeroom: null, 
             meeting: null, 
             meeting_description: ""
-        } as student,
+        },
         userType: null as account_type | null,
         isLoggedIn: false,
         access_token: "",
         refresh_token: "",
         loading: false,
         expire_time: 0,
-        studentSurveyPreview: [] as Array<studentSurveyPreview|guidanceSurveyPreview>,
-        currentlyViewingStudents: [],
-        guidanceStudents: [],
         studentSurveyPreview: [] as studentPreview[],
         currentlyViewingStudents: [] as studentPreview[],
         guidanceStudents: [] as studentGuidance[],
@@ -52,7 +49,7 @@ export const useUserStore = defineStore("user", {
                 });
             } else {
                 const surveyStore = useSurveyStore();
-                surveyStore.getSurvey()
+                surveyStore.getSurvey().then(() => 
                 fetch(`${import.meta.env.VITE_URL}/student/surveyPreview/`, {
                     method: "GET",
                     headers: {
@@ -73,7 +70,7 @@ export const useUserStore = defineStore("user", {
                     })
                     .catch((error) => {
                         console.error("Error fetching surveyPreview:", error);
-                    }).then(() => this.loading = false)      
+                    }).then(() => this.loading = false))      
             }
         },
         async GoogleLogin(res: any) {
