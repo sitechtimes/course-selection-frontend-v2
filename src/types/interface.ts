@@ -43,6 +43,7 @@ export interface surveyStore {
     open: boolean
     submit: boolean
     missingAnswers: string[]
+    studentCourses: studentCourses
 }
 
 // user object
@@ -76,6 +77,17 @@ export interface studentGuidance extends studentData {
     description: string
 }
 
+export interface studentSurveyData {
+    survey: survey
+    answeredSurvey: answeredSurvey
+    coursesTaken: course[]
+    coursesAvailable: course[]
+}
+
+export interface studentCourses {
+    coursesTaken: course[]
+    coursesAvailable: course[]
+}
 // guidance edges and nodes interfaces
 export interface guidanceStudentData {
     students: studentGuidance[]
