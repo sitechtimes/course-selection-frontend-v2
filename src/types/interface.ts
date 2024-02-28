@@ -114,6 +114,7 @@ export interface studentPreview {
     status: string;
     flag: string;
     dueDate?: string;
+    meetingDate: string;
 }
 
 export interface allStudentNodes {

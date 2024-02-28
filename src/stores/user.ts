@@ -65,7 +65,7 @@ export const useUserStore = defineStore("user", {
                     console.error('Error in init:', error);
                 };
             } else {
-                fetch(`${import.meta.env.VITE_URL}/student/surveyPreview/`, {
+                await fetch(`${import.meta.env.VITE_URL}/student/surveyPreview/`, {
                     method: "GET",
                     headers: {
                         Authorization: `Bearer ${this.access_token}`,
@@ -74,19 +74,17 @@ export const useUserStore = defineStore("user", {
                     .then((res) => res.json())
                     .then(async (data) => {
                         const surveyStore = useSurveyStore();
-                        const studentStore = useStudentStore();
 
                         if (data.dueDate < new Date() || data.status === "FINALIZED") {
                             surveyStore.open = false;
                         }
-                        studentStore.studentSurveyPreview = data;
                         this.studentSurveyPreview = data;
                         surveyStore.currentAnsweredSurvey.status = data.status;
                     })
                     .catch((error) => {
                         console.error("Error fetching surveyPreview:", error);
                     });
-                fetch(`${import.meta.env.VITE_URL}/student/survey/`, {
+                await fetch(`${import.meta.env.VITE_URL}/student/survey/`, {
                     method: "GET",
                     headers: {
                         Authorization: `Bearer ${this.access_token}`,
