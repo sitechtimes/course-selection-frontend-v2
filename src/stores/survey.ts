@@ -19,6 +19,7 @@ export const useSurveyStore = defineStore("survey", {
   },
   actions: {
     async checkSurveyAnswers() {
+      this.missingAnswers = [];
       this.currentSurvey.question.forEach((question: surveyQuestion) => {
         const questionResponse: surveyStringAnswer | surveyAnswer | undefined = this.currentResponse.find((response) => response.id === question.id);
 
