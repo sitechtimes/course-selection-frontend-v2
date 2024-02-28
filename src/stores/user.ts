@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import { useSurveyStore } from "./survey";
-import { useStudentStore } from "./student";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import { user, account_type, userData, guidanceData, studentGuidance, studentMeetings, studentPreview } from "../types/interface";
@@ -49,28 +48,21 @@ export const useUserStore = defineStore("user", {
                 });
             } else {
                 const surveyStore = useSurveyStore();
-                surveyStore.getSurvey().then(() => 
-                fetch(`${import.meta.env.VITE_URL}/student/surveyPreview/`, {
-                    method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${this.access_token}`,
-                    },
-                })
-                    .then((res) => res.json())
-                    .then(async (data) => {
-                        const surveyStore = useSurveyStore();
-                        console.log(surveyStore.currentSurvey)
-
-                        if (new Date(data.dueDate) < new Date() || data.status === "FINALIZED") {
-                            surveyStore.open = false;
-                        }
-
-                        this.studentSurveyPreview.push(data)
-                        surveyStore.currentAnswers.status = data.status;
-                    })
-                    .catch((error) => {
-                        console.error("Error fetching surveyPreview:", error);
-                    }).then(() => this.loading = false))      
+                const data = surveyStore.getSurvey()
+                try {
+                    const surveyStore = useSurveyStore();
+                    //@ts-ignore
+                    if (new Date(data.dueDate) < new Date() || data.status === "FINALIZED") {
+                        surveyStore.open = false;
+                    }
+                    this.studentSurveyPreview.push(data)
+                    //@ts-ignore
+                    surveyStore.currentAnswers.status = data.status;
+                }
+                catch(error) {
+                    console.error("Error fetching surveyPreview:", error);
+                }
+                this.loading = false  
             }
         },
         async GoogleLogin(res: any) {
@@ -276,6 +268,7 @@ export const useUserStore = defineStore("user", {
                     this.userType = "guidance";
                 } else {
                     this.userType = "student";
+                    this.student = data.studentProfile
                 }
             } catch (error) {
                 console.error('Error fetching user:', error);

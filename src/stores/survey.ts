@@ -50,6 +50,7 @@ export const useSurveyStore = defineStore("survey", () => {
 
     async function getSurvey() {
       let url = ""
+      let preview = {}
       if (userStore.userType === "student") url = "/student/survey/"
       else url = `/guidance/survey/${currentAnswers.value.email}`
       
@@ -71,6 +72,12 @@ export const useSurveyStore = defineStore("survey", () => {
           currentResponse.value = JSON.parse(res.answeredSurvey.answers)
 
           currentResponse.value.push(...JSON.parse(res.answeredSurvey.answers))
+          fetch(`${import.meta.env.VITE_URL}/student/surveyPreview/`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${userStore.access_token}`,
+            },
+        }).then(res => preview = res.json())
         })
     }
 
