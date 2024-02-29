@@ -1,19 +1,17 @@
 import { defineStore } from "pinia";
 import { useUserStore } from "./user";
-import { useRouter } from "vue-router";
-import { grade, status, surveyAnswer, surveyQuestion, surveyStore, surveyStringAnswer, classReferenced, studentSurveyData } from "../types/interface";
-import axios from "axios";
+import { surveyAnswer, surveyQuestion, surveyStore, surveyStringAnswer, studentSurveyData } from "../types/interface";
 
 export const useSurveyStore = defineStore("survey", {
   state: (): surveyStore => ({
-    currentAnsweredSurvey: {answers: "[{}]", email: "", grade: "FRESHMAN", status: "INCOMPLETE"},
-    currentResponse: [{id: '', question: '', answer:{courses:[], preference: []}}],
-    currentSurvey: {dueDate: "", grade: "FRESHMAN", question: [{id: "", questionType: "OTHER", status: 'STANDARD', question:'', classReferenced: null}]},
+    currentAnsweredSurvey: { answers: "[{}]", email: "", grade: "FRESHMAN", status: "INCOMPLETE" },
+    currentResponse: [{ id: '', question: '', answer: { courses: [], preference: [] } }],
+    currentSurvey: { dueDate: "", grade: "FRESHMAN", question: [{ id: "", questionType: "OTHER", status: 'STANDARD', question: '', classReferenced: null }] },
     loading: false,
     open: true,
     submit: false,
     missingAnswers: [],
-    studentCourses: {coursesTaken: [], coursesAvailable: []},
+    studentCourses: { coursesTaken: [], coursesAvailable: [] },
   }),
   getters: {
     //
@@ -36,7 +34,7 @@ export const useSurveyStore = defineStore("survey", {
           }
         }
 
-        if(isGeneralOrBoolean(question) && isMissingOrNA(questionResponse)) {
+        if (isGeneralOrBoolean(question) && isMissingOrNA(questionResponse)) {
           // check for general and boolean questions
           this.missingAnswers.push(question.id);
         } else if (questionResponse?.answer.courses.length === 0) {
@@ -50,7 +48,11 @@ export const useSurveyStore = defineStore("survey", {
       const url = userStore.userType === "student" ? "/student/survey/" : `/guidance/survey/${this.currentAnsweredSurvey.email}`;
 
       const res = await fetch(import.meta.env.VITE_URL + url, {
+        method:
+          "GET"
+        ,
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${userStore.access_token}`,
         },
       });
@@ -69,11 +71,12 @@ export const useSurveyStore = defineStore("survey", {
     async postSurvey(status: "COMPLETE" | "FINALIZED") {
       const userStore = useUserStore();
       const url = userStore.userType === "student" ? "/student/survey/" : `/guidance/survey/${this.currentAnsweredSurvey.email}`;
-      
+
       try {
         await fetch(import.meta.env.VITE_URL + url, {
           method: "POST",
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${userStore.access_token}`,
           },
           body: JSON.stringify({
@@ -91,7 +94,7 @@ export const useSurveyStore = defineStore("survey", {
       this.loading = true;
       this.checkSurveyAnswers();
 
-      if (this.missingAnswers.length !== 0) return;
+      // if (this.missingAnswers.length !== 0) return;
 
       if (userStore.userType === "student") {
         await this.postSurvey("COMPLETE");
@@ -100,7 +103,7 @@ export const useSurveyStore = defineStore("survey", {
       }
       this.loading = false;
     },
-    
+
   },
   persist: {
     storage: sessionStorage

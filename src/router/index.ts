@@ -62,7 +62,7 @@ const router = createRouter({
           return { name: "guidanceStudentlist" };
         }
 
-        if (studentStore.answeredSurvey[0] != undefined && userStore.userType === 'student' && studentStore.answeredSurvey[0].status === "COMPLETE") {
+        if (surveyStore.currentAnsweredSurvey != undefined && userStore.userType === 'student' && surveyStore.currentAnsweredSurvey.status === "COMPLETE"||surveyStore.currentAnsweredSurvey.status === 'FINALIZED') {
           return { name: "reviewSurvey" };
         }
 

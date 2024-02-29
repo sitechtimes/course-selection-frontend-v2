@@ -1,3 +1,42 @@
+<template>
+  <div class="h-[80vh] flex flex-col justify-center items-center space-y-8">
+    <p v-if="surveyStore.loading">Setting things up...</p>
+    <div v-else class="w-11/12 md:w-4/5 lg:w-3/4 flex flex-col items-center min-h-[20rem] h-5/6 overflow mt-6">
+      <div class="mt-5">
+        <h1 class="text-4xl font-semibold mb-6">
+          {{ surveyStore.currentSurvey.grade }} Year Survey
+        </h1>
+      </div>
+      <div class="h-5/6 flex items-center">
+        <generalComponent v-if="currentQuestion.questionType === 'GENERAL'" :question="currentQuestion"
+          :key="currentQuestion.id"></generalComponent>
+        <booleanComponent v-else-if="currentQuestion.questionType === 'BOOLEAN'" :question="currentQuestion"
+          :key="currentQuestion.question"></booleanComponent>
+        <checkboxComponent v-else :question="currentQuestion" :choices="getChoices()" :key="currentQuestion.questionType"
+          :color="'D6EEFF'"></checkboxComponent>
+      </div>
+    </div>
+    <div class="h-1/6 w-11/12 md:w-4/5 lg:w-3/4 flex justify-between items-start px-4">
+      <button @click="previousQuestion()" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:bg-stone-400"
+        :disabled="min">
+        Back
+      </button>
+      <button @click="nextQuestion()" class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:hidden"
+        :disabled="max">
+        Next
+      </button>
+      <RouterLink to="/student/survey/review" v-if="max">
+        <button class="bg-emerald-600 text-white w-auto px-3 h-10 rounded-md inline disabled:hidden" :disabled="!max">
+          Review and Submit
+        </button>
+      </RouterLink>
+    </div>
+    <p class="absolute bottom-8 right-16 text-xl font-semibold">
+      {{ currentIndex + 1 }}
+    </p>
+  </div>
+</template>
+
 <script setup lang="ts">
 import checkboxComponent from "../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue";
 import booleanComponent from "../components/SurveyPageComponents/Reusables/SurveyBoolean.vue";
@@ -22,11 +61,11 @@ let currentQuestion: surveyQuestion = reactive(
 const min: Ref<boolean> = ref(true);
 const max: Ref<boolean> = ref(false);
 
-surveyStore.setSurvey(
-  studentStore.user.email,
+surveyStore.saveSurvey(
+  userStore.studentSurveyPreview.email,
   surveyStore.currentSurvey.question,
   //@ts-ignore
-  studentStore.student.grade 
+  userStore.studentSurveyPreview.grade
 );
 
 const previousQuestion = () => {
@@ -49,108 +88,45 @@ const nextQuestion = () => {
   }
 };
 
+//finds what courses the student took to assign them questions
 const getChoices = () => {
-  const classes = studentStore.student.coursesAvailable;
+  const classes = surveyStore.studentCourses.coursesAvailable;
   return classes.filter((x) => x.subject === currentQuestion.questionType);
 };
 
 onBeforeRouteLeave((to, from, next) => {
-    if(JSON.stringify(surveyStore.currentResponse) === studentStore.answeredSurvey[0].answers || to.path === '/student/survey/review') {
+  if (JSON.stringify(surveyStore.currentResponse) === surveyStore.currentAnsweredSurvey.answers || to.path === '/student/survey/review') {
+    window.removeEventListener('beforeunload', reminder)
+    next()
+  } else {
+    const answer = window.confirm('Changes you made might not be saved.')
+    if (answer) {
       window.removeEventListener('beforeunload', reminder)
       next()
     } else {
-      const answer = window.confirm('Changes you made might not be saved.')
-      if (answer) {
-        window.removeEventListener('beforeunload', reminder)
-        next()
-      } else {
-        next(false)
+      next(false)
     }
-    }
+  }
 })
 
 const reminder = (e: { preventDefault: () => void; returnValue: string; }) => {
-    e.preventDefault(); 
-    e.returnValue = '';
+  e.preventDefault();
+  e.returnValue = '';
 };
 
 watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
-  if(JSON.stringify(newResponse) === studentStore.answeredSurvey[0].answers) {
+  if (JSON.stringify(newResponse) === surveyStore.currentAnsweredSurvey.answers) {
     window.removeEventListener('beforeunload', reminder)
   } else {
     window.addEventListener('beforeunload', reminder);
   }
-}, { deep:true })
+}, { deep: true })
 
-watch(() => studentStore.answeredSurvey[0], (newResponse, oldResponse) => {
-  if(newResponse.answers === JSON.stringify(surveyStore.currentResponse)) {
+watch(() => surveyStore.currentAnsweredSurvey, (newResponse, oldResponse) => {
+  if (newResponse.answers === JSON.stringify(surveyStore.currentResponse)) {
     window.removeEventListener('beforeunload', reminder)
   } else {
     window.addEventListener('beforeunload', reminder);
   }
-}, { deep:true })
+}, { deep: true })
 </script>
-
-<template>
-  <div class="h-[80vh] flex flex-col justify-center items-center space-y-8">
-    <p v-if="surveyStore.loading">Setting things up...</p>
-    <div
-      v-else
-      class="w-11/12 md:w-4/5 lg:w-3/4 flex flex-col items-center min-h-[20rem] h-5/6 overflow mt-6"
-    >
-      <div class="mt-5">
-        <h1 class="text-4xl font-semibold mb-6">
-        {{ surveyStore.currentSurvey.grade }} Year Survey
-        </h1>
-      </div>
-      <div class="h-5/6 flex items-center">
-        <generalComponent
-          v-if="currentQuestion.questionType === 'GENERAL'"
-          :question="currentQuestion"
-          :key="currentQuestion.id"
-        ></generalComponent>
-        <booleanComponent
-          v-else-if="currentQuestion.questionType === 'BOOLEAN'"
-          :question="currentQuestion"
-          :key="currentQuestion.question"
-        ></booleanComponent>
-        <checkboxComponent
-          v-else
-          :question="currentQuestion"
-          :choices="getChoices()"
-          :key="currentQuestion.questionType"
-          :color="'D6EEFF'"
-        ></checkboxComponent>
-      </div>
-    </div>
-    <div
-      class="h-1/6 w-11/12 md:w-4/5 lg:w-3/4 flex justify-between items-start px-4"
-    >
-      <button
-        @click="previousQuestion()"
-        class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:bg-stone-400"
-        :disabled="min"
-      >
-        Back
-      </button>
-      <button
-        @click="nextQuestion()"
-        class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:hidden"
-        :disabled="max"
-      >
-        Next
-      </button>
-      <RouterLink to="/student/survey/review" v-if="max">
-        <button
-          class="bg-emerald-600 text-white w-auto px-3 h-10 rounded-md inline disabled:hidden"
-          :disabled="!max"
-        >
-          Review and Submit
-        </button>
-      </RouterLink>
-    </div>
-    <p class="absolute bottom-8 right-16 text-xl font-semibold">
-      {{ currentIndex + 1 }}
-    </p>
-  </div>
-</template>
