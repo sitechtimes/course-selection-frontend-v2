@@ -60,8 +60,9 @@ const logout = async () => {
     router.push('/')
 }
 
+//submit function rewritten
 const submit = async () => {
-    await surveyStore.checkAnswers()
+    await surveyStore.checkSurveyAnswers()
     if (surveyStore.missingAnswers.length === 0) {
         if (userStore.userType === "student") {
             router.push('/student/dashboard')
