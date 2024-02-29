@@ -75,6 +75,7 @@ export interface studentGuidance extends studentData {
     user: userData
     flag: string
     description: string
+    ownStudent?: boolean
 }
 
 export interface studentSurveyData {
