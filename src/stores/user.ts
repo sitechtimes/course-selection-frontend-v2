@@ -251,7 +251,7 @@ export const useUserStore = defineStore("user", {
                 const studentIndex = this.currentlyViewingStudents.findIndex((student: studentPreview) => 
                     student.email + '@nycstudents.net' === email
                 );
-                const previewIndex = this.guidanceStudents.findIndex((student: studentPreview) => 
+                const previewIndex = this.guidanceStudents.findIndex((student: studentGuidance) => 
                     student.email + '@nycstudents.net' === email
                 );
                 
@@ -281,7 +281,7 @@ export const useUserStore = defineStore("user", {
                 const studentIndex = this.currentlyViewingStudents.findIndex((student: studentPreview) => 
                     student.email + '@nycstudents.net' === email
                 );
-                const previewIndex = this.guidanceStudents.findIndex((student: studentPreview) => 
+                const previewIndex = this.guidanceStudents.findIndex((student: studentGuidance) => 
                     student.email + '@nycstudents.net' === email
                 );
                 if (studentIndex !== -1 && previewIndex !== -1) {
