@@ -62,7 +62,7 @@ import Sort from "../components/GuidanceComponents/SortButton.vue";
 import StudentTable from "../components/GuidanceComponents/StudentTable.vue";
 import { useUserStore } from "../stores/user";
 import { studentGuidance, studentPreview } from "../types/interface";
-import { ref, Ref, computed, watch, onMounted, useTransitionState } from "vue";
+import { ref, Ref, computed, watch, onMounted } from "vue";
 
 document.title = "Student List | SITHS Course Selection";
 
@@ -80,7 +80,9 @@ const y: Ref<number> = ref(10);
 const currentPage: Ref<number> = ref(1);
 const pageCapacity: number = 10;
 
-userStore.currentlyViewingStudents = userStore.guidanceStudents;
+onMounted(()=>{
+  userStore.currentlyViewingStudents = userStore.guidanceStudents;
+});
 
 async function fetchStudents() {
   const { access_token } = useUserStore();
@@ -110,7 +112,7 @@ const updateSortOption = (selected: string) => {
 };
 
 const sortedAndFilteredStudents = computed(() => {
-  return applyFiltersAndSort(userStore.guidanceStudents, sortBy.value, input.value);
+  return applyFiltersAndSort(userStore.currentlyViewingStudents, sortBy.value, input.value);
 })
 
 function filterStudentsByCategory(students: studentGuidance[], sortBy: string) {
@@ -188,12 +190,9 @@ async function handleViewAllChange(isEnabled: boolean) {
   if (isEnabled) {
     await fetchStudents();
     userStore.currentlyViewingStudents = allStudents.value;
-    // const numPages = Math.ceil(allStudents.value.length / pageCapacity);
-    // totalPages.value = numPages;
   } else {
     userStore.currentlyViewingStudents = userStore.guidanceStudents;
   }
-
   updatePagination(1);
 }
 
