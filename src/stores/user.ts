@@ -29,15 +29,18 @@ export const useUserStore = defineStore("user", {
             this.userType = type;
             if (type === "guidance") {
                 try {
-                    fetch(`${import.meta.env.VITE_URL}/guidance/getGuidanceStudents/`, {
+                    fetch(`${import.meta.env.VITE_URL}/guidance/profiles/`, {
                         method: "GET",
                         headers: {
                             Authorization: `Bearer ${this.access_token}`,
                         },
                     }).then(async (data) => {
-                        this.guidanceStudents = await data.json();
+                        const guidanceProfiles = await data.json();
+                        this.studentSurveyPreview = guidanceProfiles;
+                        this.guidanceStudents = await guidanceProfiles.filter((student: studentGuidance) => student.ownStudent);
+                        // this.guidanceStudents = await data.json();
                     }).catch((error) => {
-                        throw new Error('Error fetching getGuidanceStudents:', error.message);
+                        throw new Error('Error fetching profiles:', error.message);
                     });
                     fetch(`${import.meta.env.VITE_URL}/guidance/meetings`, {
                         method: "GET",
@@ -251,7 +254,7 @@ export const useUserStore = defineStore("user", {
                 const studentIndex = this.currentlyViewingStudents.findIndex((student: studentPreview) => 
                     student.email + '@nycstudents.net' === email
                 );
-                const previewIndex = this.guidanceStudents.findIndex((student: studentPreview) => 
+                const previewIndex = this.guidanceStudents.findIndex((student: studentGuidance) => 
                     student.email + '@nycstudents.net' === email
                 );
                 
@@ -281,7 +284,7 @@ export const useUserStore = defineStore("user", {
                 const studentIndex = this.currentlyViewingStudents.findIndex((student: studentPreview) => 
                     student.email + '@nycstudents.net' === email
                 );
-                const previewIndex = this.guidanceStudents.findIndex((student: studentPreview) => 
+                const previewIndex = this.guidanceStudents.findIndex((student: studentGuidance) => 
                     student.email + '@nycstudents.net' === email
                 );
                 if (studentIndex !== -1 && previewIndex !== -1) {
