@@ -4,7 +4,7 @@ import { useStudentStore } from "./student";
 import { useGuidanceStore } from "./guidance";
 import { useRouter } from "vue-router";
 import axios from "axios";
-import { user, account_type, userData, guidanceData, studentGuidance, studentMeetings, studentPreview } from "../types/interface";
+import { user, account_type, userData, guidanceData, studentGuidance, studentMeetings, studentPreview, studentSurveyPreview } from "../types/interface";
 import { ref } from "vue";
 import router from "../router";
 
@@ -19,7 +19,7 @@ export const useUserStore = defineStore("user", {
         refresh_token: "",
         loading: false,
         expire_time: 0,
-        studentSurveyPreview: [] as studentPreview[],
+        studentSurveyPreview: {} as studentPreview,
         currentlyViewingStudents: [] as studentPreview[],
         guidanceStudents: [] as studentGuidance[],
         guidanceMeetings: [] as studentMeetings[],
@@ -65,7 +65,7 @@ export const useUserStore = defineStore("user", {
                     console.error('Error in init:', error);
                 };
             } else {
-                fetch(`${import.meta.env.VITE_URL}/student/surveyPreview/`, {
+                await fetch(`${import.meta.env.VITE_URL}/student/surveyPreview/`, {
                     method: "GET",
                     headers: {
                         Authorization: `Bearer ${this.access_token}`,
@@ -74,21 +74,17 @@ export const useUserStore = defineStore("user", {
                     .then((res) => res.json())
                     .then(async (data) => {
                         const surveyStore = useSurveyStore();
-                        const studentStore = useStudentStore();
 
                         if (data.dueDate < new Date() || data.status === "FINALIZED") {
                             surveyStore.open = false;
                         }
-
-                        studentStore.studentSurveyPreview = data
-                        this.studentSurveyPreview =data
-                        console.log(this.studentSurveyPreview)
+                        this.studentSurveyPreview = data;
                         surveyStore.currentAnsweredSurvey.status = data.status;
                     })
                     .catch((error) => {
                         console.error("Error fetching surveyPreview:", error);
                     });
-                fetch(`${import.meta.env.VITE_URL}/student/survey/`, {
+                await fetch(`${import.meta.env.VITE_URL}/student/survey/`, {
                     method: "GET",
                     headers: {
                         Authorization: `Bearer ${this.access_token}`,

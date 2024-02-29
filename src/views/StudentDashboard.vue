@@ -1,13 +1,12 @@
 <template>
   <div class="h-[75vh] w-full flex flex-row justify-center items-center">
-    <div v-if="studentStore.student.hr === ''" id="left"
+    <div v-if="userStore.studentSurveyPreview.grade === null" id="left"
       class="w-5/6 flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left md:w-3/4 lg:max-w-2xl xl:max-w-3xl lg:space-y-6 lg:ml-12">
       <h2 id="name" class="text-5xl font-bold">Welcome, {{ userStore.first_name.toLowerCase().charAt(0).toUpperCase() +
         userStore.first_name.toLowerCase().slice(1) }}
         {{ userStore.last_name.toLowerCase().charAt(0).toUpperCase() + userStore.last_name.toLowerCase().slice(1) }}.</h2>
       <div id="announcements" class="text-xl text-center flex ml-2 md:text-left">Thank you for signing up. Your account
         information is in the process of being updated. Please come back later.</div>
-
     </div>
     <div v-else id="left"
       class="w-5/6 flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left md:w-3/4 lg:max-w-2xl xl:max-w-3xl lg:space-y-6 lg:ml-12">
@@ -20,14 +19,14 @@
       <div id="announcements"
         class="text-lg md:text-xl text-left flex justify-center items-center ml-4 lg:ml-0 lg:justify-start">
         <BellIcon />
-        <h2 v-if="surveyStore.open">Surveys are closing on {{ closeTime[1] }}/{{ closeTime[2] }}/{{ closeTime[0] }}.</h2>
+        <h2 v-if="surveyStore.open">Surveys are closing on {{ closeTime }}.</h2>
         <h2 v-else-if="userStore.studentSurveyPreview.status === 'FINALIZED'">Your guidance counselor has finalised
           your survey. If you wish to make changes, please contact them.</h2>
         <h2 v-else>The due date for completion has passed. Please contact your guidance counselor to request changes.</h2>
       </div>
 
       <!-- survey status -->
-      <div v-if="studentStore.answeredSurvey.length === 0"
+      <div v-if="userStore.studentSurveyPreview.status === 'NOT STARTED'"
         class="text-[#461616] bg-[#EA9F9F] font-semibold text-center p-3 lg:px-6 lg:text-base text-sm rounded-md">Survey
         Status:
         <span class="font-medium">Not Started</span>
@@ -64,7 +63,7 @@
             </button>
           </RouterLink>
         </div>
-        <p v-if="studentStore.student.meeting != undefined || studentStore.student.meeting != null">You have a scheduled
+        <p v-if="userStore.studentSurveyPreview.meetingDate != undefined || userStore.studentSurveyPreview.meetingDate != null">You have a scheduled
           meeting with your guidance counselor on {{ date }} at {{ time }}.</p>
         <p v-else>Your guidance counselor has not scheduled a meeting with you yet.</p>
       </div>
@@ -84,35 +83,36 @@
 import BellIcon from "../components/icons/BellIcon.vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
-import { useStudentStore } from "../stores/student";
 //@ts-ignore
 import dateFormat from "dateformat";
-import { computed, ref, Ref, watch } from "vue";
+import { onMounted, Ref, ref } from "vue";
 
 document.title = 'Dashboard | SITHS Course Selection'
 
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
-const studentStore = useStudentStore();
 
+const closeTime: Ref<string[]> = ref([]);
 let time: String;
 let date: String;
-let closeTime: string[]
 
-if (studentStore.student.hr === '') {
-  console.log('Student profile not updated; no homeroom')
-} else {
-  //formatting for due date
-  closeTime = studentStore.studentSurveyPreview.dueDate.substring(0, 10).split("-")
-}
+onMounted(() => {
+  console.log(userStore.studentSurveyPreview)
+  if (!(userStore.studentSurveyPreview.hr === null) && userStore.studentSurveyPreview.dueDate) {
+    const ISOString = userStore.studentSurveyPreview.dueDate.substring(0, 10).split('-');
+    closeTime.value = dateFormat(ISOString, "shortDate");
+  } else {
+    console.log('Student profile not updated; no homeroom');
+  }
+})
 
+// component should be revised again after removal of studentStore
 if (
-  studentStore.student.meeting != undefined ||
-  studentStore.student.meeting != null
+  userStore.studentSurveyPreview.meetingDate != undefined ||
+  userStore.studentSurveyPreview.meetingDate != null
 ) {
-  const datetime = new Date(studentStore.student.meeting);
+  const datetime = new Date(userStore.studentSurveyPreview.meetingDate);
   date = dateFormat(datetime, "shortDate");
   time = dateFormat(datetime, "shortTime");
 }
-
 </script>

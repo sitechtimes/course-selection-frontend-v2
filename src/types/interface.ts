@@ -119,12 +119,14 @@ export interface allStudents {
 }
 
 export interface studentPreview {
-    name: string,
-    hr: string,
-    grade: string,
-    email: string,
-    status: string,
-    flag: string,
+    name: string;
+    hr: string;
+    grade: string;
+    email: string;
+    status: string;
+    flag: string;
+    dueDate?: string;
+    meetingDate: string;
 }
 
 export interface allStudentNodes {
