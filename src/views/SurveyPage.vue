@@ -61,12 +61,17 @@ let currentQuestion: surveyQuestion = reactive(
 const min: Ref<boolean> = ref(true);
 const max: Ref<boolean> = ref(false);
 
-surveyStore.saveSurvey(
-  userStore.studentSurveyPreview.email,
-  surveyStore.currentSurvey.question,
-  //@ts-ignore
-  userStore.studentSurveyPreview.grade
-);
+async function startSurvey() {
+  await surveyStore.fetchSurvey();
+}
+startSurvey()
+  // console.log("trying to save survey")
+  // surveyStore.saveSurvey(
+  //   userStore.studentSurveyPreview.email,
+  //   surveyStore.currentSurvey.question,
+  //   //@ts-ignore
+  //   userStore.studentSurveyPreview.grade
+  // );
 
 const previousQuestion = () => {
   currentIndex.value--;
