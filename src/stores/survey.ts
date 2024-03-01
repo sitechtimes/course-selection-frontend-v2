@@ -33,7 +33,7 @@ export const useSurveyStore = defineStore("survey", {
             return response.answer.trim.length === 0;
           }
         }
-
+        
         if (isGeneralOrBoolean(question) && isMissingOrNA(questionResponse)) {
           // check for general and boolean questions
           this.missingAnswers.push(question.id);
@@ -64,14 +64,24 @@ export const useSurveyStore = defineStore("survey", {
 
       this.studentCourses.coursesAvailable = surveyData.coursesAvailable;
       this.studentCourses.coursesTaken = surveyData.coursesTaken;
-
-      this.currentResponse = JSON.parse(surveyData.answeredSurvey.answers);
+      
+      if (Array.isArray(surveyData.answeredSurvey.answers)) {
+        const formattedResponses= surveyData.answeredSurvey.answers
+          .filter((answer) => answer.answer)
+          .map((answer) => ({
+            id: answer.id,
+            question: answer.question,
+            answer: answer.answer,
+          }))
+          this.currentResponse = formattedResponses
+      } else {
+        this.currentResponse = JSON.parse(surveyData.answeredSurvey.answers);
+      }
       console.log("Fetched and set student survey data.");
     },
     async postSurvey(status: "COMPLETE" | "FINALIZED") {
       const userStore = useUserStore();
       const url = userStore.userType === "student" ? "/student/survey/" : `/guidance/survey/${this.currentAnsweredSurvey.email}`;
-
       try {
         await fetch(import.meta.env.VITE_URL + url, {
           method: "POST",
@@ -92,10 +102,11 @@ export const useSurveyStore = defineStore("survey", {
     async saveSurvey() {
       const userStore = useUserStore();
       this.loading = true;
-      this.checkSurveyAnswers();
-
+      await this.checkSurveyAnswers();
+      console.log(this.missingAnswers)
       // if (this.missingAnswers.length !== 0) return;
 
+      // students should be able to save their survey without setting the status to COMPLETE
       if (userStore.userType === "student") {
         await this.postSurvey("COMPLETE");
       } else if (userStore.userType === "guidance") {
