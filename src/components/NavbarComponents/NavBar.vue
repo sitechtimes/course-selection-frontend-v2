@@ -71,7 +71,7 @@
             <p v-if="surveyStore.currentAnsweredSurvey.status != 'COMPLETE' &&
                 surveyStore.open === true
                 " @click="
-        surveyStore.setSurvey();
+        surveyStore.saveSurvey();
     toggleSave();
     " class="text-[#37394F] cursor-pointer hover:text-gray-500" ref="save">
                 Save
@@ -140,7 +140,7 @@ const logout = async () => {
 }
 
 const submit = async () => {
-    surveyStore.setSurvey();
+    surveyStore.saveSurvey();
     if (surveyStore.missingAnswers.length === 0) {
         if (userStore.userType === "student") {
             router.push("/student/dashboard");
