@@ -65,8 +65,12 @@ export const useSurveyStore = defineStore("survey", {
       this.studentCourses.coursesAvailable = surveyData.coursesAvailable;
       this.studentCourses.coursesTaken = surveyData.coursesTaken;
       
-      if (Array.isArray(surveyData.answeredSurvey.answers)) {
-        const formattedResponses= surveyData.answeredSurvey.answers
+      const surveyAnswers = surveyData.answeredSurvey.answers;
+      if (surveyAnswers.length === 0) {
+        this.currentResponse = [];
+      } else {
+        // resolve type errors here
+        const formattedResponses= JSON.parse(surveyData.answeredSurvey.answers)
           .filter((answer) => answer.answer)
           .map((answer) => ({
             id: answer.id,
@@ -74,10 +78,9 @@ export const useSurveyStore = defineStore("survey", {
             answer: answer.answer,
           }))
           this.currentResponse = formattedResponses
-      } else {
-        this.currentResponse = JSON.parse(surveyData.answeredSurvey.answers);
       }
       console.log("Fetched and set student survey data.");
+      console.log(this.currentResponse);
     },
     async postSurvey(status: "COMPLETE" | "FINALIZED") {
       const userStore = useUserStore();
