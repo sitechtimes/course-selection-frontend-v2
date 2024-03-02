@@ -151,6 +151,7 @@ export const useUserStore = defineStore("user", {
                 })
                     .then((res) => res.json())
                     .then(async (data) => {
+                        const surveyStore = useSurveyStore();
                         this.access_token = data.access_token;
                         this.refresh_token = data.refresh_token;
                         this.email = data.user.email;
@@ -164,7 +165,9 @@ export const useUserStore = defineStore("user", {
                         this.expire_time = expiration;
                         this.loading = true;
                         await this.getUserType()
-                        this.init(this.userType);
+                        await surveyStore.fetchSurvey();
+                        await this.init(this.userType);
+
                         this.savePersistentSession();
                     })
                     .catch((error) => {
