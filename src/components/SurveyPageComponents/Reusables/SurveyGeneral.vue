@@ -7,7 +7,7 @@
           type="text"
           :disabled="isDisabled"
 
-          v-model="surveyStore.currentSurvey.question[index].answer"
+          v-model="question.answer"
         />
       </fieldset> 
   </div>
