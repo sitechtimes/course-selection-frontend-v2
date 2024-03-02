@@ -82,7 +82,7 @@ export const useSurveyStore = defineStore("survey", {
       console.log("Fetched and set student survey data.");
       console.log(this.currentResponse);
     },
-    async postSurvey(status: "COMPLETE" | "FINALIZED") {
+    async postSurvey(status: "INCOMPLETE" | "COMPLETE" | "FINALIZED") {
       const userStore = useUserStore();
       const url = userStore.userType === "student" ? "/student/survey/" : `/guidance/survey/${this.currentAnsweredSurvey.email}`;
       try {
@@ -109,9 +109,8 @@ export const useSurveyStore = defineStore("survey", {
       console.log(this.missingAnswers)
       // if (this.missingAnswers.length !== 0) return;
 
-      // students should be able to save their survey without setting the status to COMPLETE
       if (userStore.userType === "student") {
-        await this.postSurvey("COMPLETE");
+        (this.missingAnswers.length !== 0) ? await this.postSurvey("INCOMPLETE") : await this.postSurvey("COMPLETE");
       } else if (userStore.userType === "guidance") {
         await this.postSurvey("FINALIZED");
       }
