@@ -67,7 +67,8 @@ export const useSurveyStore = defineStore("survey", {
       
       const surveyAnswers = surveyData.answeredSurvey.answers;
       if (surveyAnswers.length === 0) {
-        this.currentResponse = [];
+        // this.currentResponse = [];
+        this.currentResponse = surveyData.survey.question;
       } else {
         // resolve type errors here
         const formattedResponses= JSON.parse(surveyData.answeredSurvey.answers)
