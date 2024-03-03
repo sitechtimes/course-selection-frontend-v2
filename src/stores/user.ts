@@ -68,6 +68,9 @@ export const useUserStore = defineStore("user", {
                     console.error('Error in init:', error);
                 };
             } else {
+                const surveyStore = useSurveyStore();
+                await surveyStore.fetchSurvey();
+
                 await fetch(`${import.meta.env.VITE_URL}/student/surveyPreview/`, {
                     method: "GET",
                     headers: {
@@ -86,22 +89,6 @@ export const useUserStore = defineStore("user", {
                     })
                     .catch((error) => {
                         console.error("Error fetching surveyPreview:", error);
-                    });
-                await fetch(`${import.meta.env.VITE_URL}/student/survey/`, {
-                    method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${this.access_token}`,
-                    },
-                })
-                    .then((res) => res.json())
-                    .then(async (data) => {
-                        const studentStore = useStudentStore();
-
-                        studentStore.survey = data.survey.fields;
-                        studentStore.answeredSurvey = data.answeredSurvey.fields;
-                    })
-                    .catch((error) => {
-                        console.error("Error fetching survey:", error);
                     });
 
                 this.loading = false;
@@ -165,7 +152,6 @@ export const useUserStore = defineStore("user", {
                         this.expire_time = expiration;
                         this.loading = true;
                         await this.getUserType()
-                        await surveyStore.fetchSurvey();
                         await this.init(this.userType);
 
                         this.savePersistentSession();
