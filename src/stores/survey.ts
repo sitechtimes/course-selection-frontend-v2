@@ -81,7 +81,8 @@ export const useSurveyStore = defineStore("survey", {
           this.currentResponse = formattedResponses
       }
       console.log("Fetched and set student survey data.");
-      console.log(this.currentResponse);
+      console.log("Current Response:", this.currentResponse);
+      console.log("Answered Survey:", this.currentAnsweredSurvey)
     },
     async postSurvey(status: "INCOMPLETE" | "COMPLETE" | "FINALIZED") {
       const userStore = useUserStore();
@@ -107,9 +108,8 @@ export const useSurveyStore = defineStore("survey", {
       const userStore = useUserStore();
       this.loading = true;
       await this.checkSurveyAnswers();
-      console.log(this.missingAnswers)
+      console.log("Missing Answers:", this.missingAnswers)
       // if (this.missingAnswers.length !== 0) return;
-
       if (userStore.userType === "student") {
         (this.missingAnswers.length !== 0) ? await this.postSurvey("INCOMPLETE") : await this.postSurvey("COMPLETE");
       } else if (userStore.userType === "guidance") {
