@@ -63,6 +63,7 @@ const max: Ref<boolean> = ref(false);
 
 async function startSurvey() {
   await surveyStore.fetchSurvey();
+  await surveyStore.saveSurvey();
 }
 startSurvey()
   // console.log("trying to save survey")
