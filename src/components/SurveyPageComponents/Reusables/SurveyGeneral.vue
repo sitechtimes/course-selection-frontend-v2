@@ -50,13 +50,6 @@ function startQuestion() {
 
 startQuestion();
 
-watch(
-  () => props.question.answer,
-  (newResponse) => {
-    surveyStore.currentResponse[index.value].answer = newResponse;
-  }
-);
-
 watch(() => props.question.question, (newResponse) => {
   startQuestion();
 })
