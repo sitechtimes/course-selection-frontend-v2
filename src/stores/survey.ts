@@ -59,7 +59,9 @@ export const useSurveyStore = defineStore("survey", {
       const surveyData: studentSurveyData = await res.json();
       console.log(surveyData);
 
+      // empty version of the survey for the user's grade
       this.currentSurvey = surveyData.survey;
+      // version of the survey including the user's responses, email, grade, id, etc
       this.currentAnsweredSurvey = surveyData.answeredSurvey;
 
       this.studentCourses.coursesAvailable = surveyData.coursesAvailable;
@@ -67,18 +69,9 @@ export const useSurveyStore = defineStore("survey", {
       
       const surveyAnswers = surveyData.answeredSurvey.answers;
       if (surveyAnswers.length === 0) {
-        // this.currentResponse = [];
         this.currentResponse = surveyData.survey.question;
       } else {
-        // resolve type errors here
-        const formattedResponses= JSON.parse(surveyData.answeredSurvey.answers)
-          .filter((answer) => answer.answer)
-          .map((answer) => ({
-            id: answer.id,
-            question: answer.question,
-            answer: answer.answer,
-          }))
-          this.currentResponse = formattedResponses
+        this.currentResponse = JSON.parse(surveyData.answeredSurvey.answers);
       }
       console.log("Fetched and set student survey data.");
       console.log("Current Response:", this.currentResponse);
