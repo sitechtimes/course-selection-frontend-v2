@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import { useSurveyStore } from "../../../stores/survey";
-import { watch, onBeforeMount, PropType } from "vue";
+import { watch, onBeforeMount, PropType, ref } from "vue";
 import { survey, surveyAnswer, surveyQuestion } from "../../../types/interface";
 
 const props = defineProps({
@@ -27,31 +27,37 @@ const props = defineProps({
 });
 
 const surveyStore = useSurveyStore();
-let index: number = surveyStore.currentResponse.findIndex(
-  (x) => x.id == props.question.id
-);
+const index = ref(0);
 
-  if (index < 0) {
-    const questionAnswer = {
-      id: props.question.id,
-      question: props.question.question,
+const getQuestionIndex = (question: string): number => {
+  return surveyStore.currentResponse.findIndex((entry) => entry.question === question);
+}
+
+function startQuestion() {
+  const currentQuestion: string = props.question.question;
+  index.value = getQuestionIndex(currentQuestion);
+  if (index.value < 0) {
+    const newQuestion = {
+      //id does not exist for questions on backend yet
+      id: "",
+      question: currentQuestion,
+      questionType: "GENERAL",
       answer: "",
     };
-    //@ts-ignore
-    surveyStore.currentResponse.push(questionAnswer);
-
-    index = surveyStore.currentResponse.findIndex(
-      (x) => x.id == props.question.id
-    );
+    surveyStore.currentResponse.push(newQuestion);
   }
+}
 
+startQuestion();
 
 watch(
-  () => props.question,
+  () => props.question.answer,
   (newResponse) => {
-    index = surveyStore.currentResponse.findIndex(
-      (x) => x.id == newResponse.id
-    );
+    surveyStore.currentResponse[index.value].answer = newResponse;
   }
 );
+
+watch(() => props.question.question, (newResponse) => {
+  startQuestion();
+})
 </script>
