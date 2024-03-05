@@ -33,7 +33,7 @@ export const useSurveyStore = defineStore("survey", {
             return response.answer.trim.length === 0;
           }
         }
-        
+
         if (isGeneralOrBoolean(question) && isMissingOrNA(questionResponse)) {
           // check for general and boolean questions
           this.missingAnswers.push(question.id);
@@ -43,9 +43,9 @@ export const useSurveyStore = defineStore("survey", {
         }
       })
     },
-    async fetchSurvey() {
+    async fetchSurvey(email: string) {
       const userStore = useUserStore();
-      const url = userStore.userType === "student" ? "/student/survey/" : `/guidance/survey/${this.currentAnsweredSurvey.email}`;
+      const url = userStore.userType === "student" ? "/student/survey/" : `/guidance/survey/${email}`;
 
       const res = await fetch(import.meta.env.VITE_URL + url, {
         method:
@@ -57,21 +57,28 @@ export const useSurveyStore = defineStore("survey", {
         },
       });
       const surveyData: studentSurveyData = await res.json();
-      console.log(surveyData);
+      console.log("Survey Data:", surveyData);
 
-      // empty version of the survey for the user's grade
       this.currentSurvey = surveyData.survey;
-      // version of the survey including the user's responses, email, grade, id, etc
       this.currentAnsweredSurvey = surveyData.answeredSurvey;
 
       this.studentCourses.coursesAvailable = surveyData.coursesAvailable;
       this.studentCourses.coursesTaken = surveyData.coursesTaken;
-      
+
       const surveyAnswers = surveyData.answeredSurvey.answers;
       if (surveyAnswers.length === 0) {
+        // this.currentResponse = [];
         this.currentResponse = surveyData.survey.question;
       } else {
-        this.currentResponse = JSON.parse(surveyData.answeredSurvey.answers);
+        // resolve type errors here
+        const formattedResponses = (surveyData.answeredSurvey.answers)
+          .filter((answer) => answer.answer)
+          .map((answer) => ({
+            id: answer.id,
+            question: answer.question,
+            answer: answer.answer,
+          }))
+        this.currentResponse = formattedResponses
       }
       console.log("Fetched and set student survey data.");
       console.log("Current Response:", this.currentResponse);
