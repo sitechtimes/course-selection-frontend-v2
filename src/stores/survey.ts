@@ -71,14 +71,18 @@ export const useSurveyStore = defineStore("survey", {
         this.currentResponse = surveyData.survey.question;
       } else {
         // resolve type errors here
-        const formattedResponses = (surveyData.answeredSurvey.answers)
-          .filter((answer) => answer.answer)
-          .map((answer) => ({
-            id: answer.id,
-            question: answer.question,
-            answer: answer.answer,
-          }))
-        this.currentResponse = formattedResponses
+        const formattedResponses = userStore.userType === "guidance"
+          ? surveyData.answeredSurvey.answers
+          : JSON.parse(surveyData.answeredSurvey.answers);
+        this.currentResponse = formattedResponses;
+
+        // .filter((answer) => answer.answer)
+        // .map((answer) => ({
+        //   id: answer.id,
+        //   question: answer.question,
+        //   answer: answer.answer,
+        // }))
+
       }
       console.log("Fetched and set student survey data.");
       console.log("Current Response:", this.currentResponse);
