@@ -2,7 +2,7 @@
   <section class="flex flex-col items-center justify-center">
     <div class="w-2/3">
       <div class="text-2xl mb-4" v-if="studentSurvey">
-        <h1 class="font-bold text-[#37394F] text-3xl  mb-6">{{ studentSurvey.email }}'s Survey</h1>
+        <h1 class="font-bold text-[#37394F] text-3xl  mb-6">{{ studentName }}'s Survey</h1>
         <h2 v-if="studentSurvey.grade === 'FRESHMAN'">Grade : 9</h2>
         <h2 v-if="studentSurvey.grade === 'SOPHOMORE'">Grade : 10</h2>
         <h2 v-if="studentSurvey.grade === 'JUNIOR'">Grade : 11</h2>
@@ -81,11 +81,14 @@ const router = useRouter()
 const route = useRoute()
 const studentSurvey = ref<studentGuidance | null>(null);
 
+const studentName = ref('');
+
 onMounted(async () => {
   try {
     await surveyStore.fetchSurvey(route.params.email);
     if (surveyStore.currentSurvey) {
       studentSurvey.value = surveyStore.currentSurvey;
+      studentName.value = surveyStore.name.replace(',', ', ');;
       console.log("Fetched Survey Data:", studentSurvey.value);
     }
   } catch (error) {
