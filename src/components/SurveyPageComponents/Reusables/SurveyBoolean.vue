@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 import { useSurveyStore } from "../../../stores/survey";
-import { watch, PropType, ref } from "vue";
+import { watch, PropType, ref, onBeforeUpdate } from "vue";
 import { surveyQuestion, preferences } from "../../../types/interface";
 
 const props = defineProps({
@@ -64,6 +64,7 @@ function startQuestion() {
       answer: "",
     };
     surveyStore.currentResponse.push(newQuestion);
+    index.value = surveyStore.currentResponse.length - 1;
   }
 }
 
@@ -107,4 +108,8 @@ watch(
     }
   }  
 );
+
+onBeforeUpdate(() => {
+  startQuestion();
+});
 </script>
