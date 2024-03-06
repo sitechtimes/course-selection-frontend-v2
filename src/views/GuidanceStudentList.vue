@@ -73,17 +73,20 @@ const loading: Ref<boolean> = ref(false);
 const viewAll: Ref<boolean> = ref(false);
 const input: Ref<string> = ref("");
 const sortBy: Ref<string> = ref("lastnameaz");
-
+let dataReady = false;
 const x: Ref<number> = ref(0);
 const y: Ref<number> = ref(10);
 
 const currentPage: Ref<number> = ref(1);
 const pageCapacity: number = 10;
 
-onMounted(() => {
-  userStore.currentlyViewingStudents = userStore.guidanceStudents;
-  console.log(userStore.currentlyViewingStudents);
+onMounted(async () => {
+  userStore.currentlyViewingStudents = await userStore.guidanceStudents;
 });
+
+//daria edit
+
+//daria edit
 
 async function fetchStudents() {
   const { access_token } = useUserStore();
