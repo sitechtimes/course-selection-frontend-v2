@@ -12,6 +12,7 @@ export const useSurveyStore = defineStore("survey", {
     submit: false,
     missingAnswers: [],
     studentCourses: { coursesTaken: [], coursesAvailable: [] },
+    name: "",
   }),
   getters: {
     //
@@ -65,6 +66,8 @@ export const useSurveyStore = defineStore("survey", {
       this.studentCourses.coursesAvailable = surveyData.coursesAvailable;
       this.studentCourses.coursesTaken = surveyData.coursesTaken;
 
+      this.name = surveyData.name;
+      
       const surveyAnswers = surveyData.answeredSurvey.answers;
       if (surveyAnswers.length === 0) {
         // this.currentResponse = [];
