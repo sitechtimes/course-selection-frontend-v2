@@ -116,11 +116,15 @@ const updateSortOption = (selected: string) => {
 };
 
 const sortedAndFilteredStudents = computed(() => {
-  return applyFiltersAndSort(
-    userStore.currentlyViewingStudents,
-    sortBy.value,
-    input.value
-  );
+  if (viewAll.value === false) {
+    return applyFiltersAndSort(
+      userStore.guidanceStudents,
+      sortBy.value,
+      input.value
+    );
+  } else {
+    return applyFiltersAndSort(allStudents.value, sortBy.value, input.value);
+  }
 });
 
 function filterStudentsByCategory(students: studentGuidance[], sortBy: string) {

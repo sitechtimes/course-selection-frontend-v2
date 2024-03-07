@@ -7,7 +7,7 @@
           type="text"
           :disabled="isDisabled"
 
-          v-model="question.answer"
+          v-model="surveyStore.currentResponse[index].answer"
         />
       </fieldset> 
   </div>
@@ -49,13 +49,6 @@ function startQuestion() {
 }
 
 startQuestion();
-
-watch(
-  () => props.question.answer,
-  (newResponse) => {
-    surveyStore.currentResponse[index.value].answer = newResponse;
-  }
-);
 
 watch(() => props.question.question, (newResponse) => {
   startQuestion();

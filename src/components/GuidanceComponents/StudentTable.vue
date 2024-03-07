@@ -82,12 +82,10 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, ref, PropType, watch } from "vue";
+import { Ref, ref, PropType } from "vue";
 import { useRouter } from "vue-router";
-import { studentGuidance, studentPreview } from "../../types/interface";
-import { useUserStore } from "../../stores/user";
+import { studentGuidance } from "../../types/interface";
 import { useSurveyStore } from "../../stores/survey";
-import { useGuidanceStore } from "../../stores/guidance";
 import PlusIcon from "../icons/PlusIcon.vue";
 import MinusSign from "../icons/MinusSign.vue";
 import AddFlag from "../GuidanceComponents/AddFlag.vue";
@@ -137,7 +135,7 @@ const toggleDeleteFlag = (student: string) => {
 
 function titleCaseName(name: string): string {
   const titleCaseWord = (word: string): string => {
-    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(); 
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
   };
   const [lastName, firstName] = name.split(",", 2);
   const titleCasedLastName = lastName.split(" ").map(titleCaseWord).join(" ");
@@ -146,11 +144,14 @@ function titleCaseName(name: string): string {
 }
 
 async function viewSurvey(student: studentGuidance) {
-  await surveyStore.setSurvey(student.email, student.grade);
-  await router.push(
-    `/guidance/survey/${student.email.replace("@nycstudents.net", "")}`
-  );
+  try {
+    await surveyStore.fetchSurvey(student.email);
+    await router.push(`/guidance/survey/${student.email.replace("@nycstudents.net", "")}`);
+  } catch (error) {
+    console.error("Error fetching survey data:", error);
+  }
 }
+
 </script>
 
 <style scoped>

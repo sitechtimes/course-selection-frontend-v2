@@ -36,7 +36,7 @@
           class="bg-[#D6EEFF] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-36 h-12 text-2xl font-bold text-[#37394F]">Submit</button>
       </div>
     </div>
-  </section>
+  </section>  
   <ScrollPage :guidance="false" />
 </template>
 

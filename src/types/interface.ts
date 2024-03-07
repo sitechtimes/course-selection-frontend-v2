@@ -44,6 +44,7 @@ export interface surveyStore {
     submit: boolean
     missingAnswers: string[]
     studentCourses: studentCourses
+    name: string
 }
 
 // user object
@@ -83,6 +84,7 @@ export interface studentSurveyData {
     answeredSurvey: answeredSurvey
     coursesTaken: course[]
     coursesAvailable: course[]
+    name: string
 }
 
 export interface studentCourses {
@@ -192,6 +194,7 @@ export interface course {
     courseCode: string
     subject: course_type
     name: string
+    id: number
 }
 
 export interface studentMeetings {

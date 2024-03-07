@@ -9,6 +9,7 @@
             :disabled="isDisabled"
             class="w-4 h-4 mx-2 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
             :id="question.id + 'Yes'"
+            :name="`question_${question.question}`"
             value="Yes"
             v-model="surveyStore.currentResponse[index].answer"
           />
@@ -20,6 +21,7 @@
             :disabled="isDisabled"
             class="w-4 h-4 mx-2 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
             :id="question.id + 'No'"
+            :name="`question_${question.question}`"
             value="No"
             v-model="surveyStore.currentResponse[index].answer"
           />
@@ -32,7 +34,7 @@
 
 <script setup lang="ts">
 import { useSurveyStore } from "../../../stores/survey";
-import { watch, PropType } from "vue";
+import { watch, PropType, ref } from "vue";
 import { surveyQuestion, preferences } from "../../../types/interface";
 
 const props = defineProps({
@@ -44,72 +46,69 @@ const props = defineProps({
 });
 
 const surveyStore = useSurveyStore();
-let index: number = surveyStore.currentResponse.findIndex(
-  (x) => x.id == props.question?.id
-);
+const index = ref(0);
 
-  if (index < 0) {
-    const questionAnswer = {
-      id: props.question.id,
-      question: props.question.question,
+const getQuestionIndex = (question: string): number => {
+  return surveyStore.currentResponse.findIndex((entry) => entry.question === question);
+}
+
+function startQuestion() {
+  const currentQuestion: string = props.question.question;
+  index.value = getQuestionIndex(currentQuestion);
+  if (index.value < 0) {
+    const newQuestion = {
+      //id does not exist for questions on backend yet
+      id: "",
+      question: currentQuestion,
+      questionType: "BOOLEAN",
       answer: "",
     };
-    //@ts-ignore
-    surveyStore.currentResponse.push(questionAnswer);
-
-    index = surveyStore.currentResponse.findIndex(
-      (x) => x.id == props.question?.id
-    );
+    surveyStore.currentResponse.push(newQuestion);
   }
+}
 
-watch(
-  () => props.question,
-  (newResponse) => {
-    index = surveyStore.currentResponse.findIndex(
-      (x) => x.id == newResponse.id
-    );
+startQuestion();
+
+watch(() => props.question.question, (newResponse) => {
+   startQuestion();
   }
 );
 
 watch(
-  () => surveyStore.currentResponse[index].answer,
+  () => surveyStore.currentResponse[index.value].answer,
   (newResponse, oldResponse) => {
-    if(props.question?.status === 'CLASS') {
-      const totalIndex = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');
-      //@ts-ignore
-      if (newResponse === "Yes") {
-        const overallRank = surveyStore.currentResponse[totalIndex].answer.courses.length + 1;
-        const overallRankObject = {
-          rank: overallRank,
-          name: props.question.classReferenced.name,
-        };
-
-        surveyStore.currentResponse[totalIndex].answer.courses.push(props.question.classReferenced.name)
-        surveyStore.currentResponse[totalIndex].answer.preference.push(overallRankObject)
+    const allCoursesIndex = surveyStore.currentResponse.findIndex((item) => item.id === "allChosenCourses");
+    if (props.question.status === "CLASS" && newResponse.toString().toUpperCase() === "YES") {
+      // add interested course to array of overall rankings
+      const overallRank = surveyStore.currentResponse[allCoursesIndex].answer.courses.length + 1;
+      const courseObject = {
+        name: props.question.classReferenced.name,
+        courseCode: props.question.classReferenced.courseCode,
+        subject: props.question.classReferenced.subject,
       }
-      //@ts-ignore
-      if (newResponse === "No") {
-        if(surveyStore.currentResponse[totalIndex].answer.courses.includes(props.question.classReferenced.name)) {
-          const allClassIndex = surveyStore.currentResponse[totalIndex].answer.courses.findIndex((x: string) => x === props.question.classReferenced.name)
-          const allPreferenceIndex = surveyStore.currentResponse[totalIndex].answer.preference.findIndex((x: preferences) => x.name === props.question.classReferenced.name)
-
-          surveyStore.currentResponse[totalIndex].answer.preference.forEach((x: preferences) => {
-          const index = surveyStore.currentResponse[totalIndex].answer.preference.indexOf(x) 
-          surveyStore.currentResponse[totalIndex].answer.preference.sort(function(a: preferences, b: preferences) {
-              return a.rank - b.rank;
-            })
-            if(index > allPreferenceIndex) {
-              surveyStore.currentResponse[totalIndex].answer.preference[index].rank = surveyStore.currentResponse[totalIndex].answer.preference[index].rank -1
-            }
-          })
-
-          surveyStore.currentResponse[totalIndex].answer.courses.splice(allClassIndex, 1)
-          surveyStore.currentResponse[totalIndex].answer.preference.splice(allPreferenceIndex, 1)
-        }
+      const rankedCourseObject = {
+        ...courseObject,
+        rank: overallRank,
       }
-      
+      surveyStore.currentResponse[allCoursesIndex].answer.courses.push(courseObject);
+      surveyStore.currentResponse[allCoursesIndex].answer.preference.push(rankedCourseObject);
     }
-    
-  }
+
+    else if (newResponse.toString().toUpperCase() === "NO") {
+      const allCourses = surveyStore.currentResponse[allCoursesIndex].answer;
+      const referencedClass = props.question.classReferenced.name;
+
+      if (allCourses.courses.includes(referencedClass)) {
+        // remove interested course from overall rankings and adjust ranks
+        const filteredCourses = allCourses.courses.filter((x) => x !== referencedClass);
+        const filteredPreferences = allCourses.preference.filter((x) => x.name !== referencedClass);
+
+        surveyStore.currentResponse[allCoursesIndex].answer.courses = filteredCourses;
+        surveyStore.currentResponse[allCoursesIndex].answer.preference = filteredPreferences;
+        
+        surveyStore.currentResponse[allCoursesIndex].answer.preference.sort((a, b) => a.rank - b.rank);
+      }
+    }
+  }  
 );
 </script>
