@@ -194,6 +194,7 @@ export interface course {
     courseCode: string
     subject: course_type
     name: string
+    id: number
 }
 
 export interface studentMeetings {
