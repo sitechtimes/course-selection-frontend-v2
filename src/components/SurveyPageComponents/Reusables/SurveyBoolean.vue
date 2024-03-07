@@ -81,13 +81,17 @@ watch(
     if (props.question.status === "CLASS" && newResponse.toString().toUpperCase() === "YES") {
       // add interested course to array of overall rankings
       const overallRank = surveyStore.currentResponse[allCoursesIndex].answer.courses.length + 1;
-      const overallRankObject = {
-        rank: overallRank,
+      const courseObject = {
         name: props.question.classReferenced.name,
+        courseCode: props.question.classReferenced.courseCode,
+        subject: props.question.classReferenced.subject,
       }
-
-      surveyStore.currentResponse[allCoursesIndex].answer.courses.push(overallRankObject.name);
-      surveyStore.currentResponse[allCoursesIndex].answer.preference.push(overallRankObject);
+      const rankedCourseObject = {
+        ...courseObject,
+        rank: overallRank,
+      }
+      surveyStore.currentResponse[allCoursesIndex].answer.courses.push(courseObject);
+      surveyStore.currentResponse[allCoursesIndex].answer.preference.push(rankedCourseObject);
     }
 
     else if (newResponse.toString().toUpperCase() === "NO") {
