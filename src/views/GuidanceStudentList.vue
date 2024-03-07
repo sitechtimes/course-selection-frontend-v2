@@ -227,7 +227,7 @@ watch(viewAll, async (newValue) => {
 
 async function handleViewAllChange(isEnabled: boolean) {
   input.value = "";
-  sortBy.value = "lastnameaz";
+  /*sortBy.value = "lastnameaz";*/ //add this line back if default sorting is not working
 
   if (isEnabled) {
     await fetchStudents();
