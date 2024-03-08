@@ -96,7 +96,10 @@ function startQuestion() {
       id: "",
       question: currentQuestion,
       questionType: props.question.questionType,
-      answer: ""
+      answer: {
+        courses: [],
+        preference: [],
+      },
     }
     surveyStore.currentResponse.push(newQuestion);
   }
@@ -115,32 +118,25 @@ function toggleInterest(interested: boolean, course: course) {
   console.log("course", course)
   const currentQuestionPreferences = surveyStore.currentResponse[index.value].answer.preference;
   const referencedClass = course.name;
-  // adjust course rankings if not interested
   if (!interested) {
-    //SOMETHING IS AFOOT HERE
     allCourses.courses.forEach((course: string) => {
       if (course !== "Not Interested") {
-        console.log(allCourses);
         const filteredCourses = allCourses.courses.filter((x) => x.name !== referencedClass);
-        const filteredPreferences = allCourses.preference.filter((x) => x !== referencedClass);
+        const filteredPreferences = allCourses.preference.filter((x) => x.name !== referencedClass);
 
         surveyStore.currentResponse[allCoursesIndex].answer.courses = filteredCourses;
         surveyStore.currentResponse[allCoursesIndex].answer.preference = filteredPreferences;
         
         surveyStore.currentResponse[allCoursesIndex].answer.preference.sort((a, b) => a.rank - b.rank);
-
-        const classIndex = currentQuestionPreferences.findIndex((x: preferences) => x.name === course);
-        surveyStore.currentResponse[index.value].answer.preference.splice(classIndex, 1);
       }
     })
-    const adjustedPreferenceRankings = allCourses.preference.forEach((rankObject: preferences, index: number) => {
+    const classIndex = currentQuestionPreferences.findIndex((x: preferences) => x.name === referencedClass);
+    surveyStore.currentResponse[index.value].answer.preference.splice(classIndex, 1);
+
+    allCourses.preference.forEach((rankObject: preferences, index: number) => {
       rankObject.rank = index + 1;
     })
-    surveyStore.currentResponse[allCoursesIndex].answer.preference = adjustedPreferenceRankings;
-
-    surveyStore.currentResponse[index.value].answer.courses = ["Not Interested"];
   } else {
-    //courses is just preference but without the rank
     const overallRank = surveyStore.currentResponse[allCoursesIndex].answer.courses.length + 1;
     const courseObject = {
       name: course.name,
@@ -155,7 +151,6 @@ function toggleInterest(interested: boolean, course: course) {
 
     surveyStore.currentResponse[allCoursesIndex].answer.courses.push(courseObject);
     surveyStore.currentResponse[allCoursesIndex].answer.preference.push(rankedCourseObject);
-    console.log("User added a course");
   }
 }
 
