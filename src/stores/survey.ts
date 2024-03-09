@@ -114,8 +114,8 @@ export const useSurveyStore = defineStore("survey", {
     async saveSurvey() {
       const userStore = useUserStore();
       this.loading = true;
-      // await this.checkSurveyAnswers();
-      // console.log("Missing Answers:", this.missingAnswers)
+      await this.checkSurveyAnswers();
+      console.log("Missing Answers:", this.missingAnswers)
       // if (this.missingAnswers.length !== 0) return;
       if (userStore.userType === "student") {
         (this.missingAnswers.length !== 0) ? await this.postSurvey("INCOMPLETE") : await this.postSurvey("COMPLETE");
