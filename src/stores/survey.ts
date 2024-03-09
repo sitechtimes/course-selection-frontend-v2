@@ -46,7 +46,7 @@ export const useSurveyStore = defineStore("survey", {
     },
     async fetchSurvey(email: string) {
       const userStore = useUserStore();
-      const url = userStore.userType === "student" ? "/student/survey/" : `/guidance/survey/${email}`;
+      const url = userStore.userType === "student" ? "/student/survey" : `/guidance/survey/${email}`;
 
       const res = await fetch(import.meta.env.VITE_URL + url, {
         method:

@@ -60,7 +60,6 @@ const surveyStore = useSurveyStore()
 const router = useRouter()
 
 surveyStore.missingAnswers = []
-surveyStore.fetchSurvey();
 
 if (surveyStore.currentAnsweredSurvey.status === 'COMPLETE') {
   surveyStore.fetchSurvey();
@@ -125,6 +124,4 @@ watch(() => surveyStore.currentAnsweredSurvey.answers, (newResponse, oldResponse
 watch(() => surveyStore.currentResponse[indexAllCourses].answer.preference, (newResponse) => {
   x.value = x.value + 1
 }, { deep: true })
-
-console.log('surveyStore.currentResponse.indexAllCourses',surveyStore.currentResponse[indexAllCourses])
 </script>
