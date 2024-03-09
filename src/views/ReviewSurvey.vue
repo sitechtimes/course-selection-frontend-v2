@@ -125,4 +125,6 @@ watch(() => surveyStore.currentAnsweredSurvey.answers, (newResponse, oldResponse
 watch(() => surveyStore.currentResponse[indexAllCourses].answer.preference, (newResponse) => {
   x.value = x.value + 1
 }, { deep: true })
+
+console.log('surveyStore.currentResponse.indexAllCourses',surveyStore.currentResponse[indexAllCourses])
 </script>

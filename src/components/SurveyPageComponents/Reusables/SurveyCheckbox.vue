@@ -62,7 +62,6 @@
 </template>
 
 <script setup lang="ts"> 
-//@ts-nocheck
 import surveyDraggable from "./SurveyDraggable.vue";
 import { useSurveyStore } from "../../../stores/survey";
 import { watch, ref, Ref, computed, PropType } from "vue";
@@ -90,8 +89,9 @@ const getQuestionIndex = (question: string): number => {
 
 function startQuestion() {
   const currentQuestion: string = props.question.question;
+  console.log(currentQuestion);
   index.value = getQuestionIndex(currentQuestion);
-  if (index < 0) {
+  if (index.value < 0) {
     const newQuestion = {
       id: "",
       question: currentQuestion,
@@ -100,7 +100,7 @@ function startQuestion() {
         courses: [],
         preference: [],
       },
-    }
+    };
     surveyStore.currentResponse.push(newQuestion);
   }
 }
@@ -118,6 +118,7 @@ function toggleInterest(interested: boolean, course: course) {
   console.log("course", course)
   const currentQuestionPreferences = surveyStore.currentResponse[index.value].answer.preference;
   const referencedClass = course.name;
+  console.log("referencedClass", referencedClass)
   if (!interested) {
     allCourses.courses.forEach((course: string) => {
       if (course !== "Not Interested") {
