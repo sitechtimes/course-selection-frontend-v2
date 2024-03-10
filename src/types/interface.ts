@@ -37,7 +37,7 @@ export interface studentSurveyPreview {
 // survey store interface
 export interface surveyStore {
     currentAnsweredSurvey: answeredSurvey
-    currentResponse: surveyAnswer[]
+    currentResponse: Array<surveyAnswer | surveyStringAnswer>
     currentSurvey: survey
     loading: boolean
     open: boolean
@@ -169,7 +169,7 @@ export interface surveyQuestion {
 
 export interface surveyAnswer {
     id: string
-    question?: string
+    question: string
     answer: checkboxAnswer 
 }
 
@@ -180,8 +180,18 @@ export interface surveyStringAnswer {
 }
 
 export interface checkboxAnswer {
-    courses: string[]
+    courses: course[]
     preference: preferences[]
+}
+
+export interface allCoursesAnswer {
+    answer: checkboxAnswer
+    id: "allChosenCourses"
+} 
+
+export interface surveyGuidanceAnswer {
+    answer: string
+    id: "noteToGuidance" | "guidanceFinalNote"
 }
 
 export interface preferences {
@@ -194,7 +204,8 @@ export interface course {
     courseCode: string
     subject: course_type
     name: string
-    id: number
+    //id for each course should be required, fix later
+    id?: number
 }
 
 export interface studentMeetings {
