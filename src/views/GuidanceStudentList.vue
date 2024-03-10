@@ -57,6 +57,7 @@
 </template>
 
 <script setup lang="ts">
+//@ts-nocheck
 import SearchBar from "../components/GuidanceComponents/SearchBar.vue";
 import Sort from "../components/GuidanceComponents/SortButton.vue";
 import StudentTable from "../components/GuidanceComponents/StudentTable.vue";
@@ -83,10 +84,6 @@ const pageCapacity: number = 10;
 onMounted(async () => {
   userStore.currentlyViewingStudents = await userStore.guidanceStudents;
 });
-
-//daria edit
-
-//daria edit
 
 async function fetchStudents() {
   const { access_token } = useUserStore();

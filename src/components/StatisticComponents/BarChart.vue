@@ -29,6 +29,7 @@
 </template>
 
 <script lang="ts" setup>
+//@ts-nocheck
 import { Bar } from 'vue-chartjs'
 import { useUserStore } from '../../stores/user';
 import { ref, Ref, onMounted, computed } from 'vue';

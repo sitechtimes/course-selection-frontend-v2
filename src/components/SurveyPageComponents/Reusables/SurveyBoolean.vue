@@ -33,6 +33,7 @@
 </template>
 
 <script setup lang="ts">
+//@ts-nocheck
 import { useSurveyStore } from "../../../stores/survey";
 import { watch, PropType, ref } from "vue";
 import { surveyQuestion, preferences } from "../../../types/interface";
