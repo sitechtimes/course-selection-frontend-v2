@@ -36,17 +36,6 @@ export const useSurveyStore = defineStore("survey", {
         } else if ((question.questionType === "COURSES" || question.questionType === "PE" || question.questionType === "SCIENCE" || question.questionType === "TECH") && !question.answer?.courses) {
           this.missingAnswers.push({ question, index });
         }
-
-        if (isGeneralOrBoolean(question) && isMissingOrNA(questionResponse)) {
-          // check for general and boolean questions
-          this.missingAnswers.push(question.id);
-        } else if (questionResponse?.answer.courses.length === 0) {
-          // check for questions regarding courses
-          this.missingAnswers.push(question.id);
-        }
-      })
-    },
-    async fetchSurvey(email: string="") {
       });
     },      
     async fetchSurvey(email: string) {
@@ -83,13 +72,6 @@ export const useSurveyStore = defineStore("survey", {
           ? surveyData.answeredSurvey.answers
           : JSON.parse(surveyData.answeredSurvey.answers);
         this.currentResponse = formattedResponses;
-
-        // .filter((answer) => answer.answer)
-        // .map((answer) => ({
-        //   id: answer.id,
-        //   question: answer.question,
-        //   answer: answer.answer,
-        // }))
 
       }
       console.log("Fetched and set student survey data.");
