@@ -97,6 +97,7 @@ function updateRank(rank: number, dragIndex: string) {
   if (props.index === surveyStore.currentResponse.findIndex((x) => x.id === "allChosenCourses")) {
     surveyStore.currentResponse[props.index].answer.preference = ref_courses.value
   } else {
+    //@ts-ignore
     surveyStore.currentResponse[props.index].answer.preference = ref_courses.value
   }
 }

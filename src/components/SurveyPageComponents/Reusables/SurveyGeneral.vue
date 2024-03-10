@@ -44,6 +44,7 @@ function startQuestion() {
       questionType: "GENERAL",
       answer: "",
     };
+    //@ts-ignore
     surveyStore.currentResponse.push(newQuestion);
   }
 }

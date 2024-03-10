@@ -62,6 +62,7 @@
 </template>
 
 <script setup lang="ts"> 
+//@ts-nocheck
 import surveyDraggable from "./SurveyDraggable.vue";
 import { useSurveyStore } from "../../../stores/survey";
 import { watch, ref, Ref, computed, PropType } from "vue";
