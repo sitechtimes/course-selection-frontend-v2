@@ -38,10 +38,6 @@ const props = defineProps({
 const surveyStore = useSurveyStore()
 let dragElement: HTMLElement;
 
-const computedHeight = computed(() => {
-  return props.courses.length;
-});
-
 const ref_courses = ref(props.courses);
 
 const hoverBoxOver = function (e) {
