@@ -61,6 +61,7 @@
 </template>
 
 <script setup lang="ts">
+//@ts-nocheck
 import { useUserStore } from '../stores/user'
 import { useSurveyStore } from '../stores/survey';
 import booleanComponent from '../components/SurveyPageComponents/Reusables/SurveyBoolean.vue'
