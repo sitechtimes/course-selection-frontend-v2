@@ -3,7 +3,7 @@
     <div class="lg:w-2/3 w-11/12">
       <div v-for="question in surveyStore.currentSurvey.question" :key="question.id" class="flex justify-center">
         <div v-if="surveyStore.missingAnswers.length > 0" class="w-1/12 flex justify-center items-center">
-          <exclamationMark v-if="surveyStore.missingAnswers.includes(question.id)"
+          <exclamationMark v-if="surveyStore.missingAnswers.includes(question.index)"
             class="text-red-500 h-8 motion-safe:animate-bounce"></exclamationMark>
         </div>
         <div class="w-11/12">
@@ -25,7 +25,7 @@
         <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl">Final note to your guidance counselor:</p>
         <input
           class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base bg-transparent rounded-md border border-solid border-zinc-400 focus:outline-none focus:ring-0 focus:border-blue-400"
-          type="text" v-model="surveyStore.currentResponse[indexNoteGuidance]" />
+          type="text" v-model="surveyStore.currentResponse[indexNoteGuidance].answer" />
       </div>
       <div class="flex justify-center my-10 flex-col items-center">
         <p v-if="surveyStore.missingAnswers.length === 0" class="mb-4 text-center">Once you submit, you will still be able
@@ -60,7 +60,6 @@ const surveyStore = useSurveyStore()
 const router = useRouter()
 
 surveyStore.missingAnswers = []
-surveyStore.fetchSurvey();
 
 if (surveyStore.currentAnsweredSurvey.status === 'COMPLETE') {
   surveyStore.fetchSurvey();
@@ -79,6 +78,7 @@ const submit = async () => {
   await surveyStore.checkSurveyAnswers()
   if (surveyStore.missingAnswers.length === 0) {
     if (userStore.userType === "student") {
+      await surveyStore.saveSurvey()
       router.push('/student/dashboard')
     } else if (userStore.userType === "guidance") {
       router.push('/guidance/studentlist')
@@ -125,6 +125,4 @@ watch(() => surveyStore.currentAnsweredSurvey.answers, (newResponse, oldResponse
 watch(() => surveyStore.currentResponse[indexAllCourses].answer.preference, (newResponse) => {
   x.value = x.value + 1
 }, { deep: true })
-
-console.log('surveyStore.currentResponse.indexAllCourses',surveyStore.currentResponse[indexAllCourses])
 </script>

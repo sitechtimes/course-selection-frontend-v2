@@ -114,6 +114,19 @@ const notInterested = computed(() =>{
   return surveyStore.currentResponse[index.value].answer.courses.includes('Not Interested');
 })
 
+//if 'Not Interested' is selected, clear the array(courses) for that question
+watch(
+  () => notInterested.value,
+  (isNotInterested) => {
+    if (isNotInterested) {
+      surveyStore.currentResponse[index.value].answer = {
+        courses: [],
+        preference: [],
+      };
+    }
+  }
+);
+
 function toggleInterest(interested: boolean, course: course) {
   const allCoursesIndex = surveyStore.currentResponse.findIndex((x) => x.id === "allChosenCourses");
   const allCourses = surveyStore.currentResponse[allCoursesIndex].answer;
