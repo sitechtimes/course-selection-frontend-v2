@@ -78,6 +78,7 @@ const submit = async () => {
   await surveyStore.checkSurveyAnswers()
   if (surveyStore.missingAnswers.length === 0) {
     if (userStore.userType === "student") {
+      await surveyStore.saveSurvey()
       router.push('/student/dashboard')
     } else if (userStore.userType === "guidance") {
       router.push('/guidance/studentlist')
