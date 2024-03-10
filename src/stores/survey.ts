@@ -20,30 +20,24 @@ export const useSurveyStore = defineStore("survey", {
   actions: {
     async checkSurveyAnswers() {
       this.missingAnswers = [];
-      this.currentSurvey.question.forEach((question: surveyQuestion) => {
-        const questionResponse: surveyStringAnswer | surveyAnswer | undefined = this.currentResponse.find((response) => response.id === question.id);
-
-        const isGeneralOrBoolean = (question: surveyQuestion) => {
-          return question.questionType === "GENERAL" || question.questionType || "BOOLEAN"
-        }
+      this.currentResponse.forEach((question: surveyQuestion, index: number) => {
         const isMissingOrNA = (response: surveyStringAnswer | surveyAnswer | undefined) => {
           if (!response) {
-            return true
+            return true;
           }
-          if (typeof response.answer === "string") {
-            return response.answer.trim.length === 0;
+          if (typeof response.answer === "string" && response.answer.trim() === "") {
+            return true;
           }
+          return false;
+        };
+    
+        if ((question.questionType === "GENERAL" || question.questionType === "BOOLEAN") && isMissingOrNA(question.answer)) {
+          this.missingAnswers.push({ question, index });
+        } else if ((question.questionType === "COURSES" || question.questionType === "PE" || question.questionType === "SCIENCE" || question.questionType === "TECH") && !question.answer?.courses) {
+          this.missingAnswers.push({ question, index });
         }
-
-        if (isGeneralOrBoolean(question) && isMissingOrNA(questionResponse)) {
-          // check for general and boolean questions
-          this.missingAnswers.push(question.id);
-        } else if (questionResponse?.answer.courses.length === 0) {
-          // check for questions regarding courses
-          this.missingAnswers.push(question.id);
-        }
-      })
-    },
+      });
+    },      
     async fetchSurvey(email: string) {
       const userStore = useUserStore();
       const url = userStore.userType === "student" ? "/student/survey" : `/guidance/survey/${email}`;

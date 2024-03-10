@@ -3,7 +3,7 @@
     <div class="lg:w-2/3 w-11/12">
       <div v-for="question in surveyStore.currentSurvey.question" :key="question.id" class="flex justify-center">
         <div v-if="surveyStore.missingAnswers.length > 0" class="w-1/12 flex justify-center items-center">
-          <exclamationMark v-if="surveyStore.missingAnswers.includes(question.id)"
+          <exclamationMark v-if="surveyStore.missingAnswers.includes(question.index)"
             class="text-red-500 h-8 motion-safe:animate-bounce"></exclamationMark>
         </div>
         <div class="w-11/12">
@@ -64,7 +64,6 @@ surveyStore.missingAnswers = []
 if (surveyStore.currentAnsweredSurvey.status === 'COMPLETE') {
   surveyStore.fetchSurvey();
 }
-
 
 const indexAllCourses: number = surveyStore.currentResponse.findIndex((question) => question.id === 'allChosenCourses');
 const indexNoteGuidance: number = surveyStore.currentResponse.findIndex((question) => question.id === 'noteToGuidance');
