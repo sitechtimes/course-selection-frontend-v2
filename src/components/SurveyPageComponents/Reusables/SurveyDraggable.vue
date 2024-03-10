@@ -6,10 +6,13 @@
           class="h-12 mx-2 mb-2.5 xl:h-16 w-full placeholder flex items-center justify-center p-2 rounded-lg shadow-lg text-[#37394F] cursor-grab active:cursor-grabbing font-semibold course"
           :class="`bg-[#${color}]`" :course-rank="course.rank">
           <div class="w-full h-full flex items-center justify-center" :class="`bg-[#${color}]`" draggable="true"
-            @dragover.prevent="(e) => hoverBoxOver(e)" @dragstart="(e) => (dragElement = e.target)"
-            @drop.prevent="(e) => hoverBox(e, course.rank)"
-            @touchstart.prevent="(e) => handleTouchStart(e, course.rank)" @touchmove.prevent="(e) => handleTouchMove(e)"
-            @touchend.prevent="(e) => handleTouchEnd(e, course.rank)">
+            @dragover.prevent="(e: DragEvent) => hoverBoxOver(e)" 
+            @dragstart="(e: DragEvent) => (dragElement = e.target as HTMLElement)"
+            @drop.prevent="(e: MouseEvent | DragEvent ) => hoverBox(e, course.rank)"
+
+            @touchstart.prevent="(e: TouchEvent) => handleTouchStart(e, course.rank)" 
+            @touchmove.prevent="(e: TouchEvent) => handleTouchMove(e)"
+            @touchend.prevent="(e:TouchEvent) => handleTouchEnd(e)">
             {{ course.name }}
           </div>
         </div>
@@ -23,7 +26,9 @@ import { ref, computed, PropType } from "vue";
 import { useSurveyStore } from "../../../stores/survey";
 import { preferences } from "../../../types/interface";
 
-const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
+const isTouchDevice = 
+  ('ontouchstart' in window) || 
+  (navigator.maxTouchPoints !== undefined && navigator.maxTouchPoints > 0);
 
 const props = defineProps({
   courses: {
@@ -40,21 +45,34 @@ let dragElement: HTMLElement;
 
 const ref_courses = ref(props.courses);
 
-const hoverBoxOver = function (e) {
-  let dragParent = dragElement.parentElement;
-  e.target.parentElement.appendChild(dragElement);
-  dragParent.appendChild(e.target);
+const hoverBoxOver = function (e: DragEvent) {
+  const dragParent: HTMLElement | null = dragElement.parentElement;
+  const target = e.target as HTMLElement;
+
+  if (target && target.parentElement) {
+    target.parentElement.appendChild(dragElement);
+    dragParent?.appendChild(target);
+  };
 };
 
-const hoverBox = function (e, rank: number) {
-  let dragParent = dragElement.parentElement;
-  let dragIndex = dragParent?.parentElement.id;
-  e.target.parentElement.appendChild(dragElement);
-  dragParent.appendChild(e.target);
-  updateRank(rank, dragIndex)
+const hoverBox = function (e: MouseEvent | DragEvent, rank: number) {
+  const dragParent: HTMLElement | null = dragElement.parentElement;
+  let dragIndex: string = "";
+
+  if (dragParent && dragParent.parentElement) {
+    dragIndex = dragParent.parentElement.id;
+  }
+  const target = e.target as HTMLElement;
+  
+  if (target && target.parentElement) {
+    target.parentElement.appendChild(dragElement);
+    dragParent?.appendChild(target);
+  };
+
+  updateRank(rank, dragIndex);
 };
 
-function updateRank(rank: number, dragIndex: string | number) {
+function updateRank(rank: number, dragIndex: string) {
   const startObject = ref_courses.value.findIndex(x => x.rank === +rank)
 
   if (+rank > +dragIndex) {
@@ -76,7 +94,7 @@ function updateRank(rank: number, dragIndex: string | number) {
 
   ref_courses.value.sort((a, b) => a.rank - b.rank);
 
-  if (props.index === surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses')) {
+  if (props.index === surveyStore.currentResponse.findIndex((x) => x.id === "allChosenCourses")) {
     surveyStore.currentResponse[props.index].answer.preference = ref_courses.value
   } else {
     surveyStore.currentResponse[props.index].answer.preference = ref_courses.value
@@ -86,38 +104,49 @@ function updateRank(rank: number, dragIndex: string | number) {
 let touchStartX = 0;
 let touchStartY = 0;
 
-const handleTouchStart = (e, rank) => {
+const handleTouchStart = (e: TouchEvent, rank: number) => {
   if (isTouchDevice) {
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-    dragElement = e.target;
-    dragElement.setAttribute('data-rank', rank);
+    const touch = e.touches[0];
+    if (touch) {
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+
+      const target = e.target as HTMLElement;
+      dragElement = target;
+      dragElement.setAttribute("data-rank", rank.toString());
+    };
   }
 };
 
-const handleTouchMove = (e) => {
+const handleTouchMove = (e: TouchEvent) => {
   if (isTouchDevice && dragElement) {
-    const touchX = e.touches[0].clientX;
-    const touchY = e.touches[0].clientY;
+    const touch = e.touches[0];
+    const touchX = touch.clientX;
+    const touchY = touch.clientY;
+
     const deltaX = touchX - touchStartX; //finds out much the dragelement will move according to touchevent
     const deltaY = touchY - touchStartY;
     dragElement.style.transform = `translate(${deltaX}px, ${deltaY}px)`; //moves the dragelement according to the deltas
   }
 };
 
-const handleTouchEnd = (e) => {
-  dragElement.style.transform = '';
+const handleTouchEnd = (e: TouchEvent) => {
+  dragElement.style.transform = "";
+  const touch = e.changedTouches[0];
 
   //finds the targeted DOM the dragElement wants to take over via the x and y positioning of the touch event
-  const target = document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+  const target = document.elementFromPoint(touch.clientX, touch.clientY);
   if (target) {
     //finds DOM matching the target
     const targetedCourse = target.closest(".course");
     //takes the current rank of the course and updates accordingly
-    const dragIndex = parseInt(targetedCourse.getAttribute('course-rank'));
-    const rank = parseInt(dragElement.getAttribute('data-rank'));
-    updateRank(rank, dragIndex);
+    if (targetedCourse && dragElement) {
+      const dragIndex: string = targetedCourse.getAttribute("course-rank") ?? "";
+      const rank = parseInt(dragElement.getAttribute("data-rank") ?? "");
+
+      updateRank(rank, dragIndex);
+    }
   }
-  dragElement = '';
+  dragElement = new HTMLElement;
 };
 </script>
