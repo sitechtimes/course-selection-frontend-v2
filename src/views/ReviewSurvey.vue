@@ -25,7 +25,7 @@
         <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl">Final note to your guidance counselor:</p>
         <input
           class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base bg-transparent rounded-md border border-solid border-zinc-400 focus:outline-none focus:ring-0 focus:border-blue-400"
-          type="text" v-model="surveyStore.currentResponse[indexNoteGuidance]" />
+          type="text" v-model="surveyStore.currentResponse[indexNoteGuidance].answer" />
       </div>
       <div class="flex justify-center my-10 flex-col items-center">
         <p v-if="surveyStore.missingAnswers.length === 0" class="mb-4 text-center">Once you submit, you will still be able
@@ -64,6 +64,7 @@ surveyStore.missingAnswers = []
 if (surveyStore.currentAnsweredSurvey.status === 'COMPLETE') {
   surveyStore.fetchSurvey();
 }
+
 
 const indexAllCourses: number = surveyStore.currentResponse.findIndex((question) => question.id === 'allChosenCourses');
 const indexNoteGuidance: number = surveyStore.currentResponse.findIndex((question) => question.id === 'noteToGuidance');
