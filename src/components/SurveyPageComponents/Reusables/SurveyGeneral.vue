@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import { useSurveyStore } from "../../../stores/survey";
 import { watch, onBeforeMount, PropType, ref } from "vue";
-import { survey, surveyAnswer, surveyQuestion } from "../../../types/interface";
+import { survey, surveyAnswer, surveyQuestion, surveyStringAnswer } from "../../../types/interface";
 
 const props = defineProps({
   question:{

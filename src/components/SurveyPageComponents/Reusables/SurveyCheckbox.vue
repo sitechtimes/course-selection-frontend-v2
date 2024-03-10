@@ -135,8 +135,8 @@ function toggleInterest(interested: boolean, course: course) {
   const referencedClass = course.name;
 
   if (!interested) {
-    const filteredCourses = allCourses.courses.filter((x) => x.name !== referencedClass);
-    const filteredPreferences = allCourses.preference.filter((x) => x.name !== referencedClass);
+    const filteredCourses = allCourses.courses.filter((course) => course.name !== referencedClass);
+    const filteredPreferences = allCourses.preference.filter((course) => course.name !== referencedClass);
 
     surveyStore.currentResponse[allCoursesIndex].answer.courses = filteredCourses;
     surveyStore.currentResponse[allCoursesIndex].answer.preference = filteredPreferences;
@@ -171,8 +171,8 @@ function toggleInterest(interested: boolean, course: course) {
 
 
 function getChangedCourse(oldCourses, newCourses) {
-  const addedCourse = newCourses.find((x) => !oldCourses.includes(x));
-  const removedCourse = oldCourses.find((x) => !newCourses.includes(x));
+  const addedCourse = newCourses.find((course: course) => !oldCourses.includes(course));
+  const removedCourse = oldCourses.find((course: course) => !newCourses.includes(course));
 
   return addedCourse || removedCourse;
 }

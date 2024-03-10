@@ -162,15 +162,15 @@ export interface survey {
 export interface surveyQuestion {
     question: string
     questionType: question_type
-    id: string
     status: question_status
-    classReferenced: any
+    classReferenced: any 
+    id: string
 }
 
 export interface surveyAnswer {
     id: string
     question?: string
-    answer: checkboxAnswer | string
+    answer: checkboxAnswer 
 }
 
 export interface surveyStringAnswer {

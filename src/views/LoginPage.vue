@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import BaseLogin from '../components/LoginComponents/Baselogin.vue';
+import BaseLogin from '../components/LoginComponents/BaseLogin.vue';
 import { useUserStore } from '../stores/user';
 import { useRouter } from 'vue-router'
 import { watch } from 'vue';

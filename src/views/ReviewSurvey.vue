@@ -87,6 +87,7 @@ const submit = async () => {
 }
 
 onBeforeRouteLeave((to, from, next) => {
+  //@ts-ignore
   if (JSON.stringify(surveyStore.currentResponse) === surveyStore.currentAnsweredSurvey.answers || to.path === '/student/survey/review') {
     window.removeEventListener('beforeunload', reminder)
     next()
@@ -107,20 +108,22 @@ const reminder = (e: Event) => {
 };
 
 watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
+  //@ts-ignore
   if (JSON.stringify(newResponse) === surveyStore.currentAnsweredSurvey.answers) {
-    window.removeEventListener('beforeunload', reminder)
+    window.removeEventListener('beforeunload', reminder);
   } else {
     window.addEventListener('beforeunload', reminder);
   }
-}, { deep: true })
+}, { deep: true });
 
 watch(() => surveyStore.currentAnsweredSurvey.answers, (newResponse, oldResponse) => {
+  //@ts-ignore
   if (newResponse === JSON.stringify(surveyStore.currentResponse)) {
-    window.removeEventListener('beforeunload', reminder)
+    window.removeEventListener('beforeunload', reminder);
   } else {
     window.addEventListener('beforeunload', reminder);
   }
-}, { deep: true })
+}, { deep: true });
 
 watch(() => surveyStore.currentResponse[indexAllCourses].answer.preference, (newResponse) => {
   x.value = x.value + 1
