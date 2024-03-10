@@ -194,6 +194,11 @@ export interface surveyGuidanceAnswer {
     id: "noteToGuidance" | "guidanceFinalNote"
 }
 
+export interface barChartData {
+    year: number
+    stats: object
+}
+
 export interface preferences {
     rank: number
     name: string
