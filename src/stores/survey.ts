@@ -44,7 +44,7 @@ export const useSurveyStore = defineStore("survey", {
         }
       })
     },
-    async fetchSurvey(email: string) {
+    async fetchSurvey(email: string="") {
       const userStore = useUserStore();
       const url = userStore.userType === "student" ? "/student/survey/" : `/guidance/survey/${email}`;
 
