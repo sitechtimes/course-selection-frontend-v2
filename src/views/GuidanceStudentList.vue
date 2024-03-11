@@ -74,7 +74,7 @@ const loading: Ref<boolean> = ref(false);
 const viewAll: Ref<boolean> = ref(false);
 const input: Ref<string> = ref("");
 const sortBy: Ref<string> = ref("lastnameaz");
-let dataReady = false;
+
 const x: Ref<number> = ref(0);
 const y: Ref<number> = ref(10);
 
@@ -120,7 +120,7 @@ const sortedAndFilteredStudents = computed(() => {
       input.value
     );
   } else {
-    return applyFiltersAndSort(allStudents.value, sortBy.value, input.value);
+    return applyFiltersAndSort(allStudents.value as studentGuidance[], sortBy.value, input.value);
   }
 });
 
@@ -129,67 +129,67 @@ function filterStudentsByCategory(students: studentGuidance[], sortBy: string) {
   switch (sortBy) {
     case "lastnameaz":
       categorizedStudents = categorizedStudents.sort(
-        (a: studentPreview, b: studentPreview) => a.name.localeCompare(b.name)
+        (a: studentGuidance, b: studentGuidance) => a.name.localeCompare(b.name)
       );
       break;
     case "lastnameza":
       categorizedStudents = categorizedStudents.sort(
-        (a: studentPreview, b: studentPreview) => b.name.localeCompare(a.name)
+        (a: studentGuidance, b: studentGuidance) => b.name.localeCompare(a.name)
       );
       break;
     case "ns":
       categorizedStudents = categorizedStudents.filter(
-        (student: studentPreview) => student.status === "NOT STARTED"
+        (student: studentGuidance) => student.status === "NOT STARTED"
       );
       break;
     case "ip":
       categorizedStudents = categorizedStudents.filter(
-        (student: studentPreview) => student.status === "INCOMPLETE"
+        (student: studentGuidance) => student.status === "INCOMPLETE"
       );
       break;
     case "com":
       categorizedStudents = categorizedStudents.filter(
-        (student: studentPreview) => student.status === "COMPLETE"
+        (student: studentGuidance) => student.status === "COMPLETE"
       );
       break;
     case "final":
       categorizedStudents = categorizedStudents.filter(
-        (student: studentPreview) => student.status === "FINALIZED"
+        (student: studentGuidance) => student.status === "FINALIZED"
       );
       break;
     case "nine":
       categorizedStudents = categorizedStudents.filter(
-        (student: studentPreview) => student.grade === "FRESHMAN"
+        (student: studentGuidance) => student.grade === "FRESHMAN"
       );
       break;
     case "ten":
       categorizedStudents = categorizedStudents.filter(
-        (student: studentPreview) => student.grade === "SOPHOMORE"
+        (student: studentGuidance) => student.grade === "SOPHOMORE"
       );
       break;
     case "eleven":
       categorizedStudents = categorizedStudents.filter(
-        (student: studentPreview) => student.grade === "JUNIOR"
+        (student: studentGuidance) => student.grade === "JUNIOR"
       );
       break;
     case "transfer":
       categorizedStudents = categorizedStudents.filter(
-        (student: studentPreview) => student.flag === "Transfer"
+        (student: studentGuidance) => student.flag === "Transfer"
       );
       break;
     case "regents":
       categorizedStudents = categorizedStudents.filter(
-        (student: studentPreview) => student.flag === "Regents"
+        (student: studentGuidance) => student.flag === "Regents"
       );
       break;
     case "sports":
       categorizedStudents = categorizedStudents.filter(
-        (student: studentPreview) => student.flag === "Team"
+        (student: studentGuidance) => student.flag === "Team"
       );
       break;
     case "enl":
       categorizedStudents = categorizedStudents.filter(
-        (student: studentPreview) => student.flag === "ENL"
+        (student: studentGuidance) => student.flag === "ENL"
       );
       break;
   }
