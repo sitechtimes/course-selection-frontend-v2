@@ -41,14 +41,14 @@ import {
   CategoryScale,
   LinearScale
 } from 'chart.js'
-import { barChartData } from '../../types/interface';
+import { stats } from '../../types/interface';
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
-const loaded = ref(false);
 const userStore = useUserStore();
+const loaded: Ref<boolean> = ref(false);
 const selectedYear: Ref<number> = ref(0);
 
-const chartData: Ref<barChartData[]> = ref([]);
+const chartData: Ref<stats[]> = ref([]);
 const years: Ref<number[]> = ref([]);
 
 async function fetchStats() {
@@ -62,7 +62,7 @@ async function fetchStats() {
     });
     const data = await response.json();
     return {
-      years: data.map((item: barChartData) => item.year),
+      years: data.map((item: stats) => item.year),
       data: data,
     };
   } catch (error) {
