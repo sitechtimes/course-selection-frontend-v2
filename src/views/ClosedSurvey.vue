@@ -27,7 +27,6 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from '../stores/user'
 import { useSurveyStore } from '../stores/survey';
 import { useStudentStore } from '../stores/student';
 import surveyBoolean from '../components/SurveyPageComponents/Reusables/SurveyBoolean.vue'
@@ -39,7 +38,6 @@ import { ref, Ref } from 'vue';
 
 document.title = 'Survey | SITHS Course Selection'
 
-const userStore = useUserStore()
 const surveyStore = useSurveyStore()
 const studentStore = useStudentStore()
 
