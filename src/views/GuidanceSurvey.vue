@@ -89,8 +89,7 @@ onMounted(async () => {
     await surveyStore.fetchSurvey(route.params.email);
     if (surveyStore.currentSurvey) {
       studentSurvey.value = surveyStore.currentSurvey;
-      studentName.value = surveyStore.name.replace(',', ', ');;
-      console.log("Fetched Survey Data:", studentSurvey.value);
+      studentName.value = surveyStore.name.replace(',', ', ');
     }
   } catch (error) {
     console.error("Error fetching survey data:", error);

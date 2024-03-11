@@ -97,7 +97,6 @@ let time: String;
 let date: String;
 
 onMounted(() => {
-  console.log(userStore.studentSurveyPreview)
   if (!(userStore.studentSurveyPreview.hr === null) && userStore.studentSurveyPreview.dueDate) {
     const ISOString = userStore.studentSurveyPreview.dueDate.substring(0, 10).split('-');
     closeTime.value = dateFormat(ISOString, "shortDate");

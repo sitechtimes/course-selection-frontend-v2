@@ -38,10 +38,7 @@ export const useUserStore = defineStore("user", {
                         const guidanceProfiles = await data.json();
                         this.studentSurveyPreview = guidanceProfiles;
                         this.guidanceStudents = await guidanceProfiles.filter((student: studentGuidance) => student.ownStudent);
-                        this.loading = true;
-                        console.log(this.guidanceStudents)
-                        //this.guidanceStudents = await data.json();
-                        
+                        this.loading = true;              
                     }).then(() =>{this.loading = false;}).catch((error) => {
                         throw new Error('Error fetching profiles:', error.message);
                     });
