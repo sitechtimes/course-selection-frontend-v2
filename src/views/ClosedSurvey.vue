@@ -11,7 +11,7 @@
       <div class="my-6">
         <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl my-4">Your final class priority:</p>
         <!-- Have to change what this says. surveyCheckbox probably also needs to be changed-->
-        <closedFinalRank :courses="surveyStore.currentResponse[indexAll].answer.preference">
+        <closedFinalRank :courses="(surveyStore.currentResponse[indexAll] as allCoursesAnswer).answer.preference">
         </closedFinalRank>
       </div>
       <div class="mt-14">
@@ -34,7 +34,7 @@ import surveyBoolean from '../components/SurveyPageComponents/Reusables/SurveyBo
 import surveyGeneral from '../components/SurveyPageComponents/Reusables/SurveyGeneral.vue'
 import closedRank from '../components/SurveyPageComponents/Reusables/ClosedSurvey/closedRank.vue';
 import closedFinalRank from '../components/SurveyPageComponents/Reusables/ClosedSurvey/closedFinalRank.vue';
-import { surveyQuestion, surveyAnswer } from '../types/interface';
+import { surveyQuestion, surveyAnswer, allCoursesAnswer } from '../types/interface';
 import { ref, Ref } from 'vue';
 
 document.title = 'Survey | SITHS Course Selection'
