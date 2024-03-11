@@ -1,6 +1,6 @@
 <template>
   <section class="lg:text-left text-center h-full w-full">
-    <div class="flex flex-col lg:flex-row items-center w-full">
+      <div class="flex flex-col lg:flex-row items-center lg:items-start w-full">
       <div class="lg:w-1/2 w-full h-full">
         <div class="flex items-center justify-center max-w-[40rem] overflow-hidden">
           <fieldset class="flex items-center justify-start w-full h-full">
@@ -62,7 +62,6 @@
 </template>
 
 <script setup lang="ts"> 
-//@ts-nocheck
 import surveyDraggable from "./SurveyDraggable.vue";
 import { useSurveyStore } from "../../../stores/survey";
 import { watch, ref, Ref, computed, PropType } from "vue";
@@ -82,65 +81,76 @@ const props = defineProps({
 
 const surveyStore = useSurveyStore();
 const x = ref(0);
-const index = ref(0);
+const index = ref(0); //current question index
 
+//finding current question index in surveyStore
 const getQuestionIndex = (question: string): number => {
   return surveyStore.currentResponse.findIndex((entry) => entry.question === question);
 }
 
+//initialise current question 
 function startQuestion() {
   const currentQuestion: string = props.question.question;
   index.value = getQuestionIndex(currentQuestion);
-  if (index < 0) {
+  //if question does not currently exist in currentResponse, create it
+  if (index.value < 0) {
     const newQuestion = {
       id: "",
       question: currentQuestion,
       questionType: props.question.questionType,
-      answer: ""
-    }
+      answer: {
+        courses: [],
+        preference: [],
+      },
+    };
     surveyStore.currentResponse.push(newQuestion);
   }
 }
 
 startQuestion();
 
+//'Not Interested' is selected
 const notInterested = computed(() =>{
   return surveyStore.currentResponse[index.value].answer.courses.includes('Not Interested');
 })
 
+//if 'Not Interested' is selected, clear the array(courses) for that question
+watch(
+  () => notInterested.value,
+  (isNotInterested) => {
+    if (isNotInterested) {
+      surveyStore.currentResponse[index.value].answer = {
+        courses: [],
+        preference: [],
+      };
+    }
+  }
+);
+
 function toggleInterest(interested: boolean, course: course) {
   const allCoursesIndex = surveyStore.currentResponse.findIndex((x) => x.id === "allChosenCourses");
   const allCourses = surveyStore.currentResponse[allCoursesIndex].answer;
-  console.log("allCourses", allCourses)
-  console.log("course", course)
+  
   const currentQuestionPreferences = surveyStore.currentResponse[index.value].answer.preference;
   const referencedClass = course.name;
-  // adjust course rankings if not interested
+
   if (!interested) {
-    //SOMETHING IS AFOOT HERE
-    allCourses.courses.forEach((course: string) => {
-      if (course !== "Not Interested") {
-        console.log(allCourses);
-        const filteredCourses = allCourses.courses.filter((x) => x.name !== referencedClass);
-        const filteredPreferences = allCourses.preference.filter((x) => x !== referencedClass);
+    const filteredCourses = allCourses.courses.filter((course) => course.name !== referencedClass);
+    const filteredPreferences = allCourses.preference.filter((course) => course.name !== referencedClass);
 
-        surveyStore.currentResponse[allCoursesIndex].answer.courses = filteredCourses;
-        surveyStore.currentResponse[allCoursesIndex].answer.preference = filteredPreferences;
-        
-        surveyStore.currentResponse[allCoursesIndex].answer.preference.sort((a, b) => a.rank - b.rank);
+    surveyStore.currentResponse[allCoursesIndex].answer.courses = filteredCourses;
+    surveyStore.currentResponse[allCoursesIndex].answer.preference = filteredPreferences;
 
-        const classIndex = currentQuestionPreferences.findIndex((x: preferences) => x.name === course);
-        surveyStore.currentResponse[index.value].answer.preference.splice(classIndex, 1);
-      }
-    })
-    const adjustedPreferenceRankings = allCourses.preference.forEach((rankObject: preferences, index: number) => {
+    surveyStore.currentResponse[allCoursesIndex].answer.preference.sort((a, b) => a.rank - b.rank);
+    
+    const classIndex = currentQuestionPreferences.findIndex((x: preferences) => x.name === referencedClass);
+    surveyStore.currentResponse[index.value].answer.preference.splice(classIndex, 1);
+
+    allCourses.preference.forEach((rankObject: preferences, index: number) => {
       rankObject.rank = index + 1;
-    })
-    surveyStore.currentResponse[allCoursesIndex].answer.preference = adjustedPreferenceRankings;
-
-    surveyStore.currentResponse[index.value].answer.courses = ["Not Interested"];
+    });
   } else {
-    //courses is just preference but without the rank
+    //add the course to allCourses
     const overallRank = surveyStore.currentResponse[allCoursesIndex].answer.courses.length + 1;
     const courseObject = {
       name: course.name,
@@ -150,18 +160,19 @@ function toggleInterest(interested: boolean, course: course) {
     const rankedCourseObject = {
       ...courseObject,
       rank: overallRank,
-    }
+    };
+
     surveyStore.currentResponse[index.value].answer.preference.push(rankedCourseObject);
 
     surveyStore.currentResponse[allCoursesIndex].answer.courses.push(courseObject);
     surveyStore.currentResponse[allCoursesIndex].answer.preference.push(rankedCourseObject);
-    console.log("User added a course");
   }
 }
 
+
 function getChangedCourse(oldCourses, newCourses) {
-  const addedCourse = newCourses.find((x) => !oldCourses.includes(x));
-  const removedCourse = oldCourses.find((x) => !newCourses.includes(x));
+  const addedCourse = newCourses.find((course: course) => !oldCourses.includes(course));
+  const removedCourse = oldCourses.find((course: course) => !newCourses.includes(course));
 
   return addedCourse || removedCourse;
 }
@@ -171,12 +182,11 @@ watch(() => props.question.question, (newResponse) => {
   }
 );
 
+//watching for changes on selected courses
 watch(
-  // watching for changes on selected courses
   () => surveyStore.currentResponse[index.value].answer.courses,
   (newResponse, oldResponse) => {
     const interested = newResponse.length > oldResponse.length;
-    console.log(interested);
     const changedCourse = getChangedCourse(newResponse, oldResponse);
     toggleInterest(interested, changedCourse);
   }
