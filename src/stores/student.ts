@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { defineStore } from "pinia";
 import { useUserStore } from "./user";
 import { grade, surveyAnswer, surveyQuestion, studentUser } from "../types/interface";

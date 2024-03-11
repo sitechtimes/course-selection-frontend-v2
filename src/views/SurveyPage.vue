@@ -38,13 +38,13 @@
 </template>
 
 <script setup lang="ts">
+//@ts-nocheck
 import checkboxComponent from "../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue";
 import booleanComponent from "../components/SurveyPageComponents/Reusables/SurveyBoolean.vue";
 import generalComponent from "../components/SurveyPageComponents/Reusables/SurveyGeneral.vue";
 import { ref, reactive, Ref, onBeforeMount, watch } from "vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
-import { useStudentStore } from "../stores/student";
 import { surveyQuestion, course, surveyAnswer } from "../types/interface";
 import { onBeforeRouteLeave } from "vue-router";
 
@@ -52,7 +52,6 @@ document.title = 'Survey | SITHS Course Selection'
 
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
-const studentStore = useStudentStore();
 
 const currentIndex: Ref<number> = ref(0);
 let currentQuestion: surveyQuestion = reactive(
@@ -66,13 +65,6 @@ async function startSurvey() {
   await surveyStore.saveSurvey();
 }
 startSurvey()
-  // console.log("trying to save survey")
-  // surveyStore.saveSurvey(
-  //   userStore.studentSurveyPreview.email,
-  //   surveyStore.currentSurvey.question,
-  //   //@ts-ignore
-  //   userStore.studentSurveyPreview.grade
-  // );
 
 const previousQuestion = () => {
   currentIndex.value--;

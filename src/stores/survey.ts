@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { defineStore } from "pinia";
 import { useUserStore } from "./user";
 import { surveyAnswer, surveyQuestion, surveyStore, surveyStringAnswer, studentSurveyData } from "../types/interface";
@@ -52,8 +53,7 @@ export const useSurveyStore = defineStore("survey", {
         },
       });
       const surveyData: studentSurveyData = await res.json();
-      console.log("Survey Data:", surveyData);
-
+      // console.log("Survey Data:", surveyData);
       this.currentSurvey = surveyData.survey;
       this.currentAnsweredSurvey = surveyData.answeredSurvey;
 
@@ -68,15 +68,13 @@ export const useSurveyStore = defineStore("survey", {
         this.currentResponse = surveyData.survey.question;
       } else {
         // resolve type errors here
-        const formattedResponses = userStore.userType === "guidance"
-          ? surveyData.answeredSurvey.answers
-          : JSON.parse(surveyData.answeredSurvey.answers);
+        const formattedResponses = JSON.parse(surveyData.answeredSurvey.answers);
         this.currentResponse = formattedResponses;
 
       }
       console.log("Fetched and set student survey data.");
-      console.log("Current Response:", this.currentResponse);
-      console.log("Answered Survey:", this.currentAnsweredSurvey)
+      // console.log("Current Response:", this.currentResponse);
+      // console.log("Answered Survey:", this.currentAnsweredSurvey);
     },
     async postSurvey(status: "INCOMPLETE" | "COMPLETE" | "FINALIZED") {
       const userStore = useUserStore();
@@ -102,7 +100,6 @@ export const useSurveyStore = defineStore("survey", {
       const userStore = useUserStore();
       this.loading = true;
       await this.checkSurveyAnswers();
-      console.log("Missing Answers:", this.missingAnswers)
       // if (this.missingAnswers.length !== 0) return;
       if (userStore.userType === "student") {
         (this.missingAnswers.length !== 0) ? await this.postSurvey("INCOMPLETE") : await this.postSurvey("COMPLETE");

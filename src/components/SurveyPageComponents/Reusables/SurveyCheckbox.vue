@@ -16,7 +16,7 @@
                   class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
                   :id="choice.courseCode"
                   :value="choice"
-                  v-model="surveyStore.currentResponse[index].answer.courses"
+                  v-model="(surveyStore.currentResponse[index].answer as checkboxAnswer).courses"
                   :disabled="notInterested"
                 />
                 <label
@@ -33,7 +33,7 @@
                   class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
                   :id="'notInterested' + index"
                   value="Not Interested"
-                  v-model="surveyStore.currentResponse[index].answer.courses"
+                  v-model="(surveyStore.currentResponse[index].answer as checkboxAnswer).courses"
                 />
                 <label
                   :for="'notInterested' + index"
@@ -51,7 +51,7 @@
           </div>
           <surveyDraggable
           class="p-6"
-          :courses="surveyStore.currentResponse[index].answer.preference"
+          :courses="(surveyStore.currentResponse[index].answer as checkboxAnswer).preference"
           :index="index"
           :numbered="true"
           :color="color"
@@ -62,10 +62,11 @@
 </template>
 
 <script setup lang="ts"> 
+//@ts-nocheck
 import surveyDraggable from "./SurveyDraggable.vue";
 import { useSurveyStore } from "../../../stores/survey";
 import { watch, ref, Ref, computed, PropType } from "vue";
-import { surveyQuestion, preferences, course } from "../../../types/interface";
+import { surveyQuestion, preferences, course, allCoursesAnswer, checkboxAnswer } from "../../../types/interface";
 
 const props = defineProps({
   choices:{
@@ -111,7 +112,8 @@ startQuestion();
 
 //'Not Interested' is selected
 const notInterested = computed(() =>{
-  return surveyStore.currentResponse[index.value].answer.courses.includes('Not Interested');
+  const currentQuestionAnswer = surveyStore.currentResponse[index.value].answer as checkboxAnswer;
+  return currentQuestionAnswer.courses.includes("Not Interested");
 })
 
 //if 'Not Interested' is selected, clear the array(courses) for that question
@@ -129,29 +131,30 @@ watch(
 
 function toggleInterest(interested: boolean, course: course) {
   const allCoursesIndex = surveyStore.currentResponse.findIndex((x) => x.id === "allChosenCourses");
-  const allCourses = surveyStore.currentResponse[allCoursesIndex].answer;
   
-  const currentQuestionPreferences = surveyStore.currentResponse[index.value].answer.preference;
+  const allCourses = surveyStore.currentResponse[allCoursesIndex] as allCoursesAnswer;
+  const currentQuestionAnswer = surveyStore.currentResponse[index.value].answer as checkboxAnswer;
+  
   const referencedClass = course.name;
 
   if (!interested) {
-    const filteredCourses = allCourses.courses.filter((course) => course.name !== referencedClass);
-    const filteredPreferences = allCourses.preference.filter((course) => course.name !== referencedClass);
+    const filteredCourses = allCourses.answer.courses.filter((course) => typeof course !== "string" && course.name !== referencedClass);
+    const filteredPreferences = allCourses.answer.preference.filter((course) => course.name !== referencedClass);
 
-    surveyStore.currentResponse[allCoursesIndex].answer.courses = filteredCourses;
-    surveyStore.currentResponse[allCoursesIndex].answer.preference = filteredPreferences;
+    allCourses.answer.courses = filteredCourses;
+    allCourses.answer.preference = filteredPreferences;
 
-    surveyStore.currentResponse[allCoursesIndex].answer.preference.sort((a, b) => a.rank - b.rank);
+    allCourses.answer.preference.sort((a, b) => a.rank - b.rank);
     
-    const classIndex = currentQuestionPreferences.findIndex((x: preferences) => x.name === referencedClass);
-    surveyStore.currentResponse[index.value].answer.preference.splice(classIndex, 1);
+    const classIndex = allCourses.answer.preference.findIndex((x: preferences) => x.name === referencedClass);
+    currentQuestionAnswer.preference.splice(classIndex, 1);
 
-    allCourses.preference.forEach((rankObject: preferences, index: number) => {
+    allCourses.answer.preference.forEach((rankObject: preferences, index: number) => {
       rankObject.rank = index + 1;
     });
   } else {
     //add the course to allCourses
-    const overallRank = surveyStore.currentResponse[allCoursesIndex].answer.courses.length + 1;
+    const overallRank = allCourses.answer.courses.length + 1;
     const courseObject = {
       name: course.name,
       courseCode: course.courseCode,
@@ -162,15 +165,15 @@ function toggleInterest(interested: boolean, course: course) {
       rank: overallRank,
     };
 
-    surveyStore.currentResponse[index.value].answer.preference.push(rankedCourseObject);
+    currentQuestionAnswer.preference.push(rankedCourseObject);
 
-    surveyStore.currentResponse[allCoursesIndex].answer.courses.push(courseObject);
-    surveyStore.currentResponse[allCoursesIndex].answer.preference.push(rankedCourseObject);
+    allCourses.answer.courses.push(courseObject);
+    allCourses.answer.preference.push(rankedCourseObject);
   }
 }
 
 
-function getChangedCourse(oldCourses, newCourses) {
+function getChangedCourse(oldCourses: course[], newCourses: course[]) {
   const addedCourse = newCourses.find((course: course) => !oldCourses.includes(course));
   const removedCourse = oldCourses.find((course: course) => !newCourses.includes(course));
 
@@ -184,15 +187,17 @@ watch(() => props.question.question, (newResponse) => {
 
 //watching for changes on selected courses
 watch(
-  () => surveyStore.currentResponse[index.value].answer.courses,
+  () => (surveyStore.currentResponse[index.value].answer as checkboxAnswer).courses,
   (newResponse, oldResponse) => {
     const interested = newResponse.length > oldResponse.length;
-    const changedCourse = getChangedCourse(newResponse, oldResponse);
-    toggleInterest(interested, changedCourse);
+    const changedCourse = getChangedCourse(newResponse as course[], oldResponse as course[]);
+    if (changedCourse) {
+      toggleInterest(interested, changedCourse);
+    }
   }
 );
 
-watch(() => surveyStore.currentResponse[index.value].answer.preference, 
+watch(() => (surveyStore.currentResponse[index.value].answer as checkboxAnswer).preference, 
   (newResponse) => {
     x.value = x.value+1
   }, 

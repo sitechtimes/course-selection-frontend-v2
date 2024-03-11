@@ -37,7 +37,7 @@ export interface studentSurveyPreview {
 // survey store interface
 export interface surveyStore {
     currentAnsweredSurvey: answeredSurvey
-    currentResponse: surveyAnswer[]
+    currentResponse: Array<surveyAnswer | surveyStringAnswer>
     currentSurvey: survey
     loading: boolean
     open: boolean
@@ -122,14 +122,14 @@ export interface allStudents {
 }
 
 export interface studentPreview {
-    name: string;
-    hr: string;
-    grade: string;
-    email: string;
-    status: string;
-    flag: string;
-    dueDate?: string;
-    meetingDate: string;
+    name: string
+    hr: string
+    grade: string
+    email: string
+    status: string
+    flag: string
+    dueDate?: string
+    meetingDate?: string
 }
 
 export interface allStudentNodes {
@@ -169,7 +169,7 @@ export interface surveyQuestion {
 
 export interface surveyAnswer {
     id: string
-    question?: string
+    question: string
     answer: checkboxAnswer 
 }
 
@@ -180,8 +180,24 @@ export interface surveyStringAnswer {
 }
 
 export interface checkboxAnswer {
-    courses: string[]
+    courses: Array<course | string>
     preference: preferences[]
+}
+
+export interface allCoursesAnswer {
+    answer: checkboxAnswer
+    id: "allChosenCourses"
+} 
+
+export interface surveyGuidanceAnswer {
+    answer: string
+    id: "noteToGuidance" | "guidanceFinalNote"
+}
+
+export interface pieChartStats {
+    [key: string]: {
+        ranks: number[]
+    }
 }
 
 export interface preferences {
@@ -194,39 +210,40 @@ export interface course {
     courseCode: string
     subject: course_type
     name: string
-    id: number
+    //id for each course should be required, fix later
+    id?: number
 }
 
 export interface studentMeetings {
-    name: string;
-    meetingDate: Date;
-    meetingTime?: Date;
-    description: string;
-    grade: string;
-    email: string;
+    name: string
+    meetingDate: Date
+    meetingTime?: Date
+    description: string
+    grade: string
+    email: string
 }
 
 export interface calendarMeetings extends studentMeetings {
-    id: string;
+    id: string
     meetingDetails: studentMeetings
 }
 
 export interface calendarData {
     dateInfo: Array<{
-        type: string;
-        todaysDate: number;
-        id: string;
-        meetings: calendarMeetings[];
+        type: string
+        todaysDate: number
+        id: string
+        meetings: calendarMeetings[]
     }>;
 }
 
 export interface classReferenced {
-    name: string;
+    name: string
 }
 
 export type course_type = 'MATH' | 'ENGLISH' | 'LANG' | 'SS' | 'TECH' | 'PE' | 'CAREER' | 'SCIENCE' | 'ARTS' | 'OTHER'
-export type account_type = 'student' | 'guidance' | null;
-export type grade = 'FRESHMAN' | 'SOPHOMORE' | 'JUNIOR' | 'SENIOR';
+export type account_type = 'student' | 'guidance' | null
+export type grade = 'FRESHMAN' | 'SOPHOMORE' | 'JUNIOR' | 'SENIOR'
 export type status = 'COMPLETE' | 'INCOMPLETE' | 'FINALIZED' | null | undefined
 export type question_type = 'BOOLEAN' | 'GENERAL' | 'MATH' | 'ENGLISH' | 'LANG' | 'SS' | 'TECH' | 'PE' | 'CAREER' | 'SCIENCE' | 'ARTS' | 'OTHER'
 export type question_status = 'STANDARD' | 'CLASS' | 'OPTIONAL' 
