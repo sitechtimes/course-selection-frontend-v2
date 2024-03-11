@@ -69,9 +69,7 @@ export const useSurveyStore = defineStore("survey", {
         this.currentResponse = surveyData.survey.question;
       } else {
         // resolve type errors here
-        const formattedResponses = userStore.userType === "guidance"
-          ? surveyData.answeredSurvey.answers
-          : JSON.parse(surveyData.answeredSurvey.answers);
+        const formattedResponses = JSON.parse(surveyData.answeredSurvey.answers);
         this.currentResponse = formattedResponses;
 
       }
