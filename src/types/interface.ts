@@ -180,7 +180,7 @@ export interface surveyStringAnswer {
 }
 
 export interface checkboxAnswer {
-    courses: course[]
+    courses: Array<course | string>
     preference: preferences[]
 }
 
