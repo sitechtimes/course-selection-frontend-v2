@@ -57,6 +57,7 @@
 </template>
 
 <script setup lang="ts">
+//@ts-nocheck
 import SearchBar from "../components/GuidanceComponents/SearchBar.vue";
 import Sort from "../components/GuidanceComponents/SortButton.vue";
 import StudentTable from "../components/GuidanceComponents/StudentTable.vue";
@@ -80,8 +81,8 @@ const y: Ref<number> = ref(10);
 const currentPage: Ref<number> = ref(1);
 const pageCapacity: number = 10;
 
-onMounted(()=>{
-  userStore.currentlyViewingStudents = userStore.guidanceStudents;
+onMounted(async () => {
+  userStore.currentlyViewingStudents = await userStore.guidanceStudents;
 });
 
 async function fetchStudents() {
@@ -112,50 +113,84 @@ const updateSortOption = (selected: string) => {
 };
 
 const sortedAndFilteredStudents = computed(() => {
-  return applyFiltersAndSort(userStore.currentlyViewingStudents, sortBy.value, input.value);
-})
+  if (viewAll.value === false) {
+    return applyFiltersAndSort(
+      userStore.guidanceStudents,
+      sortBy.value,
+      input.value
+    );
+  } else {
+    return applyFiltersAndSort(allStudents.value as studentGuidance[], sortBy.value, input.value);
+  }
+});
 
 function filterStudentsByCategory(students: studentGuidance[], sortBy: string) {
   let categorizedStudents: studentGuidance[] = students;
-  switch(sortBy) {
-    case 'lastnameaz':
-      categorizedStudents = categorizedStudents.sort((a: studentPreview, b: studentPreview) => a.name.localeCompare(b.name));
+  switch (sortBy) {
+    case "lastnameaz":
+      categorizedStudents = categorizedStudents.sort(
+        (a: studentGuidance, b: studentGuidance) => a.name.localeCompare(b.name)
+      );
       break;
-    case 'lastnameza':
-      categorizedStudents = categorizedStudents.sort((a: studentPreview, b: studentPreview) => b.name.localeCompare(a.name));
+    case "lastnameza":
+      categorizedStudents = categorizedStudents.sort(
+        (a: studentGuidance, b: studentGuidance) => b.name.localeCompare(a.name)
+      );
       break;
-    case 'ns':
-      categorizedStudents = categorizedStudents.filter((student: studentPreview) => student.status === 'NOT STARTED');
+    case "ns":
+      categorizedStudents = categorizedStudents.filter(
+        (student: studentGuidance) => student.status === "NOT STARTED"
+      );
       break;
-    case 'ip':
-      categorizedStudents = categorizedStudents.filter((student: studentPreview) => student.status === 'INCOMPLETE');
+    case "ip":
+      categorizedStudents = categorizedStudents.filter(
+        (student: studentGuidance) => student.status === "INCOMPLETE"
+      );
       break;
-    case 'com':
-      categorizedStudents = categorizedStudents.filter((student: studentPreview) => student.status === 'COMPLETE');
+    case "com":
+      categorizedStudents = categorizedStudents.filter(
+        (student: studentGuidance) => student.status === "COMPLETE"
+      );
       break;
-    case 'final':
-      categorizedStudents = categorizedStudents.filter((student: studentPreview) => student.status === 'FINALIZED');
+    case "final":
+      categorizedStudents = categorizedStudents.filter(
+        (student: studentGuidance) => student.status === "FINALIZED"
+      );
       break;
-    case 'nine':
-      categorizedStudents = categorizedStudents.filter((student: studentPreview) => student.grade === 'FRESHMAN');
+    case "nine":
+      categorizedStudents = categorizedStudents.filter(
+        (student: studentGuidance) => student.grade === "FRESHMAN"
+      );
       break;
-    case 'ten':
-      categorizedStudents = categorizedStudents.filter((student: studentPreview) => student.grade === 'SOPHOMORE');
+    case "ten":
+      categorizedStudents = categorizedStudents.filter(
+        (student: studentGuidance) => student.grade === "SOPHOMORE"
+      );
       break;
-    case 'eleven':
-      categorizedStudents = categorizedStudents.filter((student: studentPreview) => student.grade === 'JUNIOR');
+    case "eleven":
+      categorizedStudents = categorizedStudents.filter(
+        (student: studentGuidance) => student.grade === "JUNIOR"
+      );
       break;
-    case 'transfer':
-      categorizedStudents = categorizedStudents.filter((student: studentPreview) => student.flag === 'Transfer');
+    case "transfer":
+      categorizedStudents = categorizedStudents.filter(
+        (student: studentGuidance) => student.flag === "Transfer"
+      );
       break;
-    case 'regents':
-      categorizedStudents = categorizedStudents.filter((student: studentPreview) => student.flag === 'Regents');
+    case "regents":
+      categorizedStudents = categorizedStudents.filter(
+        (student: studentGuidance) => student.flag === "Regents"
+      );
       break;
-    case 'sports':
-      categorizedStudents = categorizedStudents.filter((student: studentPreview) => student.flag === 'Team');
+    case "sports":
+      categorizedStudents = categorizedStudents.filter(
+        (student: studentGuidance) => student.flag === "Team"
+      );
       break;
-    case 'enl':
-      categorizedStudents = categorizedStudents.filter((student: studentPreview) => student.flag === 'ENL');
+    case "enl":
+      categorizedStudents = categorizedStudents.filter(
+        (student: studentGuidance) => student.flag === "ENL"
+      );
       break;
   }
   return categorizedStudents;
@@ -166,26 +201,34 @@ function filterStudentBySearch(students: studentGuidance[], query: string) {
     return students;
   }
   const lowerCaseQuery = query.toLowerCase();
-  return students.filter((student: studentGuidance) => 
-    student.name.toLowerCase().includes(lowerCaseQuery) ||
-    student.email.toLowerCase().includes(lowerCaseQuery)
+  return students.filter(
+    (student: studentGuidance) =>
+      student.name.toLowerCase().includes(lowerCaseQuery) ||
+      student.email.toLowerCase().includes(lowerCaseQuery)
   );
 }
 
-function applyFiltersAndSort(students: studentGuidance[], sortBy: string, searchQuery: string): studentGuidance[] {
+function applyFiltersAndSort(
+  students: studentGuidance[],
+  sortBy: string,
+  searchQuery: string
+): studentGuidance[] {
   // filter by category -> filter by name or email -> return result
   const categorizedStudents = filterStudentsByCategory(students, sortBy);
-  const searchedStudents = filterStudentBySearch(categorizedStudents, searchQuery);
+  const searchedStudents = filterStudentBySearch(
+    categorizedStudents,
+    searchQuery
+  );
   return searchedStudents;
 }
 
 watch(viewAll, async (newValue) => {
   handleViewAllChange(newValue);
-})
+});
 
 async function handleViewAllChange(isEnabled: boolean) {
-  input.value = '';
-  sortBy.value = 'lastnameaz';
+  input.value = "";
+  /*sortBy.value = "lastnameaz";*/ //add this line back if default sorting is not working
 
   if (isEnabled) {
     await fetchStudents();
@@ -198,52 +241,54 @@ async function handleViewAllChange(isEnabled: boolean) {
 
 const totalPages = computed(() => {
   const numStudents = sortedAndFilteredStudents.value.length;
-  if(numStudents < 1) {
+  if (numStudents < 1) {
     return 1;
   } else {
     return Math.ceil(numStudents / pageCapacity);
   }
-})
+});
 
-watch([sortedAndFilteredStudents], (currentValue, previousValue) => {
-  // adjust pagination after students are filtered and categorized
-  const displayedStudents = sortedAndFilteredStudents.value;
-  userStore.currentlyViewingStudents = displayedStudents;
-  updatePagination(1);
-}, { deep: true })
+watch(
+  [sortedAndFilteredStudents],
+  (currentValue, previousValue) => {
+    // adjust pagination after students are filtered and categorized
+    const displayedStudents = sortedAndFilteredStudents.value;
+    userStore.currentlyViewingStudents = displayedStudents;
+    updatePagination(1);
+  },
+  { deep: true }
+);
 
 function changePage(increment: number) {
   if (increment > 0) {
     currentPage.value += increment;
     x.value += pageCapacity;
     y.value += pageCapacity;
-  }
-  else if (increment < 0) {
+  } else if (increment < 0) {
     currentPage.value += increment;
     x.value -= pageCapacity;
     y.value -= pageCapacity;
   } else {
-    console.error('Invalid increment; Unable to change pages.');
-    return
+    console.error("Invalid increment; Unable to change pages.");
+    return;
   }
-  updatePagination(currentPage.value)
+  updatePagination(currentPage.value);
 }
 
 function nextPage() {
   changePage(1);
-};
+}
 
 function previousPage() {
   changePage(-1);
 }
 
 function updatePagination(pageNumber: number) {
-  const startIndex = (pageNumber * pageCapacity) - pageCapacity;
+  const startIndex = pageNumber * pageCapacity - pageCapacity;
   const endIndex = pageNumber * pageCapacity;
   x.value = startIndex;
   y.value = endIndex;
 
   currentPage.value = pageNumber;
-};
-
+}
 </script>

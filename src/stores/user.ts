@@ -38,8 +38,8 @@ export const useUserStore = defineStore("user", {
                         const guidanceProfiles = await data.json();
                         this.studentSurveyPreview = guidanceProfiles;
                         this.guidanceStudents = await guidanceProfiles.filter((student: studentGuidance) => student.ownStudent);
-                        // this.guidanceStudents = await data.json();
-                    }).catch((error) => {
+                        this.loading = true;              
+                    }).then(() =>{this.loading = false;}).catch((error) => {
                         throw new Error('Error fetching profiles:', error.message);
                     });
                     fetch(`${import.meta.env.VITE_URL}/guidance/meetings`, {
@@ -60,13 +60,14 @@ export const useUserStore = defineStore("user", {
                             email: student.email,
                         }));
                         this.guidanceMeetings = meetingsData;
-                        this.loading = false;
+                        
                     }).catch((error) => {
                         throw new Error('Error fetching meetings:', error.message);
-                    });
+                    });  
                 } catch(error) {
                     console.error('Error in init:', error);
                 };
+             
             } else {
                 const surveyStore = useSurveyStore();
                 await surveyStore.fetchSurvey();

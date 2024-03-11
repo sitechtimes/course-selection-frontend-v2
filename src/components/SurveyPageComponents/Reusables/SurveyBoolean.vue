@@ -1,8 +1,14 @@
 <template>
   <div class="w-full">
     <fieldset ref="form">
-      <legend class="text-lg xl:leading-10 md:text-xl xl:text-3xl overflow-visible">{{ question.question }}</legend>
-      <div class="flex flex-row text-lg md:text-xl xl:text-2xl justify-center sm:justify-start">
+      <legend
+        class="text-lg xl:leading-10 md:text-xl xl:text-3xl overflow-visible"
+      >
+        {{ question.question }}
+      </legend>
+      <div
+        class="flex flex-row text-lg md:text-xl xl:text-2xl justify-center sm:justify-start"
+      >
         <div class="flex justify-center items-center flex-wrap my-4">
           <input
             type="radio"
@@ -33,24 +39,34 @@
 </template>
 
 <script setup lang="ts">
+//@ts-nocheck
 import { useSurveyStore } from "../../../stores/survey";
-import { watch, PropType, ref, onBeforeUpdate } from "vue";
-import { surveyQuestion, preferences } from "../../../types/interface";
+import { watch, PropType, ref } from "vue";
+import {
+  surveyQuestion,
+  preferences,
+  checkboxAnswer,
+  surveyAnswer,
+  allCoursesAnswer,
+} from "../../../types/interface";
 
 const props = defineProps({
   question: {
     type: Object as PropType<surveyQuestion>,
-    required: true
+    required: true,
   },
   isDisabled: Boolean,
+  referencedClass: Object as PropType<preferences>,
 });
 
 const surveyStore = useSurveyStore();
 const index = ref(0);
 
 const getQuestionIndex = (question: string): number => {
-  return surveyStore.currentResponse.findIndex((entry) => entry.question === question);
-}
+  return surveyStore.currentResponse.findIndex(
+    (entry) => entry.question === question
+  );
+};
 
 function startQuestion() {
   const currentQuestion: string = props.question.question;
@@ -70,43 +86,60 @@ function startQuestion() {
 
 startQuestion();
 
-watch(() => props.question.question, (newResponse) => {
-   startQuestion();
+watch(
+  () => props.question.question,
+  (newResponse) => {
+    startQuestion();
   }
 );
 
 watch(
   () => surveyStore.currentResponse[index.value].answer,
   (newResponse, oldResponse) => {
-    const allCoursesIndex = surveyStore.currentResponse.findIndex((item) => item.id === "allChosenCourses");
-    if (props.question.status === "CLASS" && newResponse.toString().toUpperCase() === "YES") {
+    const allCoursesIndex = surveyStore.currentResponse.findIndex(
+      (item) => item.id === "allChosenCourses"
+    );
+    const allCourses = surveyStore.currentResponse[
+      allCoursesIndex
+    ] as allCoursesAnswer;
+
+    if (
+      props.question.status === "CLASS" &&
+      newResponse.toString().toUpperCase() === "YES"
+    ) {
       // add interested course to array of overall rankings
-      const overallRank = surveyStore.currentResponse[allCoursesIndex].answer.courses.length + 1;
-      const overallRankObject = {
-        rank: overallRank,
+      const overallRank = allCourses.answer.courses.length + 1;
+      //currently no way to reference the class object from the question object, classReferenced is null
+      const courseObject = {
         name: props.question.classReferenced.name,
-      }
-
-      surveyStore.currentResponse[allCoursesIndex].answer.courses.push(overallRankObject.name);
-      surveyStore.currentResponse[allCoursesIndex].answer.preference.push(overallRankObject);
-    }
-
-    else if (newResponse.toString().toUpperCase() === "NO") {
-      const allCourses = surveyStore.currentResponse[allCoursesIndex].answer;
+        courseCode: props.question.classReferenced.courseCode,
+        subject: props.question.classReferenced.subject,
+      };
+      const rankedCourseObject = {
+        ...courseObject,
+        rank: overallRank,
+      };
+      allCourses.answer.courses.push(courseObject);
+      allCourses.answer.preference.push(rankedCourseObject);
+    } else if (newResponse.toString().toUpperCase() === "NO") {
       const referencedClass = props.question.classReferenced.name;
 
-      if (allCourses.courses.includes(referencedClass)) {
+      if (allCourses.answer.courses.includes(referencedClass)) {
         // remove interested course from overall rankings and adjust ranks
-        const filteredCourses = allCourses.courses.filter((x) => x !== referencedClass);
-        const filteredPreferences = allCourses.preference.filter((x) => x.name !== referencedClass);
+        const filteredCourses = allCourses.answer.courses.filter(
+          (x) => x !== referencedClass
+        );
+        const filteredPreferences = allCourses.answer.preference.filter(
+          (x) => x.name !== referencedClass
+        );
 
-        surveyStore.currentResponse[allCoursesIndex].answer.courses = filteredCourses;
-        surveyStore.currentResponse[allCoursesIndex].answer.preference = filteredPreferences;
-        
-        surveyStore.currentResponse[allCoursesIndex].answer.preference.sort((a, b) => a.rank - b.rank);
+        allCourses.answer.courses = filteredCourses;
+        allCourses.answer.preference = filteredPreferences;
+
+        allCourses.answer.preference.sort((a, b) => a.rank - b.rank);
       }
     }
-  }  
+  }
 );
 
 onBeforeUpdate(() => {

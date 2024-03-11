@@ -29,22 +29,23 @@
 
 <script lang="ts" setup>
 import { Pie } from "vue-chartjs";
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, Ref, ComputedRef } from "vue";
 import { useUserStore } from "../../stores/user";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { pieChartStats, stats } from "../../types/interface";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const loaded = ref(false);
 const userStore = useUserStore();
-const selectedCourse = ref("");
-const selectedYear = ref("");
+const loaded: Ref<boolean> = ref(false);
+const selectedCourse: Ref<string> = ref("");
+const selectedYear: Ref<string> = ref("");
 
-let data = [];
-let years = [];
+const chartData: Ref<stats[]> = ref([]);
+const years: Ref<number[]> = ref([]);
 
 async function fetchStats() {
-  const access_token = userStore.access_token;
-  const statsURL = `${import.meta.env.VITE_URL}/guidance/stats`;
+  const access_token: string = userStore.access_token;
+  const statsURL: string = `${import.meta.env.VITE_URL}/guidance/stats`;
   try {
     const response = await fetch(statsURL, {
       method: 'GET',
@@ -54,7 +55,7 @@ async function fetchStats() {
       },
     });
     const data = await response.json();
-    const fetchedYears = data.map((index) => index.year);
+    const fetchedYears = data.map((item: stats) => item.year);
     return {
       years: fetchedYears,
       data: data,
@@ -70,17 +71,18 @@ async function fetchStats() {
 
 onMounted(async () => {
   const statsData = await fetchStats();
-  years = statsData.years;
-  data = statsData.data;
+  years.value = statsData.years;
+  chartData.value = statsData.data;
   loaded.value = true;
 });
 
 //if a new year is selected from the dropdown, find the index where the stats are located
-const stats = computed(() => {
+const stats: ComputedRef<pieChartStats> = computed(() => {
   if (selectedYear !== null) {
-    const indexSelectedYear = years.indexOf(selectedYear.value);
-    return data[indexSelectedYear]?.stats || {};
+    const indexSelectedYear = years.value.indexOf(Number(selectedYear.value));
+    return chartData.value[indexSelectedYear]?.stats || {};
   }
+  return {};
 });
 
 //returns each course name

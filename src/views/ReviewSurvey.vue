@@ -3,7 +3,7 @@
     <div class="lg:w-2/3 w-11/12">
       <div v-for="question in surveyStore.currentSurvey.question" :key="question.id" class="flex justify-center">
         <div v-if="surveyStore.missingAnswers.length > 0" class="w-1/12 flex justify-center items-center">
-          <exclamationMark v-if="surveyStore.missingAnswers.includes(question.id)"
+            <exclamationMark v-if="surveyStore.missingAnswers.includes(question.id)"
             class="text-red-500 h-8 motion-safe:animate-bounce"></exclamationMark>
         </div>
         <div class="w-11/12">
@@ -18,14 +18,14 @@
       <div class="my-6">
         <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl my-4">For the final part of the survey, please drag your
           classes in the order of priority, with the first choice being your top priority.</p>
-        <surveyDraggable :courses="surveyStore.currentResponse[indexAllCourses].answer.preference"
+        <surveyDraggable :courses="(surveyStore.currentResponse[indexAllCourses] as allCoursesAnswer).answer.preference"
           :index="indexAllCourses" :numbered="true" :key="x" :color="'D6EEFF'"></surveyDraggable>
       </div>
       <div class="mt-14">
         <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl">Final note to your guidance counselor:</p>
         <input
           class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base bg-transparent rounded-md border border-solid border-zinc-400 focus:outline-none focus:ring-0 focus:border-blue-400"
-          type="text" v-model="surveyStore.currentResponse[indexNoteGuidance]" />
+          type="text" v-model="surveyStore.currentResponse[indexNoteGuidance].answer" />
       </div>
       <div class="flex justify-center my-10 flex-col items-center">
         <p v-if="surveyStore.missingAnswers.length === 0" class="mb-4 text-center">Once you submit, you will still be able
@@ -49,7 +49,7 @@ import checkboxComponent from '../components/SurveyPageComponents/Reusables/Surv
 import surveyDraggable from '../components/SurveyPageComponents/Reusables/SurveyDraggable.vue';
 import exclamationMark from '../components/icons/ExclamationMark.vue';
 import ScrollPage from '../components/SurveyPageComponents/Reusables/ScrollPage.vue';
-import { surveyQuestion } from '../types/interface';
+import { allCoursesAnswer, surveyQuestion } from '../types/interface';
 import { watch, ref, Ref } from 'vue';
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
 
@@ -60,7 +60,6 @@ const surveyStore = useSurveyStore()
 const router = useRouter()
 
 surveyStore.missingAnswers = []
-surveyStore.fetchSurvey();
 
 if (surveyStore.currentAnsweredSurvey.status === 'COMPLETE') {
   surveyStore.fetchSurvey();
@@ -79,6 +78,7 @@ const submit = async () => {
   await surveyStore.checkSurveyAnswers()
   if (surveyStore.missingAnswers.length === 0) {
     if (userStore.userType === "student") {
+      await surveyStore.saveSurvey()
       router.push('/student/dashboard')
     } else if (userStore.userType === "guidance") {
       router.push('/guidance/studentlist')
@@ -87,6 +87,7 @@ const submit = async () => {
 }
 
 onBeforeRouteLeave((to, from, next) => {
+  //@ts-ignore
   if (JSON.stringify(surveyStore.currentResponse) === surveyStore.currentAnsweredSurvey.answers || to.path === '/student/survey/review') {
     window.removeEventListener('beforeunload', reminder)
     next()
@@ -107,22 +108,24 @@ const reminder = (e: Event) => {
 };
 
 watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
+  //@ts-ignore
   if (JSON.stringify(newResponse) === surveyStore.currentAnsweredSurvey.answers) {
-    window.removeEventListener('beforeunload', reminder)
+    window.removeEventListener('beforeunload', reminder);
   } else {
     window.addEventListener('beforeunload', reminder);
   }
-}, { deep: true })
+}, { deep: true });
 
 watch(() => surveyStore.currentAnsweredSurvey.answers, (newResponse, oldResponse) => {
+  //@ts-ignore
   if (newResponse === JSON.stringify(surveyStore.currentResponse)) {
-    window.removeEventListener('beforeunload', reminder)
+    window.removeEventListener('beforeunload', reminder);
   } else {
     window.addEventListener('beforeunload', reminder);
   }
-}, { deep: true })
+}, { deep: true });
 
-watch(() => surveyStore.currentResponse[indexAllCourses].answer.preference, (newResponse) => {
+watch(() => (surveyStore.currentResponse[indexAllCourses] as allCoursesAnswer).answer.preference, (newResponse) => {
   x.value = x.value + 1
 }, { deep: true })
 </script>
