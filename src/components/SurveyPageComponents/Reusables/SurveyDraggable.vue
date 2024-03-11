@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import { ref, computed, PropType } from "vue";
 import { useSurveyStore } from "../../../stores/survey";
-import { preferences } from "../../../types/interface";
+import { checkboxAnswer, preferences } from "../../../types/interface";
 
 const isTouchDevice = 
   ('ontouchstart' in window) || 
@@ -94,12 +94,10 @@ function updateRank(rank: number, dragIndex: string) {
 
   ref_courses.value.sort((a, b) => a.rank - b.rank);
 
-  if (props.index === surveyStore.currentResponse.findIndex((x) => x.id === "allChosenCourses")) {
-    surveyStore.currentResponse[props.index].answer.preference = ref_courses.value
-  } else {
-    //@ts-ignore
-    surveyStore.currentResponse[props.index].answer.preference = ref_courses.value
-  }
+  if (props.index !== undefined) {
+    const currentAnswer = surveyStore.currentResponse[props.index].answer as checkboxAnswer;
+    currentAnswer.preference = ref_courses.value;
+  };
 }
 
 let touchStartX = 0;

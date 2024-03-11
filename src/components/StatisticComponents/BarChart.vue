@@ -42,14 +42,15 @@ import {
   CategoryScale,
   LinearScale
 } from 'chart.js'
+import { stats } from '../../types/interface';
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
-const loaded = ref(false);
 const userStore = useUserStore();
+const loaded: Ref<boolean> = ref(false);
 const selectedYear: Ref<number> = ref(0);
 
-let data = [];
-let years = [];
+const chartData: Ref<stats[]> = ref([]);
+const years: Ref<number[]> = ref([]);
 
 async function fetchStats() {
   try {
@@ -59,10 +60,10 @@ async function fetchStats() {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${userStore.access_token}`,
       },
-    }).then(res => res.json());
-    const data = await response;
+    });
+    const data = await response.json();
     return {
-      years: data.map((index) => index.year),
+      years: data.map((item: stats) => item.year),
       data: data,
     };
   } catch (error) {
@@ -76,16 +77,16 @@ async function fetchStats() {
 
 onMounted(async () => {
   const statsData = await fetchStats();
-  years = statsData.years;
-  data = statsData.data;
+  years.value = statsData.years;
+  chartData.value = statsData.data;
   loaded.value = true;
 });
 
 //if a new year is selected from the dropdown, find the index where the stats are located
 const stats = computed(() => {
   if (selectedYear !== null) {
-    const indexSelectedYear = years.indexOf(selectedYear.value);
-    return data[indexSelectedYear].stats;
+    const indexSelectedYear = years.value.indexOf(selectedYear.value);
+    return chartData.value[indexSelectedYear].stats;
   }
 });
 
@@ -130,18 +131,16 @@ const getChartData = computed(() => {
       coursename: string,
       info: Object
     }
-    const targettedCourses = Object.entries(stats.value) //take each key-value pair and filter them by !null courses that match the user's selected subject
+    const targettedCourses = Object.entries(stats) //take each key-value pair and filter them by !null courses that match the user's selected subject
       .filter(([courseName, info]: [string, any]) => {
         return (info && info.courseInfo && info.courseInfo.fields.subject) === (selectedSubject.value);
       });
     if (targettedCourses.length > 0) { //if the # of targetted courses exceed 0 (there is data), push to the graph
       for (const [courseName, info] of targettedCourses) {
         chartData.labels.push(courseName);
-        //@ts-ignore
         chartData.datasets[0].data.push(info.picks);
       }
     } else {
-      //@ts-ignore
       chartData.labels.push('No courses match this subject');
       chartData.datasets[0].data.push(0);
     }

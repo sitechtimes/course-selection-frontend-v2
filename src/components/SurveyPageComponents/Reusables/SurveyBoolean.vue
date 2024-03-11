@@ -36,7 +36,7 @@
 //@ts-nocheck
 import { useSurveyStore } from "../../../stores/survey";
 import { watch, PropType, ref } from "vue";
-import { surveyQuestion, preferences } from "../../../types/interface";
+import { surveyQuestion, preferences, checkboxAnswer, surveyAnswer, allCoursesAnswer } from "../../../types/interface";
 
 const props = defineProps({
   question: {
@@ -44,6 +44,7 @@ const props = defineProps({
     required: true
   },
   isDisabled: Boolean,
+  referencedClass: Object as PropType<preferences>,
 });
 
 const surveyStore = useSurveyStore();
@@ -71,7 +72,7 @@ function startQuestion() {
 startQuestion();
 
 watch(() => props.question.question, (newResponse) => {
-   startQuestion();
+    startQuestion();
   }
 );
 
@@ -79,9 +80,12 @@ watch(
   () => surveyStore.currentResponse[index.value].answer,
   (newResponse, oldResponse) => {
     const allCoursesIndex = surveyStore.currentResponse.findIndex((item) => item.id === "allChosenCourses");
+    const allCourses = surveyStore.currentResponse[allCoursesIndex] as allCoursesAnswer;
+
     if (props.question.status === "CLASS" && newResponse.toString().toUpperCase() === "YES") {
       // add interested course to array of overall rankings
-      const overallRank = surveyStore.currentResponse[allCoursesIndex].answer.courses.length + 1;
+      const overallRank = allCourses.answer.courses.length + 1; 
+      //currently no way to reference the class object from the question object, classReferenced is null
       const courseObject = {
         name: props.question.classReferenced.name,
         courseCode: props.question.classReferenced.courseCode,
@@ -91,23 +95,22 @@ watch(
         ...courseObject,
         rank: overallRank,
       }
-      surveyStore.currentResponse[allCoursesIndex].answer.courses.push(courseObject);
-      surveyStore.currentResponse[allCoursesIndex].answer.preference.push(rankedCourseObject);
+      allCourses.answer.courses.push(courseObject);
+      allCourses.answer.preference.push(rankedCourseObject);
     }
 
     else if (newResponse.toString().toUpperCase() === "NO") {
-      const allCourses = surveyStore.currentResponse[allCoursesIndex].answer;
       const referencedClass = props.question.classReferenced.name;
 
-      if (allCourses.courses.includes(referencedClass)) {
+      if (allCourses.answer.courses.includes(referencedClass)) {
         // remove interested course from overall rankings and adjust ranks
-        const filteredCourses = allCourses.courses.filter((x) => x !== referencedClass);
-        const filteredPreferences = allCourses.preference.filter((x) => x.name !== referencedClass);
+        const filteredCourses = allCourses.answer.courses.filter((x) => x !== referencedClass);
+        const filteredPreferences = allCourses.answer.preference.filter((x) => x.name !== referencedClass);
 
-        surveyStore.currentResponse[allCoursesIndex].answer.courses = filteredCourses;
-        surveyStore.currentResponse[allCoursesIndex].answer.preference = filteredPreferences;
+        allCourses.answer.courses = filteredCourses;
+        allCourses.answer.preference = filteredPreferences;
         
-        surveyStore.currentResponse[allCoursesIndex].answer.preference.sort((a, b) => a.rank - b.rank);
+        allCourses.answer.preference.sort((a, b) => a.rank - b.rank);
       }
     }
   }  
