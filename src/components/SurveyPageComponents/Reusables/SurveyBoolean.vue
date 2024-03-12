@@ -94,7 +94,7 @@ watch(
 
       if (oldResponse.toString().toUpperCase() === "YES") {
         //remove interested course from overall rankings and adjust ranks
-        const filteredCourses = allCourses.answer.courses.filter((x) => x.name !== referencedClass);
+        const filteredCourses = allCourses.answer.courses.filter((x) => typeof x !== 'string' && x.name !== referencedClass);
         const filteredPreferences = allCourses.answer.preference.filter((x) => x.name !== referencedClass);
 
         allCourses.answer.courses = filteredCourses;
