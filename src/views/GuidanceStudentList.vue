@@ -113,14 +113,22 @@ const updateSortOption = (selected: string) => {
 };
 
 const sortedAndFilteredStudents = computed(() => {
-  if (viewAll.value === false) {
-    return applyFiltersAndSort(
-      userStore.guidanceStudents,
-      sortBy.value,
-      input.value
-    );
-  } else {
-    return applyFiltersAndSort(allStudents.value as studentGuidance[], sortBy.value, input.value);
+  try {
+    if (viewAll.value === false) {
+      return applyFiltersAndSort(
+        userStore.guidanceStudents,
+        sortBy.value,
+        input.value
+      );
+    } else {
+      return applyFiltersAndSort(
+        allStudents.value as studentGuidance[],
+        sortBy.value,
+        input.value
+      );
+    }
+  } finally {
+    updatePagination(1);
   }
 });
 
@@ -254,7 +262,6 @@ watch(
     // adjust pagination after students are filtered and categorized
     const displayedStudents = sortedAndFilteredStudents.value;
     userStore.currentlyViewingStudents = displayedStudents;
-    updatePagination(1);
   },
   { deep: true }
 );
