@@ -86,44 +86,44 @@ const submit = async () => {
   }
 }
 
-onBeforeRouteLeave((to, from, next) => {
-  //@ts-ignore
-  if (JSON.stringify(surveyStore.currentResponse) === surveyStore.currentAnsweredSurvey.answers || to.path === '/student/survey/review') {
-    window.removeEventListener('beforeunload', reminder)
-    next()
-  } else {
-    const answer = window.confirm('Changes you made might not be saved.')
-    if (answer) {
-      window.removeEventListener('beforeunload', reminder)
-      next()
-    } else {
-      next(false)
-    }
-  }
-})
+// onBeforeRouteLeave((to, from, next) => {
+//   //@ts-ignore
+//   if (JSON.stringify(surveyStore.currentResponse) === surveyStore.currentAnsweredSurvey.answers || to.path === '/student/survey/review') {
+//     window.removeEventListener('beforeunload', reminder)
+//     next()
+//   } else {
+//     const answer = window.confirm('Changes you made might not be saved.')
+//     if (answer) {
+//       window.removeEventListener('beforeunload', reminder)
+//       next()
+//     } else {
+//       next(false)
+//     }
+//   }
+// })
 
 const reminder = (e: Event) => {
   e.preventDefault();
   e.returnValue = false;
 };
 
-watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
-  //@ts-ignore
-  if (JSON.stringify(newResponse) === surveyStore.currentAnsweredSurvey.answers) {
-    window.removeEventListener('beforeunload', reminder);
-  } else {
-    window.addEventListener('beforeunload', reminder);
-  }
-}, { deep: true });
+// watch(() => surveyStore.currentResponse, (newResponse, oldResponse) => {
+//   //@ts-ignore
+//   if (JSON.stringify(newResponse) === surveyStore.currentAnsweredSurvey.answers) {
+//     window.removeEventListener('beforeunload', reminder);
+//   } else {
+//     window.addEventListener('beforeunload', reminder);
+//   }
+// }, { deep: true });
 
-watch(() => surveyStore.currentAnsweredSurvey.answers, (newResponse, oldResponse) => {
-  //@ts-ignore
-  if (newResponse === JSON.stringify(surveyStore.currentResponse)) {
-    window.removeEventListener('beforeunload', reminder);
-  } else {
-    window.addEventListener('beforeunload', reminder);
-  }
-}, { deep: true });
+// watch(() => surveyStore.currentAnsweredSurvey.answers, (newResponse, oldResponse) => {
+//   //@ts-ignore
+//   if (newResponse === JSON.stringify(surveyStore.currentResponse)) {
+//     window.removeEventListener('beforeunload', reminder);
+//   } else {
+//     window.addEventListener('beforeunload', reminder);
+//   }
+// }, { deep: true });
 
 watch(() => (surveyStore.currentResponse[indexAllCourses] as allCoursesAnswer).answer.preference, (newResponse) => {
   x.value = x.value + 1

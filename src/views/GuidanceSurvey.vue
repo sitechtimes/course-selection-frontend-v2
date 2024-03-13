@@ -124,20 +124,20 @@ watch(() => surveyStore.currentResponse[indexAll].answer.preference, (newRespons
   x.value = x.value + 1
 }, { deep: true })
 
-onBeforeRouteLeave((to, from, next) => {
-  if (JSON.stringify(surveyStore.currentResponse) === surveyStore.currentAnsweredSurvey.answers || to.path === '/guidance/dashboard') {
-    window.removeEventListener('beforeunload', reminder)
-    next()
-  } else {
-    const answer = window.confirm('Changes you made might not be saved.')
-    if (answer) {
-      window.removeEventListener('beforeunload', reminder)
-      next()
-    } else {
-      next(false)
-    }
-  }
-})
+// onBeforeRouteLeave((to, from, next) => {
+//   if (JSON.stringify(surveyStore.currentResponse) === surveyStore.currentAnsweredSurvey.answers || to.path === '/guidance/dashboard') {
+//     window.removeEventListener('beforeunload', reminder)
+//     next()
+//   } else {
+//     const answer = window.confirm('Changes you made might not be saved.')
+//     if (answer) {
+//       window.removeEventListener('beforeunload', reminder)
+//       next()
+//     } else {
+//       next(false)
+//     }
+//   }
+// })
 
 const reminder = (e: { preventDefault: () => void; returnValue: string; }) => {
   e.preventDefault();

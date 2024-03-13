@@ -20,28 +20,28 @@
         class="text-lg md:text-xl text-left flex justify-center items-center ml-4 lg:ml-0 lg:justify-start">
         <BellIcon />
         <h2 v-if="surveyStore.open">Surveys are closing on {{ closeTime }}.</h2>
-        <h2 v-else-if="userStore.studentSurveyPreview.status === 'FINALIZED'">Your guidance counselor has finalised
+        <h2 v-else-if="surveyStatus === 'FINALIZED'">Your guidance counselor has finalised
           your survey. If you wish to make changes, please contact them.</h2>
         <h2 v-else>The due date for completion has passed. Please contact your guidance counselor to request changes.</h2>
       </div>
 
       <!-- survey status -->
-      <div v-if="userStore.studentSurveyPreview.status === 'NOT STARTED'"
+      <div v-if="surveyStatus === 'NOT STARTED'"
         class="text-[#461616] bg-[#EA9F9F] font-semibold text-center p-3 lg:px-6 lg:text-base text-sm rounded-md">Survey
         Status:
         <span class="font-medium">Not Started</span>
       </div>
-      <div v-else-if="userStore.studentSurveyPreview.status === 'COMPLETE'"
+      <div v-else-if="surveyStatus === 'COMPLETE'"
         class="text-[#174616] bg-[#A8D480]  font-semibold text-center p-3 lg:px-6 lg:text-base text-sm rounded-md">Survey
         Status:
         <span class="font-medium">Submitted</span>
       </div>
-      <div v-else-if="userStore.studentSurveyPreview.status === 'INCOMPLETE'"
+      <div v-else-if="surveyStatus === 'INCOMPLETE'"
         class="text-[#461616] bg-[#F9D477] font-semibold text-center p-3 lg:px-6 lg:text-base text-sm rounded-md">Survey
         Status:
         <span class="font-medium">In Progress</span>
       </div>
-      <div v-else-if="userStore.studentSurveyPreview.status === 'FINALIZED'"
+      <div v-else-if="surveyStatus === 'FINALIZED'"
         class="text-[#461616] bg-[#D1A4DE] font-semibold text-center p-3 lg:px-6 lg:text-base text-sm rounded-md">Survey
         Status:
         <span class="font-medium">Finalized</span>
@@ -85,12 +85,13 @@ import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
 //@ts-ignore
 import dateFormat from "dateformat";
-import { onMounted, Ref, ref } from "vue";
+import { onMounted, Ref, ref, watch } from "vue";
 
 document.title = 'Dashboard | SITHS Course Selection'
 
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
+const surveyStatus = ref(surveyStore.currentAnsweredSurvey.status);
 
 const closeTime: Ref<string[]> = ref([]);
 let time: String;
@@ -115,4 +116,11 @@ if (
   date = dateFormat(datetime, "shortDate");
   time = dateFormat(datetime, "shortTime");
 }
+
+watch(
+  () => surveyStore.currentAnsweredSurvey.status,
+  (newStatus) => {
+    surveyStatus.value = newStatus;
+  }
+);
 </script>
