@@ -44,6 +44,7 @@
           v-if="showFlagModal === student.email"
           @exit="toggleFlagModal('')"
           :student="student"
+          :viewAll="viewall"
           :flags="flags"
         >
         </AddFlag>
@@ -51,6 +52,7 @@
           v-if="showDeleteFlag === student.email"
           @exit="toggleDeleteFlag('')"
           :student="student"
+          :viewAll="viewall"
           :flags="flags"
         >
         </DeleteFlag>
@@ -127,7 +129,7 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, ref, PropType } from "vue";
+import { Ref, ref, PropType, Prop } from "vue";
 import { useRouter } from "vue-router";
 import { studentGuidance } from "../../types/interface";
 import { useSurveyStore } from "../../stores/survey";
@@ -142,6 +144,7 @@ const userStore = useUserStore();
 
 const props = defineProps({
   newStudents: Array as PropType<Array<studentGuidance>>,
+  viewall: Boolean,
 });
 
 const surveyStore = useSurveyStore();

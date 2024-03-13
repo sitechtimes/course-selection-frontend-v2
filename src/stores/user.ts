@@ -226,7 +226,7 @@ export const useUserStore = defineStore("user", {
                 console.error('Error fetching updateMeeting:', error);
             });
         },
-        async addFlag(email: string, newFlag: string) {
+        async addFlag(email: string, newFlag: string, viewAll:boolean) {
             try {
                 const res = await fetch(`${import.meta.env.VITE_URL}/guidance/updateFlag/`, {
                     method: "POST",
@@ -247,16 +247,26 @@ export const useUserStore = defineStore("user", {
                 const previewIndex = this.guidanceStudents.findIndex((student: studentGuidance) => 
                     student.email + '@nycstudents.net' === email
                 );
-                
-                if (studentIndex !== -1 && previewIndex !== -1) {
-                    this.currentlyViewingStudents[studentIndex].flag = data.flag;
+
+                if(viewAll === true){  //if viewAll students is on
+                    if(studentIndex !== -1 && previewIndex === -1){ //if the guidance counseler is adding flag to a student that is not their's
+                        this.currentlyViewingStudents[studentIndex].flag = data.flag;
+                    }else{ //or else if the guidance counseler has the student
+                        this.currentlyViewingStudents[studentIndex].flag = data.flag;
                     this.guidanceStudents[previewIndex].flag = data.flag;
+                    }
+                }else{ //else if viewAll is not on
+                    if (studentIndex !== -1 && previewIndex !== -1) {
+                        this.currentlyViewingStudents[studentIndex].flag = data.flag;
+                        this.guidanceStudents[previewIndex].flag = data.flag;
+                    }
                 }
+
             } catch (error) {
                 console.error('Error fetching updateFlag:', error);
             };
         },
-        async deleteFlag(email: string, flagToBeRemoved: string) {
+        async deleteFlag(email: string, flagToBeRemoved: string, viewAll: boolean) {
             try {
                 const res = await fetch(`${import.meta.env.VITE_URL}/guidance/updateFlag/`, {
                     method: "DELETE",
@@ -277,10 +287,21 @@ export const useUserStore = defineStore("user", {
                 const previewIndex = this.guidanceStudents.findIndex((student: studentGuidance) => 
                     student.email + '@nycstudents.net' === email
                 );
-                if (studentIndex !== -1 && previewIndex !== -1) {
-                    this.currentlyViewingStudents[studentIndex].flag = data.flag;
+                
+                if(viewAll === true){  //if viewAll students is on
+                    if(studentIndex !== -1 && previewIndex === -1){ //if the guidance counseler is deleting flag of a student that is not their's
+                        this.currentlyViewingStudents[studentIndex].flag = data.flag;
+                    }else{ //or else if the guidance counseler has the student
+                        this.currentlyViewingStudents[studentIndex].flag = data.flag;
                     this.guidanceStudents[previewIndex].flag = data.flag;
+                    }
+                }else{ //else if viewAll is not on
+                    if (studentIndex !== -1 && previewIndex !== -1) {
+                        this.currentlyViewingStudents[studentIndex].flag = data.flag;
+                        this.guidanceStudents[previewIndex].flag = data.flag;
+                    }
                 }
+                
             } catch (error) {
                 console.error('Error fetching updateFlag:', error);
             };

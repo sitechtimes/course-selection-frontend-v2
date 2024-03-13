@@ -19,7 +19,10 @@
         placeholder="Search Students..."
       />
     </div>
-    <StudentTable :new-students="sortedAndFilteredStudents.slice(x, y)" />
+    <StudentTable
+      :viewall="viewAll"
+      :new-students="sortedAndFilteredStudents.slice(x, y)"
+    />
     <div class="max-w-[80%] overflow-x-auto mt-4 flex flex-row justify-between">
       <button
         class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold"
