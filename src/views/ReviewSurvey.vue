@@ -86,21 +86,21 @@ const submit = async () => {
   }
 }
 
-onBeforeRouteLeave((to, from, next) => {
-  //@ts-ignore
-  if (JSON.stringify(surveyStore.currentResponse) === surveyStore.currentAnsweredSurvey.answers || to.path === '/student/survey/review') {
-    window.removeEventListener('beforeunload', reminder)
-    next()
-  } else {
-    const answer = window.confirm('Changes you made might not be saved.')
-    if (answer) {
-      window.removeEventListener('beforeunload', reminder)
-      next()
-    } else {
-      next(false)
-    }
-  }
-})
+// onBeforeRouteLeave((to, from, next) => {
+//   //@ts-ignore
+//   if (JSON.stringify(surveyStore.currentResponse) === surveyStore.currentAnsweredSurvey.answers || to.path === '/student/survey/review') {
+//     window.removeEventListener('beforeunload', reminder)
+//     next()
+//   } else {
+//     const answer = window.confirm('Changes you made might not be saved.')
+//     if (answer) {
+//       window.removeEventListener('beforeunload', reminder)
+//       next()
+//     } else {
+//       next(false)
+//     }
+//   }
+// })
 
 const reminder = (e: Event) => {
   e.preventDefault();
