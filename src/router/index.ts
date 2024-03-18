@@ -193,7 +193,7 @@ router.beforeEach(async (to) => {
 
     userStore.isLoggedIn = true;
     try {
-      userStore.init(session.account_type);
+      await userStore.init(session.account_type);
     } catch (error) {
       console.error('Unable to load user session');
     }
