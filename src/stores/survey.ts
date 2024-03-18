@@ -102,9 +102,16 @@ export const useSurveyStore = defineStore("survey", {
       await this.checkSurveyAnswers();
       // if (this.missingAnswers.length !== 0) return;
       if (userStore.userType === "student") {
-        (this.missingAnswers.length !== 0) ? await this.postSurvey("INCOMPLETE") : await this.postSurvey("COMPLETE");
+        if(this.missingAnswers.length === 0){
+          await this.postSurvey("COMPLETE")
+          userStore.studentSurveyPreview.status = "COMPLETE"
+        }else{
+          await this.postSurvey("INCOMPLETE")
+          userStore.studentSurveyPreview.status = "INCOMPLETE"
+        }
       } else if (userStore.userType === "guidance") {
         await this.postSurvey("FINALIZED");
+        userStore.studentSurveyPreview.status = "FINALIZED"
       }
       this.loading = false;
     },
