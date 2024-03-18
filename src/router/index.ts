@@ -172,28 +172,35 @@ const router = createRouter({
   ]
 })
 
+function setSession() {
+  const sessionItem = localStorage.getItem("session");
+  const session = sessionItem !== null ? JSON.parse(sessionItem) : null;
+
+  const userStore = useUserStore();
+  const account_type = session.account_type;
+
+  console.log(...session);
+  console.log({...session});
+  Object.assign(userStore, {...session});
+  
+  userStore.isLoggedIn = true;
+
+  return account_type;
+}
+
 router.beforeEach(async (to) => {
   const userStore = useUserStore();
   const loggedIn = userStore.isLoggedIn;
 
   const publicPages = ["/", "/login"];
   const authRequired = !publicPages.includes(to.path);
+
   const sessionExists = localStorage.getItem('session') !== null;
-
+  //restore session if it exists
   if (sessionExists && !loggedIn) {
-    const sessionItem = localStorage.getItem('session');
-    const session = sessionItem !== null ? JSON.parse(sessionItem) : null;
-    //Check for CRSF
-    userStore.email = session.email;
-    userStore.first_name = session.first_name;
-    userStore.last_name = session.last_name;
-    userStore.refresh_token = session.refresh_token;
-    userStore.access_token = session.access_token;
-    userStore.expire_time = session.expire_time;
-
-    userStore.isLoggedIn = true;
+    const account_type = setSession();
     try {
-      userStore.init(session.account_type);
+      userStore.init(account_type);
     } catch (error) {
       console.error('Unable to load user session');
     }
