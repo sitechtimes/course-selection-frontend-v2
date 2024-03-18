@@ -158,7 +158,9 @@ export const useUserStore = defineStore("user", {
                         this.savePersistentSession();
                     })
                     .catch((error) => {
+                        alert("Login failed. Please check your credentials.");
                         throw new Error('Error fetching login:', error.message);
+                        
                     });
 
             } catch (error) {
