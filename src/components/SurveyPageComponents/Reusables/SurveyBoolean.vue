@@ -10,17 +10,27 @@
         class="flex flex-row text-lg md:text-xl xl:text-2xl justify-center sm:justify-start"
       >
         <div class="flex justify-center items-center flex-wrap my-4">
-          <input type="radio" :disabled="isDisabled"
+          <input
+            type="radio"
+            :disabled="isDisabled"
             class="w-4 h-4 mx-2 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
-            :id="question.id + 'Yes'" :name="`question_${question.question}`" value="Yes"
-            v-model="surveyStore.currentResponse[index].answer" />
+            :id="question.id + 'Yes'"
+            :name="`question_${question.question}`"
+            value="Yes"
+            v-model="surveyStore.currentResponse[index].answer"
+          />
           <label :for="question.id + 'Yes'">Yes</label>
         </div>
         <div class="flex justify-center items-center flex-wrap m-8">
-          <input type="radio" :disabled="isDisabled"
+          <input
+            type="radio"
+            :disabled="isDisabled"
             class="w-4 h-4 mx-2 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
-            :id="question.id + 'No'" :name="`question_${question.question}`" value="No"
-            v-model="surveyStore.currentResponse[index].answer" />
+            :id="question.id + 'No'"
+            :name="`question_${question.question}`"
+            value="No"
+            v-model="surveyStore.currentResponse[index].answer"
+          />
           <label :for="question.id + 'No'">No</label>
         </div>
       </div>
@@ -31,8 +41,13 @@
 <script setup lang="ts">
 //@ts-nocheck
 import { useSurveyStore } from "../../../stores/survey";
-import { watch, PropType, ref } from "vue";
-import { surveyQuestion, preferences, surveyAnswer, allCoursesAnswer } from "../../../types/interface";
+import { watch, PropType, ref, onBeforeUpdate } from "vue";
+import {
+  surveyQuestion,
+  preferences,
+  surveyAnswer,
+  allCoursesAnswer,
+} from "../../../types/interface";
 
 const props = defineProps({
   question: {
@@ -70,18 +85,27 @@ function startQuestion() {
 
 startQuestion();
 
-watch(() => props.question.question, (newResponse) => {
-  startQuestion();
-}
+watch(
+  () => props.question.question,
+  (newResponse) => {
+    startQuestion();
+  }
 );
 
 watch(
   () => surveyStore.currentResponse[index.value].answer,
   (newResponse, oldResponse) => {
-    const allCoursesIndex = surveyStore.currentResponse.findIndex((item) => item.id === "allChosenCourses");
-    const allCourses = surveyStore.currentResponse[allCoursesIndex] as allCoursesAnswer;
+    const allCoursesIndex = surveyStore.currentResponse.findIndex(
+      (item) => item.id === "allChosenCourses"
+    );
+    const allCourses = surveyStore.currentResponse[
+      allCoursesIndex
+    ] as allCoursesAnswer;
     //if student selects Yes,
-    if (props.question.status === "CLASS" && newResponse.toString().toUpperCase() === "YES") {
+    if (
+      props.question.status === "CLASS" &&
+      newResponse.toString().toUpperCase() === "YES"
+    ) {
       // add interested course to array of overall rankings
       const overallRank = allCourses.answer.courses.length + 1;
       //currently no way to reference the class object from the question object, classReferenced is null
@@ -98,14 +122,23 @@ watch(
       allCourses.answer.courses.push(courseObject);
       //push to course rankings
       allCourses.answer.preference.push(rankedCourseObject);
-    } else if (oldResponse && newResponse && oldResponse.toString().toUpperCase() !== newResponse.toString().toUpperCase()) {
+    } else if (
+      oldResponse &&
+      newResponse &&
+      oldResponse.toString().toUpperCase() !==
+        newResponse.toString().toUpperCase()
+    ) {
       //if the response has changed and the old response was Yes
       const referencedClass = props.question.classReferenced.name;
 
       if (oldResponse.toString().toUpperCase() === "YES") {
         //remove interested course from overall rankings and adjust ranks
-        const filteredCourses = allCourses.answer.courses.filter((x) => typeof x !== 'string' && x.name !== referencedClass);
-        const filteredPreferences = allCourses.answer.preference.filter((x) => x.name !== referencedClass);
+        const filteredCourses = allCourses.answer.courses.filter(
+          (x) => typeof x !== "string" && x.name !== referencedClass
+        );
+        const filteredPreferences = allCourses.answer.preference.filter(
+          (x) => x.name !== referencedClass
+        );
 
         allCourses.answer.courses = filteredCourses;
         allCourses.answer.preference = filteredPreferences;
@@ -131,8 +164,12 @@ watch(
 
         if (allCourses.answer.courses.includes(referencedClass)) {
           //remove interested course from overall rankings and adjust ranks
-          const filteredCourses = allCourses.answer.courses.filter((x) => x !== referencedClass);
-          const filteredPreferences = allCourses.answer.preference.filter((x) => x.name !== referencedClass);
+          const filteredCourses = allCourses.answer.courses.filter(
+            (x) => x !== referencedClass
+          );
+          const filteredPreferences = allCourses.answer.preference.filter(
+            (x) => x.name !== referencedClass
+          );
 
           allCourses.answer.courses = filteredCourses;
           allCourses.answer.preference = filteredPreferences;
