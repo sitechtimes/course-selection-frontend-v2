@@ -19,7 +19,10 @@
         placeholder="Search Students..."
       />
     </div>
-    <StudentTable :new-students="sortedAndFilteredStudents.slice(x, y)" />
+    <StudentTable
+      :viewall="viewAll"
+      :new-students="sortedAndFilteredStudents.slice(x, y)"
+    />
     <div class="max-w-[80%] overflow-x-auto mt-4 flex flex-row justify-between">
       <button
         class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold"
@@ -113,14 +116,22 @@ const updateSortOption = (selected: string) => {
 };
 
 const sortedAndFilteredStudents = computed(() => {
-  if (viewAll.value === false) {
-    return applyFiltersAndSort(
-      userStore.guidanceStudents,
-      sortBy.value,
-      input.value
-    );
-  } else {
-    return applyFiltersAndSort(allStudents.value as studentGuidance[], sortBy.value, input.value);
+  try {
+    if (viewAll.value === false) {
+      return applyFiltersAndSort(
+        userStore.guidanceStudents,
+        sortBy.value,
+        input.value
+      );
+    } else {
+      return applyFiltersAndSort(
+        allStudents.value as studentGuidance[],
+        sortBy.value,
+        input.value
+      );
+    }
+  } finally {
+    updatePagination(1);
   }
 });
 
@@ -254,7 +265,6 @@ watch(
     // adjust pagination after students are filtered and categorized
     const displayedStudents = sortedAndFilteredStudents.value;
     userStore.currentlyViewingStudents = displayedStudents;
-    updatePagination(1);
   },
   { deep: true }
 );
