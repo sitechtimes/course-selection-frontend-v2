@@ -61,7 +61,7 @@ export const useSurveyStore = defineStore("survey", {
       this.studentCourses.coursesTaken = surveyData.coursesTaken;
 
       this.name = surveyData.name;
-      
+
       const surveyAnswers = surveyData.answeredSurvey.answers;
       if (surveyAnswers.length === 0) {
         // this.currentResponse = [];

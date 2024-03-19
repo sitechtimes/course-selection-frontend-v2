@@ -150,10 +150,8 @@
 <script setup lang="ts">
 import { ref, Ref, defineProps, onMounted } from "vue";
 import { useUserStore } from "../../stores/user";
-import { useGuidanceStore } from "../../stores/guidance";
 import { studentGuidance } from "../../types/interface";
 
-const guidanceStore = useGuidanceStore();
 const userStore = useUserStore();
 
 const date: Ref<string> = ref("");
