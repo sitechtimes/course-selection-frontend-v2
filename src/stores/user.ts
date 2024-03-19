@@ -1,7 +1,5 @@
 import { defineStore } from "pinia";
 import { useSurveyStore } from "./survey";
-import { useStudentStore } from "./student";
-import { useGuidanceStore } from "./guidance";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import { user, account_type, userData, guidanceData, studentGuidance, studentMeetings, studentPreview, studentSurveyPreview } from "../types/interface";

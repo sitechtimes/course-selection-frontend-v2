@@ -1,7 +1,6 @@
 import { RouteComponent, createRouter, createWebHistory } from "vue-router";
 import { useUserStore } from "../../src/stores/user";
 import { useSurveyStore } from "../stores/survey";
-import { useStudentStore } from "../stores/student";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -56,7 +55,6 @@ const router = createRouter({
       beforeEnter: (to) => {
         const userStore = useUserStore();
         const surveyStore = useSurveyStore();
-        const studentStore = useStudentStore();
 
         if (userStore.userType === 'guidance') {
           return { name: "guidanceStudentlist" };

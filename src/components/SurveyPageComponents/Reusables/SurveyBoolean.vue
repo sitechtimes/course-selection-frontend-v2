@@ -31,7 +31,7 @@
 <script setup lang="ts">
 //@ts-nocheck
 import { useSurveyStore } from "../../../stores/survey";
-import { watch, PropType, ref } from "vue";
+import { watch, PropType, ref, onBeforeUpdate } from "vue";
 import { surveyQuestion, preferences, surveyAnswer, allCoursesAnswer } from "../../../types/interface";
 
 const props = defineProps({
