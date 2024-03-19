@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { useSurveyStore } from "../../../stores/survey";
-import { watch, onBeforeMount, PropType, ref } from "vue";
+import { watch, onBeforeMount, PropType, ref, onBeforeUpdate } from "vue";
 import {
   survey,
   surveyAnswer,
