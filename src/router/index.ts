@@ -221,7 +221,7 @@ router.beforeEach(async (to) => {
   if (sessionExists && !loggedIn) {
     const account_type = await setSession();
     try {
-      userStore.init(account_type);
+      await userStore.init(account_type);
     } catch (error) {
       console.error('Unable to load user session');
     }
