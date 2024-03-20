@@ -95,8 +95,8 @@ const surveyStore = useSurveyStore();
 let time: String;
 let date: String;
 
-onMounted(() => {
-  if (!(userStore.studentSurveyPreview.hr === null) && userStore.studentSurveyPreview.dueDate) {
+const closeTime = computed(() => {
+  if (userStore.studentSurveyPreview.dueDate) {
     const ISOString = userStore.studentSurveyPreview.dueDate.substring(0, 10).split('-');
     return dateFormat(ISOString, "shortDate");
   } else {
