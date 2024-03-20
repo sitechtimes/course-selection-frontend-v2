@@ -99,8 +99,6 @@ const closeTime = computed(() => {
   if (userStore.studentSurveyPreview.dueDate) {
     const ISOString = userStore.studentSurveyPreview.dueDate.substring(0, 10).split('-');
     return dateFormat(ISOString, "shortDate");
-  } else {
-    console.error("Survey due date is not found");
   }
 })
 
