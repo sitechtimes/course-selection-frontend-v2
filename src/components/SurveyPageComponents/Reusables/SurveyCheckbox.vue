@@ -148,7 +148,7 @@ function toggleInterest(interested: boolean, course: course) {
     const overallRank = allCourses.answer.courses.length + 1;
     const courseObject = {
       name: course.name,
-      // courseCode: course.courseCode,
+      courseCode: course.courseCode,
       subject: course.subject,
     };
     const rankedCourseObject = {
