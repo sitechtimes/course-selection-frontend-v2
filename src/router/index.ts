@@ -181,10 +181,6 @@ async function setSession() {
   // console.log(session);
   Object.assign(userStore, {...session});
   
-  //use refresh token to get new access token
-  //then fetch survey data and set in suvery store
-  console.log(userStore.refresh_token)
-  console.log(session.refresh_token)
   const res = await fetch(import.meta.env.VITE_URL + "/auth/token/refresh/", {
     method: "POST",
     headers: {
@@ -202,7 +198,8 @@ async function setSession() {
     userStore.access_token = data.access;
     userStore.refresh_token = data.refresh;
     userStore.expire_time = data.access_token_expiration;
-    
+    userStore.userType = account_type;
+
     userStore.savePersistentSession();
   } else {
     throw new Error("Unable to refresh token");
