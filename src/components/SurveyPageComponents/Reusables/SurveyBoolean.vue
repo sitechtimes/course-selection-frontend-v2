@@ -1,14 +1,8 @@
 <template>
   <div class="w-full">
     <fieldset ref="form">
-      <legend
-        class="text-lg xl:leading-10 md:text-xl xl:text-3xl overflow-visible"
-      >
-        {{ question.question }}
-      </legend>
-      <div
-        class="flex flex-row text-lg md:text-xl xl:text-2xl justify-center sm:justify-start"
-      >
+      <legend class="text-lg xl:leading-10 md:text-xl xl:text-3xl overflow-visible">{{ question.question }}</legend>
+      <div class="flex flex-row text-lg md:text-xl xl:text-2xl justify-center sm:justify-start">
         <div class="flex justify-center items-center flex-wrap my-4">
           <input type="radio" :disabled="isDisabled"
             class="w-4 h-4 mx-2 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
@@ -29,15 +23,14 @@
 </template>
 
 <script setup lang="ts">
-//@ts-nocheck
 import { useSurveyStore } from "../../../stores/survey";
-import { watch, PropType, ref, onBeforeUpdate } from "vue";
+import { watch, PropType, ref } from "vue";
 import { surveyQuestion, preferences, surveyAnswer, allCoursesAnswer } from "../../../types/interface";
 
 const props = defineProps({
   question: {
     type: Object as PropType<surveyQuestion>,
-    required: true,
+    required: true
   },
   isDisabled: Boolean,
   referencedClass: Object as PropType<preferences>,
@@ -47,10 +40,8 @@ const surveyStore = useSurveyStore();
 const index = ref(0);
 
 const getQuestionIndex = (question: string): number => {
-  return surveyStore.currentResponse.findIndex(
-    (entry) => entry.question === question
-  );
-};
+  return surveyStore.currentResponse.findIndex((entry) => entry.question === question);
+}
 
 function startQuestion() {
   const currentQuestion: string = props.question.question;
@@ -64,7 +55,6 @@ function startQuestion() {
       answer: "",
     };
     surveyStore.currentResponse.push(newQuestion);
-    index.value = surveyStore.currentResponse.length - 1;
   }
 }
 
@@ -141,10 +131,6 @@ watch(
         }
       }
     }
-  }
-);
+  });
 
-onBeforeUpdate(() => {
-  startQuestion();
-});
 </script>
