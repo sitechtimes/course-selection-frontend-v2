@@ -85,23 +85,22 @@ import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
 //@ts-ignore
 import dateFormat from "dateformat";
-import { onMounted, Ref, ref } from "vue";
+import { onMounted, Ref, ref, watch, computed } from "vue";
 
 document.title = 'Dashboard | SITHS Course Selection'
 
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
 
-const closeTime: Ref<string[]> = ref([]);
 let time: String;
 let date: String;
 
 onMounted(() => {
   if (!(userStore.studentSurveyPreview.hr === null) && userStore.studentSurveyPreview.dueDate) {
     const ISOString = userStore.studentSurveyPreview.dueDate.substring(0, 10).split('-');
-    closeTime.value = dateFormat(ISOString, "shortDate");
+    return dateFormat(ISOString, "shortDate");
   } else {
-    console.log('Student profile not updated; no homeroom');
+    console.error("Survey due date is not found");
   }
 })
 
