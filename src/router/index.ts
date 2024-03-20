@@ -1,6 +1,7 @@
 import { RouteComponent, createRouter, createWebHistory } from "vue-router";
 import { useUserStore } from "../../src/stores/user";
 import { useSurveyStore } from "../stores/survey";
+import { account_type } from "../types/interface";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -170,19 +171,44 @@ const router = createRouter({
   ]
 })
 
-function setSession() {
+async function setSession() {
   const sessionItem = localStorage.getItem("session");
-  const session = sessionItem !== null ? JSON.parse(sessionItem) : null;
+  let session = sessionItem !== null ? JSON.parse(sessionItem) : null;
 
   const userStore = useUserStore();
-  const account_type = session.account_type;
+  const account_type: account_type = session.account_type;
 
-  console.log(...session);
-  console.log({...session});
+  // console.log(session);
   Object.assign(userStore, {...session});
   
-  userStore.isLoggedIn = true;
+  //use refresh token to get new access token
+  //then fetch survey data and set in suvery store
+  console.log(userStore.refresh_token)
+  console.log(session.refresh_token)
+  const res = await fetch(import.meta.env.VITE_URL + "/auth/token/refresh/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${userStore.refresh_token}`,
+    },
+    body: JSON.stringify({ refresh: userStore.refresh_token }),
 
+  });
+  console.log(JSON.stringify({ refresh: userStore.refresh_token }))
+
+  if (res.ok) {
+    const data = await res.json();
+
+    userStore.access_token = data.access;
+    userStore.refresh_token = data.refresh;
+    userStore.expire_time = data.access_token_expiration;
+    
+    userStore.savePersistentSession();
+  } else {
+    throw new Error("Unable to refresh token");
+  }
+
+  userStore.isLoggedIn = true;
   return account_type;
 }
 
@@ -196,7 +222,7 @@ router.beforeEach(async (to) => {
   const sessionExists = localStorage.getItem('session') !== null;
   //restore session if it exists
   if (sessionExists && !loggedIn) {
-    const account_type = setSession();
+    const account_type = await setSession();
     try {
       userStore.init(account_type);
     } catch (error) {
