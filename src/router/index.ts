@@ -1,6 +1,7 @@
 import { RouteComponent, createRouter, createWebHistory } from "vue-router";
 import { useUserStore } from "../../src/stores/user";
 import { useSurveyStore } from "../stores/survey";
+import { account_type } from "../types/interface";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -170,28 +171,57 @@ const router = createRouter({
   ]
 })
 
+async function setSession() {
+  const sessionItem = localStorage.getItem("session");
+  let session = sessionItem !== null ? JSON.parse(sessionItem) : null;
+
+  const userStore = useUserStore();
+  const account_type: account_type = session.account_type;
+
+  // console.log(session);
+  Object.assign(userStore, {...session});
+  
+  const res = await fetch(import.meta.env.VITE_URL + "/auth/token/refresh/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${userStore.refresh_token}`,
+    },
+    body: JSON.stringify({ refresh: userStore.refresh_token }),
+
+  });
+  console.log(JSON.stringify({ refresh: userStore.refresh_token }))
+
+  if (res.ok) {
+    const data = await res.json();
+
+    userStore.access_token = data.access;
+    userStore.refresh_token = data.refresh;
+    userStore.expire_time = data.access_token_expiration;
+    userStore.userType = account_type;
+
+    userStore.savePersistentSession();
+  } else {
+    throw new Error("Unable to refresh token");
+  }
+
+  userStore.isLoggedIn = true;
+  return account_type;
+}
+
 router.beforeEach(async (to) => {
   const userStore = useUserStore();
   const loggedIn = userStore.isLoggedIn;
 
   const publicPages = ["/", "/login"];
   const authRequired = !publicPages.includes(to.path);
+
   const sessionExists = localStorage.getItem('session') !== null;
-
+  //restore session if it exists
   if (sessionExists && !loggedIn) {
-    const sessionItem = localStorage.getItem('session');
-    const session = sessionItem !== null ? JSON.parse(sessionItem) : null;
-    //Check for CRSF
-    userStore.email = session.email;
-    userStore.first_name = session.first_name;
-    userStore.last_name = session.last_name;
-    userStore.refresh_token = session.refresh_token;
-    userStore.access_token = session.access_token;
-    userStore.expire_time = session.expire_time;
-
-    userStore.isLoggedIn = true;
+    const account_type = await setSession();
     try {
-      userStore.init(session.account_type);
+      await userStore.init(account_type);
     } catch (error) {
       console.error('Unable to load user session');
     }
