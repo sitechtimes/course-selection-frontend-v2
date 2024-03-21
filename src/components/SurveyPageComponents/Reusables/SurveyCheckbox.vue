@@ -153,7 +153,6 @@ watch(
 );
 
 function toggleInterest(interested: boolean, course: course) {
-  /////////////////////////////problem here please fix thanks??????????????
   const allCoursesIndex = surveyStore.currentResponse.findIndex(
     (x) => x.id === "allChosenCourses"
   );
