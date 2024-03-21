@@ -76,7 +76,9 @@
         class="h-32 w-32 sm:h-40 sm:w-40 lg:h-32 lg:w-32 xl:h-40 xl:w-40 absolute bottom-4 left-12 bg-other-s rounded-full">
       </div>
     </div>
+    
   </div>
+  <surveyDropdown/>
 </template>
 
 <script setup lang="ts">
@@ -86,6 +88,7 @@ import { useSurveyStore } from "../stores/survey";
 //@ts-ignore
 import dateFormat from "dateformat";
 import { onMounted, Ref, ref } from "vue";
+import surveyDropdown from "../components/SurveyPageComponents/Reusables/SurveyDropdown.vue"
 
 document.title = 'Dashboard | SITHS Course Selection'
 
