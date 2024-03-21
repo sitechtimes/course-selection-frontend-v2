@@ -34,10 +34,12 @@ import closedRank from '../components/SurveyPageComponents/Reusables/ClosedSurve
 import closedFinalRank from '../components/SurveyPageComponents/Reusables/ClosedSurvey/closedFinalRank.vue';
 import { surveyQuestion, surveyAnswer, allCoursesAnswer } from '../types/interface';
 import { ref, Ref } from 'vue';
+import { useUserStore } from '../stores/user';
 
 document.title = 'Survey | SITHS Course Selection'
 
 const surveyStore = useSurveyStore()
+const userStore = useUserStore()
 
 surveyStore.fetchSurvey(
   userStore.email,
