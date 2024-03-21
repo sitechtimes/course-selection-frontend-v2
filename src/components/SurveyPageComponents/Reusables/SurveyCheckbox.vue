@@ -173,15 +173,15 @@ function toggleInterest(interested: boolean, course: course) {
       (course) => course.name !== referencedClass
     );
 
-    allCourses.answer.courses = filteredCourses;
-    allCourses.answer.preference = filteredPreferences;
-
-    allCourses.answer.preference.sort((a, b) => a.rank - b.rank);
-
     const classIndex = allCourses.answer.preference.findIndex(
       (x: preferences) => x.name === referencedClass
     );
     currentQuestionAnswer.preference.splice(classIndex, 1);
+
+    allCourses.answer.courses = filteredCourses;
+    allCourses.answer.preference = filteredPreferences;
+
+    allCourses.answer.preference.sort((a, b) => a.rank - b.rank);
 
     allCourses.answer.preference.forEach(
       (rankObject: preferences, index: number) => {
