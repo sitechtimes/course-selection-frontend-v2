@@ -173,9 +173,10 @@ function toggleInterest(interested: boolean, course: course) {
       (course) => course.name !== referencedClass
     );
 
-    const classIndex = allCourses.answer.preference.findIndex(
-      (x: preferences) => x.name === referencedClass
-    );
+    const classIndex = (
+      surveyStore.currentResponse[index.value].answer as checkboxAnswer
+    ).preference.findIndex((x: preferences) => x.name === referencedClass);
+
     currentQuestionAnswer.preference.splice(classIndex, 1);
 
     allCourses.answer.courses = filteredCourses;
