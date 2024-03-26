@@ -1,45 +1,36 @@
 <template>
   <div class="w-full">
     <fieldset ref="form">
-      <legend
-        class="text-lg xl:leading-10 md:text-xl xl:text-3xl overflow-visible"
-      >
-        {{ question.question }}
-      </legend>
-      <div
-        class="flex flex-row text-lg md:text-xl xl:text-2xl justify-center sm:justify-start"
-      >
-        <div class="flex justify-center items-center flex-wrap my-4">
+      <legend class="text-lg xl:leading-10 md:text-xl xl:text-3xl overflow-visible">{{ question.question }}</legend>
+      <div class="flex flex-row text-lg md:text-xl xl:text-2xl justify-center sm:justify-start">
+        <label class="flex justify-center items-center flex-wrap my-4">
           <input
             type="radio"
             :disabled="isDisabled"
             class="w-4 h-4 mx-2 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
-            :id="question.id + 'Yes'"
             :name="`question_${question.question}`"
             value="Yes"
             v-model="surveyStore.currentResponse[index].answer"
           />
-          <label :for="question.id + 'Yes'">Yes</label>
-        </div>
-        <div class="flex justify-center items-center flex-wrap m-8">
+          Yes
+        </label>
+        <label class="flex justify-center items-center flex-wrap m-8">
           <input
             type="radio"
             :disabled="isDisabled"
             class="w-4 h-4 mx-2 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
-            :id="question.id + 'No'"
             :name="`question_${question.question}`"
             value="No"
             v-model="surveyStore.currentResponse[index].answer"
           />
-          <label :for="question.id + 'No'">No</label>
-        </div>
+          No
+        </label>
       </div>
     </fieldset>
   </div>
 </template>
 
 <script setup lang="ts">
-//@ts-nocheck
 import { useSurveyStore } from "../../../stores/survey";
 import { watch, PropType, ref, onBeforeUpdate } from "vue";
 import {
@@ -62,9 +53,7 @@ const surveyStore = useSurveyStore();
 const index = ref(0);
 
 const getQuestionIndex = (question: string): number => {
-  return surveyStore.currentResponse.findIndex(
-    (entry) => entry.question === question
-  );
+  return surveyStore.currentResponse.findIndex((entry) => entry.question === question);
 };
 
 function startQuestion() {
@@ -79,7 +68,6 @@ function startQuestion() {
       answer: "",
     };
     surveyStore.currentResponse.push(newQuestion);
-    index.value = surveyStore.currentResponse.length - 1;
   }
 }
 
@@ -133,12 +121,8 @@ watch(
 
       if (oldResponse.toString().toUpperCase() === "YES") {
         //remove interested course from overall rankings and adjust ranks
-        const filteredCourses = allCourses.answer.courses.filter(
-          (x) => typeof x !== "string" && x.name !== referencedClass
-        );
-        const filteredPreferences = allCourses.answer.preference.filter(
-          (x) => x.name !== referencedClass
-        );
+        const filteredCourses = allCourses.answer.courses.filter((x) => typeof x !== "string" && x.name !== referencedClass);
+        const filteredPreferences = allCourses.answer.preference.filter((x) => x.name !== referencedClass);
 
         allCourses.answer.courses = filteredCourses;
         allCourses.answer.preference = filteredPreferences;
@@ -180,8 +164,4 @@ watch(
     }
   }
 );
-
-onBeforeUpdate(() => {
-  startQuestion();
-});
 </script>

@@ -12,42 +12,30 @@
               {{ question.question }}
             </legend>
             <div class="flex flex-col flex-wrap justify-center items-start">
-              <div
-                v-for="choice in choices"
-                :key="choice.courseCode"
-                class="flex flex-wrap flex-column justify-center items-center m-2 w-max"
-              >
-                <input
-                  type="checkbox"
-                  class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
-                  :id="choice.courseCode"
-                  :value="choice"
-                  v-model="(surveyStore.currentResponse[index].answer as checkboxAnswer).courses"
-                  :disabled="notInterested"
-                />
-                <label
-                  :for="choice.courseCode"
-                  class="text-base sm:text-lg xl:text-xl ml-4"
-                  >{{ choice.name }}</label
-                >
+              <div v-for="choice in choices" :key="choice.name">
+                <label class="text-base sm:text-lg xl:text-xl ml-4 flex flex-wrap flex-column justify-center items-center m-2 w-max gap-2">
+                  <input
+                    type="checkbox"
+                    class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
+                    :value="choice"
+                    v-model="(surveyStore.currentResponse[index].answer as checkboxAnswer).courses"
+                    :disabled="notInterested"
+                  />
+                  {{ choice.name }}
+                </label>
               </div>
-              <div
+              <label
                 v-if="props.question.status === 'OPTIONAL'"
-                class="flex flex-wrap flex-column justify-center items-center m-2 w-max"
+                class="text-base sm:text-lg xl:text-xl ml-4 flex flex-wrap flex-column justify-center items-center m-2 w-max gap-2"
               >
                 <input
                   type="checkbox"
                   class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
-                  :id="'notInterested' + index"
                   value="Not Interested"
                   v-model="(surveyStore.currentResponse[index].answer as checkboxAnswer).courses"
                 />
-                <label
-                  :for="'notInterested' + index"
-                  class="text-lg xl:text-xl ml-4"
-                  >Not Interested</label
-                >
-              </div>
+                Not Interested
+              </label>
             </div>
           </fieldset>
         </div>
@@ -56,11 +44,7 @@
         class="mt-4 border-black border border-solid rounded-xl lg:w-[45%] w-[90%] lg:ml-14 lg:h-[50vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll"
       >
         <div class="flex justify-center mt-[1%]">
-          <p
-            class="ml-6 mt-2 text-lg xl:leading-10 md:text-xl xl:text-2xl text-black"
-          >
-            Drag course(s) into order of preference:
-          </p>
+          <p class="ml-6 mt-2 text-lg xl:leading-10 md:text-xl xl:text-2xl text-black">Drag course(s) into order of preference:</p>
         </div>
         <surveyDraggable
           class="p-6"
@@ -76,7 +60,6 @@
 </template>
 
 <script setup lang="ts">
-//@ts-nocheck
 import surveyDraggable from "./SurveyDraggable.vue";
 import { useSurveyStore } from "../../../stores/survey";
 import { watch, ref, Ref, computed, PropType } from "vue";
@@ -106,9 +89,7 @@ const index = ref(0); //current question index
 
 //finding current question index in surveyStore
 const getQuestionIndex = (question: string): number => {
-  return surveyStore.currentResponse.findIndex(
-    (entry) => entry.question === question
-  );
+  return surveyStore.currentResponse.findIndex((entry) => entry.question === question);
 };
 
 //initialise current question
@@ -134,8 +115,7 @@ startQuestion();
 
 //'Not Interested' is selected
 const notInterested = computed(() => {
-  const currentQuestionAnswer = surveyStore.currentResponse[index.value]
-    .answer as checkboxAnswer;
+  const currentQuestionAnswer = surveyStore.currentResponse[index.value].answer as checkboxAnswer;
   return currentQuestionAnswer.courses.includes("Not Interested");
 });
 
@@ -153,15 +133,10 @@ watch(
 );
 
 function toggleInterest(interested: boolean, course: course) {
-  const allCoursesIndex = surveyStore.currentResponse.findIndex(
-    (x) => x.id === "allChosenCourses"
-  );
+  const allCoursesIndex = surveyStore.currentResponse.findIndex((x) => x.id === "allChosenCourses");
 
-  const allCourses = surveyStore.currentResponse[
-    allCoursesIndex
-  ] as allCoursesAnswer;
-  const currentQuestionAnswer = surveyStore.currentResponse[index.value]
-    .answer as checkboxAnswer;
+  const allCourses = surveyStore.currentResponse[allCoursesIndex] as allCoursesAnswer;
+  const currentQuestionAnswer = surveyStore.currentResponse[index.value].answer as checkboxAnswer;
 
   const referencedClass = course.name;
 
@@ -244,9 +219,7 @@ watch(
 );
 
 watch(
-  () =>
-    (surveyStore.currentResponse[index.value].answer as checkboxAnswer)
-      .preference,
+  () => (surveyStore.currentResponse[index.value].answer as checkboxAnswer).preference,
   (newResponse) => {
     x.value = x.value + 1;
   },

@@ -118,6 +118,8 @@ export const useSurveyStore = defineStore("survey", {
 
   },
   persist: {
+    //presist surveyStore is userStore access token is valid/present
+    //see if theres any way to check for the expiration of the token
     storage: sessionStorage
   },
 });

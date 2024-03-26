@@ -28,21 +28,21 @@
 
 <script setup lang="ts">
 import { useSurveyStore } from '../stores/survey';
-import { useStudentStore } from '../stores/student';
 import surveyBoolean from '../components/SurveyPageComponents/Reusables/SurveyBoolean.vue'
 import surveyGeneral from '../components/SurveyPageComponents/Reusables/SurveyGeneral.vue'
 import closedRank from '../components/SurveyPageComponents/Reusables/ClosedSurvey/closedRank.vue';
 import closedFinalRank from '../components/SurveyPageComponents/Reusables/ClosedSurvey/closedFinalRank.vue';
 import { surveyQuestion, surveyAnswer, allCoursesAnswer } from '../types/interface';
 import { ref, Ref } from 'vue';
+import { useUserStore } from '../stores/user';
 
 document.title = 'Survey | SITHS Course Selection'
 
 const surveyStore = useSurveyStore()
-const studentStore = useStudentStore()
+const userStore = useUserStore()
 
 surveyStore.fetchSurvey(
-  studentStore.user.email,
+  userStore.email,
 );
 
 const indexAll = surveyStore.currentResponse.findIndex((x) => x.id === 'allChosenCourses');
@@ -50,7 +50,7 @@ const indexNote = surveyStore.currentResponse.findIndex((x) => x.id === 'noteToG
 const x: Ref<number> = ref(0)
 
 const getChoices = (question: surveyQuestion) => {
-  const classes = studentStore.student.coursesAvailable
+  const classes = surveyStore.studentCourses.coursesAvailable
   return classes.filter(x => x.subject === question.questionType)
 }
 

@@ -20,7 +20,7 @@
         class="text-lg md:text-xl text-left flex justify-center items-center ml-4 lg:ml-0 lg:justify-start">
         <BellIcon />
         <h2 v-if="surveyStore.open">Surveys are closing on {{ closeTime }}.</h2>
-        <h2 v-else-if="userStore.studentSurveyPreview.status === 'FINALIZED'">Your guidance counselor has finalised
+        <h2 v-else-if="userStore.studentSurveyPreview.status === 'FINALIZED'">Your guidance counselor has finalized
           your survey. If you wish to make changes, please contact them.</h2>
         <h2 v-else>The due date for completion has passed. Please contact your guidance counselor to request changes.</h2>
       </div>
@@ -85,27 +85,24 @@ import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
 //@ts-ignore
 import dateFormat from "dateformat";
-import { onMounted, Ref, ref } from "vue";
+import { onMounted, Ref, ref, watch, computed } from "vue";
 
 document.title = 'Dashboard | SITHS Course Selection'
 
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
 
-const closeTime: Ref<string[]> = ref([]);
 let time: String;
 let date: String;
 
-onMounted(() => {
-  if (!(userStore.studentSurveyPreview.hr === null) && userStore.studentSurveyPreview.dueDate) {
+const closeTime = computed(() => {
+  if (userStore.studentSurveyPreview.dueDate) {
     const ISOString = userStore.studentSurveyPreview.dueDate.substring(0, 10).split('-');
-    closeTime.value = dateFormat(ISOString, "shortDate");
-  } else {
-    console.log('Student profile not updated; no homeroom');
+    return dateFormat(ISOString, "shortDate");
   }
 })
 
-// component should be revised again after removal of studentStore
+
 if (
   userStore.studentSurveyPreview.meetingDate != undefined ||
   userStore.studentSurveyPreview.meetingDate != null
