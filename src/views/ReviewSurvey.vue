@@ -10,19 +10,19 @@
           <booleanComponent
             v-if="question.questionType === 'BOOLEAN'"
             :question="question"
-            :warn="surveyStore.missingAnswers.filter((answer) => answer === question.question).length > 0"
+            :warn="surveyStore.missingAnswers.filter((answer) => answer === question.id).length > 0"
           />
           <generalComponent
             v-else-if="question.questionType === 'GENERAL'"
             :question="question"
-            :warn="surveyStore.missingAnswers.filter((answer) => answer === question.question).length > 0"
+            :warn="surveyStore.missingAnswers.filter((answer) => answer === question.id).length > 0"
           />
           <checkboxComponent
             v-else
             :question="question"
             :choices="getChoices(question)"
             :color="'D6EEFF'"
-            :warn="surveyStore.missingAnswers.filter((answer) => answer === question.question).length > 0"
+            :warn="surveyStore.missingAnswers.filter((answer) => answer === question.id).length > 0"
           />
         </div>
       </div>

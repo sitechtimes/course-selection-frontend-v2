@@ -43,11 +43,11 @@ export const useSurveyStore = defineStore("survey", {
           return r;
         };
         if (isMissingOrNA(question.answer)) {
-          if (!((this.missingAnswers.includes(question.question)))) {
-            this.missingAnswers.push(question.question);
+          if (!((this.missingAnswers.includes(question.id)))) {
+            this.missingAnswers.push(question.id);
           }
         } else {
-          const index = this.missingAnswers.indexOf(question.question);
+          const index = this.missingAnswers.indexOf(question.id);
           if (index !== -1) this.missingAnswers.splice(index, 1);
         }
       });
@@ -105,7 +105,6 @@ export const useSurveyStore = defineStore("survey", {
             answers: JSON.stringify(this.currentResponse),
           })
         })
-        console.log(JSON.stringify(this.currentResponse))
       } catch (error) {
         console.error("Error posting survey:", error);
       }
