@@ -146,6 +146,6 @@ const handleTouchEnd = (e: TouchEvent) => {
       updateRank(rank, dragIndex);
     }
   }
-  dragElement = new HTMLElement;
+  // dragElement = new HTMLElement;
 };
 </script>

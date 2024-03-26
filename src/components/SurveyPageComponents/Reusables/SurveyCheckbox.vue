@@ -3,7 +3,7 @@
     <div class="flex flex-col lg:flex-row items-center lg:items-start w-full">
       <div class="lg:w-1/2 w-full h-full">
         <div class="flex items-center justify-center max-w-[40rem] overflow-hidden">
-          <fieldset class="flex items-center justify-start w-full h-full">
+          <fieldset class="flex flex-col justify-start w-full h-full" :aria-invalid="warn" :aria-describedby="warn ? question.id+'required' : ''">
             <legend class="text-lg xl:leading-10 md:text-xl xl:text-3xl overflow-visible text-left mb-4">{{ question.question }}</legend>
             <div class="flex flex-col flex-wrap justify-center items-start">
               <div v-for="choice in choices" :key="choice.name">
@@ -35,8 +35,10 @@
         </div>
       </div>
       <div
-        class="mt-4 border-black border border-solid rounded-xl lg:w-[45%] w-[90%] lg:ml-14 lg:h-[50vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-scroll"
+        class="mt-4 border border-solid rounded-xl lg:w-[45%] w-[90%] lg:ml-14 lg:h-[50vh] md:mt-[1%] relative self-center lg:self-auto lg:overflow-y-auto transition-colors duration-200 ease-linear flex flex-col justify-between"
+        :class="warn ? 'border-red-400 bg-red-50' : 'border-black'"
       >
+      <div>
         <div class="flex justify-center mt-[1%]">
           <p class="ml-6 mt-2 text-lg xl:leading-10 md:text-xl xl:text-2xl text-black">Drag course(s) into order of preference:</p>
         </div>
@@ -47,16 +49,30 @@
           :numbered="true"
           :color="color"
           :key="x"
-        ></surveyDraggable>
+        />
+      </div>
+        <Transition
+          enter-from-class="opacity-0"
+          enter-active-class="transition-opacity duration-200 ease-linear"
+        >
+          <div
+            class="flex items-center justify-center text-red-500 gap-2 pb-2 xl:ml-10 md:ml-8 xs:ml-4 ml-2"
+            v-if="warn"
+          >
+            <exclamationMark />
+            <p class="text-lg" :id="question.id+'required'">This question is required.</p>
+          </div>
+        </Transition>
       </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
+import exclamationMark from "../../../components/icons/ExclamationMark.vue";
 import surveyDraggable from "./SurveyDraggable.vue";
 import { useSurveyStore } from "../../../stores/survey";
-import { watch, ref, Ref, computed, PropType } from "vue";
+import { watch, ref, computed, PropType } from "vue";
 import { surveyQuestion, preferences, course, allCoursesAnswer, checkboxAnswer } from "../../../types/interface";
 
 const props = defineProps({
@@ -69,6 +85,7 @@ const props = defineProps({
     required: true,
   },
   color: String,
+  warn: Boolean,
 });
 
 const surveyStore = useSurveyStore();
@@ -181,6 +198,7 @@ watch(
 watch(
   () => (surveyStore.currentResponse[index.value].answer as checkboxAnswer).courses,
   (newResponse, oldResponse) => {
+    surveyStore.checkSurveyAnswers([surveyStore.currentResponse[index.value]])
     const interested = newResponse.length > oldResponse.length;
     const changedCourse = getChangedCourse(newResponse as course[], oldResponse as course[]);
     if (changedCourse) {

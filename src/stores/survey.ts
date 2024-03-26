@@ -19,23 +19,36 @@ export const useSurveyStore = defineStore("survey", {
     //
   },
   actions: {
-    async checkSurveyAnswers() {
-      this.missingAnswers = [];
-      this.currentResponse.forEach((question: surveyQuestion, index: number) => {
+    async checkSurveyAnswers(answers: Array<surveyAnswer | surveyStringAnswer>) {
+      answers.forEach((question: surveyQuestion) => {
         const isMissingOrNA = (response: surveyStringAnswer | surveyAnswer | undefined) => {
-          if (!response) {
-            return true;
+          let r:boolean = false;
+          switch (question.questionType) {
+            case "GENERAL":
+              if (response.trim().length === 0) r = true;
+              break;
+            case "BOOLEAN":
+              if (!response) r = true;
+              break;
+            case undefined:
+              // final note to guidance counselor has no questionType nor status
+              r = false;
+              break;
+            default:
+              // for checkbox question type
+              r = question.answer.courses.length === 0;
+              break;
           }
-          if (typeof response.answer === "string" && response.answer.trim() === "") {
-            return true;
-          }
-          return false;
+          if (question.status === "OPTIONAL") r = false;
+          return r;
         };
-    
-        if ((question.questionType === "GENERAL" || question.questionType === "BOOLEAN") && isMissingOrNA(question.answer)) {
-          this.missingAnswers.push({ question, index });
-        } else if ((question.questionType === "COURSES" || question.questionType === "PE" || question.questionType === "SCIENCE" || question.questionType === "TECH") && !question.answer?.courses) {
-          this.missingAnswers.push({ question, index });
+        if (isMissingOrNA(question.answer)) {
+          if (!((this.missingAnswers.includes(question.question)))) {
+            this.missingAnswers.push(question.question);
+          }
+        } else {
+          const index = this.missingAnswers.indexOf(question.question);
+          if (index !== -1) this.missingAnswers.splice(index, 1);
         }
       });
     },      
@@ -92,6 +105,7 @@ export const useSurveyStore = defineStore("survey", {
             answers: JSON.stringify(this.currentResponse),
           })
         })
+        console.log(JSON.stringify(this.currentResponse))
       } catch (error) {
         console.error("Error posting survey:", error);
       }
@@ -99,7 +113,7 @@ export const useSurveyStore = defineStore("survey", {
     async saveSurvey() {
       const userStore = useUserStore();
       this.loading = true;
-      await this.checkSurveyAnswers();
+      await this.checkSurveyAnswers(this.currentResponse);
       // if (this.missingAnswers.length !== 0) return;
       if (userStore.userType === "student") {
         if(this.missingAnswers.length === 0){
