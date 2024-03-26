@@ -11,7 +11,7 @@
         <h2 v-if="studentSurvey.grade === 'SENIOR'">Grade : 12</h2>
       </div>
 
-      <p v-if="surveyStore.loading">Setting things up...</p>
+      <p v-if="surveyStore.loading">Please stand by...</p>
       <div v-else>
         <div
           v-for="question in surveyStore.currentSurvey.question"
