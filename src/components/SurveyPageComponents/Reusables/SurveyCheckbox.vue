@@ -146,20 +146,29 @@ function toggleInterest(interested: boolean, course: course) {
   const referencedClass = course.name;
 
   if (!interested) {
-    const filteredCourses = allCourses.answer.courses.filter((course) => typeof course !== "string" && course.name !== referencedClass);
-    const filteredPreferences = allCourses.answer.preference.filter((course) => course.name !== referencedClass);
+    const filteredCourses = allCourses.answer.courses.filter(
+      (course) => typeof course !== "string" && course.name !== referencedClass
+    );
+    const filteredPreferences = allCourses.answer.preference.filter(
+      (course) => course.name !== referencedClass
+    );
+
+    const classIndex = (
+      surveyStore.currentResponse[index.value].answer as checkboxAnswer
+    ).preference.findIndex((x: preferences) => x.name === referencedClass);
+
+    currentQuestionAnswer.preference.splice(classIndex, 1);
 
     allCourses.answer.courses = filteredCourses;
     allCourses.answer.preference = filteredPreferences;
 
     allCourses.answer.preference.sort((a, b) => a.rank - b.rank);
 
-    const classIndex = allCourses.answer.preference.findIndex((x: preferences) => x.name === referencedClass);
-    currentQuestionAnswer.preference.splice(classIndex, 1);
-
-    allCourses.answer.preference.forEach((rankObject: preferences, index: number) => {
-      rankObject.rank = index + 1;
-    });
+    allCourses.answer.preference.forEach(
+      (rankObject: preferences, index: number) => {
+        rankObject.rank = index + 1;
+      }
+    );
   } else {
     //add the course to allCourses
     const overallRank = allCourses.answer.courses.length + 1;
@@ -181,8 +190,12 @@ function toggleInterest(interested: boolean, course: course) {
 }
 
 function getChangedCourse(oldCourses: course[], newCourses: course[]) {
-  const addedCourse = newCourses.find((course: course) => !oldCourses.includes(course));
-  const removedCourse = oldCourses.find((course: course) => !newCourses.includes(course));
+  const addedCourse = newCourses.find(
+    (course: course) => !oldCourses.includes(course)
+  );
+  const removedCourse = oldCourses.find(
+    (course: course) => !newCourses.includes(course)
+  );
 
   return addedCourse || removedCourse;
 }
@@ -196,11 +209,15 @@ watch(
 
 //watching for changes on selected courses
 watch(
-  () => (surveyStore.currentResponse[index.value].answer as checkboxAnswer).courses,
+  () =>
+    (surveyStore.currentResponse[index.value].answer as checkboxAnswer).courses,
   (newResponse, oldResponse) => {
     surveyStore.checkSurveyAnswers([surveyStore.currentResponse[index.value]])
     const interested = newResponse.length > oldResponse.length;
-    const changedCourse = getChangedCourse(newResponse as course[], oldResponse as course[]);
+    const changedCourse = getChangedCourse(
+      newResponse as course[],
+      oldResponse as course[]
+    );
     if (changedCourse) {
       toggleInterest(interested, changedCourse);
     }
