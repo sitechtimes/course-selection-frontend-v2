@@ -1,18 +1,30 @@
-# Vue 3 + TypeScript + Vite
+<h1 align="center">Course Selectnot</h1>
+<p align="center">"No, I will not select a course"</p>
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## Project Setup
 
-## Recommended IDE Setup
+1. Install dependencies and run locally
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+```sh
+npm install
+npm run dev
+```
 
-## Type Support For `.vue` Imports in TS
+## Tech Stack
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+<ul>
+    <li><img src="https://seeklogo.com/images/N/nuxt-logo-1CCC5F38FD-seeklogo.com.png?raw=true" height="13"> <a href="https://nuxt.com/docs/getting-started/introduction">Nuxt 3</a></li>
+    <li><img src="https://seeklogo.com/images/V/vuejs-logo-17D586B587-seeklogo.com.png?raw=true" height="15"> <a href="https://vuejs.org/guide/introduction.html">Vue 3</a> (Composition API)</li>
+    <li><img src="https://seeklogo.com/images/P/pinia-logo-51BF712FB0-seeklogo.com.png?raw=true" height="21"> <a href="https://pinia.vuejs.org/core-concepts/">Pinia</a> (Composition API)</li>
+    <li><img src="https://seeklogo.com/images/V/vite-logo-BFD4283991-seeklogo.com.png?raw=true" height="16"> <a href="https://vuejs.org/guide/introduction.html">Vite</a></li>
+    <li><img src="https://seeklogo.com/images/V/vitest-logo-9ADDA575A5-seeklogo.com.png?raw=true" height="15"> <a href="https://vuejs.org/guide/introduction.html">Vitest</a></li>
+    <li><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Typescript_logo_2020.svg/2048px-Typescript_logo_2020.svg.png?raw=true" height="17"> <a href="https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html">Typescript</a></li>
+    <li><img src="https://seeklogo.com/images/T/tailwind-css-logo-5AD4175897-seeklogo.com.png?raw=true" height="11"> <a href="https://tailwindcss.com/docs/utility-first">Tailwind CSS</a></li>
+    <li><img src="https://seeklogo.com/images/P/prettier-logo-D5C5197E37-seeklogo.com.png?raw=true" height="17"> <a href="https://prettier.io/docs/en/install">Prettier</a></li>
+</ul>
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+## daisyUI
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+This project uses [daisyUI](https://daisyui.com/components), a Tailwind-based UI library.
+
+DaisyUI classes use the prefix `du-` so you can use [this VSCode extension](https://marketplace.visualstudio.com/items?itemName=emranweb.daisyui-snippet) to get snippets.
