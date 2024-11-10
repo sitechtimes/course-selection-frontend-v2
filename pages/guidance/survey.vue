@@ -6,6 +6,14 @@
 const route = useRoute();
 const router = useRouter();
 
+const studentId = ref<number>();
+const year = ref<number>();
+
+onBeforeMount(() => {
+  studentId.value = Number(route.query.id);
+  year.value = Number(route.query.year);
+});
+
 onMounted(() => {});
 </script>
 

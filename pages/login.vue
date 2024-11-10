@@ -15,7 +15,7 @@
             <p class="text-base text-zinc-600 font-semibold">Back</p>
           </button>
           <h1 class="text-4xl mb-4 font-bold">Login</h1>
-          <div class="flex flex-col w-11/12 max-w-[21rem] space-y-5 rounded-md">
+          <form id="login" class="flex flex-col w-11/12 max-w-[21rem] space-y-5 rounded-md" @submit.prevent="userStore.login(email, password)">
             <div class="relative z-0 w-full group overflow-visible">
               <input
                 v-model="email"
@@ -50,9 +50,9 @@
                 Password
               </label>
             </div>
-          </div>
+          </form>
 
-          <button id="button" class="bg-zinc-300 w-32 h-12 mt-4 rounded-md text-lg font-semibold hover:bg-zinc-200" @click="userStore.login(email, password)">Login</button>
+          <button type="submit" form="login" class="bg-zinc-300 w-32 h-12 mt-4 rounded-md text-lg font-semibold hover:bg-zinc-200">Login</button>
         </div>
       </div>
     </div>

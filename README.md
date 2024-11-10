@@ -22,9 +22,3 @@ npm run dev
     <li><img src="https://seeklogo.com/images/T/tailwind-css-logo-5AD4175897-seeklogo.com.png?raw=true" height="11"> <a href="https://tailwindcss.com/docs/utility-first">Tailwind CSS</a></li>
     <li><img src="https://seeklogo.com/images/P/prettier-logo-D5C5197E37-seeklogo.com.png?raw=true" height="17"> <a href="https://prettier.io/docs/en/install">Prettier</a></li>
 </ul>
-
-## daisyUI
-
-This project uses [daisyUI](https://daisyui.com/components), a Tailwind-based UI library.
-
-DaisyUI classes use the prefix `du-` so you can use [this VSCode extension](https://marketplace.visualstudio.com/items?itemName=emranweb.daisyui-snippet) to get snippets.
