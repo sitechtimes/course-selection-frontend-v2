@@ -18,13 +18,6 @@
 
 <script setup lang="ts">
 useSeoMeta({
-  title: "SITHS Course Selection"
+  title: "Course Selection"
 });
-
-const route = useRoute();
-const router = useRouter();
-
-onMounted(() => {});
 </script>
-
-<style scoped></style>

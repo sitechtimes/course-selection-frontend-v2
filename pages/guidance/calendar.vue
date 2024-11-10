@@ -1,12 +1,18 @@
 <template>
-  <div class="flex flex-col items-center justify-center"></div>
+  <div class="">
+    <GuidanceCalendar />
+  </div>
 </template>
 
 <script setup lang="ts">
-const route = useRoute();
-const router = useRouter();
-
-onMounted(() => {});
+useSeoMeta({
+  title: "Calendar & Events | SITHS Course Selection"
+});
 </script>
 
-<style scoped></style>
+<style scoped>
+.event {
+  display: flex;
+  flex-direction: column;
+}
+</style>

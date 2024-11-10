@@ -1,14 +1,29 @@
 <template>
-  <NuxtLayout>
+  <div
+    class="fixed place-content-center items-center inset-x-0 bottom-0 w-full flex z-20 text-[#174616] bg-[#A8D480] h-[10%] lg:text-xl text-lg duration-[0.75s]"
+    :class="{ 'translate-y-full': !surveyStore.submit }"
+  >
+    <p class="">Your survey has been submitted</p>
+  </div>
+  <div id="app">
+    <NavBar />
     <NuxtPage />
-  </NuxtLayout>
+  </div>
 </template>
 
-<script setup lang="ts">
-const route = useRoute();
-const router = useRouter();
-
-onMounted(() => {});
-</script>
-
 <style scoped></style>
+
+<script setup lang="ts">
+const surveyStore = useSurveyStore();
+const userStore = useUserStore();
+const resetStore = useResetStore();
+
+const currentTime = new Date();
+
+const session = localStorage.getItem("session");
+const sessionExpiration = session ? JSON.parse(session).expire_time : null;
+
+if (currentTime.getTime() > userStore.expire_time && currentTime > sessionExpiration) {
+  resetStore.all();
+}
+</script>

@@ -1,12 +1,8 @@
 <template>
-  <div class="flex flex-col items-center justify-center"></div>
+  <div class="flex flex-row justify-center">
+    <GuidancePrintPage />
+  </div>
 </template>
 
-<script setup lang="ts">
-const route = useRoute();
-const router = useRouter();
-
-onMounted(() => {});
-</script>
-
-<style scoped></style>
+<script setup lang="ts"></script>
+<style></style>
