@@ -1,14 +1,44 @@
-// user store interfaces
-export interface user {
-  first_name: string;
-  last_name: string;
-  email: string;
-  userType: account_type;
-  isLoggedIn: boolean;
-  access_token: string;
-  refresh_token: string;
-  loading: boolean;
-  expire_time: number;
+export interface Student {
+  grade: number;
+  meetingDate: string | null;
+  description: string;
+  status: "Complete" | "Finalized" | "In Progress";
+  dueDate: string;
+}
+
+export interface Survey {
+  dueDate: string;
+  grade: number;
+  questions: Question[];
+  answers: JSON;
+}
+
+type Subject =
+  | "ENGLISH"
+  | "SS"
+  | "MATH"
+  | "SCIENCE"
+  | "LANG"
+  | "TECH"
+  | "ART"
+  | "PE";
+
+export interface Question {
+  id: number;
+  question: string;
+  questionType: "BOOLEAN" | "GENERAL" | "DROPDOWN" | Subject;
+  status: "OPTIONAL" | "STANDARD" | "CLASS";
+  classReferenced: Course | null;
+  answer:
+    | string
+    | boolean
+    | number
+    | { courses: string[]; preference: string[] };
+}
+
+export interface Course {
+  name: string;
+  subject: Subject;
 }
 
 // guidance store interface
@@ -25,10 +55,10 @@ export interface studentUser {
   student: studentData;
   survey: survey;
   user: userData;
-  studentSurveyPreview: studentSurveyPreview;
+  studentSurveyPreview: SurveyPreview;
 }
 
-export interface studentSurveyPreview {
+export interface SurveyPreview {
   dueDate: string;
   grade: string;
   status: string;
@@ -63,7 +93,6 @@ export interface studentData {
   coursesRequired: course[];
   coursesTaken: course[];
   grade: grade;
-  hr: string;
   meeting: string | null;
   description: string;
 }
@@ -123,7 +152,6 @@ export interface allStudents {
 
 export interface studentPreview {
   name: string;
-  hr: string;
   grade: string;
   email: string;
   status: string;
@@ -242,7 +270,17 @@ export interface classReferenced {
   name: string;
 }
 
-export type course_type = "MATH" | "ENGLISH" | "LANG" | "SS" | "TECH" | "PE" | "CAREER" | "SCIENCE" | "ARTS" | "OTHER";
+export type course_type =
+  | "MATH"
+  | "ENGLISH"
+  | "LANG"
+  | "SS"
+  | "TECH"
+  | "PE"
+  | "CAREER"
+  | "SCIENCE"
+  | "ARTS"
+  | "OTHER";
 export type account_type = "student" | "guidance" | null;
 export type grade = "FRESHMAN" | "SOPHOMORE" | "JUNIOR" | "SENIOR";
 export type status = "COMPLETE" | "INCOMPLETE" | "FINALIZED" | null | undefined;

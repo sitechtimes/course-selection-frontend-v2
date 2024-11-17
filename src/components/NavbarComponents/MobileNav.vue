@@ -8,7 +8,7 @@
       class="absolute inset-0 w-full h-full bg-white opacity-100 -z-10"
     ></div>
     <div
-      v-if="userStore.isLoggedIn && userStore.userType === 'student'"
+      v-if="userStore.isAuth && !userStore.isGuidance"
       class="h-full absolute top-40 left-16 flex flex-col justify-start items-start space-y-8 z-10"
     >
       <RouterLink @click="$emit('e')" id="link" to="/student/dashboard"
@@ -28,7 +28,7 @@
       </a>
       <RouterLink to="/" @click="$emit('e')">
         <p
-          @click="logout()"
+          @click="userStore.logout()"
           id="link"
           class="text-4xl text-red-500 cursor-pointer"
         >
@@ -37,7 +37,7 @@
       </RouterLink>
     </div>
     <div
-      v-if="userStore.isLoggedIn && userStore.userType === 'guidance'"
+      v-if="userStore.isAuth && userStore.isGuidance"
       class="h-full absolute top-40 left-16 flex flex-col justify-start items-start space-y-8 z-10"
     >
       <RouterLink @click="$emit('e')" id="link" to="/guidance/dashboard"
@@ -54,7 +54,7 @@
       >
       <RouterLink to="/" @click="$emit('e')">
         <p
-          @click="logout()"
+          @click="userStore.logout()"
           id="link"
           class="text-4xl text-red-500 cursor-pointer"
         >
@@ -63,7 +63,7 @@
       </RouterLink>
     </div>
     <div
-      v-if="!userStore.isLoggedIn"
+      v-if="!userStore.isAuth"
       class="h-full absolute top-56 left-16 flex flex-col justify-start items-start space-y-8 z-10"
     >
       <RouterLink @click="$emit('e')" id="link" to="/"
@@ -89,13 +89,8 @@ import { RouterLink } from "vue-router";
 import gsap from "gsap";
 import { onMounted } from "vue";
 import { useUserStore } from "../../stores/user";
-import { useSurveyStore } from "../../stores/survey";
-import { useResetStore } from "../../stores/reset";
-import router from "../../router";
 
 const userStore = useUserStore();
-const surveyStore = useSurveyStore();
-const resetStore = useResetStore();
 
 onMounted(() => {
   const tl = gsap.timeline({
@@ -115,18 +110,4 @@ onMounted(() => {
     "-=0.2"
   );
 });
-
-const surveyNav = () => {
-  if (surveyStore.open) {
-    router.push("/student/survey");
-  } else if (!surveyStore.open) {
-    router.push("/student/survey/closed");
-  }
-};
-
-const logout = async () => {
-  await resetStore.all();
-  localStorage.clear();
-  router.push("/");
-};
 </script>

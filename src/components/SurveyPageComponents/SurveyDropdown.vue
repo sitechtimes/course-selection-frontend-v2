@@ -5,7 +5,9 @@
       :aria-invalid="warn"
       :aria-describedby="warn ? question.id + 'required' : ''"
     >
-      <legend class="text-lg xl:leading-10 md:text-xl xl:text-3xl overflow-visible mb-4">
+      <legend
+        class="text-lg xl:leading-10 md:text-xl xl:text-3xl overflow-visible mb-4"
+      >
         {{ question.question }}
       </legend>
       <div class="flex flex-row items-baseline">
@@ -17,9 +19,11 @@
               : 'focus:border-blue-400 border-zinc-400 bg-transparent'
           "
           :disabled="isDisabled"
-          v-model="surveyStore.currentResponse[index].answer"
+          v-model="surveyStore.answers[index].answer"
         >
-          <option v-for="value in options" :key="value" :value="value">{{ value }}</option>
+          <option v-for="value in options" :key="value" :value="value">
+            {{ value }}
+          </option>
         </select>
         <Transition
           enter-from-class="opacity-0"
@@ -40,10 +44,10 @@
 </template>
 
 <script setup lang="ts">
-import { useSurveyStore } from "../../../stores/survey";
+import { useSurveyStore } from "../../stores/survey";
 import { watch, PropType, ref } from "vue";
-import { surveyQuestion } from "../../../types/interface";
-import exclamationMark from "../../../components/icons/ExclamationMark.vue";
+import { surveyQuestion, Question } from "../../types/interface";
+import exclamationMark from "../../components/icons/ExclamationMark.vue";
 
 const props = defineProps({
   question: {
@@ -59,7 +63,9 @@ const index = ref(0);
 const options = props.question.options;
 
 const getQuestionIndex = (question: string): number => {
-  return surveyStore.currentResponse.findIndex((entry) => entry.question === question);
+  return surveyStore.answers.findIndex(
+    (entry: Question) => entry.question === question
+  );
 };
 
 function startQuestion() {
@@ -73,7 +79,7 @@ function startQuestion() {
       answer: "",
       options: props.question.options,
     };
-    surveyStore.currentResponse.push(newQuestion);
+    surveyStore.answers.push(newQuestion);
   }
 }
 
@@ -87,9 +93,9 @@ watch(
 );
 
 watch(
-  () => surveyStore.currentResponse[index.value].answer,
+  () => surveyStore.answers[index.value].answer,
   (newResponse) => {
-    surveyStore.checkSurveyAnswers([surveyStore.currentResponse[index.value]]);
+    surveyStore.checkAnswers([surveyStore.answers[index.value]]);
   }
 );
 </script>

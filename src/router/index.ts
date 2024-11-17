@@ -1,7 +1,6 @@
-import { RouteComponent, createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import { useUserStore } from "../../src/stores/user";
 import { useSurveyStore } from "../stores/survey";
-import { account_type } from "../types/interface";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -9,232 +8,101 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      component: (): Promise<RouteComponent> => import("../views/LandingPage.vue"),
-      beforeEnter: (to) => {
-        const userStore = useUserStore();
-
-        if (userStore.isLoggedIn && userStore.userType === 'student') {
-          return { name: "studentDash" }
-        } else if(userStore.isLoggedIn && userStore.userType === 'guidance') {
-          return { name: "guidanceDash" }
-        } 
-      }
-    },
-    {
-      path: "/guidance/dashboard",
-      name: "guidanceDash",
-      component: (): Promise<RouteComponent> => import("../views/GuidanceHome.vue"),
-      beforeEnter: (to) => {
-        const userStore = useUserStore();
-
-        if (userStore.userType === 'student') {
-          return { name: "studentDash" };
-        }
-      }
-    },
-    {
-      path: '/guidance/studentlist',
-      name: 'guidanceStudentlist',
-      component: (): Promise<RouteComponent> => import('../views/GuidanceStudentList.vue'),
-      beforeEnter: (to) => {
-        const userStore = useUserStore();
-
-        if (userStore.userType === 'student') {
-          return { name: "studentDash" };
-        }
-      }
+      component: () => import("../views/LandingPage.vue"),
     },
     {
       path: "/login",
       name: "login",
-      component: (): Promise<RouteComponent> => import("../views/LoginPage.vue"),
+      component: () => import("../views/LoginPage.vue"),
     },
     {
-      path: "/student/survey",
-      name: "studentSurvey",
-      component: (): Promise<RouteComponent> => import("../views/SurveyPage.vue"),
-      beforeEnter: (to) => {
-        const userStore = useUserStore();
-        const surveyStore = useSurveyStore();
-
-        if (userStore.userType === 'guidance') {
-          return { name: "guidanceStudentlist" };
-        }
-
-        if (surveyStore.currentAnsweredSurvey != undefined && userStore.userType === 'student' && surveyStore.currentAnsweredSurvey.status === "COMPLETE"||surveyStore.currentAnsweredSurvey.status === 'FINALIZED') {
-          return { name: "reviewSurvey" };
-        }
-
-        if(!surveyStore.open) {
-          return { name: "closedSurvey" }
-        }
-      }
+      path: "/guidance",
+      name: "guidance",
+      meta: { user: "guidance" },
+      children: [
+        {
+          path: "dashboard",
+          name: "guidanceDash",
+          component: () => import("../views/GuidanceHome.vue"),
+        },
+        {
+          path: "studentlist",
+          name: "guidanceStudentlist",
+          component: () => import("../views/GuidanceStudentList.vue"),
+        },
+        {
+          path: "survey/:email",
+          name: "guidanceSurvey",
+          component: () => import("../views/GuidanceSurvey.vue"),
+        },
+        {
+          path: "calendar",
+          name: "calendar",
+          component: () => import("../views/GuidanceCalendar.vue"),
+        },
+        {
+          path: "statistics",
+          name: "statistics",
+          component: () => import("../views/GuidanceStatistics.vue"),
+        },
+        {
+          path: "PrintPage/:email",
+          name: "printPage",
+          component: () => import("../views/PrintPage.vue"),
+        },
+      ],
     },
     {
-      path: '/student/survey/closed',
-      name: 'closedSurvey',
-      component: (): Promise<RouteComponent> => import('../views/ClosedSurvey.vue'),
-      beforeEnter: (to) => {
-        const userStore = useUserStore();
-        const surveyStore = useSurveyStore()
-
-        if (userStore.userType === 'guidance') {
-          return { name: "guidanceStudentlist" };
-        }
-
-        if (surveyStore.open === true) {
-          return { name: "studentSurvey" };
-        }
-      }
+      path: "/student",
+      name: "student",
+      meta: { user: "student" },
+      children: [
+        {
+          path: "dashboard",
+          name: "studentDash",
+          component: () => import("../views/StudentDashboard.vue"),
+        },
+        {
+          path: "survey",
+          name: "studentSurvey",
+          component: () => import("../views/SurveyPage.vue"),
+          beforeEnter: async (to) => {
+            const surveyStore = useSurveyStore();
+            if (!surveyStore.loaded) await surveyStore.getSurvey();
+            return surveyStore.open ? true : { name: "closedSurvey" };
+          },
+        },
+        {
+          path: "survey/closed",
+          name: "closedSurvey",
+          component: () => import("../views/ClosedSurvey.vue"),
+          beforeEnter: (to) =>
+            useSurveyStore().open ? { name: "studentSurvey" } : true,
+        },
+        {
+          path: "survey/review",
+          name: "reviewSurvey",
+          component: () => import("../views/ReviewSurvey.vue"),
+          beforeEnter: (to) =>
+            useSurveyStore().open ? true : { name: "closedSurvey" },
+        },
+      ],
     },
-    {
-      path: '/student/survey/review',
-      name: 'reviewSurvey',
-      component: (): Promise<RouteComponent> => import('../views/ReviewSurvey.vue'),
-      beforeEnter: (to) => {
-        const userStore = useUserStore();
-        const surveyStore = useSurveyStore()
-
-        if (userStore.userType === 'guidance') {
-          return { name: "guidanceStudentlist" };
-        }
-
-        if(!surveyStore.open) {
-          return { name: "closedSurvey" }
-        }
-      }
-    },
-    {
-      path: '/guidanceCalendar',
-      name: 'guidanceCalendar',
-      component: (): Promise<RouteComponent> => import('../views/GuidanceCalendar.vue')
-    },
-    {
-      path: '/student/dashboard',
-      name: 'studentDash',
-      component: (): Promise<RouteComponent> => import('../views/StudentDashboard.vue'),
-      beforeEnter: (to) => {
-        const userStore = useUserStore();
-
-        if (userStore.userType === 'guidance') {
-          return { name: "guidanceDash" };
-        }
-      }
-    },
-    {
-      path: '/guidance/survey/:email',
-      name: 'guidanceSurvey',
-      component: (): Promise<RouteComponent> => import('../views/GuidanceSurvey.vue'),
-      beforeEnter: (to) => {
-        const userStore = useUserStore();
-
-        if (userStore.userType === 'student') {
-          return { name: "studentDash" };
-        }
-      }
-    },
-    {
-      path: '/guidance/calendar',
-      name: 'calendar',
-      component: (): Promise<RouteComponent> => import('../views/GuidanceCalendar.vue'),
-      beforeEnter: (to) => {
-        const userStore = useUserStore();
-
-        if (userStore.userType === 'student') {
-          return { name: "studentDash" };
-        }
-      }
-    },
-    {
-      path: '/guidance/statistics',
-      name: 'statistics',
-      component: (): Promise<RouteComponent> => import('../views/GuidanceStatistics.vue'),
-      beforeEnter: (to) => {
-        const userStore = useUserStore();
-
-        if (userStore.userType === 'student') {
-          return { name: "studentDash" };
-        }
-      }
-    },
-    {
-      path: '/guidance/PrintPage/:email',
-      name: 'printPage',
-      component: (): Promise<RouteComponent> => import('../views/PrintPage.vue'),
-      beforeEnter: (to) => {
-        const userStore = useUserStore();
-        if (userStore.userType === 'student') {
-          return { name: "studentDash" };
-        }
-      }
-    },
-  ]
-})
-
-async function setSession() {
-  const sessionItem = localStorage.getItem("session");
-  let session = sessionItem !== null ? JSON.parse(sessionItem) : null;
-
-  const userStore = useUserStore();
-  const account_type: account_type = session.account_type;
-
-  Object.assign(userStore, {...session});
-  
-  const res = await fetch(import.meta.env.VITE_URL + "/auth/token/refresh/", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${userStore.refresh_token}`,
-    },
-    body: JSON.stringify({ refresh: userStore.refresh_token }),
-
-  });
-
-  if (res.ok) {
-    const data = await res.json();
-
-    userStore.access_token = data.access;
-    userStore.refresh_token = data.refresh;
-    userStore.expire_time = data.access_token_expiration;
-    userStore.userType = account_type;
-
-    userStore.savePersistentSession();
-  } else {
-    if (res.status === 401) {
-      console.log("Refresh token expired");
-      router.push("/");
-    } else {
-      throw new Error("Unable to refresh token");
-    }
-  }
-
-  userStore.isLoggedIn = true;
-  return account_type;
-}
+  ],
+});
 
 router.beforeEach(async (to) => {
   const userStore = useUserStore();
-  const loggedIn = userStore.isLoggedIn;
-
-  const publicPages = ["/", "/login"];
-  const authRequired = !publicPages.includes(to.path);
-
-  const sessionExists = localStorage.getItem('session') !== null;
-  //restore session if it exists
-  if (sessionExists && !loggedIn) {
-    const account_type = await setSession();
-    try {
-      await userStore.init(account_type);
-    } catch (error) {
-      console.error('Unable to load user session');
-    }
-    router.push(to);
-    return
-  }
-
-  if (authRequired && !loggedIn) {
+  const anonPaths = ["/", "/login"];
+  if (!userStore.initComplete) await userStore.init();
+  if (!anonPaths.includes(to.path) && !userStore.isAuth)
     return { name: "login" };
-  }
+  else if (anonPaths.includes(to.path) && userStore.isAuth)
+    return { name: `${userStore.isGuidance ? "guidance" : "student"}Dash` };
+  else if (to.meta.user === "guidance" && !userStore.isGuidance)
+    return { name: `studentDash` };
+  else if (to.meta.user === "student" && userStore.isGuidance)
+    return { name: `guidanceDash` };
 });
 
 export default router;

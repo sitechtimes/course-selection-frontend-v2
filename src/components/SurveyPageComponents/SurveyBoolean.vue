@@ -20,7 +20,7 @@
             class="w-5 h-5 mx-2 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
             :name="`question_${question.question}`"
             value="Yes"
-            v-model="surveyStore.currentResponse[index].answer"
+            v-model="surveyStore.answers[index].answer"
           />
           Yes
         </label>
@@ -31,7 +31,7 @@
             class="w-5 h-5 mx-2 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
             :name="`question_${question.question}`"
             value="No"
-            v-model="surveyStore.currentResponse[index].answer"
+            v-model="surveyStore.answers[index].answer"
           />
           No
         </label>
@@ -52,14 +52,15 @@
 </template>
 
 <script setup lang="ts">
-import exclamationMark from "../../../components/icons/ExclamationMark.vue";
-import { useSurveyStore } from "../../../stores/survey";
+import exclamationMark from "../../components/icons/ExclamationMark.vue";
+import { useSurveyStore } from "../../stores/survey";
 import { watch, PropType, ref } from "vue";
 import {
   surveyQuestion,
   preferences,
   allCoursesAnswer,
-} from "../../../types/interface";
+  Question,
+} from "../../types/interface";
 
 const props = defineProps({
   question: {
@@ -75,8 +76,8 @@ const surveyStore = useSurveyStore();
 const index = ref(0);
 
 const getQuestionIndex = (question: string): number => {
-  return surveyStore.currentResponse.findIndex(
-    (entry) => entry.question === question
+  return surveyStore.answers.findIndex(
+    (entry: Question) => entry.question === question
   );
 };
 
@@ -90,7 +91,7 @@ function startQuestion() {
       questionType: "BOOLEAN",
       answer: "",
     };
-    surveyStore.currentResponse.push(newQuestion);
+    surveyStore.answers.push(newQuestion);
   }
 }
 
@@ -104,15 +105,11 @@ watch(
 );
 
 watch(
-  () => surveyStore.currentResponse[index.value].answer,
+  () => surveyStore.answers[index.value].answer,
   (newResponse, oldResponse) => {
-    surveyStore.checkSurveyAnswers([surveyStore.currentResponse[index.value]]);
-    const allCoursesIndex = surveyStore.currentResponse.findIndex(
-      (item) => item.id === "allChosenCourses"
-    );
-    const allCourses = surveyStore.currentResponse[
-      allCoursesIndex
-    ] as allCoursesAnswer;
+    surveyStore.checkAnswers([surveyStore.answers[index.value]]);
+    const allCoursesIndex = surveyStore.answers.length - 1;
+    const allCourses = surveyStore.answers[allCoursesIndex] as allCoursesAnswer;
 
     const referencedClass = props.question.classReferenced?.name;
 
@@ -132,10 +129,14 @@ watch(
       };
       allCourses.answer.courses.push(courseObject);
       allCourses.answer.preference.push(rankedCourseObject);
-    } else if (newResponse.toString().toUpperCase() === "NO" && oldResponse.toString().toUpperCase() === "YES") {
+    } else if (
+      newResponse.toString().toUpperCase() === "NO" &&
+      oldResponse.toString().toUpperCase() === "YES"
+    ) {
       //if the response has changed from Yes to No, remove the interested course
       allCourses.answer.courses = allCourses.answer.courses.filter(
-        (course) => typeof course !== "string" && course.name !== referencedClass
+        (course) =>
+          typeof course !== "string" && course.name !== referencedClass
       );
       allCourses.answer.preference = allCourses.answer.preference.filter(
         (preference) => preference.name !== referencedClass
@@ -149,5 +150,4 @@ watch(
 button[type="radio"] {
   transform: scale(3);
 }
-
 </style>

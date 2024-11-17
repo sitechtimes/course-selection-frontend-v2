@@ -12,21 +12,40 @@
       </p>
     </div>
     <div
-      v-if="userStore.isLoggedIn && userStore.userType === 'student' && viewingSurvey() === false"
+      v-if="
+        userStore.isAuth && !userStore.isGuidance && viewingSurvey() === false
+      "
       class="hidden justify-center items-center space-x-12 md:flex"
     >
       <p>
-        <a href="https://siths-catalog.netlify.app/" target="_blank" rel="noopener">Courses</a>
+        <a
+          href="https://siths-catalog.netlify.app/"
+          target="_blank"
+          rel="noopener"
+          >Courses</a
+        >
       </p>
-      <p v-if="userStore.studentSurveyPreview !== null" @click="surveyNav()" class="cursor-pointer hover:text-gray-500">
+      <p
+        v-if="!userStore.isGuidance"
+        @click="surveyNav()"
+        class="cursor-pointer hover:text-gray-500"
+      >
         Survey
       </p>
       <RouterLink to="/">
-        <p @click="logout()" id="name-link" class="text-base text-red-500 cursor-pointer hover:text-red-400">Logout</p>
+        <p
+          @click="userStore.logout()"
+          id="name-link"
+          class="text-base text-red-500 cursor-pointer hover:text-red-400"
+        >
+          Logout
+        </p>
       </RouterLink>
     </div>
     <div
-      v-if="userStore.isLoggedIn && userStore.userType === 'guidance' && viewingSurvey() === false"
+      v-if="
+        userStore.isAuth && userStore.isGuidance && viewingSurvey() === false
+      "
       class="hidden justify-center items-center space-x-12 md:flex"
     >
       <RouterLink to="/guidance/studentlist">
@@ -39,38 +58,61 @@
         <p class="text-base hover:text-gray-5000">Statistics</p>
       </RouterLink>
       <RouterLink to="/">
-        <p @click="logout()" id="name-link" class="text-base text-red-500 cursor-pointer hover:text-red-400">Logout</p>
+        <p
+          @click="userStore.logout()"
+          id="name-link"
+          class="text-base text-red-500 cursor-pointer hover:text-red-400"
+        >
+          Logout
+        </p>
       </RouterLink>
     </div>
     <!-- login page -->
     <div
-      v-if="!userStore.isLoggedIn && viewingSurvey() === false"
+      v-if="!userStore.isAuth && viewingSurvey() === false"
       class="hidden justify-center items-center space-x-12 md:flex"
     >
       <p>
-        <a href="https://siths-catalog.netlify.app/" target="_blank" rel="noopener">Courses</a>
+        <a
+          href="https://siths-catalog.netlify.app/"
+          target="_blank"
+          rel="noopener"
+          >Courses</a
+        >
       </p>
       <RouterLink to="/login">
         <p class="text-base hover:text-gray-500">Login</p>
       </RouterLink>
     </div>
 
-    <div v-if="!viewingSurvey()" id="menu-icon" class="flex justify-center items-center cursor-pointer z-40 md:hidden">
+    <div
+      v-if="!viewingSurvey()"
+      id="menu-icon"
+      class="flex justify-center items-center cursor-pointer z-40 md:hidden"
+    >
       <MenuIcon @click="toggleMenu" v-if="!menuOpen" />
       <CloseMenu @click="toggleMenu" v-else />
     </div>
     <!-- while viewing survey -->
-    <div v-if="viewingSurvey()" class="flex flex-row-reverse w-full sm:w-1/4 md:1/6 justify-between text-xl md:text-xl">
-      <p @click="redirect()" class="text-[#37394F] cursor-pointer hover:text-gray-500">Exit</p>
+    <div
+      v-if="viewingSurvey()"
+      class="flex flex-row-reverse w-full sm:w-1/4 md:1/6 justify-between text-xl md:text-xl"
+    >
       <p
-        v-if="surveyStore.currentAnsweredSurvey.status === 'COMPLETE' && surveyStore.open === true"
+        @click="redirect()"
+        class="text-[#37394F] cursor-pointer hover:text-gray-500"
+      >
+        Exit
+      </p>
+      <p
+        v-if="surveyStore.status === 'COMPLETE' && surveyStore.open"
         @click="submit()"
         class="text-[#37394F] cursor-pointer hover:text-gray-500"
       >
         Submit
       </p>
       <p
-        v-if="surveyStore.currentAnsweredSurvey.status != 'COMPLETE' && surveyStore.open === true"
+        v-if="surveyStore.status != 'Complete' && surveyStore.open"
         @click="
           surveyStore.saveSurvey();
           toggleSave();
@@ -87,7 +129,6 @@
 <script lang="ts" setup>
 import { useUserStore } from "../../stores/user";
 import { useSurveyStore } from "../../stores/survey";
-import { useResetStore } from "../../stores/reset";
 import { RouterLink } from "vue-router";
 import MenuIcon from "../icons/MenuIcon.vue";
 import CloseMenu from "../icons/CloseMenu.vue";
@@ -97,7 +138,6 @@ import router from "../../router";
 
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
-const resetStore = useResetStore();
 let menuOpen: Ref<boolean> = ref(false);
 const save = ref();
 
@@ -106,11 +146,10 @@ const viewingSurvey = () => {
 };
 
 const redirect = () => {
-  if (userStore.isLoggedIn === true) {
-    if (userStore.userType === "student") {
+  if (userStore.isAuth) {
+    if (!userStore.isGuidance) {
       router.push("/student/dashboard");
-    }
-    if (userStore.userType === "guidance") {
+    } else {
       router.push("/guidance/studentlist");
     }
   } else {
@@ -138,19 +177,13 @@ const toggleSave = () => {
   }, 1500);
 };
 
-const logout = async () => {
-  await resetStore.all();
-  localStorage.clear();
-  router.push("/");
-};
-
 const submit = async () => {
   surveyStore.saveSurvey();
   if (surveyStore.missingAnswers.length === 0) {
-    if (userStore.userType === "student") {
-      router.push("/student/dashboard");
-    } else if (userStore.userType === "guidance") {
+    if (userStore.isGuidance) {
       router.push("/guidance/studentlist");
+    } else {
+      router.push("/student/dashboard");
     }
   }
 };
