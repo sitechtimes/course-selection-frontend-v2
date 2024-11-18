@@ -10,7 +10,17 @@ export interface Survey {
   dueDate: string;
   grade: number;
   questions: Question[];
-  answers: JSON;
+  answers: Answer[];
+}
+
+interface Answer {
+  question: number;
+  answer: string | boolean | Rank[];
+}
+
+interface Rank {
+  course: number;
+  rank: number;
 }
 
 type Subject =
@@ -108,12 +118,10 @@ export interface studentGuidance extends studentData {
   ownStudent?: boolean;
 }
 
-export interface studentSurveyData {
-  survey: survey;
-  answeredSurvey: answeredSurvey;
+export interface SurveyData {
+  survey: Survey;
   coursesTaken: course[];
   coursesAvailable: course[];
-  name: string;
 }
 
 export interface studentCourses {

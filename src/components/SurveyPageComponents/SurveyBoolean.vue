@@ -55,16 +55,11 @@
 import exclamationMark from "../../components/icons/ExclamationMark.vue";
 import { useSurveyStore } from "../../stores/survey";
 import { watch, PropType, ref } from "vue";
-import {
-  surveyQuestion,
-  preferences,
-  allCoursesAnswer,
-  Question,
-} from "../../types/interface";
+import { preferences, allCoursesAnswer, Question } from "../../types/interface";
 
 const props = defineProps({
   question: {
-    type: Object as PropType<surveyQuestion>,
+    type: Object as PropType<Question>,
     required: true,
   },
   isDisabled: Boolean,

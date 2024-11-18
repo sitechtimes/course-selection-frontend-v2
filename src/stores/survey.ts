@@ -7,7 +7,9 @@ import {
   surveyQuestion,
   surveyStore,
   surveyStringAnswer,
-  studentSurveyData,
+  SurveyData,
+  Survey,
+  Answer,
 } from "../types/interface";
 import { ref } from "vue";
 
@@ -21,7 +23,7 @@ export const useSurveyStore = defineStore("survey", () => {
   const coursesTaken = ref<Course[]>([]);
   const coursesAvailable = ref<Course[]>([]);
   const survey = ref({} as Survey);
-  const answers = ref<Question>([]);
+  const answers = ref<Answer>([]);
 
   async function getSurvey(email: string = "") {
     const res = await fetch(import.meta.env.VITE_URL + "student/survey/", {
@@ -31,13 +33,10 @@ export const useSurveyStore = defineStore("survey", () => {
       open.value = false;
       return;
     }
-    const data: studentSurveyData = await res.json();
+    const data: SurveyData = await res.json();
     survey.value = data.survey;
     status.value = data.survey.status;
-    answers.value =
-      data.survey.answers.length === 0
-        ? data.survey.questions
-        : data.survey.answers;
+    answers.value = data.survey.answers;
     coursesTaken.value = data.coursesTaken;
     coursesAvailable.value = data.coursesAvailable;
     loaded.value = true;
@@ -56,6 +55,18 @@ export const useSurveyStore = defineStore("survey", () => {
     if (res.ok) {
       status.value = "SAVED";
     }
+  }
+
+  function checkForChanges() {
+    let changes = [];
+    answers.value.forEach((question) => {
+      old = survey.value.answers.find((q) => q.id === question.id);
+      if (typeof question.answer === "object") {
+        if (old.answer.find((a, i) => a.rank !== question.answer[i].rank))
+          changes.push(question.id);
+      } else if (question.answer !== old.answer) changes.push(question.id);
+    });
+    return changes.length > 0 ? changes : false;
   }
 
   function checkAnswers(a: any) {
@@ -133,6 +144,7 @@ export const useSurveyStore = defineStore("survey", () => {
     status,
     saveSurvey,
     checkAnswers,
+    checkForChanges,
     $reset,
   };
 });

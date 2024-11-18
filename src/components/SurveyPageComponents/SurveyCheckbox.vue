@@ -91,7 +91,7 @@ import surveyDraggable from "./SurveyDraggable.vue";
 import { useSurveyStore } from "../../stores/survey";
 import { watch, ref, computed, PropType } from "vue";
 import {
-  surveyQuestion,
+  Question,
   preferences,
   Course,
   allCoursesAnswer,
@@ -106,7 +106,7 @@ const props = defineProps({
     required: true,
   },
   question: {
-    type: Object as PropType<surveyQuestion>,
+    type: Object as PropType<Question>,
     required: true,
   },
   color: String,
@@ -119,7 +119,9 @@ const index = ref(0); //current question index
 
 //finding current question index in surveyStore
 const getQuestionIndex = (question: string): number => {
-  return surveyStore.answers.findIndex((entry) => entry.question === question);
+  return surveyStore.answers.findIndex(
+    (entry) => entry.question.id === question.id
+  );
 };
 
 //initialise current question

@@ -23,9 +23,6 @@ export const useUserStore = defineStore("userStore", () => {
   const email = ref("");
   const isGuidance = ref(false);
   const student = ref<Student>({} as Student);
-  const guidanceStudents = ref<studentGuidance[]>([]);
-  const guidanceMeetings = ref<studentMeetings[]>([]);
-  const currentlyViewingStudents = ref<studentPreview[]>([]);
 
   async function fetchData(url: string, method?: string, body?: any) {
     loading.value = true;

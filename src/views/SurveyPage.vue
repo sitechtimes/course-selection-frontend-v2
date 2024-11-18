@@ -16,35 +16,37 @@
         </h1>
       </div>
       <div class="h-5/6 flex items-center">
-        <generalComponent
+        <GeneralComponent
           v-if="currentQuestion.questionType === 'GENERAL'"
           :question="currentQuestion"
           :key="currentQuestion.id + '-general'"
         >
-        </generalComponent>
+        </GeneralComponent>
 
-        <booleanComponent
+        <BooleanComponent
           v-else-if="currentQuestion.questionType === 'BOOLEAN'"
           :question="currentQuestion"
           :key="currentQuestion.id + '-boolean'"
         >
-        </booleanComponent>
+        </BooleanComponent>
 
-        <dropdownComponent
+        <DropdownComponent
           v-else-if="currentQuestion.questionType === 'DROPDOWN'"
           :question="currentQuestion"
           :key="currentQuestion.question + '-dropdown'"
         >
-        </dropdownComponent>
+        </DropdownComponent>
 
-        <checkboxComponent
+        <CheckboxComponent
           v-else
           :question="currentQuestion"
-          :choices="getChoices()"
+          :choices="surveyStore.coursesAvailable.filter(
+    (x: Course) => x.subject === currentQuestion.questionType
+  )"
           :key="currentQuestion.question + '-checkbox'"
           :color="'D6EEFF'"
         >
-        </checkboxComponent>
+        </CheckboxComponent>
       </div>
     </div>
     <div
@@ -52,23 +54,29 @@
     >
       <div class="flex flex-row justify-between w-full">
         <button
-          @click="previousQuestion()"
+          @click="
+            currentQuestion = surveyStore.survey.questions[--currentIndex]
+          "
           class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:bg-stone-400"
-          :disabled="min"
+          :disabled="currentIndex === 0"
         >
           Back
         </button>
         <button
-          @click="nextQuestion()"
+          @click="
+            currentQuestion = surveyStore.survey.questions[++currentIndex]
+          "
           class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:hidden"
-          :disabled="max"
+          :disabled="currentIndex === surveyStore.survey.questions.length - 1"
         >
           Next
         </button>
-        <RouterLink to="/student/survey/review" v-if="max">
+        <RouterLink
+          to="/student/survey/review"
+          v-if="currentIndex === surveyStore.survey.questions.length - 1"
+        >
           <button
             class="bg-emerald-600 text-white w-auto px-3 h-10 rounded-md inline disabled:hidden"
-            :disabled="!max"
           >
             Review and Submit
           </button>
@@ -82,14 +90,14 @@
 </template>
 
 <script setup lang="ts">
-import checkboxComponent from "../components/SurveyPageComponents/SurveyCheckbox.vue";
-import booleanComponent from "../components/SurveyPageComponents/SurveyBoolean.vue";
-import generalComponent from "../components/SurveyPageComponents/SurveyGeneral.vue";
-import dropdownComponent from "../components/SurveyPageComponents/SurveyDropdown.vue";
+import CheckboxComponent from "../components/SurveyPageComponents/SurveyCheckbox.vue";
+import BooleanComponent from "../components/SurveyPageComponents/SurveyBoolean.vue";
+import GeneralComponent from "../components/SurveyPageComponents/SurveyGeneral.vue";
+import DropdownComponent from "../components/SurveyPageComponents/SurveyDropdown.vue";
 import { ref, reactive, Ref, watch } from "vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
-import { surveyQuestion, Course } from "../types/interface";
+import { Question, Course } from "../types/interface";
 import { onBeforeRouteLeave } from "vue-router";
 
 document.title = "Survey | SITHS Course Selection";
@@ -97,55 +105,22 @@ document.title = "Survey | SITHS Course Selection";
 const surveyStore = useSurveyStore();
 const userStore = useUserStore();
 
-const currentIndex: Ref<number> = ref(0);
-let currentQuestion: surveyQuestion = reactive(
+const currentIndex = ref(0);
+let currentQuestion: Question = reactive(
   surveyStore.survey.questions[currentIndex.value]
 );
-const min: Ref<boolean> = ref(true);
-const max: Ref<boolean> = ref(false);
-
-const previousQuestion = () => {
-  currentIndex.value--;
-  currentQuestion = surveyStore.survey.questions[currentIndex.value];
-
-  max.value = false;
-  if (currentIndex.value === 0) {
-    min.value = true;
-  }
-};
-
-const nextQuestion = () => {
-  currentIndex.value++;
-  currentQuestion = surveyStore.survey.questions[currentIndex.value];
-
-  min.value = false;
-  if (currentIndex.value === surveyStore.survey.questions.length - 1) {
-    max.value = true;
-  }
-};
 
 //finds what courses the student took to assign them questions
-const getChoices = () =>
-  surveyStore.coursesAvailable.filter(
-    (x: Course) => x.subject === currentQuestion.questionType
-  );
-
 onBeforeRouteLeave((to, from, next) => {
   if (
-    JSON.stringify(surveyStore.answers) === surveyStore.survey.answers ||
-    to.path === "/student/survey/review"
+    !surveyStore.checkForChanges() ||
+    to.path === "/student/survey/review" ||
+    window.confirm("Changes you made might not be saved.")
   ) {
     window.removeEventListener("beforeunload", reminder);
-    next();
-  } else {
-    const answer = window.confirm("Changes you made might not be saved.");
-    if (answer) {
-      window.removeEventListener("beforeunload", reminder);
-      next();
-    } else {
-      next(false);
-    }
+    return next();
   }
+  next(false);
 });
 
 const reminder = (e: { preventDefault: () => void; returnValue: string }) => {
@@ -156,11 +131,9 @@ const reminder = (e: { preventDefault: () => void; returnValue: string }) => {
 watch(
   () => surveyStore.answers,
   (newResponse, oldResponse) => {
-    if (JSON.stringify(newResponse) === surveyStore.survey.answers) {
-      window.removeEventListener("beforeunload", reminder);
-    } else {
-      window.addEventListener("beforeunload", reminder);
-    }
+    surveyStore.checkForChanges()
+      ? window.removeEventListener("beforeunload", reminder)
+      : window.addEventListener("beforeunload", reminder);
   },
   { deep: true }
 );
@@ -168,11 +141,9 @@ watch(
 watch(
   () => surveyStore.survey,
   (newResponse, oldResponse) => {
-    if (newResponse.answers === JSON.stringify(surveyStore.answers)) {
-      window.removeEventListener("beforeunload", reminder);
-    } else {
-      window.addEventListener("beforeunload", reminder);
-    }
+    surveyStore.checkForChanges()
+      ? window.removeEventListener("beforeunload", reminder)
+      : window.addEventListener("beforeunload", reminder);
   },
   { deep: true }
 );
