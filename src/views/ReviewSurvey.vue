@@ -67,7 +67,7 @@
         <input
           class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base bg-transparent rounded-md border border-solid border-zinc-400 focus:outline-none focus:ring-0 focus:border-blue-400"
           type="text"
-          v-model="surveyStore.currentResponse[indexNoteGuidance].answer"
+          v-model="surveyStore.answers[indexNoteGuidance].answer"
         />
       </div>
       <div class="flex justify-center my-10 flex-col items-center">
@@ -97,12 +97,12 @@
 <script setup lang="ts">
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
-import booleanComponent from "../components/SurveyPageComponents/Reusables/SurveyBoolean.vue";
-import generalComponent from "../components/SurveyPageComponents/Reusables/SurveyGeneral.vue";
-import checkboxComponent from "../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue";
-import surveyDraggable from "../components/SurveyPageComponents/Reusables/SurveyDraggable.vue";
-import dropdownComponent from "../components/SurveyPageComponents/Reusables/SurveyDropdown.vue";
-import ScrollPage from "../components/SurveyPageComponents/Reusables/ScrollPage.vue";
+import booleanComponent from "../components/SurveyPageComponents/SurveyBoolean.vue";
+import generalComponent from "../components/SurveyPageComponents/SurveyGeneral.vue";
+import checkboxComponent from "../components/SurveyPageComponents/SurveyCheckbox.vue";
+import surveyDraggable from "../components/SurveyPageComponents/SurveyDraggable.vue";
+import dropdownComponent from "../components/SurveyPageComponents/SurveyDropdown.vue";
+import ScrollPage from "../components/SurveyPageComponents/ScrollPage.vue";
 import {
   allCoursesAnswer,
   checkboxAnswer,
@@ -118,25 +118,24 @@ const surveyStore = useSurveyStore();
 const router = useRouter();
 
 surveyStore.missingAnswers = [];
-surveyStore.checkSurveyAnswers(surveyStore.currentResponse);
+surveyStore.checkAnswers(surveyStore.answers);
 
-const indexAllCourses: number = surveyStore.currentResponse.findIndex(
+const indexAllCourses: number = surveyStore.answers.findIndex(
   (question) => question.id === "allChosenCourses"
 );
-const indexNoteGuidance: number = surveyStore.currentResponse.findIndex(
+const indexNoteGuidance: number = surveyStore.answers.findIndex(
   (question) => question.id === "noteToGuidance"
 );
 const x: Ref<number> = ref(0);
 
 const ref_courses = ref(
-  (surveyStore.currentResponse[indexAllCourses] as allCoursesAnswer).answer
-    .preference
+  (surveyStore.answers[indexAllCourses] as allCoursesAnswer).answer.preference
 );
 
 //watch for changes in the courses prop and update items accordingly
 watch(
   () =>
-    (surveyStore.currentResponse[indexAllCourses] as allCoursesAnswer).answer
+    (surveyStore.answers[indexAllCourses] as allCoursesAnswer).answer
       .preference,
   (newPreference: Array<any>) => {
     ref_courses.value = [...newPreference];
@@ -152,7 +151,7 @@ const getChoices = (question: surveyQuestion) => {
 const shouldWarn = ref(false);
 
 const submit = async () => {
-  surveyStore.checkSurveyAnswers(surveyStore.currentResponse);
+  surveyStore.checkSurveyAnswers(surveyStore.answers);
   if (surveyStore.missingAnswers.length > 0) {
     alert("Please answer all required questions before submitting.");
     shouldWarn.value = true;
@@ -169,7 +168,7 @@ const submit = async () => {
 onBeforeRouteLeave((to, from, next) => {
   //@ts-ignore
   if (
-    JSON.stringify(surveyStore.currentResponse) ===
+    JSON.stringify(surveyStore.answers) ===
       surveyStore.currentAnsweredSurvey.answers ||
     to.path === "/student/survey/review"
   ) {
@@ -192,7 +191,7 @@ const reminder = (e: Event) => {
 };
 
 watch(
-  () => surveyStore.currentResponse,
+  () => surveyStore.answers,
   (newResponse, oldResponse) => {
     if (
       //@ts-ignore
@@ -210,7 +209,7 @@ watch(
   () => surveyStore.currentAnsweredSurvey.answers,
   (newResponse, oldResponse) => {
     //@ts-ignore
-    if (newResponse === JSON.stringify(surveyStore.currentResponse)) {
+    if (newResponse === JSON.stringify(surveyStore.answers)) {
       window.removeEventListener("beforeunload", reminder);
     } else {
       window.addEventListener("beforeunload", reminder);
@@ -221,7 +220,7 @@ watch(
 
 watch(
   () =>
-    (surveyStore.currentResponse[indexAllCourses] as allCoursesAnswer).answer
+    (surveyStore.answers[indexAllCourses] as allCoursesAnswer).answer
       .preference,
   (newResponse) => {
     x.value = +1;

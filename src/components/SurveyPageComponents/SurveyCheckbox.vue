@@ -24,7 +24,7 @@
                     type="checkbox"
                     class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
                     :value="choice"
-                    v-model="(surveyStore.currentResponse[index].answer as checkboxAnswer).courses"
+                    v-model="(surveyStore.answers[index].answer as checkboxAnswer).courses"
                     :disabled="notInterested"
                   />
                   {{ choice.name }}
@@ -38,7 +38,7 @@
                   type="checkbox"
                   class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
                   value="Not Interested"
-                  v-model="(surveyStore.currentResponse[index].answer as checkboxAnswer).courses"
+                  v-model="(surveyStore.answers[index].answer as checkboxAnswer).courses"
                 />
                 Not Interested
               </label>
@@ -60,7 +60,7 @@
           </div>
           <surveyDraggable
             class="p-6"
-            :courses="(surveyStore.currentResponse[index].answer as checkboxAnswer).preference"
+            :courses="(surveyStore.answers[index].answer as checkboxAnswer).preference"
             :index="index"
             :numbered="true"
             :color="color"
@@ -119,16 +119,14 @@ const index = ref(0); //current question index
 
 //finding current question index in surveyStore
 const getQuestionIndex = (question: string): number => {
-  return surveyStore.currentResponse.findIndex(
-    (entry) => entry.question === question
-  );
+  return surveyStore.answers.findIndex((entry) => entry.question === question);
 };
 
 //initialise current question
 function startQuestion() {
   const currentQuestion: string = props.question.question;
   index.value = getQuestionIndex(currentQuestion);
-  //if question does not currently exist in currentResponse, create it
+  //if question does not currently exist in answers, create it
   if (index.value < 0) {
     const newQuestion = {
       id: props.question.id,
@@ -139,7 +137,7 @@ function startQuestion() {
         preference: [],
       },
     };
-    surveyStore.currentResponse.push(newQuestion);
+    surveyStore.answers.push(newQuestion);
   }
 }
 
@@ -147,13 +145,13 @@ startQuestion();
 
 //'Not Interested' is selected
 const notInterested = computed(() => {
-  const currentQuestionAnswer = surveyStore.currentResponse[index.value]
+  const currentQuestionAnswer = surveyStore.answers[index.value]
     .answer as checkboxAnswer;
   return currentQuestionAnswer.courses.includes("Not Interested");
 });
 
 //if 'Not Interested' is selected, clear the array(courses) for that question
-const indexAllCourses: number = surveyStore.currentResponse.findIndex(
+const indexAllCourses: number = surveyStore.answers.findIndex(
   (question) => question.id === "allChosenCourses"
 );
 watch(
@@ -162,18 +160,17 @@ watch(
     if (isNotInterested) {
       // I am so, so sorry
       const bads = (
-        surveyStore.currentResponse[index.value].answer as checkboxAnswer
+        surveyStore.answers[index.value].answer as checkboxAnswer
       ).courses.map((course) => {
         if (typeof course === "string") return course;
         return course.name;
       });
-      surveyStore.currentResponse[index.value].answer = {
+      surveyStore.answers[index.value].answer = {
         courses: ["Not Interested"],
         preference: [],
       };
-      const final = (
-        surveyStore.currentResponse[indexAllCourses] as allCoursesAnswer
-      ).answer;
+      const final = (surveyStore.answers[indexAllCourses] as allCoursesAnswer)
+        .answer;
       bads.forEach((bad) => {
         const index = final.courses.findIndex((course) => {
           if (typeof course === "string") {
@@ -196,22 +193,18 @@ watch(
           final.preference.splice(index, 1);
         }
       });
-      (
-        surveyStore.currentResponse[indexAllCourses] as allCoursesAnswer
-      ).answer = final;
+      (surveyStore.answers[indexAllCourses] as allCoursesAnswer).answer = final;
     }
   }
 );
 
 function toggleInterest(interested: boolean, course: course) {
-  const allCoursesIndex = surveyStore.currentResponse.findIndex(
+  const allCoursesIndex = surveyStore.answers.findIndex(
     (x) => x.id === "allChosenCourses"
   );
 
-  const allCourses = surveyStore.currentResponse[
-    allCoursesIndex
-  ] as allCoursesAnswer;
-  const currentQuestionAnswer = surveyStore.currentResponse[index.value]
+  const allCourses = surveyStore.answers[allCoursesIndex] as allCoursesAnswer;
+  const currentQuestionAnswer = surveyStore.answers[index.value]
     .answer as checkboxAnswer;
 
   const referencedClass = course.name;
@@ -279,10 +272,9 @@ watch(
 
 //watching for changes on selected courses
 watch(
-  () =>
-    (surveyStore.currentResponse[index.value].answer as checkboxAnswer).courses,
+  () => (surveyStore.answers[index.value].answer as checkboxAnswer).courses,
   (newResponse, oldResponse) => {
-    surveyStore.checkSurveyAnswers([surveyStore.currentResponse[index.value]]);
+    surveyStore.checkSurveyAnswers([surveyStore.answers[index.value]]);
     const interested = newResponse.length > oldResponse.length;
     const changedCourse = getChangedCourse(
       newResponse as course[],
@@ -295,17 +287,17 @@ watch(
 );
 
 // watch(
-//   () => (surveyStore.currentResponse[index.value].answer as checkboxAnswer).preference,
+//   () => (surveyStore.answers[index.value].answer as checkboxAnswer).preference,
 //   (newResponse) => {
 //     x.value = x.value++;
 //   },
 //   { deep: true }
 // );
 
-// //watch for changes in currentResponse; rerender draggable
-// surveyStore.currentResponse.forEach((question, questionIndex) => {
+// //watch for changes in answers; rerender draggable
+// surveyStore.answers.forEach((question, questionIndex) => {
 //   watch(
-//     () => surveyStore.currentResponse[questionIndex],
+//     () => surveyStore.answers[questionIndex],
 //     () => {
 //       x.value++;
 //     },
@@ -315,15 +307,14 @@ watch(
 
 //watch for changes in courses array; rerender draggable
 watch(
-  () =>
-    (surveyStore.currentResponse[index.value].answer as checkboxAnswer).courses,
+  () => (surveyStore.answers[index.value].answer as checkboxAnswer).courses,
   () => {
     x.value++;
   }
 );
 
 watch(
-  () => surveyStore.currentResponse[index.value].answer as checkboxAnswer,
+  () => surveyStore.answers[index.value].answer as checkboxAnswer,
   () => {
     x.value++;
   }

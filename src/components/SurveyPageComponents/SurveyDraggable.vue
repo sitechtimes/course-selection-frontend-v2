@@ -61,7 +61,7 @@ const onDragEnd = (event) => {
   });
 
   if (props.index !== undefined) {
-    const currentAnswer = surveyStore.currentResponse[props.index]
+    const currentAnswer = surveyStore.answers[props.index]
       .answer as checkboxAnswer;
     currentAnswer.preference = ref_courses.value;
   }
@@ -69,10 +69,10 @@ const onDragEnd = (event) => {
 
 const x = ref(0); //triggers component rerender
 
-//watch for changes in currentResponse; trigger draggable rerender
-surveyStore.currentResponse.forEach((question, questionIndex) => {
+//watch for changes in answers; trigger draggable rerender
+surveyStore.answers.forEach((question, questionIndex) => {
   watch(
-    () => surveyStore.currentResponse[questionIndex],
+    () => surveyStore.answers[questionIndex],
     () => {
       x.value++;
     },
