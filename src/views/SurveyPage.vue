@@ -94,7 +94,7 @@ import CheckboxComponent from "../components/SurveyPageComponents/SurveyCheckbox
 import BooleanComponent from "../components/SurveyPageComponents/SurveyBoolean.vue";
 import GeneralComponent from "../components/SurveyPageComponents/SurveyGeneral.vue";
 import DropdownComponent from "../components/SurveyPageComponents/SurveyDropdown.vue";
-import { ref, reactive, Ref, watch } from "vue";
+import { ref, reactive, watch } from "vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
 import { Question, Course } from "../types/interface";
@@ -129,21 +129,11 @@ const reminder = (e: { preventDefault: () => void; returnValue: string }) => {
 };
 
 watch(
-  () => surveyStore.answers,
-  (newResponse, oldResponse) => {
+  () => [surveyStore.answers, surveyStore.survey],
+  () => {
     surveyStore.checkForChanges()
-      ? window.removeEventListener("beforeunload", reminder)
-      : window.addEventListener("beforeunload", reminder);
-  },
-  { deep: true }
-);
-
-watch(
-  () => surveyStore.survey,
-  (newResponse, oldResponse) => {
-    surveyStore.checkForChanges()
-      ? window.removeEventListener("beforeunload", reminder)
-      : window.addEventListener("beforeunload", reminder);
+      ? window.addEventListener("beforeunload", reminder)
+      : window.removeEventListener("beforeunload", reminder);
   },
   { deep: true }
 );

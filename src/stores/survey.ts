@@ -19,24 +19,30 @@ export const useSurveyStore = defineStore("survey", () => {
   const open = ref(true);
   const submit = ref(false);
   const status = ref("");
-  const missingAnswers = ref([]);
   const coursesTaken = ref<Course[]>([]);
   const coursesAvailable = ref<Course[]>([]);
   const survey = ref({} as Survey);
-  const answers = ref<Answer>([]);
+  const answers = ref<Answer[]>([]);
+  const changes = ref<Answer[]>([]);
 
   async function getSurvey(email: string = "") {
     const res = await fetch(import.meta.env.VITE_URL + "student/survey/", {
       credentials: "include",
     });
-    if (!res.ok) {
-      open.value = false;
-      return;
-    }
+    if (!res.ok) return (open.value = false);
     const data: SurveyData = await res.json();
     survey.value = data.survey;
     status.value = data.survey.status;
-    answers.value = data.survey.answers;
+    answers.value = JSON.parse(JSON.stringify(data.survey.answers));
+    const final = survey.value.questions.find(
+      (q) => q.questionType === "FINAL"
+    );
+    answers.value.push(
+      ...answers.value.splice(
+        answers.value.findIndex((a) => a.question === final.id),
+        1
+      )
+    );
     coursesTaken.value = data.coursesTaken;
     coursesAvailable.value = data.coursesAvailable;
     loaded.value = true;
@@ -58,65 +64,14 @@ export const useSurveyStore = defineStore("survey", () => {
   }
 
   function checkForChanges() {
-    let changes = [];
-    answers.value.forEach((question) => {
-      old = survey.value.answers.find((q) => q.id === question.id);
-      if (typeof question.answer === "object") {
-        if (old.answer.find((a, i) => a.rank !== question.answer[i].rank))
-          changes.push(question.id);
-      } else if (question.answer !== old.answer) changes.push(question.id);
+    changes.value = answers.value.filter((ans) => {
+      let old = survey.value.answers.find((q) => q.question === ans.question);
+      if (typeof ans.answer === "object")
+        return old.answer.find((a, i) => a.rank !== ans.answer[i].rank);
+      if (typeof ans.answer === "string") ans.answer = ans.answer.trim();
+      if (ans.answer !== old.answer) return true;
     });
-    return changes.length > 0 ? changes : false;
-  }
-
-  function checkAnswers(a: any) {
-    missingAnswers.value = [];
-    answers.value.forEach((question) => {
-      if (question.answer === "") {
-        missingAnswers.value.push(question.id);
-      }
-    });
-
-    const existingQuestions = survey.value.questions.map((q) => q.id);
-
-    answers.value.forEach((question: surveyQuestion) => {
-      if (!existingQuestions.includes(question.id)) return;
-      const isMissingOrNA = (
-        response: surveyStringAnswer | surveyAnswer | undefined
-      ) => {
-        let r: boolean = false;
-        switch (question.questionType) {
-          case "GENERAL":
-            if (response.trim().length === 0) r = true;
-            break;
-          case "BOOLEAN":
-            if (!response) r = true;
-            break;
-          case "DROPDOWN":
-            if (response === null) r = true;
-            break;
-          case undefined:
-            // final note to guidance counselor has no questionType nor status
-            r = false;
-            break;
-          default:
-            // for checkbox question type
-            r = question.answer.courses.length === 0;
-            break;
-        }
-        if (question.status === "OPTIONAL") r = false;
-        return r;
-      };
-
-      if (isMissingOrNA(question.answer)) {
-        if (!this.missingAnswers.includes(question.id)) {
-          this.missingAnswers.push(question.id);
-        }
-      } else {
-        const index = this.missingAnswers.indexOf(question.id);
-        if (index !== -1) this.missingAnswers.splice(index, 1);
-      }
-    });
+    return changes.value.length > 0;
   }
   function $reset() {
     open.value = true;
@@ -134,17 +89,15 @@ export const useSurveyStore = defineStore("survey", () => {
   return {
     open,
     submit,
-    missingAnswers,
-    coursesTaken,
-    coursesAvailable,
-    answers,
+    status,
     survey,
     loaded,
+    answers,
     getSurvey,
-    status,
     saveSurvey,
-    checkAnswers,
+    coursesTaken,
     checkForChanges,
+    coursesAvailable,
     $reset,
   };
 });

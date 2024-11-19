@@ -29,12 +29,11 @@
 import { ref, watch, PropType } from "vue";
 import draggable from "vuedraggable";
 import { useSurveyStore } from "../../stores/survey";
-import { preferences } from "../../types/interface";
-import { checkboxAnswer } from "../../types/interface";
+import { Rank } from "../../types/interface";
 
 const props = defineProps({
   courses: {
-    type: Array as PropType<Array<preferences>>,
+    type: Array as PropType<Rank[]>,
     required: true,
   },
   numbered: Boolean,
@@ -61,9 +60,7 @@ const onDragEnd = (event) => {
   });
 
   if (props.index !== undefined) {
-    const currentAnswer = surveyStore.answers[props.index]
-      .answer as checkboxAnswer;
-    currentAnswer.preference = ref_courses.value;
+    surveyStore.answers[props.index].answer = ref_courses.value;
   }
 };
 

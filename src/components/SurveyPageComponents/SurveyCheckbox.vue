@@ -24,7 +24,7 @@
                     type="checkbox"
                     class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
                     :value="choice"
-                    v-model="(surveyStore.answers[index].answer as checkboxAnswer).courses"
+                    v-model="courses"
                     :disabled="notInterested"
                   />
                   {{ choice.name }}
@@ -38,7 +38,7 @@
                   type="checkbox"
                   class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
                   value="Not Interested"
-                  v-model="(surveyStore.answers[index].answer as checkboxAnswer).courses"
+                  v-model="courses"
                 />
                 Not Interested
               </label>
@@ -60,7 +60,7 @@
           </div>
           <surveyDraggable
             class="p-6"
-            :courses="(surveyStore.answers[index].answer as checkboxAnswer).preference"
+            :courses="(surveyStore.answers[index].answer as Rank[])"
             :index="index"
             :numbered="true"
             :color="color"
@@ -90,19 +90,13 @@ import exclamationMark from "../../components/icons/ExclamationMark.vue";
 import surveyDraggable from "./SurveyDraggable.vue";
 import { useSurveyStore } from "../../stores/survey";
 import { watch, ref, computed, PropType } from "vue";
-import {
-  Question,
-  preferences,
-  Course,
-  allCoursesAnswer,
-  checkboxAnswer,
-} from "../../types/interface";
+import { Question, preferences, Course, Rank } from "../../types/interface";
 
 const emit = defineEmits(["save"]);
 
 const props = defineProps({
   choices: {
-    type: Array as PropType<Array<Course>>,
+    type: Array as PropType<Course[]>,
     required: true,
   },
   question: {
@@ -114,67 +108,45 @@ const props = defineProps({
 });
 
 const surveyStore = useSurveyStore();
+const courses = ref<Course[]>([]);
 const x = ref(0);
-const index = ref(0); //current question index
-
-//finding current question index in surveyStore
-const getQuestionIndex = (question: string): number => {
+const index = ref(0);
+const getQuestionIndex = (): number => {
   return surveyStore.answers.findIndex(
-    (entry) => entry.question.id === question.id
+    (entry) => entry.question === props.question.id
   );
 };
 
 //initialise current question
 function startQuestion() {
-  const currentQuestion: string = props.question.question;
-  index.value = getQuestionIndex(currentQuestion);
-  //if question does not currently exist in answers, create it
-  if (index.value < 0) {
-    const newQuestion = {
-      id: props.question.id,
-      question: currentQuestion,
-      questionType: props.question.questionType,
-      answer: {
-        courses: [],
-        preference: [],
-      },
-    };
-    surveyStore.answers.push(newQuestion);
-  }
+  index.value = getQuestionIndex();
 }
 
 startQuestion();
 
 //'Not Interested' is selected
 const notInterested = computed(() => {
-  const currentQuestionAnswer = surveyStore.answers[index.value]
-    .answer as checkboxAnswer;
-  return currentQuestionAnswer.courses.includes("Not Interested");
+  const answer = surveyStore.answers[index.value].answer as Rank[];
+  return answer.find((c) => c.course === -1);
 });
 
-//if 'Not Interested' is selected, clear the array(courses) for that question
-const indexAllCourses: number = surveyStore.answers.findIndex(
-  (question) => question.id === "allChosenCourses"
+const indexAllCourses: number = surveyStore.survey.questions.findIndex(
+  (question) => question.questionType === "FINAL"
 );
 watch(
   () => notInterested.value,
   (isNotInterested) => {
     if (isNotInterested) {
-      // I am so, so sorry
-      const bads = (
-        surveyStore.answers[index.value].answer as checkboxAnswer
-      ).courses.map((course) => {
-        if (typeof course === "string") return course;
-        return course.name;
-      });
-      surveyStore.answers[index.value].answer = {
-        courses: ["Not Interested"],
-        preference: [],
-      };
-      const final = (surveyStore.answers[indexAllCourses] as allCoursesAnswer)
-        .answer;
+      const bads = (surveyStore.answers[index.value].answer as Rank[]).map(
+        (course) => {
+          if (typeof course === "string") return course;
+          return course.course;
+        }
+      );
+      surveyStore.answers[index.value].answer = [];
+      const final = surveyStore.answers[surveyStore.answers.length - 1].answer;
       bads.forEach((bad) => {
-        const index = final.courses.findIndex((course) => {
+        const index = final.findIndex((course) => {
           if (typeof course === "string") {
             return bad === course;
           }
@@ -195,7 +167,7 @@ watch(
           final.preference.splice(index, 1);
         }
       });
-      (surveyStore.answers[indexAllCourses] as allCoursesAnswer).answer = final;
+      // (surveyStore.answers[indexAllCourses]).answer = final;
     }
   }
 );
@@ -254,12 +226,10 @@ function toggleInterest(interested: boolean, course: course) {
   }
 }
 
-function getChangedCourse(oldCourses: course[], newCourses: course[]) {
-  const addedCourse = newCourses.find(
-    (course: course) => !oldCourses.includes(course)
-  );
+function getChangedCourse(oldCourses, newCourses: course[]) {
+  const addedCourse = newCourses.find((course) => !oldCourses.includes(course));
   const removedCourse = oldCourses.find(
-    (course: course) => !newCourses.includes(course)
+    (course) => !newCourses.includes(course)
   );
 
   return addedCourse || removedCourse;
@@ -268,55 +238,29 @@ function getChangedCourse(oldCourses: course[], newCourses: course[]) {
 watch(
   () => props.question.question,
   (newResponse) => {
+    courses.value = surveyStore.coursesAvailable.filter(
+      (x) => x.subject === props.question.questionType
+    );
+    courses.value.push({ name: "Not Interested", subject: "PE" });
     startQuestion();
   }
 );
 
 //watching for changes on selected courses
 watch(
-  () => (surveyStore.answers[index.value].answer as checkboxAnswer).courses,
+  () => surveyStore.answers[index.value].answer.courses,
   (newResponse, oldResponse) => {
-    surveyStore.checkSurveyAnswers([surveyStore.answers[index.value]]);
     const interested = newResponse.length > oldResponse.length;
-    const changedCourse = getChangedCourse(
-      newResponse as course[],
-      oldResponse as course[]
-    );
+    const changedCourse = getChangedCourse(newResponse, oldResponse);
     if (changedCourse) {
       toggleInterest(interested, changedCourse);
     }
   }
 );
 
-// watch(
-//   () => (surveyStore.answers[index.value].answer as checkboxAnswer).preference,
-//   (newResponse) => {
-//     x.value = x.value++;
-//   },
-//   { deep: true }
-// );
-
-// //watch for changes in answers; rerender draggable
-// surveyStore.answers.forEach((question, questionIndex) => {
-//   watch(
-//     () => surveyStore.answers[questionIndex],
-//     () => {
-//       x.value++;
-//     },
-//     { deep: true }
-//   );
-// });
-
 //watch for changes in courses array; rerender draggable
 watch(
-  () => (surveyStore.answers[index.value].answer as checkboxAnswer).courses,
-  () => {
-    x.value++;
-  }
-);
-
-watch(
-  () => surveyStore.answers[index.value].answer as checkboxAnswer,
+  () => surveyStore.answers[index.value].answer,
   () => {
     x.value++;
   }

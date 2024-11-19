@@ -13,12 +13,12 @@ export interface Survey {
   answers: Answer[];
 }
 
-interface Answer {
+export interface Answer {
   question: number;
   answer: string | boolean | Rank[];
 }
 
-interface Rank {
+export interface Rank {
   course: number;
   rank: number;
 }
@@ -36,17 +36,19 @@ type Subject =
 export interface Question {
   id: number;
   question: string;
-  questionType: "BOOLEAN" | "GENERAL" | "DROPDOWN" | Subject;
+  questionType: "BOOLEAN" | "FINAL" | "GENERAL" | "DROPDOWN" | Subject;
   status: "OPTIONAL" | "STANDARD" | "CLASS";
   classReferenced: Course | null;
-  answer:
-    | string
-    | boolean
-    | number
-    | { courses: string[]; preference: string[] };
+  options: string[] | null;
+}
+
+export interface Checkbox {
+  courses: string[];
+  preference: string[];
 }
 
 export interface Course {
+  id: number;
   name: string;
   subject: Subject;
 }

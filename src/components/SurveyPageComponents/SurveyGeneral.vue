@@ -58,39 +58,13 @@ const props = defineProps({
 const surveyStore = useSurveyStore();
 const index = ref(0);
 
-const getQuestionIndex = (question: string): number => {
-  return surveyStore.answers.findIndex(
-    (entry: Question) => entry.question === question
-  );
-};
-
-function startQuestion() {
-  const currentQuestion: string = props.question.question;
-  index.value = getQuestionIndex(currentQuestion);
-  if (index.value < 0) {
-    const newQuestion = {
-      id: props.question.id,
-      question: currentQuestion,
-      questionType: "GENERAL",
-      answer: "",
-    };
-    surveyStore.answers.push(newQuestion);
-  }
-}
-
-startQuestion();
-
 watch(
   () => props.question.question,
-  (newResponse) => {
-    startQuestion();
-  }
-);
-
-watch(
-  () => surveyStore.answers[index.value].answer,
   () => {
-    surveyStore.checkAnswers([surveyStore.answers[index.value]]);
-  }
+    index.value = surveyStore.answers.findIndex(
+      (ans) => ans.question === props.question.id
+    );
+  },
+  { immediate: true }
 );
 </script>

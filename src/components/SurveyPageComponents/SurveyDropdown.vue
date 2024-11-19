@@ -21,7 +21,11 @@
           :disabled="isDisabled"
           v-model="surveyStore.answers[index].answer"
         >
-          <option v-for="value in options" :key="value" :value="value">
+          <option
+            v-for="value in props.question.options"
+            :key="value"
+            :value="value"
+          >
             {{ value }}
           </option>
         </select>
@@ -60,42 +64,14 @@ const props = defineProps({
 
 const surveyStore = useSurveyStore();
 const index = ref(0);
-const options = props.question.options;
-
-const getQuestionIndex = (question: string): number => {
-  return surveyStore.answers.findIndex(
-    (entry: Question) => entry.question === question
-  );
-};
-
-function startQuestion() {
-  const currentQuestion: string = props.question.question;
-  index.value = getQuestionIndex(currentQuestion);
-  if (index.value < 0) {
-    const newQuestion = {
-      id: props.question.id,
-      question: currentQuestion,
-      questionType: "DROPDOWN",
-      answer: "",
-      options: props.question.options,
-    };
-    surveyStore.answers.push(newQuestion);
-  }
-}
-
-startQuestion();
 
 watch(
   () => props.question.question,
-  (newResponse) => {
-    startQuestion();
-  }
-);
-
-watch(
-  () => surveyStore.answers[index.value].answer,
-  (newResponse) => {
-    surveyStore.checkAnswers([surveyStore.answers[index.value]]);
-  }
+  () => {
+    index.value = surveyStore.answers.findIndex(
+      (ans) => ans.question === props.question.id
+    );
+  },
+  { immediate: true }
 );
 </script>
