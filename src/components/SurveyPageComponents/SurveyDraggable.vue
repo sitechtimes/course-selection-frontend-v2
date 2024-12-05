@@ -1,10 +1,10 @@
 <template>
   <div class="h-auto select-none flex items-center justify-center w-full">
     <div
-      v-if="ref_courses.length > 0"
+      v-if="ranked.length > 0"
       class="flex flex-col mt-2 text-center text-base md:text-lg xl:text-xl"
     >
-      <draggable v-model="ref_courses" item-key="rank" @end="onDragEnd">
+      <draggable v-model="ranked" item-key="rank" @end="onDragEnd">
         <template #item="{ element, index }">
           <div
             v-if="element.name !== undefined"
@@ -29,51 +29,36 @@
 import { ref, watch, PropType } from "vue";
 import draggable from "vuedraggable";
 import { useSurveyStore } from "../../stores/survey";
-import { Rank } from "../../types/interface";
+import { Course, Answer, Rank } from "../../types/interface";
 
 const props = defineProps({
   courses: {
-    type: Array as PropType<Rank[]>,
+    type: Array as PropType<Course[]>,
     required: true,
   },
   numbered: Boolean,
-  index: Number,
+  answer: {
+    type: Object as PropType<Answer>,
+    required: true,
+  },
   color: String,
 });
 
 const surveyStore = useSurveyStore();
-const ref_courses = ref([...props.courses]);
-
+const ranked = ref<Course[]>([...props.courses]);
 //watch for changes in the courses prop and update items accordingly
 watch(
   () => props.courses,
   (newCourses) => {
-    ref_courses.value = [...newCourses];
+    ranked.value = [...newCourses];
   }
 );
 
 //@ts-ignore
 const onDragEnd = (event) => {
-  //update the ranks based on the new order
-  ref_courses.value.forEach((course, index) => {
-    course.rank = index + 1;
-  });
-
-  if (props.index !== undefined) {
-    surveyStore.answers[props.index].answer = ref_courses.value;
-  }
+  props.answer.answer = ranked.value.map((course, index) => ({
+    course: course.id,
+    rank: index + 1,
+  }));
 };
-
-const x = ref(0); //triggers component rerender
-
-//watch for changes in answers; trigger draggable rerender
-surveyStore.answers.forEach((question, questionIndex) => {
-  watch(
-    () => surveyStore.answers[questionIndex],
-    () => {
-      x.value++;
-    },
-    { deep: true }
-  );
-});
 </script>

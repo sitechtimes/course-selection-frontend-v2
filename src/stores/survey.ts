@@ -23,7 +23,9 @@ export const useSurveyStore = defineStore("survey", () => {
   const coursesAvailable = ref<Course[]>([]);
   const survey = ref({} as Survey);
   const answers = ref<Answer[]>([]);
+  const selectedCourses = ref<Course[]>([]);
   const changes = ref<Answer[]>([]);
+  const missingAnswers = ref<Number[]>([]);
 
   async function getSurvey(email: string = "") {
     const res = await fetch(import.meta.env.VITE_URL + "student/survey/", {
@@ -63,7 +65,7 @@ export const useSurveyStore = defineStore("survey", () => {
     }
   }
 
-  function checkForChanges() {
+  function checkAnswers() {
     changes.value = answers.value.filter((ans) => {
       let old = survey.value.answers.find((q) => q.question === ans.question);
       if (typeof ans.answer === "object")
@@ -71,8 +73,21 @@ export const useSurveyStore = defineStore("survey", () => {
       if (typeof ans.answer === "string") ans.answer = ans.answer.trim();
       if (ans.answer !== old.answer) return true;
     });
+    missingAnswers.value = answers.value
+      .filter((ans) => {
+        let question = survey.value.questions.find(
+          (q) => q.id === ans.question
+        );
+        if (ans.answer === null) return true;
+        if (question.status === "OPTIONAL") return false;
+        if (typeof ans.answer === "object") return ans.answer.length === 0;
+        if (typeof ans.answer === "string") return ans.answer.trim() === "";
+        return false;
+      })
+      .map((ans) => ans.question);
     return changes.value.length > 0;
   }
+
   function $reset() {
     open.value = true;
     submit.value = false;
@@ -96,7 +111,9 @@ export const useSurveyStore = defineStore("survey", () => {
     getSurvey,
     saveSurvey,
     coursesTaken,
-    checkForChanges,
+    checkAnswers,
+    missingAnswers,
+    selectedCourses,
     coursesAvailable,
     $reset,
   };

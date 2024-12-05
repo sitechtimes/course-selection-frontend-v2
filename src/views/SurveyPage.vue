@@ -20,22 +20,19 @@
           v-if="currentQuestion.questionType === 'GENERAL'"
           :question="currentQuestion"
           :key="currentQuestion.id + '-general'"
-        >
-        </GeneralComponent>
+        />
 
         <BooleanComponent
           v-else-if="currentQuestion.questionType === 'BOOLEAN'"
           :question="currentQuestion"
           :key="currentQuestion.id + '-boolean'"
-        >
-        </BooleanComponent>
+        />
 
         <DropdownComponent
           v-else-if="currentQuestion.questionType === 'DROPDOWN'"
           :question="currentQuestion"
           :key="currentQuestion.question + '-dropdown'"
-        >
-        </DropdownComponent>
+        />
 
         <CheckboxComponent
           v-else
@@ -45,8 +42,7 @@
   )"
           :key="currentQuestion.question + '-checkbox'"
           :color="'D6EEFF'"
-        >
-        </CheckboxComponent>
+        />
       </div>
     </div>
     <div
@@ -67,13 +63,13 @@
             currentQuestion = surveyStore.survey.questions[++currentIndex]
           "
           class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:hidden"
-          :disabled="currentIndex === surveyStore.survey.questions.length - 1"
+          :disabled="currentIndex === surveyStore.survey.questions.length - 2"
         >
           Next
         </button>
         <RouterLink
           to="/student/survey/review"
-          v-if="currentIndex === surveyStore.survey.questions.length - 1"
+          v-if="currentIndex === surveyStore.survey.questions.length - 2"
         >
           <button
             class="bg-emerald-600 text-white w-auto px-3 h-10 rounded-md inline disabled:hidden"
@@ -97,7 +93,7 @@ import DropdownComponent from "../components/SurveyPageComponents/SurveyDropdown
 import { ref, reactive, watch } from "vue";
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
-import { Question, Course } from "../types/interface";
+import { Question, Course, Answer } from "../types/interface";
 import { onBeforeRouteLeave } from "vue-router";
 
 document.title = "Survey | SITHS Course Selection";
@@ -113,7 +109,7 @@ let currentQuestion: Question = reactive(
 //finds what courses the student took to assign them questions
 onBeforeRouteLeave((to, from, next) => {
   if (
-    !surveyStore.checkForChanges() ||
+    !surveyStore.checkAnswers() ||
     to.path === "/student/survey/review" ||
     window.confirm("Changes you made might not be saved.")
   ) {
@@ -131,7 +127,7 @@ const reminder = (e: { preventDefault: () => void; returnValue: string }) => {
 watch(
   () => [surveyStore.answers, surveyStore.survey],
   () => {
-    surveyStore.checkForChanges()
+    surveyStore.checkAnswers()
       ? window.addEventListener("beforeunload", reminder)
       : window.removeEventListener("beforeunload", reminder);
   },

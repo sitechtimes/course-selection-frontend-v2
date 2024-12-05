@@ -55,7 +55,7 @@
 import exclamationMark from "../../components/icons/ExclamationMark.vue";
 import { useSurveyStore } from "../../stores/survey";
 import { watch, PropType, ref } from "vue";
-import { preferences, Question, Rank } from "../../types/interface";
+import { preferences, Question, Rank, Answer } from "../../types/interface";
 
 const props = defineProps({
   question: {
@@ -83,18 +83,22 @@ watch(
 watch(
   () => surveyStore.answers[index.value].answer,
   (newResponse, oldResponse) => {
-    const allCourses = surveyStore.answers[surveyStore.answers.length - 1];
-
     const referenced = props.question.classReferenced?.id;
     if (!referenced) return;
+    const allCoursesQuestion = surveyStore.survey.questions.find(
+      (entry) => entry.questionType === "FINAL"
+    ) as Question;
+    const finalAnswer = surveyStore.answers.find(
+      (entry) => entry.question === allCoursesQuestion.id
+    ) as Answer;
 
     if (newResponse) {
-      (allCourses.answer as Rank[]).push({
+      (finalAnswer.answer as Rank[]).push({
         course: referenced,
-        rank: (allCourses.answer as Rank[]).length + 1,
+        rank: (finalAnswer.answer as Rank[]).length + 1,
       });
     } else if (!newResponse && oldResponse) {
-      allCourses.answer = (allCourses.answer as Rank[]).filter(
+      finalAnswer.answer = (finalAnswer.answer as Rank[]).filter(
         (ans) => ans.course !== referenced
       );
     }

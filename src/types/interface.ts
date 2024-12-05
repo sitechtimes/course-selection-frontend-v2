@@ -15,7 +15,7 @@ export interface Survey {
 
 export interface Answer {
   question: number;
-  answer: string | boolean | Rank[];
+  answer: string | boolean | null | Rank[];
 }
 
 export interface Rank {

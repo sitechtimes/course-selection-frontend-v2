@@ -2,7 +2,7 @@
   <section class="flex justify-center items-center flex-col">
     <div class="lg:w-2/3 w-11/12">
       <div
-        v-for="question in surveyStore.currentSurvey.question"
+        v-for="question in surveyStore.survey.questions"
         :key="question.id"
         class="flex justify-center mb-8"
       >
@@ -10,40 +10,24 @@
           <booleanComponent
             v-if="question.questionType === 'BOOLEAN'"
             :question="question"
-            :warn="
-              surveyStore.missingAnswers.filter(
-                (answer) => answer === question.id
-              ).length > 0 && shouldWarn
-            "
+            :warn="question.id in surveyStore.missingAnswers && shouldWarn"
           />
           <generalComponent
             v-else-if="question.questionType === 'GENERAL'"
             :question="question"
-            :warn="
-              surveyStore.missingAnswers.filter(
-                (answer) => answer === question.id
-              ).length > 0 && shouldWarn
-            "
+            :warn="question.id in surveyStore.missingAnswers && shouldWarn"
           />
           <dropdownComponent
             v-else-if="question.questionType === 'DROPDOWN'"
             :question="question"
-            :warn="
-              surveyStore.missingAnswers.filter(
-                (answer) => answer === question.id
-              ).length > 0 && shouldWarn
-            "
+            :warn="question.id in surveyStore.missingAnswers && shouldWarn"
           />
           <checkboxComponent
             v-else
             :question="question"
             :choices="getChoices(question)"
             :color="'D6EEFF'"
-            :warn="
-              surveyStore.missingAnswers.filter(
-                (answer) => answer === question.id
-              ).length > 0 && shouldWarn
-            "
+            :warn="question.id in surveyStore.missingAnswers && shouldWarn"
           />
         </div>
       </div>
@@ -103,11 +87,7 @@ import checkboxComponent from "../components/SurveyPageComponents/SurveyCheckbox
 import surveyDraggable from "../components/SurveyPageComponents/SurveyDraggable.vue";
 import dropdownComponent from "../components/SurveyPageComponents/SurveyDropdown.vue";
 import ScrollPage from "../components/SurveyPageComponents/ScrollPage.vue";
-import {
-  allCoursesAnswer,
-  checkboxAnswer,
-  surveyQuestion,
-} from "../types/interface";
+import { allCoursesAnswer, surveyQuestion, Question } from "../types/interface";
 import { watch, ref, Ref } from "vue";
 import { useRouter, onBeforeRouteLeave } from "vue-router";
 
@@ -118,11 +98,15 @@ const surveyStore = useSurveyStore();
 const router = useRouter();
 
 surveyStore.missingAnswers = [];
-surveyStore.checkAnswers(surveyStore.answers);
+surveyStore.checkAnswers();
 
-const indexAllCourses: number = surveyStore.answers.findIndex(
-  (question) => question.id === "allChosenCourses"
+const allCoursesQuestion = surveyStore.survey.questions.find(
+  (question) => question.questionType === "FINAL"
+) as Question;
+const finalAnswer = surveyStore.answers.find(
+  (answer) => answer.question === allCoursesQuestion.id
 );
+
 const indexNoteGuidance: number = surveyStore.answers.findIndex(
   (question) => question.id === "noteToGuidance"
 );
@@ -143,10 +127,10 @@ watch(
   { deep: true }
 );
 
-const getChoices = (question: surveyQuestion) => {
-  const classes = surveyStore.studentCourses.coursesAvailable;
-  return classes.filter((x) => x.subject === question.questionType);
-};
+const getChoices = (question: surveyQuestion) =>
+  surveyStore.coursesAvailable.filter(
+    (x) => x.subject === question.questionType
+  );
 
 const shouldWarn = ref(false);
 
