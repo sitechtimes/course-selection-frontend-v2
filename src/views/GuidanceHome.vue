@@ -1,22 +1,3 @@
-<script setup lang="ts">
-import { useUserStore } from "../stores/user";
-const userStore = useUserStore();
-document.title = "Home | SITHS Course Selection";
-
-function toTitleCase(string: string) {
-  return string
-    .split(",")
-    .map((chunk) =>
-      chunk
-        .split(" ")
-        .map((part) => part.trim().toLowerCase())
-        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-        .join(" ")
-    )
-    .join(",");
-}
-</script>
-
 <template>
   <div class="h-[80vh] w-full flex flex-row justify-center items-center">
     <div
@@ -25,14 +6,17 @@ function toTitleCase(string: string) {
     >
       <h1 id="heading" class="text-4xl font-bold lg:text-5xl">
         Hello
-        {{ toTitleCase(`${userStore.first_name} ${userStore.last_name}`) }},
+        {{ generateName() }},
       </h1>
       <h2 class="text-lg lg:text-xl">
-        Welcome to Staten Island Technical High School's Course Selection Guidance platform.
+        Welcome to Staten Island Technical High School's Course Selection
+        Guidance platform.
       </h2>
       <div class="flex justify-start items-center space-x-4">
         <RouterLink to="/guidance/studentlist">
-          <button class="bg-other-g w-48 h-14 rounded-md text-xl font-semibold hover:bg-primary-g">
+          <button
+            class="bg-other-g w-48 h-14 rounded-md text-xl font-semibold hover:bg-primary-g"
+          >
             View Students
           </button>
         </RouterLink>
@@ -53,3 +37,19 @@ function toTitleCase(string: string) {
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { useUserStore } from "../stores/user";
+const userStore = useUserStore();
+document.title = "Home | SITHS Course Selection";
+
+function generateName() {
+  return (
+    userStore.firstName.charAt(0).toUpperCase() +
+    userStore.firstName.slice(1).toLowerCase() +
+    " " +
+    userStore.lastName.charAt(0).toUpperCase() +
+    userStore.lastName.slice(1).toLowerCase()
+  );
+}
+</script>

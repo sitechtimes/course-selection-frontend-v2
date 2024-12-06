@@ -27,10 +27,23 @@ export const useSurveyStore = defineStore("survey", () => {
   const changes = ref<Answer[]>([]);
   const missingAnswers = ref<Number[]>([]);
 
-  async function getSurvey(email: string = "") {
-    const res = await fetch(import.meta.env.VITE_URL + "student/survey/", {
-      credentials: "include",
-    });
+  async function fetchData(url: string, method?: string, body?: any) {
+    loading.value = true;
+    const options: RequestInit = { credentials: "include" };
+    if (method) {
+      options["method"] = method;
+      options["headers"] = { "Content-Type": "application/json" };
+      options["body"] = JSON.stringify(body);
+    }
+    const res = await fetch(import.meta.env.VITE_URL + url, options);
+    loading.value = false;
+    return res;
+  }
+
+  async function getSurvey(id: number = 0) {
+    const res = {};
+    if (id === 0) res = await fetchData("student/survey/");
+    else res = await fetchData(`student/survey/${id}`);
     if (!res.ok) return (open.value = false);
     const data: SurveyData = await res.json();
     survey.value = data.survey;

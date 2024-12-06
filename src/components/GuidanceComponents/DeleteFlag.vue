@@ -1,6 +1,10 @@
 <template>
-  <div class="fixed top-0 left-0 z-100 w-full h-full bg-black/40 flex justify-center items-center">
-    <div class="h-1/3 w-1/4 bg-white rounded-sm px-10 py-2 flex justify-evenly flex-col">
+  <div
+    class="fixed top-0 left-0 z-100 w-full h-full bg-black/40 flex justify-center items-center"
+  >
+    <div
+      class="h-1/3 w-1/4 bg-white rounded-sm px-10 py-2 flex justify-evenly flex-col"
+    >
       <div class="flex">
         <p><b>Student:</b> {{ titleCase(student.name) }}</p>
       </div>
@@ -27,13 +31,13 @@
 
 <script setup lang="ts">
 import { PropType, defineProps, defineEmits, ref, Ref, computed } from "vue";
-import { studentGuidance } from "../../types/interface";
+import { GuidanceStudent, studentGuidance } from "../../types/interface";
 import { useUserStore } from "../../stores/user";
 
 const emit = defineEmits(["exit"]);
 const userStore = useUserStore();
 
-interface flag {
+interface Flag {
   flag: string;
   title: string;
   color: string;
@@ -41,11 +45,11 @@ interface flag {
 
 const props = defineProps({
   student: {
-    type: Object as PropType<studentGuidance>,
+    type: Object as PropType<GuidanceStudent>,
     required: true,
   },
   flags: {
-    type: Array as PropType<Array<flag>>,
+    type: Array as PropType<Array<Flag>>,
     required: true,
   },
   viewAll: {
@@ -56,10 +60,11 @@ const props = defineProps({
 
 const selected: Ref<string> = ref("");
 
-const addedFlags: Ref<flag[]> = computed(() => {
-  //only push added flags into the dropdown
-  return props.flags.filter((flag) => props.student.flag.includes(flag.flag));
-});
+const addedFlags: Ref<Flag[]> = computed(() =>
+  props.flags.filter(
+    (flag) => props.student[flag.flag as keyof GuidanceStudent]
+  )
+);
 
 function titleCase(string: string): string {
   return string
@@ -74,7 +79,7 @@ function titleCase(string: string): string {
     .join(", ");
 }
 const confirm = async (flag: string) => {
-  await userStore.deleteFlag(`${props.student.email}@nycstudents.net`, flag, props.viewAll);
+  await userStore.changeFlag(props.student, true);
   emit("exit");
 };
 </script>

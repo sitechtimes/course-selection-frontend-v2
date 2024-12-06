@@ -2,8 +2,19 @@ export interface Student {
   grade: number;
   meetingDate: string | null;
   description: string;
-  status: "Complete" | "Finalized" | "In Progress";
+  status: "Complete" | "Finalized" | "In Progress" | "Not Started";
   dueDate: string;
+}
+
+export interface GuidanceStudent extends Student {
+  id: number;
+  name: string;
+  enl: boolean;
+  email: string;
+  transfer: boolean;
+  team: boolean;
+  regents: boolean;
+  ownStudent: number[];
 }
 
 export interface Survey {

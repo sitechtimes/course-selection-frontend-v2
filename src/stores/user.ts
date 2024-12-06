@@ -7,7 +7,7 @@ import {
   studentGuidance,
   studentMeetings,
   studentPreview,
-  SurveyPreview,
+  GuidanceStudent,
 } from "../types/interface";
 import { ref } from "vue";
 
@@ -23,6 +23,8 @@ export const useUserStore = defineStore("userStore", () => {
   const email = ref("");
   const isGuidance = ref(false);
   const student = ref<Student>({} as Student);
+  const studentList = ref<GuidanceStudent[]>([]);
+  const viewedStudents = ref<GuidanceStudent[]>([]);
 
   async function fetchData(url: string, method?: string, body?: any) {
     loading.value = true;
@@ -47,8 +49,11 @@ export const useUserStore = defineStore("userStore", () => {
     lastName.value = data.lastName[0] + data.lastName.slice(1).toLowerCase();
     email.value = data.email;
     isGuidance.value = data.isGuidance;
-    student.value = data.student;
-    if (data.student.status === "Finalized") surveyStore.open = false;
+    if (!isGuidance.value) {
+      student.value = data.student;
+      if (["Finalized", "Complete"].includes(data.student.status))
+        surveyStore.open = false;
+    } else await getStudents();
     isAuth.value = true;
   }
   async function login(username: string, password: string) {
@@ -63,9 +68,11 @@ export const useUserStore = defineStore("userStore", () => {
     lastName.value = data.lastName[0] + data.lastName.slice(1).toLowerCase();
     email.value = data.email;
     isGuidance.value = data.isGuidance;
-    student.value = data.student;
-    if (["Finalized", "Complete"].includes(data.student.status))
-      surveyStore.open = false;
+    if (!isGuidance.value) {
+      student.value = data.student;
+      if (["Finalized", "Complete"].includes(data.student.status))
+        surveyStore.open = false;
+    } else await getStudents();
     isAuth.value = true;
     router.push(`/${isGuidance.value ? "guidance" : "student"}/dashboard`);
   }
@@ -76,6 +83,23 @@ export const useUserStore = defineStore("userStore", () => {
     surveyStore.$reset();
     $reset();
     router.push("/");
+  }
+
+  async function getStudents() {
+    const res = await fetchData("guidance/profiles/");
+    if (!res.ok) return await res.json();
+    const data = await res.json();
+    studentList.value = data;
+  }
+  async function changeFlag(student: GuidanceStudent, remove: boolean = false) {
+    const res = await fetchData("guidance/flag/", "POST", {
+      id: student.id,
+      remove,
+    });
+    if (!res.ok) return await res.json();
+    const data = await res.json();
+    // const index = studentList.value.findIndex((student) => student.id === id);
+    // studentList.value[index] = data.flag;
   }
 
   function $reset() {
@@ -90,16 +114,19 @@ export const useUserStore = defineStore("userStore", () => {
   }
 
   return {
-    loading,
-    isAuth,
-    initComplete,
-    firstName,
-    lastName,
     init,
     login,
-    isGuidance,
-    student,
     logout,
+    isAuth,
+    loading,
+    student,
+    lastName,
+    firstName,
+    isGuidance,
+    changeFlag,
+    studentList,
+    initComplete,
+    viewedStudents,
     $reset,
   };
 });

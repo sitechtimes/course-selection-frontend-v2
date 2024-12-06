@@ -31,7 +31,7 @@ const router = createRouter({
           component: () => import("../views/GuidanceStudentList.vue"),
         },
         {
-          path: "survey/:email",
+          path: "survey/:id",
           name: "guidanceSurvey",
           component: () => import("../views/GuidanceSurvey.vue"),
         },

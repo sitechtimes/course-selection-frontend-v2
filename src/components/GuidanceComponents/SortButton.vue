@@ -5,43 +5,35 @@
       id="sort"
       @click="isOpen = !isOpen"
     >
-      <div>
-        <a class="mt-2.5 ml-4 flex">
-          <p class="font-semibold" id="sortshow">{{ selected }}</p>
-        </a>
-      </div>
+      <a class="mt-2.5 ml-4 flex">
+        <p class="font-semibold" id="sortshow">{{ selected }}</p>
+      </a>
+
       <DownArrow class="mt-2.5" />
     </div>
     <div
       class="sub-menu absolute shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
       v-if="isOpen"
     >
-      <div
+      <button
         v-for="x in menuArray"
         :key="x.sortBy"
+        @click="filter(x.sortBy, x.text)"
         class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g"
       >
-        <button @click="filter(x.sortBy, x.text)" class="ml-2">
-          {{ x.text }}
-        </button>
-      </div>
+        <p class="ml-2">{{ x.text }}</p>
+      </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, Ref, watch } from "vue";
-import { useUserStore } from "../../stores/user";
+import { ref } from "vue";
 import DownArrow from "../icons/DownArrow.vue";
-import { userData } from "../../types/interface";
 
-const userStore = useUserStore();
-const selected: Ref<string> = ref("Sort By");
-const isOpen: Ref<boolean> = ref(false);
+const selected = ref("Sort By");
+const isOpen = ref(false);
 const emit = defineEmits(["filter-selected"]);
-
-//default sorting is last names a-z
-const defaultSort = { sortBy: "lastnameaz", text: "Sort By" };
 
 const filter = (sortBy: string, text: string) => {
   emit("filter-selected", sortBy);
@@ -59,32 +51,36 @@ const menuArray = [
     text: "Last Name (Z-A)",
   },
   {
-    sortBy: "ns",
+    sortBy: "Not Started",
     text: "Not Started",
   },
   {
-    sortBy: "ip",
+    sortBy: "In Progress",
     text: "In Progress",
   },
   {
-    sortBy: "com",
+    sortBy: "Completed",
     text: "Completed",
   },
   {
-    sortBy: "final",
+    sortBy: "Finalized",
     text: "Finalized",
   },
   {
-    sortBy: "nine",
+    sortBy: "9",
     text: "Grade 9",
   },
   {
-    sortBy: "ten",
+    sortBy: "10",
     text: "Grade 10",
   },
   {
-    sortBy: "eleven",
+    sortBy: "11",
     text: "Grade 11",
+  },
+  {
+    sortBy: "12",
+    text: "Grade 12",
   },
   {
     sortBy: "transfer",
