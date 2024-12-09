@@ -37,10 +37,9 @@
           order of priority, with the first choice being your top priority.
         </p>
         <surveyDraggable
-          :courses="ref_courses"
-          :index="indexAllCourses"
+          :courses="surveyStore.selectedCourses"
           :numbered="true"
-          :key="x"
+          :answer="finalAnswer"
           :color="'D6EEFF'"
         />
       </div>
@@ -51,7 +50,7 @@
         <input
           class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base bg-transparent rounded-md border border-solid border-zinc-400 focus:outline-none focus:ring-0 focus:border-blue-400"
           type="text"
-          v-model="surveyStore.answers[indexNoteGuidance].answer"
+          v-model="counselorNotes.answer"
         />
       </div>
       <div class="flex justify-center my-10 flex-col items-center">
@@ -87,8 +86,8 @@ import checkboxComponent from "../components/SurveyPageComponents/SurveyCheckbox
 import surveyDraggable from "../components/SurveyPageComponents/SurveyDraggable.vue";
 import dropdownComponent from "../components/SurveyPageComponents/SurveyDropdown.vue";
 import ScrollPage from "../components/SurveyPageComponents/ScrollPage.vue";
-import { allCoursesAnswer, surveyQuestion, Question } from "../types/interface";
-import { watch, ref, Ref } from "vue";
+import { Answer, Question } from "../types/interface";
+import { watch, ref } from "vue";
 import { useRouter, onBeforeRouteLeave } from "vue-router";
 
 document.title = "Survey | SITHS Course Selection";
@@ -100,34 +99,12 @@ const router = useRouter();
 surveyStore.missingAnswers = [];
 surveyStore.checkAnswers();
 
-const allCoursesQuestion = surveyStore.survey.questions.find(
-  (question) => question.questionType === "FINAL"
-) as Question;
-const finalAnswer = surveyStore.answers.find(
-  (answer) => answer.question === allCoursesQuestion.id
-);
+let allCoursesQuestion = {} as Question;
+let finalAnswer = {} as Answer;
+let guidanceQuestion = {} as Question;
+let counselorNotes = {} as Answer;
 
-const indexNoteGuidance: number = surveyStore.answers.findIndex(
-  (question) => question.id === "noteToGuidance"
-);
-const x: Ref<number> = ref(0);
-
-const ref_courses = ref(
-  (surveyStore.answers[indexAllCourses] as allCoursesAnswer).answer.preference
-);
-
-//watch for changes in the courses prop and update items accordingly
-watch(
-  () =>
-    (surveyStore.answers[indexAllCourses] as allCoursesAnswer).answer
-      .preference,
-  (newPreference: Array<any>) => {
-    ref_courses.value = [...newPreference];
-  },
-  { deep: true }
-);
-
-const getChoices = (question: surveyQuestion) =>
+const getChoices = (question: Question) =>
   surveyStore.coursesAvailable.filter(
     (x) => x.subject === question.questionType
   );
@@ -135,79 +112,68 @@ const getChoices = (question: surveyQuestion) =>
 const shouldWarn = ref(false);
 
 const submit = async () => {
-  surveyStore.checkSurveyAnswers(surveyStore.answers);
+  surveyStore.checkAnswers();
   if (surveyStore.missingAnswers.length > 0) {
     alert("Please answer all required questions before submitting.");
     shouldWarn.value = true;
     return;
   }
   if (!userStore.isGuidance) {
-    await surveyStore.submitSurvey();
+    await surveyStore.saveSurvey(true);
     router.push("/student/dashboard");
-  } else if (userStore.isGuidance) {
+  } else {
     router.push("/guidance/studentlist");
   }
 };
 
 onBeforeRouteLeave((to, from, next) => {
-  //@ts-ignore
+  surveyStore.checkAnswers();
   if (
-    JSON.stringify(surveyStore.answers) ===
-      surveyStore.currentAnsweredSurvey.answers ||
+    surveyStore.changes.length === 0 ||
     to.path === "/student/survey/review"
   ) {
     window.removeEventListener("beforeunload", reminder);
-    next();
-  } else {
-    const answer = window.confirm("Changes you made might not be saved.");
-    if (answer) {
-      window.removeEventListener("beforeunload", reminder);
-      next();
-    } else {
-      next(false);
-    }
+    return next();
   }
+  const save = window.confirm("Changes you made might not be saved.");
+  if (!save) return next(false);
+  window.removeEventListener("beforeunload", reminder);
+  next();
 });
 
 const reminder = (e: Event) => {
   e.preventDefault();
-  e.returnValue = false;
 };
+
+watch(
+  surveyStore.survey,
+  () => {
+    console.log(surveyStore.survey);
+    allCoursesQuestion = surveyStore.survey.questions.find(
+      (question) => question.questionType === "FINAL"
+    ) as Question;
+    finalAnswer = surveyStore.answers.find(
+      (answer) => answer.question === allCoursesQuestion.id
+    ) as Answer;
+
+    guidanceQuestion = surveyStore.survey.questions.find(
+      (question) => question.questionType === "NOTE"
+    ) as Question;
+
+    counselorNotes = surveyStore.answers.find(
+      (answer) => answer.question === guidanceQuestion.id
+    ) as Answer;
+  },
+  { deep: true }
+);
 
 watch(
   () => surveyStore.answers,
   (newResponse, oldResponse) => {
-    if (
-      //@ts-ignore
-      JSON.stringify(newResponse) === surveyStore.currentAnsweredSurvey.answers
-    ) {
-      window.removeEventListener("beforeunload", reminder);
-    } else {
-      window.addEventListener("beforeunload", reminder);
-    }
-  },
-  { deep: true }
-);
-
-watch(
-  () => surveyStore.currentAnsweredSurvey.answers,
-  (newResponse, oldResponse) => {
-    //@ts-ignore
-    if (newResponse === JSON.stringify(surveyStore.answers)) {
-      window.removeEventListener("beforeunload", reminder);
-    } else {
-      window.addEventListener("beforeunload", reminder);
-    }
-  },
-  { deep: true }
-);
-
-watch(
-  () =>
-    (surveyStore.answers[indexAllCourses] as allCoursesAnswer).answer
-      .preference,
-  (newResponse) => {
-    x.value = +1;
+    surveyStore.checkAnswers();
+    if (surveyStore.changes.length === 0)
+      return window.removeEventListener("beforeunload", reminder);
+    window.addEventListener("beforeunload", reminder);
   },
   { deep: true }
 );

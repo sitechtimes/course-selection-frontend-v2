@@ -47,7 +47,7 @@ type Subject =
 export interface Question {
   id: number;
   question: string;
-  questionType: "BOOLEAN" | "FINAL" | "GENERAL" | "DROPDOWN" | Subject;
+  questionType: "BOOLEAN" | "FINAL" | "NOTE" | "GENERAL" | "DROPDOWN" | Subject;
   status: "OPTIONAL" | "STANDARD" | "CLASS";
   classReferenced: Course | null;
   options: string[] | null;

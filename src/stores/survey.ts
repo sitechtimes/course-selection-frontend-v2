@@ -63,7 +63,7 @@ export const useSurveyStore = defineStore("survey", () => {
     loaded.value = true;
   }
 
-  async function saveSurvey() {
+  async function saveSurvey(submit: boolean = false) {
     const res = await fetch(import.meta.env.VITE_URL + "student/survey/", {
       method: "POST",
       headers: {
@@ -81,6 +81,7 @@ export const useSurveyStore = defineStore("survey", () => {
   function checkAnswers() {
     changes.value = answers.value.filter((ans) => {
       let old = survey.value.answers.find((q) => q.question === ans.question);
+      if (ans.answer === null) return false;
       if (typeof ans.answer === "object")
         return old.answer.find((a, i) => a.rank !== ans.answer[i].rank);
       if (typeof ans.answer === "string") ans.answer = ans.answer.trim();
@@ -120,6 +121,7 @@ export const useSurveyStore = defineStore("survey", () => {
     status,
     survey,
     loaded,
+    changes,
     answers,
     getSurvey,
     saveSurvey,

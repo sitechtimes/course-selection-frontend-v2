@@ -129,6 +129,9 @@ watch(
     finalAnswer.answer = (finalAnswer.answer as Rank[])
       .filter((rank) => !(rank.course in bads))
       .map((rank, index) => ({ ...rank, rank: index + 1 }));
+    surveyStore.selectedCourses = surveyStore.selectedCourses.filter(
+      (course) => !(course.id in bads)
+    );
     courses.value = [];
 
     answer.value.answer = [];
@@ -143,6 +146,7 @@ function toggleInterest(interested: boolean, course: Course) {
       course: course.id,
     });
     surveyStore.selectedCourses.push(course);
+    console.log(surveyStore.selectedCourses);
     return;
   }
   surveyStore.selectedCourses = surveyStore.selectedCourses.filter(
@@ -167,11 +171,10 @@ function getChangedCourse(newCourses: Course[], oldCourses: Course[]) {
 
 watch(
   () => props.question.question,
-  (newResponse) => {
+  () => {
     answer.value = surveyStore.answers.find(
       (entry) => entry.question === props.question.id
     ) as Answer;
-    console.log(answer.value);
     courses.value = surveyStore.coursesAvailable.filter(
       (x) => x.subject === props.question.questionType
     );
@@ -184,9 +187,7 @@ watch(
   (newResponse, oldResponse) => {
     const interested = newResponse.length > oldResponse.length;
     const changedCourse = getChangedCourse(newResponse, oldResponse);
-    if (changedCourse) {
-      toggleInterest(interested, changedCourse);
-    }
+    if (changedCourse) toggleInterest(interested, changedCourse);
   },
   { deep: true }
 );

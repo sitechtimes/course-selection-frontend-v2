@@ -51,7 +51,8 @@ watch(
   () => props.courses,
   (newCourses) => {
     ranked.value = [...newCourses];
-  }
+  },
+  { deep: true }
 );
 
 //@ts-ignore

@@ -71,20 +71,22 @@ const router = createRouter({
             if (!surveyStore.loaded) await surveyStore.getSurvey();
             return surveyStore.open ? true : { name: "closedSurvey" };
           },
-        },
-        {
-          path: "survey/closed",
-          name: "closedSurvey",
-          component: () => import("../views/ClosedSurvey.vue"),
-          beforeEnter: (to) =>
-            useSurveyStore().open ? { name: "studentSurvey" } : true,
-        },
-        {
-          path: "survey/review",
-          name: "reviewSurvey",
-          component: () => import("../views/ReviewSurvey.vue"),
-          beforeEnter: (to) =>
-            useSurveyStore().open ? true : { name: "closedSurvey" },
+          children: [
+            {
+              path: "/closed",
+              name: "closedSurvey",
+              component: () => import("../views/ClosedSurvey.vue"),
+              beforeEnter: (to) =>
+                useSurveyStore().open ? { name: "studentSurvey" } : true,
+            },
+            {
+              path: "review",
+              name: "reviewSurvey",
+              component: () => import("../views/ReviewSurvey.vue"),
+              beforeEnter: (to) =>
+                useSurveyStore().open ? true : { name: "closedSurvey" },
+            },
+          ],
         },
       ],
     },
