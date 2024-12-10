@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import GuidanceCalendar from "../components/GuidanceComponents/GuidanceCalendar.vue";
+import GuidanceCalendar from "../components/Guidance/GuidanceCalendar.vue";
 
 document.title = "Calendar & Events | SITHS Course Selection";
 </script>

@@ -7,51 +7,43 @@
         class="flex justify-center mb-8"
       >
         <div class="flex flex-col w-11/12">
-          <booleanComponent
+          <SurveyBoolean
             v-if="question.questionType === 'BOOLEAN'"
             :question="question"
+            :finalAnswer="finalAnswer"
             :warn="question.id in surveyStore.missingAnswers && shouldWarn"
           />
-          <generalComponent
+          <SurveyGeneral
             v-else-if="question.questionType === 'GENERAL'"
             :question="question"
             :warn="question.id in surveyStore.missingAnswers && shouldWarn"
           />
-          <dropdownComponent
+          <SurveyDropdown
             v-else-if="question.questionType === 'DROPDOWN'"
             :question="question"
             :warn="question.id in surveyStore.missingAnswers && shouldWarn"
           />
-          <checkboxComponent
+          <div v-else-if="question.questionType === 'FINAL'" class="my-6">
+            <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl my-4">
+              For the final part of the survey, please drag your classes in the
+              order of priority, with the first choice being your top priority.
+            </p>
+            <SurveyDraggable
+              :courses="surveyStore.selectedCourses"
+              :numbered="true"
+              :answer="finalAnswer"
+              :color="'D6EEFF'"
+            />
+          </div>
+          <SurveyCheckbox
             v-else
+            :finalAnswer="finalAnswer"
             :question="question"
             :choices="getChoices(question)"
             :color="'D6EEFF'"
             :warn="question.id in surveyStore.missingAnswers && shouldWarn"
           />
         </div>
-      </div>
-      <div class="my-6">
-        <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl my-4">
-          For the final part of the survey, please drag your classes in the
-          order of priority, with the first choice being your top priority.
-        </p>
-        <surveyDraggable
-          :courses="surveyStore.selectedCourses"
-          :numbered="true"
-          :answer="finalAnswer"
-          :color="'D6EEFF'"
-        />
-      </div>
-      <div class="mt-14">
-        <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl">
-          Final note to your guidance counselor:
-        </p>
-        <input
-          class="block py-2 px-3 mt-3 w-full md:w-3/5 text-base bg-transparent rounded-md border border-solid border-zinc-400 focus:outline-none focus:ring-0 focus:border-blue-400"
-          type="text"
-          v-model="counselorNotes.answer"
-        />
       </div>
       <div class="flex justify-center my-10 flex-col items-center">
         <p
@@ -78,17 +70,17 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from "../stores/user";
-import { useSurveyStore } from "../stores/survey";
-import booleanComponent from "../components/SurveyPageComponents/SurveyBoolean.vue";
-import generalComponent from "../components/SurveyPageComponents/SurveyGeneral.vue";
-import checkboxComponent from "../components/SurveyPageComponents/SurveyCheckbox.vue";
-import surveyDraggable from "../components/SurveyPageComponents/SurveyDraggable.vue";
-import dropdownComponent from "../components/SurveyPageComponents/SurveyDropdown.vue";
-import ScrollPage from "../components/SurveyPageComponents/ScrollPage.vue";
-import { Answer, Question } from "../types/interface";
-import { watch, ref } from "vue";
+import SurveyDraggable from "../components/Survey/Draggable.vue";
+import SurveyCheckbox from "../components/Survey/Checkbox.vue";
+import SurveyDropdown from "../components/Survey/Dropdown.vue";
+import SurveyBoolean from "../components/Survey/Boolean.vue";
+import SurveyGeneral from "../components/Survey/General.vue";
+import ScrollPage from "../components/Survey/ScrollPage.vue";
 import { useRouter, onBeforeRouteLeave } from "vue-router";
+import { Answer, Question } from "../types/interface";
+import { useSurveyStore } from "../stores/survey";
+import { useUserStore } from "../stores/user";
+import { watch, ref } from "vue";
 
 document.title = "Survey | SITHS Course Selection";
 
@@ -99,10 +91,12 @@ const router = useRouter();
 surveyStore.missingAnswers = [];
 surveyStore.checkAnswers();
 
-let allCoursesQuestion = {} as Question;
-let finalAnswer = {} as Answer;
-let guidanceQuestion = {} as Question;
-let counselorNotes = {} as Answer;
+const allCoursesQuestion = surveyStore.survey.questions.find(
+  (question) => question.questionType === "FINAL"
+) as Question;
+const finalAnswer = surveyStore.answers.find(
+  (answer) => answer.question === allCoursesQuestion.id
+) as Answer;
 
 const getChoices = (question: Question) =>
   surveyStore.coursesAvailable.filter(
@@ -111,20 +105,17 @@ const getChoices = (question: Question) =>
 
 const shouldWarn = ref(false);
 
-const submit = async () => {
+async function submit() {
   surveyStore.checkAnswers();
   if (surveyStore.missingAnswers.length > 0) {
     alert("Please answer all required questions before submitting.");
     shouldWarn.value = true;
     return;
   }
-  if (!userStore.isGuidance) {
-    await surveyStore.saveSurvey(true);
-    router.push("/student/dashboard");
-  } else {
-    router.push("/guidance/studentlist");
-  }
-};
+  if (userStore.isGuidance) return router.push("/guidance/studentlist");
+  await surveyStore.saveSurvey(1);
+  router.push("/student/dashboard");
+}
 
 onBeforeRouteLeave((to, from, next) => {
   surveyStore.checkAnswers();
@@ -132,48 +123,22 @@ onBeforeRouteLeave((to, from, next) => {
     surveyStore.changes.length === 0 ||
     to.path === "/student/survey/review"
   ) {
-    window.removeEventListener("beforeunload", reminder);
+    window.removeEventListener("beforeunload", (e) => e.preventDefault());
     return next();
   }
   const save = window.confirm("Changes you made might not be saved.");
   if (!save) return next(false);
-  window.removeEventListener("beforeunload", reminder);
+  window.removeEventListener("beforeunload", (e) => e.preventDefault());
   next();
 });
 
-const reminder = (e: Event) => {
-  e.preventDefault();
-};
-
-watch(
-  surveyStore.survey,
-  () => {
-    console.log(surveyStore.survey);
-    allCoursesQuestion = surveyStore.survey.questions.find(
-      (question) => question.questionType === "FINAL"
-    ) as Question;
-    finalAnswer = surveyStore.answers.find(
-      (answer) => answer.question === allCoursesQuestion.id
-    ) as Answer;
-
-    guidanceQuestion = surveyStore.survey.questions.find(
-      (question) => question.questionType === "NOTE"
-    ) as Question;
-
-    counselorNotes = surveyStore.answers.find(
-      (answer) => answer.question === guidanceQuestion.id
-    ) as Answer;
-  },
-  { deep: true }
-);
-
 watch(
   () => surveyStore.answers,
-  (newResponse, oldResponse) => {
+  () => {
     surveyStore.checkAnswers();
     if (surveyStore.changes.length === 0)
-      return window.removeEventListener("beforeunload", reminder);
-    window.addEventListener("beforeunload", reminder);
+      window.removeEventListener("beforeunload", (e) => e.preventDefault());
+    else window.addEventListener("beforeunload", (e) => e.preventDefault());
   },
   { deep: true }
 );

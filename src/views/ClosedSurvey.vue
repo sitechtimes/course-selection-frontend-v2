@@ -6,31 +6,30 @@
         :key="question.id"
         class="flex justify-center"
       >
-        <surveyBoolean
+        <SurveyBoolean
           class="mb-2"
           v-if="question.questionType === 'BOOLEAN'"
           :question="question"
           :isDisabled="true"
-        >
-        </surveyBoolean>
-        <surveyGeneral
+        />
+        <SurveyGeneral
           class="mb-6"
           v-else-if="question.questionType === 'GENERAL'"
           :question="question"
           :isDisabled="true"
-        ></surveyGeneral>
-        <surveyDropdown
+        />
+        <SurveyDropdown
           class="mb-2"
           v-else-if="question.questionType === 'DROPDOWN'"
           :question="question"
           :isDisabled="true"
         />
-        <closedRank
+        <ClosedRank
           v-else
           class="mb-6"
           :question="question"
           :choices="getChoices(question)"
-        ></closedRank>
+        />
       </div>
       <div class="my-6">
         <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl my-4">
@@ -60,12 +59,12 @@
 
 <script setup lang="ts">
 import { useSurveyStore } from "../stores/survey";
-import surveyBoolean from "../components/SurveyPageComponents/SurveyBoolean.vue";
-import surveyGeneral from "../components/SurveyPageComponents/SurveyGeneral.vue";
-import SurveyDropdown from "../components/SurveyPageComponents/SurveyDropdown.vue";
-import closedRank from "../components/SurveyPageComponents/ClosedSurvey/closedRank.vue";
-import closedFinalRank from "../components/SurveyPageComponents/ClosedSurvey/closedFinalRank.vue";
-import ScrollPage from "../components/SurveyPageComponents/ScrollPage.vue";
+import SurveyBoolean from "../components/Survey/SurveyBoolean.vue";
+import surveyGeneral from "../components/Survey/SurveyGeneral.vue";
+import SurveyDropdown from "../components/Survey/SurveyDropdown.vue";
+import closedRank from "../components/Survey/ClosedSurvey/closedRank.vue";
+import closedFinalRank from "../components/Survey/ClosedSurvey/closedFinalRank.vue";
+import ScrollPage from "../components/Survey/ScrollPage.vue";
 import { surveyQuestion, allCoursesAnswer } from "../types/interface";
 import { ref, Ref } from "vue";
 import { useUserStore } from "../stores/user";

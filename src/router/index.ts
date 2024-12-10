@@ -65,26 +65,28 @@ const router = createRouter({
         {
           path: "survey",
           name: "studentSurvey",
-          component: () => import("../views/SurveyPage.vue"),
-          beforeEnter: async (to) => {
+          beforeEnter: async (to, from, next) => {
             const surveyStore = useSurveyStore();
             if (!surveyStore.loaded) await surveyStore.getSurvey();
-            return surveyStore.open ? true : { name: "closedSurvey" };
+            return surveyStore.open ? next() : next({ name: "closedSurvey" });
           },
           children: [
             {
-              path: "/closed",
+              path: "",
+              name: "openSurvey",
+              component: () => import("../views/SurveyPage.vue"),
+            },
+            {
+              path: "closed",
               name: "closedSurvey",
               component: () => import("../views/ClosedSurvey.vue"),
-              beforeEnter: (to) =>
+              beforeEnter: () =>
                 useSurveyStore().open ? { name: "studentSurvey" } : true,
             },
             {
               path: "review",
               name: "reviewSurvey",
               component: () => import("../views/ReviewSurvey.vue"),
-              beforeEnter: (to) =>
-                useSurveyStore().open ? true : { name: "closedSurvey" },
             },
           ],
         },
@@ -99,11 +101,11 @@ router.beforeEach(async (to) => {
   if (!userStore.initComplete) await userStore.init();
   if (!anonPaths.includes(to.path) && !userStore.isAuth)
     return { name: "login" };
-  else if (anonPaths.includes(to.path) && userStore.isAuth)
+  if (anonPaths.includes(to.path) && userStore.isAuth)
     return { name: `${userStore.isGuidance ? "guidance" : "student"}Dash` };
-  else if (to.meta.user === "guidance" && !userStore.isGuidance)
+  if (to.meta.user === "guidance" && !userStore.isGuidance)
     return { name: `studentDash` };
-  else if (to.meta.user === "student" && userStore.isGuidance)
+  if (to.meta.user === "student" && userStore.isGuidance)
     return { name: `guidanceDash` };
 });
 

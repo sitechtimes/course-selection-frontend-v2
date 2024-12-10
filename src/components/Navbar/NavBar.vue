@@ -6,15 +6,13 @@
     <div @click="redirect()" class="cursor-pointer">
       <p
         class="text-lg sm:text-xl md:text-2xl font-semibold z-50 hover:text-gray-600 flex sm:flex"
-        :class="{ hidden: viewingSurvey() }"
+        :class="viewingSurvey() && 'hidden'"
       >
         Course Selection
       </p>
     </div>
     <div
-      v-if="
-        userStore.isAuth && !userStore.isGuidance && viewingSurvey() === false
-      "
+      v-if="userStore.isAuth && !userStore.isGuidance && !viewingSurvey()"
       class="hidden justify-center items-center space-x-12 md:flex"
     >
       <p>
@@ -27,7 +25,7 @@
       </p>
       <p
         v-if="!userStore.isGuidance"
-        @click="surveyNav()"
+        @click="router.push('/student/survey/')"
         class="cursor-pointer hover:text-gray-500"
       >
         Survey
@@ -43,9 +41,7 @@
       </RouterLink>
     </div>
     <div
-      v-if="
-        userStore.isAuth && userStore.isGuidance && viewingSurvey() === false
-      "
+      v-if="userStore.isAuth && userStore.isGuidance && !viewingSurvey()"
       class="hidden justify-center items-center space-x-12 md:flex"
     >
       <RouterLink to="/guidance/studentlist">
@@ -69,7 +65,7 @@
     </div>
     <!-- login page -->
     <div
-      v-if="!userStore.isAuth && viewingSurvey() === false"
+      v-if="!userStore.isAuth && !viewingSurvey()"
       class="hidden justify-center items-center space-x-12 md:flex"
     >
       <p>
@@ -90,8 +86,8 @@
       id="menu-icon"
       class="flex justify-center items-center cursor-pointer z-40 md:hidden"
     >
-      <MenuIcon @click="toggleMenu" v-if="!menuOpen" />
-      <CloseMenu @click="toggleMenu" v-else />
+      <MenuIcon @click="menuOpen = !menuOpen" v-if="!menuOpen" />
+      <CloseMenu @click="menuOpen = !menuOpen" v-else />
     </div>
     <!-- while viewing survey -->
     <div
@@ -114,7 +110,7 @@
       <p
         v-if="surveyStore.status != 'Complete' && surveyStore.open"
         @click="
-          surveyStore.saveSurvey();
+          surveyStore.saveSurvey(0);
           toggleSave();
         "
         class="text-[#37394F] cursor-pointer hover:text-gray-500"
@@ -123,68 +119,42 @@
         Save
       </p>
     </div>
-    <MobileNav v-if="menuOpen" @e="toggleMenu" />
+    <MobileNav v-if="menuOpen" @e="menuOpen = !menuOpen" />
   </nav>
 </template>
 <script lang="ts" setup>
-import { useUserStore } from "../../stores/user";
 import { useSurveyStore } from "../../stores/survey";
-import { RouterLink } from "vue-router";
-import MenuIcon from "../icons/MenuIcon.vue";
+import { useUserStore } from "../../stores/user";
 import CloseMenu from "../icons/CloseMenu.vue";
+import MenuIcon from "../icons/MenuIcon.vue";
+import { RouterLink } from "vue-router";
 import MobileNav from "./MobileNav.vue";
-import { ref, Ref } from "vue";
 import router from "../../router";
+import { ref } from "vue";
 
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
-let menuOpen: Ref<boolean> = ref(false);
-const save = ref();
+const menuOpen = ref(false);
+const save = ref("Save");
 
-const viewingSurvey = () => {
-  return router.currentRoute.value.path.includes("survey");
-};
+const viewingSurvey = () => router.currentRoute.value.path.includes("survey");
 
-const redirect = () => {
-  if (userStore.isAuth) {
-    if (!userStore.isGuidance) {
-      router.push("/student/dashboard");
-    } else {
-      router.push("/guidance/studentlist");
-    }
-  } else {
-    return router.push("/");
-  }
-};
-
-const surveyNav = () => {
-  if (surveyStore.open) {
-    router.push("/student/survey/");
-  } else if (!surveyStore.open) {
-    router.push("/student/survey/closed");
-  }
-};
-
-const toggleMenu = () => {
-  menuOpen.value = !menuOpen.value;
-};
+function redirect() {
+  if (!userStore.isAuth) return router.push("/");
+  if (userStore.isGuidance) return router.push("/guidance/studentlist");
+  else router.push("/student/dashboard");
+}
 
 const toggleSave = () => {
-  save.value.innerHTML = "Saved";
-  setTimeout(() => {
-    if (!save.value) return;
-    save.value.innerHTML = "Save";
-  }, 1500);
+  surveyStore.saveSurvey(0);
+  save.value = "Saved";
+  setTimeout(() => (save.value ? (save.value = "Save") : null), 1500);
 };
 
-const submit = async () => {
-  surveyStore.saveSurvey();
-  if (surveyStore.missingAnswers.length === 0) {
-    if (userStore.isGuidance) {
-      router.push("/guidance/studentlist");
-    } else {
-      router.push("/student/dashboard");
-    }
-  }
-};
+async function submit() {
+  surveyStore.saveSurvey(0);
+  if (surveyStore.missingAnswers.length !== 0) return;
+  if (userStore.isGuidance) router.push("/guidance/studentlist");
+  else router.push("/student/dashboard");
+}
 </script>

@@ -25,6 +25,7 @@ export interface Survey {
 }
 
 export interface Answer {
+  id: number;
   question: number;
   answer: string | boolean | null | Rank[];
 }
@@ -62,6 +63,21 @@ export interface Course {
   id: number;
   name: string;
   subject: Subject;
+}
+
+export interface Flag {
+  flag: string;
+  title: string;
+  color: string;
+}
+
+export interface ChartData {
+  labels: string[];
+  datasets: {
+    data: number[];
+    backgroundColor: string[];
+    label: string;
+  }[];
 }
 
 // guidance store interface
@@ -154,7 +170,7 @@ export interface surveyStatsNodes {
   node: stats;
 }
 
-export interface stats {
+export interface Stats {
   year: number;
   stats: string;
 }
@@ -244,7 +260,7 @@ export interface surveyGuidanceAnswer {
   id: "noteToGuidance" | "guidanceFinalNote";
 }
 
-export interface pieChartStats {
+export interface PieChartStats {
   [key: string]: {
     ranks: number[];
   };

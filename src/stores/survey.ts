@@ -28,22 +28,19 @@ export const useSurveyStore = defineStore("survey", () => {
   const missingAnswers = ref<Number[]>([]);
 
   async function fetchData(url: string, method?: string, body?: any) {
-    loading.value = true;
     const options: RequestInit = { credentials: "include" };
     if (method) {
       options["method"] = method;
       options["headers"] = { "Content-Type": "application/json" };
       options["body"] = JSON.stringify(body);
     }
-    const res = await fetch(import.meta.env.VITE_URL + url, options);
-    loading.value = false;
-    return res;
+    return await fetch(import.meta.env.VITE_URL + url, options);
   }
 
   async function getSurvey(id: number = 0) {
-    const res = {};
-    if (id === 0) res = await fetchData("student/survey/");
-    else res = await fetchData(`student/survey/${id}`);
+    const res = await fetchData(
+      id === 0 ? "student/survey/" : `student/survey/${id}`
+    );
     if (!res.ok) return (open.value = false);
     const data: SurveyData = await res.json();
     survey.value = data.survey;
@@ -63,19 +60,15 @@ export const useSurveyStore = defineStore("survey", () => {
     loaded.value = true;
   }
 
-  async function saveSurvey(submit: boolean = false) {
-    const res = await fetch(import.meta.env.VITE_URL + "student/survey/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        answers: answers.value,
-      }),
+  async function saveSurvey(status: Number) {
+    const res = await fetchData("student/survey/", "POST", {
+      answers: changes.value,
+      status: status,
     });
     if (res.ok) {
       status.value = "SAVED";
     }
+    console.log(await res.json());
   }
 
   function checkAnswers() {
@@ -83,11 +76,15 @@ export const useSurveyStore = defineStore("survey", () => {
       let old = survey.value.answers.find((q) => q.question === ans.question);
       if (ans.answer === null) return false;
       if (typeof ans.answer === "object")
-        return old.answer.find((a, i) => a.rank !== ans.answer[i].rank);
+        return (
+          old.answer.find((a, i) => a.rank !== ans.answer[i].rank) ||
+          ans.length !== old.length
+        );
       if (typeof ans.answer === "string") ans.answer = ans.answer.trim();
       if (ans.answer !== old.answer) return true;
     });
     missingAnswers.value = answers.value
+      .slice(0, -2)
       .filter((ans) => {
         let question = survey.value.questions.find(
           (q) => q.id === ans.question

@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import BaseLogin from "../components/LoginComponents/BaseLogin.vue";
+import BaseLogin from "../components/Login/BaseLogin.vue";
 import { useUserStore } from "../stores/user";
 const userStore = useUserStore();
 

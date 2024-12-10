@@ -66,8 +66,12 @@
 import { ref, Ref, reactive, onMounted, watchEffect } from "vue";
 import { useUserStore } from "../../stores/user";
 //@ts-ignore
-import { studentMeetings, calendarMeetings, calendarData } from "../../types/interface";
-import UpcomingMeetings from "../GuidanceComponents/UpcomingMeetings.vue";
+import {
+  studentMeetings,
+  calendarMeetings,
+  calendarData,
+} from "../../types/interface";
+import UpcomingMeetings from "../Guidance/UpcomingMeetings.vue";
 import CreateEvent from "./CreateEvent.vue";
 import MeetingDetails from "./MeetingDetails.vue";
 import PlusIcon from "../icons/PlusIcon.vue";
@@ -135,7 +139,6 @@ onMounted(async () => {
   await renderCalendar();
 });
 
-
 const toggleDetails = (meeting: studentMeetings) => {
   meetingDetails.name = meeting.name;
   meetingDetails.meetingDate = meeting.meetingDate;
@@ -148,18 +151,23 @@ const toggleDetails = (meeting: studentMeetings) => {
 };
 
 const toggleEvent = (date: any) => {
-  let year = todaysYear
-  let month = date.type == "previous" ? todaysMonth-1 
-    : date.type == "future" ? todaysMonth+1 
-    : todaysMonth
+  let year = todaysYear;
+  let month =
+    date.type == "previous"
+      ? todaysMonth - 1
+      : date.type == "future"
+      ? todaysMonth + 1
+      : todaysMonth;
   if (month == -1) {
-    month = 11
-    year = todaysYear-1
+    month = 11;
+    year = todaysYear - 1;
   } else if (month == 12) {
-    month = 0
-    year = todaysYear+1
+    month = 0;
+    year = todaysYear + 1;
   }
-  createEventDate.value = `${year}-${(month + 1).toString().padStart(2, '0')}-${(date.todaysDate).toString().padStart(2, '0')}`
+  createEventDate.value = `${year}-${(month + 1)
+    .toString()
+    .padStart(2, "0")}-${date.todaysDate.toString().padStart(2, "0")}`;
   showEvent.value = !showEvent.value;
 };
 

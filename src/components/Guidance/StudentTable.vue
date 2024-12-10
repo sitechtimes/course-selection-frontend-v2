@@ -37,60 +37,29 @@
 
       <tbody
         v-for="student in newStudents"
-        :key="student.email"
+        :key="student.id"
         class="border-2 border-black"
       >
-        <AddFlag
-          v-if="showFlagModal === student.email"
-          @exit="toggleFlagModal('')"
+        <ChangeFlag
+          v-if="Math.abs(flagModal) === student.id"
+          @exit="flagModal = 0"
           :student="student"
           :viewAll="viewall"
           :flags="flags"
-        >
-        </AddFlag>
-        <DeleteFlag
-          v-if="showDeleteFlag === student.email"
-          @exit="toggleDeleteFlag('')"
-          :student="student"
-          :viewAll="viewall"
-          :flags="flags"
-        >
-        </DeleteFlag>
+          :add="flagModal > 0"
+        />
         <tr>
           <td class="p-4">
-            {{ titleCaseName(student.name) }}
+            {{ titleCase(student.name) }}
           </td>
           <td class="p-4" v-if="student.grade">{{ student.grade }}</td>
           <td class="p-4" v-else>&nbsp;</td>
           <td class="p-4">
             {{ student.email ? student.email + "@nycstudents.net" : "&nbsp;" }}
           </td>
-          <td class="p-4" v-if="student.status === 'Not Started'">
-            <p
-              class="text-[#461616] bg-[#EA9F9F] w-[8rem] font-semibold text-center p-1 rounded-2xl"
-            >
-              Not Started
-            </p>
-          </td>
-          <td class="p-4" v-else-if="student.status === 'In Progress'">
-            <p
-              class="text-[#322911] bg-[#F9D477] w-[8rem] font-semibold text-center p-1 rounded-2xl"
-            >
-              In Progress
-            </p>
-          </td>
-          <td class="p-4" v-else-if="student.status === 'Complete'">
-            <p
-              class="text-[#174616] bg-[#A8D480] w-[8rem] font-semibold text-center p-1 rounded-2xl"
-            >
-              Completed
-            </p>
-          </td>
-          <td class="p-4" v-else-if="student.status === 'Finalized'">
-            <p
-              class="text-[#311638] bg-[#D1A4DE] w-[8rem] font-semibold text-center p-1 rounded-2xl"
-            >
-              Finalized
+          <td class="p-4">
+            <p :class="statusStyles(student.status)">
+              {{ student.status }}
             </p>
           </td>
           <td @click="viewSurvey(student)" class="p-4 hover:cursor-pointer">
@@ -108,15 +77,14 @@
               </div>
             </div>
             <PlusIcon
-              @click="toggleFlagModal(student.email)"
+              @click="flagModal = student.id"
               class="w-3 m-1 hidden child hover:cursor-pointer"
-            >
-            </PlusIcon>
+            />
+
             <MinusSign
-              @click="toggleDeleteFlag(student.email)"
+              @click="flagModal = -student.id"
               class="w-3 m-1 hidden child hover:cursor-pointer"
-            >
-            </MinusSign>
+            />
           </td>
         </tr>
       </tbody>
@@ -131,47 +99,37 @@ import { GuidanceStudent } from "../../types/interface";
 import { useSurveyStore } from "../../stores/survey";
 import PlusIcon from "../icons/PlusIcon.vue";
 import MinusSign from "../icons/MinusSign.vue";
-import AddFlag from "../GuidanceComponents/AddFlag.vue";
-import DeleteFlag from "../GuidanceComponents/DeleteFlag.vue";
+import ChangeFlag from "../Guidance/ChangeFlag.vue";
 
 defineProps({
   newStudents: Array as PropType<GuidanceStudent[]>,
   viewall: Boolean,
 });
 
+function statusStyles(status: string) {
+  return (
+    {
+      "Not Started": "text-[#461616] bg-[#EA9F9F]",
+      "In Progress": "text-[#322911] bg-[#F9D477]",
+      Complete: "text-[#174616] bg-[#A8D480]",
+      Finalized: "text-[#311638] bg-[#D1A4DE]",
+    }[status] + "w-[8rem] font-semibold text-center p-1 rounded-2xl"
+  );
+}
 const surveyStore = useSurveyStore();
 const router = useRouter();
 
-let tooltip = ref(false);
-let showFlagModal = ref("");
-let showDeleteFlag = ref("");
+const tooltip = ref(false);
+const flagModal = ref(0);
 
 const flags = [
-  {
-    flag: "transfer",
-    title: "Transfer student",
-    color: "bg-red-400",
-  },
-  {
-    flag: "regents",
-    title: "Missing regents",
-    color: "bg-green-400",
-  },
-  {
-    flag: "team",
-    title: "Three season athlete",
-    color: "bg-blue-400",
-  },
-  {
-    flag: "enl",
-    title: "ENL",
-    color: "bg-purple-400",
-  },
+  { flag: "transfer", title: "Transfer student", color: "bg-red-400" },
+  { flag: "regents", title: "Missing regents", color: "bg-green-400" },
+  { flag: "team", title: "Three season athlete", color: "bg-blue-400" },
+  { flag: "enl", title: "ENL", color: "bg-purple-400" },
 ];
 
-const toggleFlagModal = (student: string) => (showFlagModal.value = student);
-const toggleDeleteFlag = (student: string) => (showDeleteFlag.value = student);
-const titleCaseName = (name: string) =>
+const titleCase = (name: string) =>
   name
     .split(",")
     .map((chunk) =>
@@ -184,12 +142,8 @@ const titleCaseName = (name: string) =>
     .join(", ");
 
 async function viewSurvey(student: GuidanceStudent) {
-  try {
-    await surveyStore.getSurvey(student.id);
-    await router.push(`/guidance/survey/${student.id}`);
-  } catch (error) {
-    console.error("Error fetching survey data:", error);
-  }
+  await surveyStore.getSurvey(student.id);
+  await router.push(`/guidance/survey/${student.id}`);
 }
 </script>
 

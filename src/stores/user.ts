@@ -8,6 +8,7 @@ import {
   studentMeetings,
   studentPreview,
   GuidanceStudent,
+  Stats,
 } from "../types/interface";
 import { ref } from "vue";
 
@@ -85,13 +86,24 @@ export const useUserStore = defineStore("userStore", () => {
     router.push("/");
   }
 
+  async function fetchStats() {
+    const res = await fetchData("guidance/stats");
+    const data = await res.json();
+    if (!res.ok) return { years: [], data: [] };
+    return { years: data.map((item: Stats) => item.year), data: data };
+  }
+
   async function getStudents() {
     const res = await fetchData("guidance/profiles/");
     if (!res.ok) return await res.json();
     const data = await res.json();
     studentList.value = data;
   }
-  async function changeFlag(student: GuidanceStudent, remove: boolean = false) {
+  async function changeFlag(
+    student: GuidanceStudent,
+    flag: string,
+    remove: boolean = false
+  ) {
     const res = await fetchData("guidance/flag/", "POST", {
       id: student.id,
       remove,
@@ -123,6 +135,7 @@ export const useUserStore = defineStore("userStore", () => {
     lastName,
     firstName,
     isGuidance,
+    fetchStats,
     changeFlag,
     studentList,
     initComplete,

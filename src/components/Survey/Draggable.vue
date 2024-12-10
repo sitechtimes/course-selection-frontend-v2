@@ -4,7 +4,7 @@
       v-if="ranked.length > 0"
       class="flex flex-col mt-2 text-center text-base md:text-lg xl:text-xl"
     >
-      <draggable v-model="ranked" item-key="rank" @end="onDragEnd">
+      <vuedraggable v-model="ranked" item-key="rank" @end="onDragEnd">
         <template #item="{ element, index }">
           <div
             v-if="element.name !== undefined"
@@ -20,16 +20,16 @@
             </div>
           </div>
         </template>
-      </draggable>
+      </vuedraggable>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, PropType } from "vue";
-import draggable from "vuedraggable";
+import { Course, Answer } from "../../types/interface";
 import { useSurveyStore } from "../../stores/survey";
-import { Course, Answer, Rank } from "../../types/interface";
+import { ref, watch, PropType } from "vue";
+import vuedraggable from "vuedraggable";
 
 const props = defineProps({
   courses: {
@@ -44,7 +44,6 @@ const props = defineProps({
   color: String,
 });
 
-const surveyStore = useSurveyStore();
 const ranked = ref<Course[]>([...props.courses]);
 //watch for changes in the courses prop and update items accordingly
 watch(
@@ -55,8 +54,7 @@ watch(
   { deep: true }
 );
 
-//@ts-ignore
-const onDragEnd = (event) => {
+const onDragEnd = () => {
   props.answer.answer = ranked.value.map((course, index) => ({
     course: course.id,
     rank: index + 1,

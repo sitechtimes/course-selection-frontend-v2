@@ -127,12 +127,12 @@
 //@ts-nocheck
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
-import booleanComponent from "../components/SurveyPageComponents/Reusables/SurveyBoolean.vue";
-import generalComponent from "../components/SurveyPageComponents/Reusables/SurveyGeneral.vue";
-import checkboxComponent from "../components/SurveyPageComponents/Reusables/SurveyCheckbox.vue";
-import dropdownComponent from "../components/SurveyPageComponents/Reusables/SurveyDropdown.vue";
-import surveyDraggable from "../components/SurveyPageComponents/Reusables/SurveyDraggable.vue";
-import ScrollPage from "../components/SurveyPageComponents/Reusables/ScrollPage.vue";
+import booleanComponent from "../components/Survey/Reusables/Boolean.vue";
+import generalComponent from "../components/Survey/Reusables/SurveyGeneral.vue";
+import checkboxComponent from "../components/Survey/Reusables/SurveyCheckbox.vue";
+import dropdownComponent from "../components/Survey/Reusables/SurveyDropdown.vue";
+import surveyDraggable from "../components/Survey/Reusables/SurveyDraggable.vue";
+import ScrollPage from "../components/Survey/Reusables/ScrollPage.vue";
 import { surveyQuestion, studentGuidance } from "../types/interface";
 import { useRouter, useRoute, onBeforeRouteLeave } from "vue-router";
 import { ref, Ref, watch, onMounted } from "vue";
@@ -162,7 +162,7 @@ onMounted(async () => {
 surveyStore.missingAnswers = [];
 surveyStore.checkSurveyAnswers(surveyStore.currentResponse);
 
-const x: Ref<number> = ref(0);
+const x = ref(0);
 
 const indexAll = surveyStore.currentResponse.findIndex(
   (x) => x.id === "allChosenCourses"
@@ -174,10 +174,10 @@ const indexGuidanceFinalNote = surveyStore.currentResponse.findIndex(
   (x) => x.id === "guidanceFinalNote"
 );
 
-const getChoices = (question: surveyQuestion) => {
-  const classes = surveyStore.studentCourses.coursesAvailable;
-  return classes.filter((x) => x.subject === question.questionType);
-};
+const getChoices = (question: surveyQuestion) =>
+  surveyStore.studentCourses.coursesAvailable.filter(
+    (x) => x.subject === question.questionType
+  );
 
 const shouldWarn = ref(false);
 
@@ -188,12 +188,9 @@ const submit = async () => {
     shouldWarn.value = true;
     return;
   }
-  if (!userStore.isGuidance) {
-    await surveyStore.submitSurvey();
-    router.push("/student/dashboard");
-  } else if (userStore.isGuidance) {
-    router.push("/guidance/studentlist");
-  }
+  if (userStore.isGuidance) return router.push("/guidance/studentlist");
+  await surveyStore.submitSurvey();
+  router.push("/student/dashboard");
 };
 
 watch(
@@ -210,34 +207,25 @@ onBeforeRouteLeave((to, from, next) => {
       surveyStore.currentAnsweredSurvey.answers ||
     to.path === "/guidance/dashboard"
   ) {
-    window.removeEventListener("beforeunload", reminder);
+    window.removeEventListener("beforeunload", (e) => e.preventDefault());
     next();
-  } else {
-    const answer = window.confirm("Changes you made might not be saved.");
-    if (answer) {
-      window.removeEventListener("beforeunload", reminder);
-      next();
-    } else {
-      next(false);
-    }
+    return;
   }
+  const answer = window.confirm("Changes you made might not be saved.");
+  if (answer) {
+    window.removeEventListener("beforeunload", (e) => e.preventDefault());
+    next();
+  } else next(false);
 });
-
-const reminder = (e: { preventDefault: () => void; returnValue: string }) => {
-  e.preventDefault();
-  e.returnValue = "";
-};
 
 watch(
   () => surveyStore.currentResponse,
   (newResponse, oldResponse) => {
     if (
       JSON.stringify(newResponse) === surveyStore.currentAnsweredSurvey.answers
-    ) {
-      window.removeEventListener("beforeunload", reminder);
-    } else {
-      window.addEventListener("beforeunload", reminder);
-    }
+    )
+      window.removeEventListener("beforeunload", (e) => e.preventDefault());
+    else window.addEventListener("beforeunload", (e) => e.preventDefault());
   },
   { deep: true }
 );

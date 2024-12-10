@@ -6,12 +6,12 @@
       class="h-1/3 w-1/4 bg-white rounded-sm px-10 py-2 flex justify-evenly flex-col"
     >
       <div class="flex">
-        <p><b>Student:</b> {{ titleCaseName(student.name) }}</p>
+        <p><b>Student:</b> {{ titleCase(student.name) }}</p>
       </div>
       <div class="w-full flex flex-col items-center">
-        <p class="my-2">Add flag:</p>
+        <p class="my-2">{{ props.add ? "Add" : "Delete" }} flag:</p>
         <select v-model="selected" class="w-full">
-          <option v-for="flag in unaddedFlags" :value="flag.flag">
+          <option v-for="flag in flags" :value="flag.flag">
             {{ flag.title }}
           </option>
         </select>
@@ -19,7 +19,7 @@
       <div class="flex flex-row w-full justify-between">
         <button @click="$emit('exit')">Cancel</button>
         <button
-          @click="confirm(selected)"
+          @click="confirm()"
           class="bg-[#DEE9C8] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] px-4 py-2 text-[#37394F]"
         >
           Confirm
@@ -30,18 +30,12 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, defineProps, defineEmits, ref, Ref, computed } from "vue";
-import { GuidanceStudent, studentGuidance } from "../../types/interface";
+import { PropType, defineProps, defineEmits, ref, computed } from "vue";
+import { GuidanceStudent, Flag } from "../../types/interface";
 import { useUserStore } from "../../stores/user";
 
 const emit = defineEmits(["exit"]);
 const userStore = useUserStore();
-
-interface flag {
-  flag: string;
-  title: string;
-  color: string;
-}
 
 const props = defineProps({
   student: {
@@ -49,31 +43,34 @@ const props = defineProps({
     required: true,
   },
   flags: {
-    type: Array as PropType<Array<flag>>,
+    type: Array as PropType<Flag[]>,
     required: true,
   },
   viewAll: {
     type: Boolean,
     required: true,
   },
+  add: {
+    type: Boolean,
+    required: true,
+  },
 });
 
-const selected: Ref<string> = ref("");
+const selected = ref("");
 
-const unaddedFlags: Ref<flag[]> = computed(() => {
-  //only push unadded flags into the dropdown
-  return props.flags.filter(
-    (flag) => !props.student[flag.flag as keyof GuidanceStudent]
-  );
-});
+const flags = computed(() =>
+  props.flags.filter(
+    (flag) => props.add !== props.student[flag.flag as keyof GuidanceStudent]
+  )
+);
 
-const confirm = async (flag: string) => {
-  await userStore.changeFlag(props.student);
+const confirm = async () => {
+  await userStore.changeFlag(props.student, selected.value, props.add);
   emit("exit");
 };
 
-function titleCaseName(name: string): string {
-  return name
+const titleCase = (name: string) =>
+  name
     .split(",")
     .map((chunk) =>
       chunk
@@ -83,5 +80,4 @@ function titleCaseName(name: string): string {
         .join(" ")
     )
     .join(", ");
-}
 </script>

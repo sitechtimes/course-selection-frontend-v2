@@ -25,22 +25,38 @@
         <BooleanComponent
           v-else-if="currentQuestion.questionType === 'BOOLEAN'"
           :question="currentQuestion"
+          :finalAnswer="finalAnswer"
           :key="currentQuestion.id + '-boolean'"
         />
 
         <DropdownComponent
           v-else-if="currentQuestion.questionType === 'DROPDOWN'"
           :question="currentQuestion"
-          :key="currentQuestion.question + '-dropdown'"
+          :key="currentQuestion.id + '-dropdown'"
         />
+        <div v-else-if="currentQuestion.questionType === 'FINAL'" class="my-6">
+          <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl my-4">
+            For the final part of the survey, please drag your classes in the
+            order of priority, with the first choice being your top priority.
+          </p>
+          <SurveyDraggable
+            :courses="surveyStore.selectedCourses"
+            :numbered="true"
+            :answer="finalAnswer"
+            :color="'D6EEFF'"
+          />
+        </div>
 
         <CheckboxComponent
           v-else
+          :finalAnswer="finalAnswer"
           :question="currentQuestion"
-          :choices="surveyStore.coursesAvailable.filter(
-    (x: Course) => x.subject === currentQuestion.questionType
-  )"
-          :key="currentQuestion.question + '-checkbox'"
+          :choices="
+            surveyStore.coursesAvailable.filter(
+              (x) => x.subject === currentQuestion.questionType
+            )
+          "
+          :key="currentQuestion.id + '-checkbox'"
           :color="'D6EEFF'"
         />
       </div>
@@ -50,18 +66,14 @@
     >
       <div class="flex flex-row justify-between w-full">
         <button
-          @click="
-            currentQuestion = surveyStore.survey.questions[--currentIndex]
-          "
+          @click="currentIndex--"
           class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:bg-stone-400"
           :disabled="currentIndex === 0"
         >
           Back
         </button>
         <button
-          @click="
-            currentQuestion = surveyStore.survey.questions[++currentIndex]
-          "
+          @click="currentIndex++"
           class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:hidden"
           :disabled="currentIndex === surveyStore.survey.questions.length - 2"
         >
@@ -86,15 +98,16 @@
 </template>
 
 <script setup lang="ts">
-import CheckboxComponent from "../components/SurveyPageComponents/SurveyCheckbox.vue";
-import BooleanComponent from "../components/SurveyPageComponents/SurveyBoolean.vue";
-import GeneralComponent from "../components/SurveyPageComponents/SurveyGeneral.vue";
-import DropdownComponent from "../components/SurveyPageComponents/SurveyDropdown.vue";
-import { ref, reactive, watch } from "vue";
-import { useUserStore } from "../stores/user";
+import CheckboxComponent from "../components/Survey/Checkbox.vue";
+import DropdownComponent from "../components/Survey/Dropdown.vue";
+import SurveyDraggable from "../components/Survey/Draggable.vue";
+import BooleanComponent from "../components/Survey/Boolean.vue";
+import GeneralComponent from "../components/Survey/General.vue";
+import { Question, Answer } from "../types/interface";
 import { useSurveyStore } from "../stores/survey";
-import { Question, Course, Answer } from "../types/interface";
 import { onBeforeRouteLeave } from "vue-router";
+import { useUserStore } from "../stores/user";
+import { ref, reactive, watch } from "vue";
 
 document.title = "Survey | SITHS Course Selection";
 
@@ -106,30 +119,35 @@ let currentQuestion: Question = reactive(
   surveyStore.survey.questions[currentIndex.value]
 );
 
-//finds what courses the student took to assign them questions
+const allCoursesQuestion = surveyStore.survey.questions.find(
+  (entry) => entry.questionType === "FINAL"
+) as Question;
+const finalAnswer = surveyStore.answers.find(
+  (entry) => entry.question === allCoursesQuestion.id
+) as Answer;
+
 onBeforeRouteLeave((to, from, next) => {
   if (
     !surveyStore.checkAnswers() ||
     to.path === "/student/survey/review" ||
     window.confirm("Changes you made might not be saved.")
   ) {
-    window.removeEventListener("beforeunload", reminder);
+    window.removeEventListener("beforeunload", (e) => e.preventDefault());
     return next();
   }
   next(false);
 });
 
-const reminder = (e: { preventDefault: () => void; returnValue: string }) => {
-  e.preventDefault();
-  e.returnValue = "";
-};
-
+watch(
+  () => currentIndex.value,
+  () => (currentQuestion = surveyStore.survey.questions[currentIndex.value])
+);
 watch(
   () => [surveyStore.answers, surveyStore.survey],
   () => {
     surveyStore.checkAnswers()
-      ? window.addEventListener("beforeunload", reminder)
-      : window.removeEventListener("beforeunload", reminder);
+      ? window.addEventListener("beforeunload", (e) => e.preventDefault())
+      : window.removeEventListener("beforeunload", (e) => e.preventDefault());
   },
   { deep: true }
 );

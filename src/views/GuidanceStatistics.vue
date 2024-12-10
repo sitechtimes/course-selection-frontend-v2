@@ -3,10 +3,16 @@
     <div class="flex flex-row ml-12">
       <button
         class="h-10 w-50 px-10 m-4 flex flex-col bg-primary-g text-black justify-center align-center item-center cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
-        @click="allCourses">All Courses</button>
+        @click="allCourses"
+      >
+        All Courses
+      </button>
       <button
         class="h-10 w-50 px-10 m-4 flex flex-col bg-primary-g text-black justify-center align-center item-center cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
-        @click="courseRankings">Course Rankings</button>
+        @click="courseRankings"
+      >
+        Course Rankings
+      </button>
     </div>
     <div class="barChart" v-if="barChart">
       <BarChart />
@@ -18,9 +24,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import BarChart from '../components/StatisticComponents/BarChart.vue';
-import PieChart from '../components/StatisticComponents/PieChart.vue';
+import { ref } from "vue";
+import BarChart from "../components/Statistic/BarChart.vue";
+import PieChart from "../components/Statistic/PieChart.vue";
 
 const barChart = ref(true);
 const pieChart = ref(false);
@@ -34,5 +40,4 @@ const courseRankings = () => {
   pieChart.value = true;
   barChart.value = false;
 };
-
 </script>

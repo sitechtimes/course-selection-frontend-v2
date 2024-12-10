@@ -74,9 +74,9 @@
 </template>
 
 <script setup lang="ts">
-import SearchBar from "../components/GuidanceComponents/SearchBar.vue";
-import Sort from "../components/GuidanceComponents/SortButton.vue";
-import StudentTable from "../components/GuidanceComponents/StudentTable.vue";
+import SearchBar from "../components/Guidance/SearchBar.vue";
+import Sort from "../components/Guidance/SortButton.vue";
+import StudentTable from "../components/Guidance/StudentTable.vue";
 import { useUserStore } from "../stores/user";
 import { GuidanceStudent } from "../types/interface";
 import { ref, computed, watch } from "vue";

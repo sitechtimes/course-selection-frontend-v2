@@ -52,12 +52,16 @@
 </template>
 
 <script setup lang="ts">
+import { preferences, Question, Rank, Answer } from "../../types/interface";
 import exclamationMark from "../../components/icons/ExclamationMark.vue";
 import { useSurveyStore } from "../../stores/survey";
 import { watch, PropType, ref } from "vue";
-import { preferences, Question, Rank, Answer } from "../../types/interface";
 
 const props = defineProps({
+  finalAnswer: {
+    type: Object as PropType<Answer>,
+    required: true,
+  },
   question: {
     type: Object as PropType<Question>,
     required: true,
@@ -69,7 +73,6 @@ const props = defineProps({
 
 const surveyStore = useSurveyStore();
 const index = ref(0);
-
 watch(
   () => props.question.question,
   () => {
@@ -83,23 +86,21 @@ watch(
 watch(
   () => surveyStore.answers[index.value].answer,
   (newResponse, oldResponse) => {
-    const referenced = props.question.classReferenced?.id;
+    const referenced = props.question.classReferenced;
     if (!referenced) return;
-    const allCoursesQuestion = surveyStore.survey.questions.find(
-      (entry) => entry.questionType === "FINAL"
-    ) as Question;
-    const finalAnswer = surveyStore.answers.find(
-      (entry) => entry.question === allCoursesQuestion.id
-    ) as Answer;
 
-    if (newResponse) {
-      (finalAnswer.answer as Rank[]).push({
-        course: referenced,
-        rank: (finalAnswer.answer as Rank[]).length + 1,
+    if (newResponse && !oldResponse) {
+      surveyStore.selectedCourses.push(referenced);
+      (props.finalAnswer.answer as Rank[]).push({
+        course: referenced.id,
+        rank: (props.finalAnswer.answer as Rank[]).length + 1,
       });
     } else if (!newResponse && oldResponse) {
-      finalAnswer.answer = (finalAnswer.answer as Rank[]).filter(
-        (ans) => ans.course !== referenced
+      surveyStore.selectedCourses = surveyStore.selectedCourses.filter(
+        (course) => course.id !== referenced.id
+      );
+      props.finalAnswer.answer = (props.finalAnswer.answer as Rank[]).filter(
+        (ans) => ans.course !== referenced.id
       );
     }
   }

@@ -66,7 +66,6 @@
             :color="color"
             :final="false"
             @save="emit('save')"
-            :key="x"
           />
         </div>
         <Transition
@@ -87,14 +86,17 @@
 
 <script setup lang="ts">
 import exclamationMark from "../../components/icons/ExclamationMark.vue";
-import surveyDraggable from "./SurveyDraggable.vue";
-import { useSurveyStore } from "../../stores/survey";
-import { watch, ref, computed, PropType, onMounted } from "vue";
 import { Question, Course, Rank, Answer } from "../../types/interface";
+import { watch, ref, PropType, onMounted } from "vue";
+import { useSurveyStore } from "../../stores/survey";
+import surveyDraggable from "./Draggable.vue";
 
 const emit = defineEmits(["save"]);
-
 const props = defineProps({
+  finalAnswer: {
+    type: Object as PropType<Answer>,
+    required: true,
+  },
   choices: {
     type: Array as PropType<Course[]>,
     required: true,
@@ -109,15 +111,11 @@ const props = defineProps({
 
 const surveyStore = useSurveyStore();
 const courses = ref<Course[]>([]);
-const x = ref(0);
 const answer = ref<Answer>(
   surveyStore.answers.find(
     (entry) => entry.question === props.question.id
   ) as Answer
 );
-let finalAnswer: Answer = {} as Answer;
-
-//'Not Interested' is selected
 const notInterested = ref(false);
 
 watch(
@@ -126,7 +124,7 @@ watch(
     if (!isNotInterested) return;
     const bads = (answer.value.answer as Rank[]).map((course) => course.course);
 
-    finalAnswer.answer = (finalAnswer.answer as Rank[])
+    props.finalAnswer.answer = (props.finalAnswer.answer as Rank[])
       .filter((rank) => !(rank.course in bads))
       .map((rank, index) => ({ ...rank, rank: index + 1 }));
     surveyStore.selectedCourses = surveyStore.selectedCourses.filter(
@@ -140,8 +138,8 @@ watch(
 
 function toggleInterest(interested: boolean, course: Course) {
   if (interested) {
-    const rank = (finalAnswer.answer as Rank[]).length + 1;
-    (finalAnswer.answer as Rank[]).push({
+    const rank = (props.finalAnswer.answer as Rank[]).length + 1;
+    (props.finalAnswer.answer as Rank[]).push({
       rank: rank,
       course: course.id,
     });
@@ -152,7 +150,7 @@ function toggleInterest(interested: boolean, course: Course) {
   surveyStore.selectedCourses = surveyStore.selectedCourses.filter(
     (x) => x !== course
   );
-  finalAnswer.answer = (finalAnswer.answer as Rank[]).filter(
+  props.finalAnswer.answer = (props.finalAnswer.answer as Rank[]).filter(
     (rank) => rank.course !== course.id
   );
 }
@@ -170,7 +168,7 @@ function getChangedCourse(newCourses: Course[], oldCourses: Course[]) {
 }
 
 watch(
-  () => props.question.question,
+  () => props.question.id,
   () => {
     answer.value = surveyStore.answers.find(
       (entry) => entry.question === props.question.id
@@ -181,7 +179,6 @@ watch(
   }
 );
 
-//watching for changes on selected courses
 watch(
   () => courses.value,
   (newResponse, oldResponse) => {
@@ -192,19 +189,5 @@ watch(
   { deep: true }
 );
 
-watch(
-  () => courses.value,
-  () => {
-    x.value++;
-  }
-);
-
-onMounted(() => {
-  const allCoursesQuestion = surveyStore.survey.questions.find(
-    (entry) => entry.questionType === "FINAL"
-  ) as Question;
-  finalAnswer = surveyStore.answers.find(
-    (entry) => entry.question === allCoursesQuestion.id
-  ) as Answer;
-});
+onMounted(() => {});
 </script>

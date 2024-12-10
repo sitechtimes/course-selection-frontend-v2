@@ -1,7 +1,3 @@
-<script setup lang="ts">
-document.title = 'Course Selection'
-</script>
-
 <template>
   <div class="h-[75vh] w-full flex flex-row justify-center items-center">
     <div
@@ -9,11 +5,9 @@ document.title = 'Course Selection'
       class="w-fit flex flex-col justify-center items-center text-center space-y-4 lg:items-start lg:text-left md:w-3/4 max-w-md lg:max-w-2xl xl:max-w-3xl lg:space-y-6 lg:ml-12"
     >
       <h1 id="heading" class="text-4xl font-bold lg:text-5xl lg:leading-normal">
-       Staten Island Technical High School Course Selection 
+        Staten Island Technical High School Course Selection
       </h1>
-      <h2 class="text-lg lg:text-xl">
-        Selections made easy.
-      </h2>
+      <h2 class="text-lg lg:text-xl">Selections made easy.</h2>
       <div class="flex justify-start items-center">
         <RouterLink to="/login">
           <button
@@ -39,3 +33,6 @@ document.title = 'Course Selection'
     </div>
   </div>
 </template>
+<script setup lang="ts">
+document.title = "Course Selection";
+</script>
