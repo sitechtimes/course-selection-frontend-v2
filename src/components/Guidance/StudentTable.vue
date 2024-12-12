@@ -111,7 +111,7 @@ function statusStyles(status: string) {
     {
       "Not Started": "text-[#461616] bg-[#EA9F9F]",
       "In Progress": "text-[#322911] bg-[#F9D477]",
-      Complete: "text-[#174616] bg-[#A8D480]",
+      Completed: "text-[#174616] bg-[#A8D480]",
       Finalized: "text-[#311638] bg-[#D1A4DE]",
     }[status] + "w-[8rem] font-semibold text-center p-1 rounded-2xl"
   );

@@ -52,8 +52,7 @@ export const useUserStore = defineStore("userStore", () => {
     isGuidance.value = data.isGuidance;
     if (!isGuidance.value) {
       student.value = data.student;
-      if (["Finalized", "Complete"].includes(data.student.status))
-        surveyStore.open = false;
+      if (data.student.status === "Finalized") surveyStore.open = false;
     } else await getStudents();
     isAuth.value = true;
   }
@@ -71,8 +70,7 @@ export const useUserStore = defineStore("userStore", () => {
     isGuidance.value = data.isGuidance;
     if (!isGuidance.value) {
       student.value = data.student;
-      if (["Finalized", "Complete"].includes(data.student.status))
-        surveyStore.open = false;
+      if (data.student.status === "Finalized") surveyStore.open = false;
     } else await getStudents();
     isAuth.value = true;
     router.push(`/${isGuidance.value ? "guidance" : "student"}/dashboard`);

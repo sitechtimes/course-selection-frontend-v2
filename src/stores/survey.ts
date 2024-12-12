@@ -18,7 +18,6 @@ export const useSurveyStore = defineStore("survey", () => {
   const loaded = ref(false);
   const open = ref(true);
   const submit = ref(false);
-  const status = ref("");
   const coursesTaken = ref<Course[]>([]);
   const coursesAvailable = ref<Course[]>([]);
   const survey = ref({} as Survey);
@@ -44,7 +43,6 @@ export const useSurveyStore = defineStore("survey", () => {
     if (!res.ok) return (open.value = false);
     const data: SurveyData = await res.json();
     survey.value = data.survey;
-    status.value = data.survey.status;
     answers.value = JSON.parse(JSON.stringify(data.survey.answers));
     const final = survey.value.questions.find(
       (q) => q.questionType === "FINAL"
@@ -61,24 +59,23 @@ export const useSurveyStore = defineStore("survey", () => {
   }
 
   async function saveSurvey(status: Number) {
+    checkAnswers();
     const res = await fetchData("student/survey/", "POST", {
       answers: changes.value,
       status: status,
     });
-    if (res.ok) {
-      status.value = "SAVED";
-    }
-    console.log(await res.json());
+    if (!res.ok) return;
+    survey.value = await res.json();
   }
 
   function checkAnswers() {
     changes.value = answers.value.filter((ans) => {
-      let old = survey.value.answers.find((q) => q.question === ans.question);
+      const old = survey.value.answers.find((q) => q.question === ans.question);
       if (ans.answer === null) return false;
       if (typeof ans.answer === "object")
         return (
           old.answer.find((a, i) => a.rank !== ans.answer[i].rank) ||
-          ans.length !== old.length
+          ans.answer.length !== old.answer.length
         );
       if (typeof ans.answer === "string") ans.answer = ans.answer.trim();
       if (ans.answer !== old.answer) return true;

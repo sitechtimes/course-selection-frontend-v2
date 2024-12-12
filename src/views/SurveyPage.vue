@@ -34,18 +34,6 @@
           :question="currentQuestion"
           :key="currentQuestion.id + '-dropdown'"
         />
-        <div v-else-if="currentQuestion.questionType === 'FINAL'" class="my-6">
-          <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl my-4">
-            For the final part of the survey, please drag your classes in the
-            order of priority, with the first choice being your top priority.
-          </p>
-          <SurveyDraggable
-            :courses="surveyStore.selectedCourses"
-            :numbered="true"
-            :answer="finalAnswer"
-            :color="'D6EEFF'"
-          />
-        </div>
 
         <CheckboxComponent
           v-else
@@ -75,13 +63,13 @@
         <button
           @click="currentIndex++"
           class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:hidden"
-          :disabled="currentIndex === surveyStore.survey.questions.length - 2"
+          :disabled="currentIndex === surveyStore.survey.questions.length - 3"
         >
           Next
         </button>
         <RouterLink
           to="/student/survey/review"
-          v-if="currentIndex === surveyStore.survey.questions.length - 2"
+          v-if="currentIndex === surveyStore.survey.questions.length - 3"
         >
           <button
             class="bg-emerald-600 text-white w-auto px-3 h-10 rounded-md inline disabled:hidden"

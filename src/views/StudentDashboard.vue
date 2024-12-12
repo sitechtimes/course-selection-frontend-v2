@@ -129,7 +129,7 @@ import { computed, ref } from "vue";
 document.title = "Dashboard | SITHS Course Selection";
 
 const statusStyles = ref({
-  Complete: "text-[#174616] bg-[#A8D480]",
+  Completed: "text-[#174616] bg-[#A8D480]",
   "In Progress": "text-[#461616] bg-[#F9D477]",
   Finalized: "text-[#461616] bg-[#D1A4DE]",
 });

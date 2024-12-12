@@ -112,8 +112,8 @@ async function submit() {
     shouldWarn.value = true;
     return;
   }
-  if (userStore.isGuidance) return router.push("/guidance/studentlist");
   await surveyStore.saveSurvey(1);
+  if (userStore.isGuidance) return router.push("/guidance/studentlist");
   router.push("/student/dashboard");
 }
 

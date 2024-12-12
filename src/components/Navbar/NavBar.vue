@@ -108,7 +108,7 @@
         Submit
       </p>
       <p
-        v-if="surveyStore.status != 'Complete' && surveyStore.open"
+        v-if="surveyStore.status != 'Completed' && surveyStore.open"
         @click="
           surveyStore.saveSurvey(0);
           toggleSave();

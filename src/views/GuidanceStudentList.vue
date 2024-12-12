@@ -110,7 +110,6 @@ const sortedAndFilteredStudents = computed(() => {
 });
 
 function filterByCategory(students: GuidanceStudent[], sortBy: string) {
-  console.log(sortBy);
   if (sortBy === "lastnameaz")
     return students.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -167,7 +166,7 @@ function changePage(increment: number) {
   } else if (increment < 0) {
     startIndex.value -= pageCapacity;
     endIndex.value -= pageCapacity;
-  } else return console.error("Invalid increment; Unable to change pages.");
+  } else return;
   updatePagination(currentPage.value);
 }
 

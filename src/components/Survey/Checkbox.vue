@@ -58,7 +58,7 @@
               Drag course(s) into order of preference:
             </p>
           </div>
-          <surveyDraggable
+          <SurveyDraggable
             class="p-6"
             :courses="courses"
             :answer="answer"
@@ -89,7 +89,7 @@ import exclamationMark from "../../components/icons/ExclamationMark.vue";
 import { Question, Course, Rank, Answer } from "../../types/interface";
 import { watch, ref, PropType, onMounted } from "vue";
 import { useSurveyStore } from "../../stores/survey";
-import surveyDraggable from "./Draggable.vue";
+import SurveyDraggable from "./Draggable.vue";
 
 const emit = defineEmits(["save"]);
 const props = defineProps({
@@ -144,7 +144,6 @@ function toggleInterest(interested: boolean, course: Course) {
       course: course.id,
     });
     surveyStore.selectedCourses.push(course);
-    console.log(surveyStore.selectedCourses);
     return;
   }
   surveyStore.selectedCourses = surveyStore.selectedCourses.filter(
@@ -171,10 +170,11 @@ watch(
   () => props.question.id,
   () => {
     answer.value = surveyStore.answers.find(
-      (entry) => entry.question === props.question.id
+      (ans) => ans.question === props.question.id
     ) as Answer;
+    console.log(answer.value);
     courses.value = surveyStore.coursesAvailable.filter(
-      (x) => x.subject === props.question.questionType
+      (course) => course.subject === props.question.questionType
     );
   }
 );
