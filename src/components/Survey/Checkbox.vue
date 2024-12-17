@@ -137,29 +137,31 @@ watch(
 );
 
 function toggleInterest(interested: boolean, course: Course) {
-  if (interested) {
-    const rank = (props.finalAnswer.answer as Rank[]).length + 1;
-    (props.finalAnswer.answer as Rank[]).push({
-      rank: rank,
-      course: course.id,
-    });
-    props.finalAnswer.answer = (props.finalAnswer.answer as Rank[]).filter(
-      (x) => x.course !== course.id
-    );
-    surveyStore.selectedCourses.push(course);
-    return;
-  }
   surveyStore.selectedCourses = surveyStore.selectedCourses.filter(
     (x) => x !== course
   );
   props.finalAnswer.answer = (props.finalAnswer.answer as Rank[]).filter(
     (rank) => rank.course !== course.id
   );
+  if (!interested) return;
+  const rank = (props.finalAnswer.answer as Rank[]).length + 1;
+  (props.finalAnswer.answer as Rank[]).push({
+    rank: rank,
+    course: course.id,
+  });
+  props.finalAnswer.answer = (props.finalAnswer.answer as Rank[]).filter(
+    (x) => x.course !== course.id
+  );
+  surveyStore.selectedCourses.push(course);
+  return;
 }
 
 function getChangedCourse(newCourses: Course[], oldCourses: Course[]) {
   const addedCourse = newCourses.find((course) => !oldCourses.includes(course));
   if (addedCourse) {
+    answer.value.answer = (answer.value.answer as Rank[]).filter(
+      (rank) => rank.course !== addedCourse.id
+    );
     (answer.value.answer as Rank[]).push({
       rank: (answer.value.answer as Rank[]).length + 1,
       course: addedCourse.id,
@@ -168,6 +170,16 @@ function getChangedCourse(newCourses: Course[], oldCourses: Course[]) {
   }
   return oldCourses.find((course) => !newCourses.includes(course));
 }
+
+watch(
+  () => answer.value.answer,
+  () => {
+    (answer.value.answer as Rank[]).forEach((ans, index) => {
+      ans.rank = index + 1;
+    });
+  },
+  { deep: true }
+);
 
 watch(
   () => courses.value,

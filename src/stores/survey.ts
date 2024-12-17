@@ -12,8 +12,10 @@ import {
   Answer,
 } from "../types/interface";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 
 export const useSurveyStore = defineStore("survey", () => {
+  const router = useRouter();
   const userStore = useUserStore();
   const loaded = ref(false);
   const open = ref(true);
@@ -64,7 +66,11 @@ export const useSurveyStore = defineStore("survey", () => {
       status: status,
     });
     if (!res.ok) return;
-    survey.value = await res.json();
+    submit.value = true;
+    setTimeout(() => (submit.value = false), 3000);
+    userStore.student.status = await res.json();
+    if (userStore.isGuidance) return router.push("/guidance/studentlist");
+    router.push("/student/dashboard");
   }
 
   function checkAnswers() {
@@ -73,9 +79,10 @@ export const useSurveyStore = defineStore("survey", () => {
       if (ans.answer === null) return false;
       if (typeof ans.answer === "object")
         return (
-          old.answer.find((a, i) => a.rank !== ans.answer[i].rank) ||
-          ans.answer.length !== old.answer.length
+          ans.answer.length !== old.answer.length ||
+          ans.answer.some((item, i) => item.rank !== old.answer[i].rank)
         );
+
       if (typeof ans.answer === "string") ans.answer = ans.answer.trim();
       if (ans.answer !== old.answer) return true;
     });
@@ -104,8 +111,6 @@ export const useSurveyStore = defineStore("survey", () => {
     coursesAvailable.value = [];
     survey.value = {} as studentSurveyData;
     answers.value = [];
-    savedSurvey.value = {};
-    status.value = "";
   }
 
   return {

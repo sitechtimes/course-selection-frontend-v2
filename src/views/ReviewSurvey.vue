@@ -113,8 +113,6 @@ async function submit() {
     return;
   }
   await surveyStore.saveSurvey(1);
-  if (userStore.isGuidance) return router.push("/guidance/studentlist");
-  router.push("/student/dashboard");
 }
 
 onBeforeRouteLeave((to, from, next) => {

@@ -27,7 +27,6 @@
 
 <script setup lang="ts">
 import { Course, Answer } from "../../types/interface";
-import { useSurveyStore } from "../../stores/survey";
 import { ref, watch, PropType } from "vue";
 import vuedraggable from "vuedraggable";
 
@@ -45,7 +44,6 @@ const props = defineProps({
 });
 
 const ranked = ref<Course[]>([...props.courses]);
-//watch for changes in the courses prop and update items accordingly
 watch(
   () => props.courses,
   (newCourses) => {
