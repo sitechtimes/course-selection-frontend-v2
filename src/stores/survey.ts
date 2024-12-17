@@ -44,17 +44,16 @@ export const useSurveyStore = defineStore("survey", () => {
     const data: SurveyData = await res.json();
     survey.value = data.survey;
     answers.value = JSON.parse(JSON.stringify(data.survey.answers));
-    const final = survey.value.questions.find(
-      (q) => q.questionType === "FINAL"
-    );
-    answers.value.push(
-      ...answers.value.splice(
-        answers.value.findIndex((a) => a.question === final.id),
-        1
-      )
-    );
-    coursesTaken.value = data.coursesTaken;
     coursesAvailable.value = data.coursesAvailable;
+    coursesTaken.value = data.coursesTaken;
+    selectedCourses.value = data.survey.answers
+      .filter((ans) => typeof ans.answer === "object" && ans.answer !== null)
+      .map((ans) =>
+        ans.answer.map((a) =>
+          data.coursesAvailable.find((c) => c.id === a.course)
+        )
+      )
+      .flat();
     loaded.value = true;
   }
 

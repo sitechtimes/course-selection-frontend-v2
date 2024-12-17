@@ -143,6 +143,9 @@ function toggleInterest(interested: boolean, course: Course) {
       rank: rank,
       course: course.id,
     });
+    props.finalAnswer.answer = (props.finalAnswer.answer as Rank[]).filter(
+      (x) => x.course !== course.id
+    );
     surveyStore.selectedCourses.push(course);
     return;
   }
@@ -167,19 +170,6 @@ function getChangedCourse(newCourses: Course[], oldCourses: Course[]) {
 }
 
 watch(
-  () => props.question.id,
-  () => {
-    answer.value = surveyStore.answers.find(
-      (ans) => ans.question === props.question.id
-    ) as Answer;
-    console.log(answer.value);
-    courses.value = surveyStore.coursesAvailable.filter(
-      (course) => course.subject === props.question.questionType
-    );
-  }
-);
-
-watch(
   () => courses.value,
   (newResponse, oldResponse) => {
     const interested = newResponse.length > oldResponse.length;
@@ -189,5 +179,12 @@ watch(
   { deep: true }
 );
 
-onMounted(() => {});
+onMounted(() => {
+  answer.value = surveyStore.answers.find(
+    (ans) => ans.question === props.question.id
+  ) as Answer;
+  courses.value = surveyStore.coursesAvailable.filter((course) =>
+    (answer.value.answer as Rank[]).some((rank) => rank.course === course.id)
+  );
+});
 </script>

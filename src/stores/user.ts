@@ -142,6 +142,7 @@ export const useUserStore = defineStore("userStore", () => {
   };
 });
 
+// old one
 export const useUserStore1 = defineStore("user", {
   state: () => ({
     first_name: "",
