@@ -87,29 +87,21 @@
 <script setup lang="ts">
 import exclamationMark from "../../components/icons/ExclamationMark.vue";
 import { Question, Course, Rank, Answer } from "../../types/interface";
-import { watch, ref, PropType, onMounted } from "vue";
 import { useSurveyStore } from "../../stores/survey";
 import SurveyDraggable from "./Draggable.vue";
+import { watch, ref, onMounted } from "vue";
 
-const emit = defineEmits(["save"]);
-const props = defineProps({
-  finalAnswer: {
-    type: Object as PropType<Answer>,
-    required: true,
-  },
-  choices: {
-    type: Array as PropType<Course[]>,
-    required: true,
-  },
-  question: {
-    type: Object as PropType<Question>,
-    required: true,
-  },
-  color: String,
-  warn: Boolean,
-});
+const emit = defineEmits(["save", "update"]);
+const props = defineProps<{
+  finalID: number;
+  choices: Course[];
+  question: Question;
+  color: string;
+  warn?: boolean;
+}>();
 
 const surveyStore = useSurveyStore();
+const finalAnswer = surveyStore.answers[props.finalID] as Answer;
 const courses = ref<Course[]>([]);
 const answer = ref<Answer>(
   surveyStore.answers.find(
@@ -124,14 +116,13 @@ watch(
     if (!isNotInterested) return;
     const bads = (answer.value.answer as Rank[]).map((course) => course.course);
 
-    props.finalAnswer.answer = (props.finalAnswer.answer as Rank[])
+    finalAnswer.answer = (finalAnswer.answer as Rank[])
       .filter((rank) => !(rank.course in bads))
       .map((rank, index) => ({ ...rank, rank: index + 1 }));
     surveyStore.selectedCourses = surveyStore.selectedCourses.filter(
       (course) => !(course.id in bads)
     );
     courses.value = [];
-
     answer.value.answer = [];
   }
 );
@@ -140,18 +131,21 @@ function toggleInterest(interested: boolean, course: Course) {
   surveyStore.selectedCourses = surveyStore.selectedCourses.filter(
     (x) => x !== course
   );
-  props.finalAnswer.answer = (props.finalAnswer.answer as Rank[]).filter(
-    (rank) => rank.course !== course.id
-  );
+  finalAnswer.answer = (finalAnswer.answer as Rank[])
+    .filter((rank) => rank.course !== course.id)
+    .map((rank, index) => {
+      rank.rank = index + 1;
+      return rank;
+    });
   if (!interested) return;
-  const rank = (props.finalAnswer.answer as Rank[]).length + 1;
-  (props.finalAnswer.answer as Rank[]).push({
+  const rank = (finalAnswer.answer as Rank[]).length + 1;
+  finalAnswer.answer = (finalAnswer.answer as Rank[]).filter(
+    (x) => x.course !== course.id
+  );
+  (finalAnswer.answer as Rank[]).push({
     rank: rank,
     course: course.id,
   });
-  props.finalAnswer.answer = (props.finalAnswer.answer as Rank[]).filter(
-    (x) => x.course !== course.id
-  );
   surveyStore.selectedCourses.push(course);
   return;
 }

@@ -6,7 +6,7 @@
           <th class="p-4">Name</th>
           <th class="p-4">Grade</th>
           <th class="p-4">Email</th>
-          <th class="p-4">Status</th>
+          <th class="p-4 pl-10">Status</th>
           <th class="p-4">Details</th>
           <th class="p-4 flex flex-row items-center">
             <p class="p-2 font-bold">Flags</p>
@@ -44,7 +44,7 @@
           v-if="Math.abs(flagModal) === student.id"
           @exit="flagModal = 0"
           :student="student"
-          :viewAll="viewall"
+          :viewAll="viewAll"
           :flags="flags"
           :add="flagModal > 0"
         />
@@ -52,39 +52,43 @@
           <td class="p-4">
             {{ titleCase(student.name) }}
           </td>
-          <td class="p-4" v-if="student.grade">{{ student.grade }}</td>
-          <td class="p-4" v-else>&nbsp;</td>
+          <td class="p-4">{{ student.grade ?? "&nbsp;" }}</td>
           <td class="p-4">
             {{ student.email ? student.email + "@nycstudents.net" : "&nbsp;" }}
           </td>
           <td class="p-4">
-            <p :class="statusStyles(student.status)">
+            <p
+              :class="`${
+                statuses[student.status]
+              } w-[8rem] font-semibold text-center p-1 rounded-2xl`"
+            >
               {{ student.status }}
             </p>
           </td>
           <td @click="viewSurvey(student)" class="p-4 hover:cursor-pointer">
             View Survey
           </td>
-          <td class="p-4 flex flex-row parent items-center">
-            <div v-for="flag in flags" :key="flag.flag">
-              <div>
-                <div
-                  id="flagbox"
-                  v-show="student[flag.flag as keyof GuidanceStudent]"
-                  :title="flag.title"
-                  :class="flag.color + 'm-1 rounded-full h-5 w-5'"
-                ></div>
-              </div>
-            </div>
-            <PlusIcon
+          <td class="p-4 flex flex-row parent">
+            <div
+              id="flagbox"
+              v-for="flag in flags"
+              :key="flag.flag"
+              v-show="student[flag.flag as keyof GuidanceStudent]"
+              :title="flag.title"
+              :class="flag.color + 'm-1 rounded-full h-5 w-5'"
+            ></div>
+            <button
               @click="flagModal = student.id"
-              class="w-3 m-1 hidden child hover:cursor-pointer"
-            />
-
-            <MinusSign
+              class="w-3 m-1 hidden child hover:cursor-pointer text-2xl leading-[0]"
+            >
+              +
+            </button>
+            <button
               @click="flagModal = -student.id"
-              class="w-3 m-1 hidden child hover:cursor-pointer"
-            />
+              class="w-3 m-1 hidden child hover:cursor-pointer text-2xl leading-[0]"
+            >
+              -
+            </button>
           </td>
         </tr>
       </tbody>
@@ -93,29 +97,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, PropType } from "vue";
-import { useRouter } from "vue-router";
 import { GuidanceStudent } from "../../types/interface";
 import { useSurveyStore } from "../../stores/survey";
-import PlusIcon from "../icons/PlusIcon.vue";
-import MinusSign from "../icons/MinusSign.vue";
 import ChangeFlag from "../Guidance/ChangeFlag.vue";
+import { useRouter } from "vue-router";
+import { ref } from "vue";
 
-defineProps({
-  newStudents: Array as PropType<GuidanceStudent[]>,
-  viewall: Boolean,
-});
+defineProps<{ newStudents: GuidanceStudent[]; viewAll: boolean }>();
 
-function statusStyles(status: string) {
-  return (
-    {
-      "Not Started": "text-[#461616] bg-[#EA9F9F]",
-      "In Progress": "text-[#322911] bg-[#F9D477]",
-      Completed: "text-[#174616] bg-[#A8D480]",
-      Finalized: "text-[#311638] bg-[#D1A4DE]",
-    }[status] + "w-[8rem] font-semibold text-center p-1 rounded-2xl"
-  );
-}
+const statuses = {
+  "Not Started": "text-[#461616] bg-[#EA9F9F]",
+  "In Progress": "text-[#322911] bg-[#F9D477]",
+  Completed: "text-[#174616] bg-[#A8D480]",
+  Finalized: "text-[#311638] bg-[#D1A4DE]",
+};
+
 const surveyStore = useSurveyStore();
 const router = useRouter();
 

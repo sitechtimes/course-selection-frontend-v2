@@ -27,21 +27,15 @@
 
 <script setup lang="ts">
 import { Course, Answer } from "../../types/interface";
-import { ref, watch, PropType } from "vue";
 import vuedraggable from "vuedraggable";
+import { ref, watch } from "vue";
 
-const props = defineProps({
-  courses: {
-    type: Array as PropType<Course[]>,
-    required: true,
-  },
-  numbered: Boolean,
-  answer: {
-    type: Object as PropType<Answer>,
-    required: true,
-  },
-  color: String,
-});
+const props = defineProps<{
+  courses: Course[];
+  answer: Answer;
+  numbered?: boolean;
+  color?: string;
+}>();
 
 const ranked = ref<Course[]>([...props.courses]);
 watch(

@@ -8,7 +8,7 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      component: () => import("../views/LandingPage.vue"),
+      component: () => import("../views/HomePage.vue"),
     },
     {
       path: "/login",
@@ -23,7 +23,7 @@ const router = createRouter({
         {
           path: "dashboard",
           name: "guidanceDash",
-          component: () => import("../views/GuidanceHome.vue"),
+          component: () => import("../views/GuidanceDashboard.vue"),
         },
         {
           path: "studentlist",
@@ -34,6 +34,10 @@ const router = createRouter({
           path: "survey/:id",
           name: "guidanceSurvey",
           component: () => import("../views/GuidanceSurvey.vue"),
+          beforeEnter: async (to, from, next) => {
+            await useSurveyStore().getSurvey(Number(to.params.id));
+            return next();
+          },
         },
         {
           path: "calendar",
@@ -43,7 +47,7 @@ const router = createRouter({
         {
           path: "statistics",
           name: "statistics",
-          component: () => import("../views/GuidanceStatistics.vue"),
+          component: () => import("../views/GuidanceStats.vue"),
         },
         {
           path: "PrintPage/:email",
@@ -68,13 +72,15 @@ const router = createRouter({
           beforeEnter: async (to, from, next) => {
             const surveyStore = useSurveyStore();
             if (!surveyStore.loaded) await surveyStore.getSurvey();
-            return surveyStore.open ? next() : next({ name: "closedSurvey" });
+            return next();
           },
           children: [
             {
               path: "",
               name: "openSurvey",
               component: () => import("../views/SurveyPage.vue"),
+              beforeEnter: async (to, from, next) =>
+                useSurveyStore().open ? next() : next({ name: "closedSurvey" }),
             },
             {
               path: "closed",

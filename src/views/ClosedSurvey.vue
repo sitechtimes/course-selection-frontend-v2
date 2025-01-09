@@ -2,13 +2,14 @@
   <section class="flex justify-center items-center flex-col">
     <div class="w-2/3">
       <div
-        v-for="question in surveyStore.currentSurvey.question"
+        v-for="question in surveyStore.survey.questions"
         :key="question.id"
         class="flex justify-center"
       >
         <SurveyBoolean
           class="mb-2"
           v-if="question.questionType === 'BOOLEAN'"
+          :finalAnswer="(finalAnswer as Answer)"
           :question="question"
           :isDisabled="true"
         />
@@ -24,6 +25,7 @@
           :question="question"
           :isDisabled="true"
         />
+        <ClosedFinalRank v-else-if="question.questionType === 'FINAL'" />
         <ClosedRank
           v-else
           class="mb-6"
@@ -31,14 +33,13 @@
           :choices="getChoices(question)"
         />
       </div>
-      <div class="my-6">
+      <!-- <div class="my-6">
         <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl my-4">
           Your final class priority:
         </p>
         <closedFinalRank
           :courses="(surveyStore.currentResponse[indexAll] as allCoursesAnswer).answer.preference"
-        >
-        </closedFinalRank>
+        />
       </div>
       <div class="mt-14">
         <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl">
@@ -50,40 +51,36 @@
           disabled
           v-model="surveyStore.currentResponse[indexNote].answer"
         />
-      </div>
+      </div> -->
       <div class="flex justify-center my-10 flex-col items-center"></div>
     </div>
   </section>
   <ScrollPage :guidance="false" />
 </template>
-
 <script setup lang="ts">
-import { useSurveyStore } from "../stores/survey";
-import SurveyBoolean from "../components/Survey/SurveyBoolean.vue";
-import surveyGeneral from "../components/Survey/SurveyGeneral.vue";
-import SurveyDropdown from "../components/Survey/SurveyDropdown.vue";
-import closedRank from "../components/Survey/ClosedSurvey/closedRank.vue";
-import closedFinalRank from "../components/Survey/ClosedSurvey/closedFinalRank.vue";
+import ClosedFinalRank from "../components/Survey/ClosedSurvey/ClosedFinalRank.vue";
+import ClosedRank from "../components/Survey/ClosedSurvey/ClosedRank.vue";
+import SurveyDropdown from "../components/Survey/Dropdown.vue";
+import SurveyGeneral from "../components/Survey/General.vue";
+import SurveyBoolean from "../components/Survey/Boolean.vue";
 import ScrollPage from "../components/Survey/ScrollPage.vue";
-import { surveyQuestion, allCoursesAnswer } from "../types/interface";
-import { ref, Ref } from "vue";
-import { useUserStore } from "../stores/user";
+import { useSurveyStore } from "../stores/survey";
+import { Question, Answer } from "../types/interface";
 
 document.title = "Survey | SITHS Course Selection";
 
 const surveyStore = useSurveyStore();
-const userStore = useUserStore();
 
-const indexAll = surveyStore.currentResponse.findIndex(
-  (x) => x.id === "allChosenCourses"
+const finalQuestion = surveyStore.survey.questions.find(
+  (x) => x.questionType === "FINAL"
 );
-const indexNote = surveyStore.currentResponse.findIndex(
-  (x) => x.id === "noteToGuidance"
-);
-const x: Ref<number> = ref(0);
 
-const getChoices = (question: surveyQuestion) => {
-  const classes = surveyStore.studentCourses.coursesAvailable;
-  return classes.filter((x) => x.subject === question.questionType);
-};
+const finalAnswer = surveyStore.answers.find(
+  (x) => x.question === finalQuestion?.id
+);
+
+const getChoices = (question: Question) =>
+  surveyStore.coursesAvailable.filter(
+    (x) => x.subject === question.questionType
+  );
 </script>

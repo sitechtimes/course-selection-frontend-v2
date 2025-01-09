@@ -20,7 +20,7 @@
       />
     </div>
     <StudentTable
-      :viewall="viewAll"
+      :viewAll="viewAll"
       :new-students="sortedAndFilteredStudents.slice(startIndex, endIndex)"
     />
     <div class="max-w-[80%] overflow-x-auto mt-4 flex flex-row justify-between">

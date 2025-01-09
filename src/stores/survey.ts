@@ -45,22 +45,24 @@ export const useSurveyStore = defineStore("survey", () => {
     if (!res.ok) return (open.value = false);
     const data: SurveyData = await res.json();
     survey.value = data.survey;
+    userStore.student.status = survey.value.status;
     answers.value = JSON.parse(JSON.stringify(data.survey.answers));
     coursesAvailable.value = data.coursesAvailable;
     coursesTaken.value = data.coursesTaken;
-    selectedCourses.value = data.survey.answers
-      .filter((ans) => typeof ans.answer === "object" && ans.answer !== null)
-      .map((ans) =>
-        ans.answer.map((a) =>
-          data.coursesAvailable.find((c) => c.id === a.course)
-        )
-      )
+    const finalQuestion = data.survey.questions.find(
+      (q) => q.questionType === "FINAL"
+    );
+    const finalAnswer = data.survey.answers.find(
+      (a) => a.question === finalQuestion.id
+    );
+    selectedCourses.value = finalAnswer.answer
+      .map((ans) => data.coursesAvailable.find((c) => c.id === ans.course))
       .flat();
     loaded.value = true;
   }
 
   async function saveSurvey(status: Number) {
-    checkAnswers();
+    if (!checkAnswers()) return alert("No changes detected.");
     const res = await fetchData("student/survey/", "POST", {
       answers: changes.value,
       status: status,
@@ -69,6 +71,8 @@ export const useSurveyStore = defineStore("survey", () => {
     submit.value = true;
     setTimeout(() => (submit.value = false), 3000);
     userStore.student.status = await res.json();
+    survey.value.answers = answers.value;
+    checkAnswers();
     if (userStore.isGuidance) return router.push("/guidance/studentlist");
     router.push("/student/dashboard");
   }

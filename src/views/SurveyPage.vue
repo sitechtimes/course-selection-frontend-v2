@@ -25,7 +25,7 @@
         <BooleanComponent
           v-else-if="currentQuestion.questionType === 'BOOLEAN'"
           :question="currentQuestion"
-          :finalAnswer="finalAnswer"
+          :finalID="finalID"
           :key="currentQuestion.id + '-boolean'"
         />
 
@@ -37,7 +37,7 @@
 
         <CheckboxComponent
           v-else
-          :finalAnswer="finalAnswer"
+          :finalID="finalID"
           :question="currentQuestion"
           :choices="
             surveyStore.coursesAvailable.filter(
@@ -88,12 +88,11 @@
 <script setup lang="ts">
 import CheckboxComponent from "../components/Survey/Checkbox.vue";
 import DropdownComponent from "../components/Survey/Dropdown.vue";
-import SurveyDraggable from "../components/Survey/Draggable.vue";
 import BooleanComponent from "../components/Survey/Boolean.vue";
 import GeneralComponent from "../components/Survey/General.vue";
-import { Question, Answer } from "../types/interface";
 import { useSurveyStore } from "../stores/survey";
 import { onBeforeRouteLeave } from "vue-router";
+import { Question } from "../types/interface";
 import { useUserStore } from "../stores/user";
 import { ref, reactive, watch } from "vue";
 
@@ -103,16 +102,17 @@ const surveyStore = useSurveyStore();
 const userStore = useUserStore();
 
 const currentIndex = ref(0);
-let currentQuestion: Question = reactive(
+let currentQuestion = reactive(
   surveyStore.survey.questions[currentIndex.value]
 );
 
 const allCoursesQuestion = surveyStore.survey.questions.find(
   (entry) => entry.questionType === "FINAL"
 ) as Question;
-const finalAnswer = surveyStore.answers.find(
+
+const finalID = surveyStore.answers.findIndex(
   (entry) => entry.question === allCoursesQuestion.id
-) as Answer;
+) as number;
 
 onBeforeRouteLeave((to, from, next) => {
   if (
@@ -130,8 +130,9 @@ watch(
   () => currentIndex.value,
   () => (currentQuestion = surveyStore.survey.questions[currentIndex.value])
 );
+
 watch(
-  () => [surveyStore.answers, surveyStore.survey],
+  () => surveyStore.answers,
   () => {
     surveyStore.checkAnswers()
       ? window.addEventListener("beforeunload", (e) => e.preventDefault())

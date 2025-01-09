@@ -30,13 +30,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
 import AngleDown from "../icons/AngleDown.vue";
 import AngleUp from "../icons/AngleUp.vue";
+import { ref, onMounted } from "vue";
 
-defineProps({
-  guidance: Boolean,
-});
+defineProps<{ guidance: boolean }>();
 
 const ShowScrollTop = ref(false);
 const ShowScrollBottom = ref(true);

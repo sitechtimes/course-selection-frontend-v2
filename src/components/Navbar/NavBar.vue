@@ -109,10 +109,7 @@
       </p>
       <p
         v-if="surveyStore.status != 'Completed' && surveyStore.open"
-        @click="
-          surveyStore.saveSurvey(0);
-          toggleSave();
-        "
+        @click="toggleSave()"
         class="text-[#37394F] cursor-pointer hover:text-gray-500"
         ref="save"
       >

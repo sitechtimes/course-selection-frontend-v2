@@ -20,13 +20,13 @@
 </template>
 
 <script setup lang="ts">
-defineProps({
-  name: String,
-  type: String,
-  required: Boolean,
-  label: String,
-  id: String,
-  value: String,
-});
+defineProps<{
+  name: string;
+  type: string;
+  required: boolean;
+  label: string;
+  id: string;
+  value: string;
+}>();
 defineEmits(["update"]);
 </script>

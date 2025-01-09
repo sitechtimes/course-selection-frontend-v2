@@ -30,31 +30,19 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, defineProps, defineEmits, ref, computed } from "vue";
+import { ref, computed } from "vue";
 import { GuidanceStudent, Flag } from "../../types/interface";
 import { useUserStore } from "../../stores/user";
 
 const emit = defineEmits(["exit"]);
 const userStore = useUserStore();
 
-const props = defineProps({
-  student: {
-    type: Object as PropType<GuidanceStudent>,
-    required: true,
-  },
-  flags: {
-    type: Array as PropType<Flag[]>,
-    required: true,
-  },
-  viewAll: {
-    type: Boolean,
-    required: true,
-  },
-  add: {
-    type: Boolean,
-    required: true,
-  },
-});
+const props = defineProps<{
+  student: GuidanceStudent;
+  flags: Flag[];
+  viewAll: boolean;
+  add: boolean;
+}>();
 
 const selected = ref("");
 

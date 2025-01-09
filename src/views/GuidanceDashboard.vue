@@ -6,7 +6,7 @@
     >
       <h1 id="heading" class="text-4xl font-bold lg:text-5xl">
         Hello
-        {{ generateName() }},
+        {{ `${name(userStore.firstName)} ${name(userStore.lastName)}` }},
       </h1>
       <h2 class="text-lg lg:text-xl">
         Welcome to Staten Island Technical High School's Course Selection
@@ -43,13 +43,6 @@ import { useUserStore } from "../stores/user";
 const userStore = useUserStore();
 document.title = "Home | SITHS Course Selection";
 
-function generateName() {
-  return (
-    userStore.firstName.charAt(0).toUpperCase() +
-    userStore.firstName.slice(1).toLowerCase() +
-    " " +
-    userStore.lastName.charAt(0).toUpperCase() +
-    userStore.lastName.slice(1).toLowerCase()
-  );
-}
+const name = (str: string) =>
+  str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 </script>

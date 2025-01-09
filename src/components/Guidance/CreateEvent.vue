@@ -21,7 +21,10 @@
       <form id="form" ref="form" @submit.prevent="empty()">
         <div class="times flex flex-col lg:flex-row">
           <div class="item mb-6">
-            <label class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold" for="date">
+            <label
+              class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold"
+              for="date"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                 <!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                 <path
@@ -38,10 +41,15 @@
               onfocus="(this.type='date')"
               id="date"
             />
-            <p v-if="dateError" class="error text-red-600 ml-6 mt-1">Field empty/invalid</p>
+            <p v-if="dateError" class="error text-red-600 ml-6 mt-1">
+              Field empty/invalid
+            </p>
           </div>
           <div class="item mb-6">
-            <label class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold" for="time">
+            <label
+              class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold"
+              for="time"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                 <!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                 <path
@@ -56,11 +64,16 @@
               v-model="time"
               placeholder="Time"
             />
-            <p v-if="timeError" class="error text-red-600 ml-6 mt-1">Field empty/invalid</p>
+            <p v-if="timeError" class="error text-red-600 ml-6 mt-1">
+              Field empty/invalid
+            </p>
           </div>
         </div>
         <div class="item mb-6">
-          <label class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold" for="emails">
+          <label
+            class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold"
+            for="emails"
+          >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
               <!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
               <path
@@ -71,7 +84,8 @@
           </label>
           <datalist id="suggestions">
             <option v-for="student in studentList" :key="student.email">
-              {{ titleCaseName(student.name) }}, | {{ student.email }}@nycstudents.net
+              {{ titleCaseName(student.name) }}, |
+              {{ student.email }}@nycstudents.net
             </option>
           </datalist>
 
@@ -83,10 +97,14 @@
             v-model="selectedStudent"
             id="student"
           />
-          <p v-if="nameError" class="error text-red-600 ml-6 mt-1">Field empty/invalid</p>
+          <p v-if="nameError" class="error text-red-600 ml-6 mt-1">
+            Field empty/invalid
+          </p>
         </div>
         <div class="item mb-6">
-          <label class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold" for="description"
+          <label
+            class="formt flex flex-row text-[#717494] ml-8 xl:text-2xl font-bold"
+            for="description"
             ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
               <!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
               <path
@@ -103,10 +121,18 @@
           />
         </div>
         <div class="flex flex-row items-center ml-6 mb-6">
-          <input type="checkbox" class="ml-2" id="notify" selectedStudent="notify" v-model="notify" />
+          <input
+            type="checkbox"
+            class="ml-2"
+            id="notify"
+            selectedStudent="notify"
+            v-model="notify"
+          />
           <label class="ml-2" for="notify">Notify Student via Email</label>
         </div>
-        <div class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit">
+        <div
+          class="item submit ml-6 mb-6 xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit"
+        >
           <button
             type="submit"
             class="text-[1.5rem] mb-8 duration-300 font-bold bg-primary-g px-4 py-2 rounded-xl w-fit h-fit opacity-0.5:hover"
@@ -122,7 +148,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, defineProps, onMounted } from "vue";
+import { ref, Ref, onMounted } from "vue";
 import { useUserStore } from "../../stores/user";
 import { studentGuidance } from "../../types/interface";
 
@@ -156,9 +182,9 @@ function toggleEvent() {
 
 const dateElement = ref();
 
-const props = defineProps({
-  todaysDate: String,
-});
+const props = defineProps<{
+  todaysDate: string;
+}>();
 onMounted(() => {
   date.value = props.todaysDate!;
   dateElement.value.type = "date";

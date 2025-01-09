@@ -124,7 +124,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import DeleteModal from "./DeleteModal.vue";
 

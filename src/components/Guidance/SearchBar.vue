@@ -16,5 +16,5 @@
 
 <script setup lang="ts">
 import SearchButton from "../icons/SearchButton.vue";
-defineProps({ modelValue: String });
+defineProps<{ modelValue: string }>();
 </script>

@@ -52,26 +52,21 @@
 </template>
 
 <script setup lang="ts">
-import { preferences, Question, Rank, Answer } from "../../types/interface";
+import { Question, Rank, Answer, Course } from "../../types/interface";
 import exclamationMark from "../../components/icons/ExclamationMark.vue";
 import { useSurveyStore } from "../../stores/survey";
-import { watch, PropType, ref } from "vue";
+import { watch, ref } from "vue";
 
-const props = defineProps({
-  finalAnswer: {
-    type: Object as PropType<Answer>,
-    required: true,
-  },
-  question: {
-    type: Object as PropType<Question>,
-    required: true,
-  },
-  isDisabled: Boolean,
-  referencedClass: Object as PropType<preferences>,
-  warn: Boolean,
-});
+const props = defineProps<{
+  finalID: number;
+  question: Question;
+  isDisabled?: boolean;
+  referencedClass?: Course;
+  warn?: boolean;
+}>();
 
 const surveyStore = useSurveyStore();
+const finalAnswer = surveyStore.answers[props.finalID] as Answer;
 const index = ref(0);
 watch(
   () => props.question.question,
@@ -91,15 +86,15 @@ watch(
 
     if (newResponse && !oldResponse) {
       surveyStore.selectedCourses.push(referenced);
-      (props.finalAnswer.answer as Rank[]).push({
+      (finalAnswer.answer as Rank[]).push({
         course: referenced.id,
-        rank: (props.finalAnswer.answer as Rank[]).length + 1,
+        rank: (finalAnswer.answer as Rank[]).length + 1,
       });
     } else if (!newResponse && oldResponse) {
       surveyStore.selectedCourses = surveyStore.selectedCourses.filter(
         (course) => course.id !== referenced.id
       );
-      props.finalAnswer.answer = (props.finalAnswer.answer as Rank[]).filter(
+      finalAnswer.answer = (finalAnswer.answer as Rank[]).filter(
         (ans) => ans.course !== referenced.id
       );
     }

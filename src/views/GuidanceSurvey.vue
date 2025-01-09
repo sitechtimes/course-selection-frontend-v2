@@ -5,21 +5,16 @@
         <h1 class="font-bold text-[#37394F] text-3xl mb-6">
           {{ studentName }}'s Survey
         </h1>
-        <h2 v-if="studentSurvey.grade === 'FRESHMAN'">Grade : 9</h2>
-        <h2 v-if="studentSurvey.grade === 'SOPHOMORE'">Grade : 10</h2>
-        <h2 v-if="studentSurvey.grade === 'JUNIOR'">Grade : 11</h2>
-        <h2 v-if="studentSurvey.grade === 'SENIOR'">Grade : 12</h2>
+        <h2>Grade: {{ studentSurvey.grade }}</h2>
       </div>
-
-      <p v-if="surveyStore.loading">Setting things up...</p>
-      <div v-else>
+      <div>
         <div
-          v-for="question in surveyStore.currentSurvey.question"
+          v-for="question in surveyStore.survey.questions"
           :key="question.id"
           class="flex justify-center"
         >
           <div class="w-11/12">
-            <booleanComponent
+            <BooleanComp
               class="mb-2"
               v-if="question.questionType === 'BOOLEAN'"
               :question="question"
@@ -28,9 +23,8 @@
                   (answer) => answer === question.id
                 ).length > 0 && shouldWarn
               "
-            >
-            </booleanComponent>
-            <generalComponent
+            />
+            <GeneralComp
               class="mb-6"
               v-else-if="question.questionType === 'GENERAL'"
               :question="question"
@@ -39,9 +33,8 @@
                   (answer) => answer === question.id
                 ).length > 0 && shouldWarn
               "
-            >
-            </generalComponent>
-            <dropdownComponent
+            />
+            <DropDownComp
               v-else-if="question.questionType === 'DROPDOWN'"
               :question="question"
               :warn="
@@ -50,7 +43,7 @@
                 ).length > 0 && shouldWarn
               "
             />
-            <checkboxComponent
+            <CheckboxComp
               v-else
               class="mb-6"
               :question="question"
@@ -61,8 +54,7 @@
                   (answer) => answer === question.id
                 ).length > 0 && shouldWarn
               "
-            >
-            </checkboxComponent>
+            />
           </div>
         </div>
 
@@ -70,14 +62,13 @@
           <p class="text-lg md:text-xl xl:text-3xl my-4">
             Student's order of priority:
           </p>
-          <surveyDraggable
+          <DraggableComp
             :courses="surveyStore.currentResponse[indexAll].answer.preference"
             :index="indexAll"
             :numbered="true"
             :key="x"
             :color="'DEE9C8'"
-          >
-          </surveyDraggable>
+          />
         </div>
         <div class="mt-14">
           <p class="text-lg md:text-xl xl:text-3xl">Note from the student:</p>
@@ -124,32 +115,29 @@
 </template>
 
 <script setup lang="ts">
-//@ts-nocheck
 import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
-import booleanComponent from "../components/Survey/Reusables/Boolean.vue";
-import generalComponent from "../components/Survey/Reusables/SurveyGeneral.vue";
-import checkboxComponent from "../components/Survey/Reusables/SurveyCheckbox.vue";
-import dropdownComponent from "../components/Survey/Reusables/SurveyDropdown.vue";
-import surveyDraggable from "../components/Survey/Reusables/SurveyDraggable.vue";
-import ScrollPage from "../components/Survey/Reusables/ScrollPage.vue";
-import { surveyQuestion, studentGuidance } from "../types/interface";
-import { useRouter, useRoute, onBeforeRouteLeave } from "vue-router";
-import { ref, Ref, watch, onMounted } from "vue";
+import BooleanComp from "../components/Survey/Boolean.vue";
+import GeneralComp from "../components/Survey/SurveyGeneral.vue";
+import CheckboxComp from "../components/Survey/SurveyCheckbox.vue";
+import DropDownComp from "../components/Survey/SurveyDropdown.vue";
+import DraggableComp from "../components/Survey/SurveyDraggable.vue";
+import ScrollPage from "../components/Survey/ScrollPage.vue";
+import { Question, GuidanceStudent } from "../types/interface";
+import { useRouter, onBeforeRouteLeave } from "vue-router";
+import { ref, watch, onMounted } from "vue";
 
 document.title = "Survey | SITHS Course Selection";
 
 const userStore = useUserStore();
 const surveyStore = useSurveyStore();
 const router = useRouter();
-const route = useRoute();
-const studentSurvey = ref<studentGuidance | null>(null);
+const studentSurvey = ref<GuidanceStudent>({} as GuidanceStudent);
 
 const studentName = ref("");
 
 onMounted(async () => {
   try {
-    await surveyStore.fetchSurvey(route.params.email);
     if (surveyStore.currentSurvey) {
       studentSurvey.value = surveyStore.currentSurvey;
       studentName.value = surveyStore.name.replace(",", ", ");
@@ -162,8 +150,6 @@ onMounted(async () => {
 surveyStore.missingAnswers = [];
 surveyStore.checkSurveyAnswers(surveyStore.currentResponse);
 
-const x = ref(0);
-
 const indexAll = surveyStore.currentResponse.findIndex(
   (x) => x.id === "allChosenCourses"
 );
@@ -174,8 +160,8 @@ const indexGuidanceFinalNote = surveyStore.currentResponse.findIndex(
   (x) => x.id === "guidanceFinalNote"
 );
 
-const getChoices = (question: surveyQuestion) =>
-  surveyStore.studentCourses.coursesAvailable.filter(
+const getChoices = (question: Question) =>
+  surveyStore.coursesAvailable.filter(
     (x) => x.subject === question.questionType
   );
 
@@ -184,7 +170,7 @@ const shouldWarn = ref(false);
 const submit = async () => {
   if (surveyStore.missingAnswers.length > 0) {
     alert("Please answer all required questions before finalizing.");
-    surveyStore.checkSurveyAnswers(surveyStore.currentResponse);
+    surveyStore.checkAnswers();
     shouldWarn.value = true;
     return;
   }
@@ -193,20 +179,8 @@ const submit = async () => {
   router.push("/student/dashboard");
 };
 
-watch(
-  () => surveyStore.currentResponse[indexAll].answer.preference,
-  (newResponse) => {
-    x.value = x.value + 1;
-  },
-  { deep: true }
-);
-
 onBeforeRouteLeave((to, from, next) => {
-  if (
-    JSON.stringify(surveyStore.currentResponse) ===
-      surveyStore.currentAnsweredSurvey.answers ||
-    to.path === "/guidance/dashboard"
-  ) {
+  if (surveyStore.checkAnswers() || to.path === "/guidance/dashboard") {
     window.removeEventListener("beforeunload", (e) => e.preventDefault());
     next();
     return;
@@ -219,25 +193,11 @@ onBeforeRouteLeave((to, from, next) => {
 });
 
 watch(
-  () => surveyStore.currentResponse,
-  (newResponse, oldResponse) => {
-    if (
-      JSON.stringify(newResponse) === surveyStore.currentAnsweredSurvey.answers
-    )
-      window.removeEventListener("beforeunload", (e) => e.preventDefault());
-    else window.addEventListener("beforeunload", (e) => e.preventDefault());
-  },
-  { deep: true }
-);
-
-watch(
-  () => surveyStore.currentAnsweredSurvey,
-  (newResponse, oldResponse) => {
-    if (newResponse.answers === JSON.stringify(surveyStore.currentResponse)) {
-      window.removeEventListener("beforeunload", reminder);
-    } else {
-      window.addEventListener("beforeunload", reminder);
-    }
+  () => [surveyStore.answers, surveyStore.survey],
+  () => {
+    surveyStore.checkAnswers()
+      ? window.addEventListener("beforeunload", (e) => e.preventDefault())
+      : window.removeEventListener("beforeunload", (e) => e.preventDefault());
   },
   { deep: true }
 );

@@ -10,7 +10,7 @@
           <SurveyBoolean
             v-if="question.questionType === 'BOOLEAN'"
             :question="question"
-            :finalAnswer="finalAnswer"
+            :finalID="finalID"
             :warn="question.id in surveyStore.missingAnswers && shouldWarn"
           />
           <SurveyGeneral
@@ -31,13 +31,13 @@
             <SurveyDraggable
               :courses="surveyStore.selectedCourses"
               :numbered="true"
-              :answer="finalAnswer"
+              :answer="surveyStore.answers[finalID]"
               :color="'D6EEFF'"
             />
           </div>
           <SurveyCheckbox
             v-else
-            :finalAnswer="finalAnswer"
+            :finalID="finalID"
             :question="question"
             :choices="getChoices(question)"
             :color="'D6EEFF'"
@@ -76,27 +76,25 @@ import SurveyDropdown from "../components/Survey/Dropdown.vue";
 import SurveyBoolean from "../components/Survey/Boolean.vue";
 import SurveyGeneral from "../components/Survey/General.vue";
 import ScrollPage from "../components/Survey/ScrollPage.vue";
-import { useRouter, onBeforeRouteLeave } from "vue-router";
-import { Answer, Question } from "../types/interface";
+import { onBeforeRouteLeave } from "vue-router";
 import { useSurveyStore } from "../stores/survey";
-import { useUserStore } from "../stores/user";
+import { Question } from "../types/interface";
 import { watch, ref } from "vue";
 
 document.title = "Survey | SITHS Course Selection";
 
-const userStore = useUserStore();
 const surveyStore = useSurveyStore();
-const router = useRouter();
 
 surveyStore.missingAnswers = [];
 surveyStore.checkAnswers();
 
 const allCoursesQuestion = surveyStore.survey.questions.find(
-  (question) => question.questionType === "FINAL"
+  (entry) => entry.questionType === "FINAL"
 ) as Question;
-const finalAnswer = surveyStore.answers.find(
-  (answer) => answer.question === allCoursesQuestion.id
-) as Answer;
+
+const finalID = surveyStore.answers.findIndex(
+  (entry) => entry.question === allCoursesQuestion.id
+) as number;
 
 const getChoices = (question: Question) =>
   surveyStore.coursesAvailable.filter(
@@ -116,7 +114,6 @@ async function submit() {
 }
 
 onBeforeRouteLeave((to, from, next) => {
-  surveyStore.checkAnswers();
   if (
     surveyStore.changes.length === 0 ||
     to.path === "/student/survey/review"
