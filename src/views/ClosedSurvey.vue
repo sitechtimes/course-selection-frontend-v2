@@ -58,14 +58,14 @@
   <ScrollPage :guidance="false" />
 </template>
 <script setup lang="ts">
-import ClosedFinalRank from "../components/Survey/ClosedSurvey/ClosedFinalRank.vue";
-import ClosedRank from "../components/Survey/ClosedSurvey/ClosedRank.vue";
+import ClosedFinalRank from "../components/Survey/ClosedFinalRank.vue";
+import ClosedRank from "../components/Survey/ClosedRank.vue";
 import SurveyDropdown from "../components/Survey/Dropdown.vue";
 import SurveyGeneral from "../components/Survey/General.vue";
 import SurveyBoolean from "../components/Survey/Boolean.vue";
 import ScrollPage from "../components/Survey/ScrollPage.vue";
 import { useSurveyStore } from "../stores/survey";
-import { Question, Answer } from "../types/interface";
+import { Question } from "../types/interface";
 
 document.title = "Survey | SITHS Course Selection";
 

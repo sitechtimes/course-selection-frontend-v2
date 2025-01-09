@@ -9,7 +9,7 @@
         <h1 class="text-4xl font-semibold mb-6">
           {{
             { 9: "Sophomore", 10: "Junior", 11: "Senior" }[
-              userStore.student.grade
+              userStore.student.grade as number
             ]
           }}
           Year Survey
@@ -41,7 +41,7 @@
           :question="currentQuestion"
           :choices="
             surveyStore.coursesAvailable.filter(
-              (x) => x.subject === currentQuestion.questionType
+              (x:Course) => x.subject === currentQuestion.questionType
             )
           "
           :key="currentQuestion.id + '-checkbox'"
@@ -92,7 +92,7 @@ import BooleanComponent from "../components/Survey/Boolean.vue";
 import GeneralComponent from "../components/Survey/General.vue";
 import { useSurveyStore } from "../stores/survey";
 import { onBeforeRouteLeave } from "vue-router";
-import { Question } from "../types/interface";
+import { Question, Course } from "../types/interface";
 import { useUserStore } from "../stores/user";
 import { ref, reactive, watch } from "vue";
 

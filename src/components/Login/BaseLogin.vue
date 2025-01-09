@@ -19,7 +19,7 @@
         type="email"
         required
         :value="username"
-        @update="(newValue) => (username = newValue)"
+        @update="(newValue:string) => (username = newValue)"
         >Username</LoginInput
       >
       <LoginInput
@@ -29,7 +29,7 @@
         type="password"
         required
         :value="password"
-        @update="(newValue) => (password = newValue)"
+        @update="(newValue:string) => (password = newValue)"
         @keyup.enter="userStore.login(username, password)"
         >Password
       </LoginInput>

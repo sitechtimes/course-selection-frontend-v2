@@ -33,8 +33,8 @@
 </template>
 
 <script setup lang="ts">
-import { useSurveyStore } from "../../../stores/survey";
-import { Rank } from "../../../types/interface";
+import { useSurveyStore } from "../../stores/survey";
+import { Rank } from "../../types/interface";
 
 const surveyStore = useSurveyStore();
 const finalQuestion = surveyStore.survey.questions.find(
