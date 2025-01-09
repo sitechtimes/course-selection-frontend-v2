@@ -10,7 +10,10 @@
           <label class="cursor-pointer">View all students</label>
           <input class="ml-2" type="checkbox" v-model="viewAll" />
         </div>
-        <Sort class="mr-0" @filter-selected="(filter) => (sortBy = filter)" />
+        <Sort
+          class="mr-0"
+          @filter-selected="(filter:string) => (sortBy = filter)"
+        />
       </div>
       <SearchBar
         class="w-2/3"

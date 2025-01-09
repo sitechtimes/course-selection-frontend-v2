@@ -25,8 +25,8 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import BarChart from "../components/Statistic/BarChart.vue";
-import PieChart from "../components/Statistic/PieChart.vue";
+import BarChart from "../components/Stats/BarChart.vue";
+import PieChart from "../components/Stats/PieChart.vue";
 
 const barChart = ref(true);
 const pieChart = ref(false);

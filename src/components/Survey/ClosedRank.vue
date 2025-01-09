@@ -21,7 +21,7 @@
               >
                 {{
                   surveyStore.coursesAvailable.find(
-                    (x) => x.id === choice.course
+                    (x: Course) => x.id === choice.course
                   )?.name
                 }}
               </p>
@@ -37,8 +37,8 @@
 </template>
 
 <script setup lang="ts">
-import { Question, Course, Rank } from "../../../types/interface";
-import { useSurveyStore } from "../../../stores/survey";
+import { Question, Course, Rank } from "../../types/interface";
+import { useSurveyStore } from "../../stores/survey";
 
 const props = defineProps<{ choices: Course[]; question: Question }>();
 const surveyStore = useSurveyStore();
