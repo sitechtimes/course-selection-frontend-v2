@@ -10,7 +10,11 @@
         <div v-for="(meetings, date) in groupedStudentMeetings" :key="date">
           <h2 class="font-bold text-lg">{{ date }}</h2>
           <ul class="my-2">
-            <li v-for="(meeting, index) in meetings" :key="index" class="ml-6 mt-2 list-disc">
+            <li
+              v-for="(meeting, index) in meetings"
+              :key="index"
+              class="ml-6 mt-2 list-disc"
+            >
               {{ meeting.meetingTime }} - {{ meeting.name }}
             </li>
           </ul>
@@ -30,15 +34,19 @@ const todaysDate = new Date();
 
 async function updateStudentMeetings() {
   //@ts-ignore
-  meetingsData.value = userStore.guidanceMeetings.map((student: studentMeetings) => ({
-    name: student.name,
-    meetingDate: new Date(student.meetingDate),
-    meetingTime: new Date(student.meetingDate).toTimeString().slice(0, 5),
-    description: student.description,
-    email: student.email,
-    grade: student.grade,
-  }))
-  .sort((a, b) => a.meetingDate.getTime() - b.meetingDate.getTime());
+  meetingsData.value = userStore.guidanceMeetings
+    .map((student: studentMeetings) => ({
+      name: student.name,
+      meetingDate: new Date(student.meetingDate),
+      meetingTime: new Date(student.meetingDate).toTimeString().slice(0, 5),
+      description: student.description,
+      email: student.email,
+      grade: student.grade,
+    }))
+    .sort(
+      (a: studentMeetings, b: studentMeetings) =>
+        a.meetingDate.getTime() - b.meetingDate.getTime()
+    );
 }
 
 const groupedStudentMeetings = computed(() => {
@@ -46,7 +54,7 @@ const groupedStudentMeetings = computed(() => {
   meetingsData.value
     .filter((meeting) => meeting.meetingDate > todaysDate)
     .forEach((meeting) => {
-      const formattedDate = (new Date(meeting.meetingDate)).toDateString();
+      const formattedDate = new Date(meeting.meetingDate).toDateString();
       if (!groupedMeetings[formattedDate]) {
         groupedMeetings[formattedDate] = [];
       }
@@ -63,5 +71,5 @@ onMounted(() => {
 // update upcoming meetings whenever a meeting is added
 userStore.$subscribe(() => {
   updateStudentMeetings();
-})
+});
 </script>

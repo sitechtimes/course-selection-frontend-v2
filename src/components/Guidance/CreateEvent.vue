@@ -150,7 +150,7 @@
 <script setup lang="ts">
 import { ref, Ref, onMounted } from "vue";
 import { useUserStore } from "../../stores/user";
-import { studentGuidance } from "../../types/interface";
+import { GuidanceStudent } from "../../types/interface";
 
 const userStore = useUserStore();
 
@@ -159,12 +159,12 @@ const time: Ref<string> = ref("");
 const description: Ref<string> = ref("");
 const selectedStudent: Ref<string> = ref("");
 
-let email: string;
+let id: number;
 
 const save = ref();
 const form = ref();
 
-const studentList: Ref<studentGuidance[]> = ref([]);
+const studentList: Ref<GuidanceStudent[]> = ref([]);
 const dateError: Ref<boolean> = ref(false);
 const timeError: Ref<boolean> = ref(false);
 const nameError: Ref<boolean> = ref(false);
@@ -172,7 +172,7 @@ const notify: Ref<boolean> = ref(false);
 const show: Ref<boolean> = ref(true);
 
 onMounted(() => {
-  studentList.value = userStore.guidanceStudents;
+  studentList.value = userStore.studentList;
 });
 
 //toggle modal
@@ -207,18 +207,24 @@ function empty() {
     for (const student of studentList.value) {
       const studentEmail = student.email;
       if (selectedStudent.value.includes(`${studentEmail}@nycstudents.net`)) {
-        email = `${student.email}@nycstudents.net`;
+        id = student.id;
       }
     }
 
     save.value.innerHTML = "Saved";
-    userStore.changeMeeting(email, meetingISO, description.value, notify.value);
+    userStore.changeMeeting(
+      id,
+      false,
+      meetingISO,
+      description.value,
+      notify.value
+    );
     form.value.reset();
     show.value = !show.value;
 
     // clear form input values
     selectedStudent.value = "";
-    email = "";
+    id = 0;
     date.value = "";
     time.value = "";
   }

@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="grid content-center justify-center flex-wrap">
     <div class="container">
       <div class="flex flex-row mb-8 text-4xl font-bold">
@@ -66,17 +66,13 @@
 import { ref, Ref, reactive, onMounted, watchEffect } from "vue";
 import { useUserStore } from "../../stores/user";
 //@ts-ignore
-import {
-  studentMeetings,
-  calendarMeetings,
-  calendarData,
-} from "../../types/interface";
+import { studentMeetings, calendarMeetings } from "../../types/interface";
 import UpcomingMeetings from "../Guidance/UpcomingMeetings.vue";
 import CreateEvent from "./CreateEvent.vue";
 import MeetingDetails from "./MeetingDetails.vue";
 import PlusIcon from "../icons/PlusIcon.vue";
 
-const calendarData: calendarData = reactive({
+const calendarData = reactive({
   dateInfo: [],
 });
 
@@ -359,4 +355,4 @@ svg {
 input:invalid {
   border-color: red;
 }
-</style>
+</style> -->

@@ -9,7 +9,7 @@
         <SurveyBoolean
           class="mb-2"
           v-if="question.questionType === 'BOOLEAN'"
-          :finalAnswer="(finalAnswer as Answer)"
+          :finalID="finalID"
           :question="question"
           :isDisabled="true"
         />
@@ -75,7 +75,7 @@ const finalQuestion = surveyStore.survey.questions.find(
   (x) => x.questionType === "FINAL"
 );
 
-const finalAnswer = surveyStore.answers.find(
+const finalID = surveyStore.answers.findIndex(
   (x) => x.question === finalQuestion?.id
 );
 

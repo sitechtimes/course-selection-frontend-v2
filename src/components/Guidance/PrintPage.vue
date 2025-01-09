@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="flex flex-col">
     <div id="printPage" class="flex w-[40vw] m-4 p-2 border border-gray-500 rounded-md">
       <div class="p-4">
@@ -142,4 +142,4 @@ svg {
   margin-right: 10px;
   fill: #37394f;
 }
-</style>
+</style> -->

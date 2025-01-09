@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <section class="flex flex-col items-center justify-center">
     <div class="w-2/3">
       <div class="text-2xl mb-4" v-if="studentSurvey">
@@ -201,4 +201,4 @@ watch(
   },
   { deep: true }
 );
-</script>
+</script> -->

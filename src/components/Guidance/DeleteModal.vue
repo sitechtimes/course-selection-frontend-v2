@@ -46,8 +46,8 @@ const toggleDetails = () => {
   showDetails.value = !showDetails.value;
 };
 
-function deleteMeeting(email: string) {
-  userStore.deleteMeeting(email);
+function deleteMeeting(id: number) {
+  userStore.changeMeeting(id, true);
   showDetails.value = !showDetails.value;
 }
 </script>
