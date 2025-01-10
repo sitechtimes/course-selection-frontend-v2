@@ -65,13 +65,13 @@ export const useSurveyStore = defineStore("survey", () => {
     if (!checkAnswers()) return alert("No changes detected.");
     const res = await fetchData("student/survey/", "POST", {
       answers: changes.value,
-      status: status,
+      status: status === 0 ? status : undefined,
     });
-    if (!res.ok) return;
+    if (!res.ok || status === 0) return;
     submit.value = true;
     setTimeout(() => (submit.value = false), 3000);
     userStore.student.status = await res.json();
-    survey.value.answers = answers.value;
+    survey.value.answers = JSON.parse(JSON.stringify(answers.value));
     checkAnswers();
     if (userStore.isGuidance) return router.push("/guidance/studentlist");
     router.push("/student/dashboard");
@@ -86,7 +86,7 @@ export const useSurveyStore = defineStore("survey", () => {
           ans.answer.length !== old.answer.length ||
           ans.answer.some((item, i) => item.rank !== old.answer[i].rank)
         );
-
+      console.log(ans.answer, old.answer);
       if (typeof ans.answer === "string") ans.answer = ans.answer.trim();
       if (ans.answer !== old.answer) return true;
     });

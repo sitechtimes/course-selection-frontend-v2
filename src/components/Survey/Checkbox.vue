@@ -115,12 +115,11 @@ watch(
   (isNotInterested) => {
     if (!isNotInterested) return;
     const bads = (answer.value.answer as Rank[]).map((course) => course.course);
-
     finalAnswer.answer = (finalAnswer.answer as Rank[])
-      .filter((rank) => !(rank.course in bads))
+      .filter(({ course }) => !bads.includes(course))
       .map((rank, index) => ({ ...rank, rank: index + 1 }));
     surveyStore.selectedCourses = surveyStore.selectedCourses.filter(
-      (course) => !(course.id in bads)
+      ({ id }) => !bads.includes(id)
     );
     courses.value = [];
     answer.value.answer = [];
@@ -133,17 +132,15 @@ function toggleInterest(interested: boolean, course: Course) {
   );
   finalAnswer.answer = (finalAnswer.answer as Rank[])
     .filter((rank) => rank.course !== course.id)
-    .map((rank, index) => {
-      rank.rank = index + 1;
-      return rank;
-    });
+    .map((rank, index) => ({ ...rank, rank: index + 1 }));
+
   if (!interested) return;
-  const rank = (finalAnswer.answer as Rank[]).length + 1;
+
   finalAnswer.answer = (finalAnswer.answer as Rank[]).filter(
     (x) => x.course !== course.id
   );
   (finalAnswer.answer as Rank[]).push({
-    rank: rank,
+    rank: (finalAnswer.answer as Rank[]).length + 1,
     course: course.id,
   });
   surveyStore.selectedCourses.push(course);

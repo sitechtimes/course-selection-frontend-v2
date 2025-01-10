@@ -24,7 +24,9 @@
     </div>
     <StudentTable
       :viewAll="viewAll"
-      :new-students="sortedAndFilteredStudents.slice(startIndex, endIndex)"
+      :new-students="
+        sortedAndFiltered.slice(startIndex, startIndex + pageCapacity)
+      "
     />
     <div class="max-w-[80%] overflow-x-auto mt-4 flex flex-row justify-between">
       <button
@@ -44,10 +46,9 @@
       <button
         v-for="n in visiblePages"
         @click="updatePagination(n)"
-        :class="{
-          'bg-[#cdeeb4] focus:bg-[#cdeeb4]': currentPage === n,
-          'bg-[#ebebeb]': currentPage !== n,
-        }"
+        :class="
+          currentPage === n ? 'bg-[#cdeeb4] focus:bg-[#cdeeb4]' : 'bg-[#ebebeb]'
+        "
         class="h-8 w-8 rounded-lg hover:opacity-75 ease-in-out duration-300 font-bold mx-2"
       >
         {{ n }}
@@ -77,11 +78,11 @@
 </template>
 
 <script setup lang="ts">
+import StudentTable from "../components/Guidance/StudentTable.vue";
 import SearchBar from "../components/Guidance/SearchBar.vue";
 import Sort from "../components/Guidance/SortButton.vue";
-import StudentTable from "../components/Guidance/StudentTable.vue";
-import { useUserStore } from "../stores/user";
 import { GuidanceStudent } from "../types/interface";
+import { useUserStore } from "../stores/user";
 import { ref, computed, watch } from "vue";
 
 document.title = "Student List | SITHS Course Selection";
@@ -92,31 +93,28 @@ const allStudents = ref<GuidanceStudent[]>([]);
 const loading = ref(false);
 const viewAll = ref(false);
 const input = ref("");
-const sortBy = ref("lastnameaz");
+const sortBy = ref("az");
 
 const startIndex = ref(0);
-const endIndex = ref(10);
 
 const currentPage = ref(1);
 const pageCapacity = 10;
 const currentChunk = ref(1);
 const pagesPerChunk = 10;
 
-const sortedAndFilteredStudents = computed(() => {
+const sortedAndFiltered = computed(() => {
   try {
-    if (!viewAll.value)
-      return applyFilters(allStudents.value, sortBy.value, input.value);
-    return applyFilters(userStore.studentList, sortBy.value, input.value);
+    return applyFilters(sortBy.value, input.value);
   } finally {
     updatePagination(1);
   }
 });
 
 function filterByCategory(students: GuidanceStudent[], sortBy: string) {
-  if (sortBy === "lastnameaz")
+  if (sortBy === "az")
     return students.sort((a, b) => a.name.localeCompare(b.name));
 
-  if (sortBy === "lastnameza")
+  if (sortBy === "za")
     return students.sort((a, b) => b.name.localeCompare(a.name));
 
   if (["Not Started", "In Progress", "Completed", "Finalized"].includes(sortBy))
@@ -126,25 +124,19 @@ function filterByCategory(students: GuidanceStudent[], sortBy: string) {
     return students.filter((student) => student.grade === parseInt(sortBy));
 
   if (["transfer", "regents", "sports", "enl"].includes(sortBy))
-    return students.filter(
-      (student) => student[sortBy as keyof GuidanceStudent]
-    );
+    return students.filter((s) => s[sortBy as keyof GuidanceStudent]);
   return students;
 }
 
-function applyFilters(
-  students: GuidanceStudent[],
-  sortBy: string,
-  search: string
-) {
-  const filtered = filterByCategory(students, sortBy);
-  if (!search.length) return filtered;
-
-  const lowerCaseQuery = search.toLowerCase();
-  return filtered.filter(
-    (student) =>
-      student.name.toLowerCase().includes(lowerCaseQuery) ||
-      student.email.toLowerCase().includes(lowerCaseQuery)
+function applyFilters(sortBy: string, search: string) {
+  startIndex.value = 0;
+  const filtered = filterByCategory(
+    viewAll.value ? userStore.studentList : allStudents.value,
+    sortBy
+  );
+  if (!search.trim().length) return filtered;
+  return filtered.filter((s) =>
+    (s.name + s.email).toLowerCase().includes(search.trim().toLowerCase())
   );
 }
 
@@ -156,7 +148,7 @@ function handleViewAllChange(isEnabled: boolean) {
 }
 
 const totalPages = computed(() => {
-  const numStudents = sortedAndFilteredStudents.value.length;
+  const numStudents = sortedAndFiltered.value.length;
   if (numStudents < 1) return 1;
   else return Math.ceil(numStudents / pageCapacity);
 });
@@ -165,17 +157,14 @@ function changePage(increment: number) {
   currentPage.value += increment;
   if (increment > 0) {
     startIndex.value += pageCapacity;
-    endIndex.value += pageCapacity;
   } else if (increment < 0) {
     startIndex.value -= pageCapacity;
-    endIndex.value -= pageCapacity;
   } else return;
   updatePagination(currentPage.value);
 }
 
 function updatePagination(page: number) {
   startIndex.value = (page - 1) * pageCapacity + 1;
-  endIndex.value = page * pageCapacity;
   currentPage.value = page;
 }
 
@@ -190,9 +179,9 @@ const visiblePages = computed(() => {
 watch(viewAll, (newValue) => handleViewAllChange(newValue));
 
 watch(
-  [sortedAndFilteredStudents],
+  [sortedAndFiltered],
   () => {
-    userStore.viewedStudents = sortedAndFilteredStudents.value;
+    userStore.viewedStudents = sortedAndFiltered.value;
     currentChunk.value = 1;
     updatePagination(1);
   },
