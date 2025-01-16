@@ -8,7 +8,7 @@
       <img id="loginpic" class="h-60" src="/seagull.gif" alt="fillerpic" />
     </div>
     <div
-      v-if="!userStore.loading"
+      v-else
       id="book"
       class="w-11/12 max-w-[32rem] max-h-[40rem] h-full border-primary-s border-[10px] rounded-xl flex justify-between items-center lg:max-w-[60rem]"
     >

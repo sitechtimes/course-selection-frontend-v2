@@ -76,6 +76,21 @@ export interface Flag {
   color: string;
 }
 
+export interface Meeting {
+  id: number;
+  name: string;
+  meetingDate: Date;
+  description: string;
+  grade: number;
+  email: string;
+}
+
+export interface DateInfo {
+  type: number;
+  todaysDate: number;
+  meetings: Meeting[];
+}
+
 export interface ChartData {
   labels: string[];
   datasets: {
@@ -98,22 +113,7 @@ export interface PieChartStats {
 export interface studentMeetings {
   name: string;
   meetingDate: Date;
-  meetingTime?: Date;
   description: string;
   grade: string;
   email: string;
-}
-
-export interface calendarMeetings extends studentMeetings {
-  id: string;
-  meetingDetails: studentMeetings;
-}
-
-export interface calendarData {
-  dateInfo: {
-    type: string;
-    todaysDate: number;
-    id: string;
-    meetings: calendarMeetings[];
-  }[];
 }

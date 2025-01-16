@@ -15,7 +15,8 @@
               :key="index"
               class="ml-6 mt-2 list-disc"
             >
-              {{ meeting.meetingTime }} - {{ meeting.name }}
+              {{ meeting.meetingDate.toLocaleTimeString() }} -
+              {{ meeting.name }}
             </li>
           </ul>
         </div>
@@ -25,51 +26,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, computed, watch, onMounted } from "vue";
 import { useUserStore } from "../../stores/user";
-import { studentMeetings } from "../../types/interface";
+import { Meeting } from "../../types/interface";
+import { ref, computed, onMounted } from "vue";
+
 const userStore = useUserStore();
-const meetingsData: Ref<studentMeetings[]> = ref([]);
+const meetingsData = ref<Meeting[]>([]);
 const todaysDate = new Date();
 
 async function updateStudentMeetings() {
-  //@ts-ignore
-  meetingsData.value = userStore.guidanceMeetings
-    .map((student: studentMeetings) => ({
-      name: student.name,
-      meetingDate: new Date(student.meetingDate),
-      meetingTime: new Date(student.meetingDate).toTimeString().slice(0, 5),
-      description: student.description,
-      email: student.email,
-      grade: student.grade,
-    }))
-    .sort(
-      (a: studentMeetings, b: studentMeetings) =>
-        a.meetingDate.getTime() - b.meetingDate.getTime()
-    );
+  meetingsData.value = userStore.meetings.sort(
+    (a: Meeting, b: Meeting) =>
+      a.meetingDate.getTime() - b.meetingDate.getTime()
+  );
 }
 
-const groupedStudentMeetings = computed(() => {
-  const groupedMeetings: Record<string, studentMeetings[]> = {};
+const groupedStudentMeetings = computed(() =>
   meetingsData.value
     .filter((meeting) => meeting.meetingDate > todaysDate)
-    .forEach((meeting) => {
-      const formattedDate = new Date(meeting.meetingDate).toDateString();
-      if (!groupedMeetings[formattedDate]) {
-        groupedMeetings[formattedDate] = [];
-      }
-      groupedMeetings[formattedDate].push(meeting);
-    });
-  return groupedMeetings;
-});
+    .reduce((acc: Record<string, Meeting[]>, meeting) => {
+      (acc[meeting.meetingDate.toDateString()] ||= []).push(meeting);
+      return acc;
+    }, {})
+);
 
-// update upcoming meetings on load
-onMounted(() => {
-  updateStudentMeetings();
-});
-
-// update upcoming meetings whenever a meeting is added
-userStore.$subscribe(() => {
-  updateStudentMeetings();
-});
+onMounted(() => updateStudentMeetings());
+userStore.$subscribe(() => updateStudentMeetings());
 </script>

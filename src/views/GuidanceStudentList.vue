@@ -2,7 +2,6 @@
   <div class="h-auto w-full flex flex-col justify-center items-center mb-10">
     <div class="flex flex-row items-center justify-center w-5/6">
       <div class="w-1/3 flex flex-row justify-evenly">
-        <div v-if="loading">Loading students...</div>
         <div
           @click="viewAll = !viewAll"
           class="h-10 px-4 w-60 mx-10 flex flex-row bg-primary-g text-black justify-evenly font-semibold items-center cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
@@ -90,7 +89,6 @@ document.title = "Student List | SITHS Course Selection";
 const userStore = useUserStore();
 const allStudents = ref<GuidanceStudent[]>([]);
 
-const loading = ref(false);
 const viewAll = ref(false);
 const input = ref("");
 const sortBy = ref("az");
@@ -135,16 +133,9 @@ function applyFilters(sortBy: string, search: string) {
     sortBy
   );
   if (!search.trim().length) return filtered;
-  return filtered.filter((s) =>
-    (s.name + s.email).toLowerCase().includes(search.trim().toLowerCase())
+  return filtered.filter(({ name, email }) =>
+    (name + email).toLowerCase().includes(search.trim().toLowerCase())
   );
-}
-
-function handleViewAllChange(isEnabled: boolean) {
-  input.value = "";
-  if (isEnabled) userStore.viewedStudents = allStudents.value;
-  else userStore.viewedStudents = userStore.studentList;
-  updatePagination(1);
 }
 
 const totalPages = computed(() => {
@@ -155,16 +146,14 @@ const totalPages = computed(() => {
 
 function changePage(increment: number) {
   currentPage.value += increment;
-  if (increment > 0) {
-    startIndex.value += pageCapacity;
-  } else if (increment < 0) {
-    startIndex.value -= pageCapacity;
-  } else return;
+  if (increment > 0) startIndex.value += pageCapacity;
+  else if (increment < 0) startIndex.value -= pageCapacity;
+  else return;
   updatePagination(currentPage.value);
 }
 
 function updatePagination(page: number) {
-  startIndex.value = (page - 1) * pageCapacity + 1;
+  startIndex.value = (page - 1) * pageCapacity;
   currentPage.value = page;
 }
 
@@ -173,18 +162,19 @@ const totalChunks = computed(() => Math.ceil(totalPages.value / pagesPerChunk));
 const visiblePages = computed(() => {
   const start = (currentChunk.value - 1) * pagesPerChunk + 1;
   const end = Math.min(start + pagesPerChunk - 1, totalPages.value);
-  return Array.from({ length: end - start + 1 }).map((_, i) => start + i);
+  return Array.from({ length: end - start + 1 }, (_, i) => start + i);
 });
 
-watch(viewAll, (newValue) => handleViewAllChange(newValue));
+watch(viewAll, (newValue) => {
+  input.value = "";
+  if (newValue) userStore.viewedStudents = allStudents.value;
+  else userStore.viewedStudents = userStore.studentList;
+  updatePagination(1);
+});
 
-watch(
-  [sortedAndFiltered],
-  () => {
-    userStore.viewedStudents = sortedAndFiltered.value;
-    currentChunk.value = 1;
-    updatePagination(1);
-  },
-  { deep: true }
-);
+watch(sortedAndFiltered, () => {
+  userStore.viewedStudents = sortedAndFiltered.value;
+  currentChunk.value = 1;
+  updatePagination(1);
+});
 </script>

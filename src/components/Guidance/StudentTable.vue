@@ -65,7 +65,10 @@
               {{ student.status }}
             </p>
           </td>
-          <td @click="viewSurvey(student)" class="p-4 hover:cursor-pointer">
+          <td
+            @click="router.push(`/guidance/survey/${student.id}`)"
+            class="p-4 hover:cursor-pointer"
+          >
             View Survey
           </td>
           <td class="p-4 flex flex-row parent">
@@ -98,7 +101,6 @@
 
 <script setup lang="ts">
 import { GuidanceStudent } from "../../types/interface";
-import { useSurveyStore } from "../../stores/survey";
 import ChangeFlag from "../Guidance/ChangeFlag.vue";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
@@ -112,7 +114,6 @@ const statuses = {
   Finalized: "text-[#311638] bg-[#D1A4DE]",
 };
 
-const surveyStore = useSurveyStore();
 const router = useRouter();
 
 const tooltip = ref(false);
@@ -136,11 +137,6 @@ const titleCase = (name: string) =>
         .join(" ")
     )
     .join(", ");
-
-async function viewSurvey(student: GuidanceStudent) {
-  await surveyStore.getSurvey(student.id);
-  await router.push(`/guidance/survey/${student.id}`);
-}
 </script>
 
 <style scoped>

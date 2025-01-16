@@ -5,21 +5,19 @@
   >
     <h2 class="h2 font-bold text-[1.5rem] mb-2 text-left">Are you sure?</h2>
     <p class="my-4">
-      Delete {{ meetingDetails.name }}'s meeting on
-      {{ meetingDetails.meetingDate }}
+      Delete {{ details.name }}'s meeting on
+      {{ details.meetingDate }}
     </p>
-    <p class="mb-6">
-      {{ meetingDetails.name }} will be notified of this change
-    </p>
+    <p class="mb-6">{{ details.name }} will be notified of this change</p>
     <div class="flex flex-row items-center justify-end">
       <button
-        @click="toggleDetails"
+        @click="showDetails = !showDetails"
         class="duration-300 font-bold px-4 py-2 rounded-2xl w-fit h-fit opacity-0.5:hover"
       >
         Cancel
       </button>
       <button
-        @click="deleteMeeting(meetingDetails.email)"
+        @click="deleteMeeting(details.id)"
         class="duration-300 font-bold bg-[#f28e8e] px-4 py-2 rounded-lg w-fit h-fit opacity-0.5:hover"
       >
         Delete
@@ -30,21 +28,13 @@
 
 <script setup lang="ts">
 import { useUserStore } from "../../stores/user";
+import { Meeting } from "../../types/interface";
 import { ref } from "vue";
 
 const userStore = useUserStore();
 
 const showDetails = ref(true);
-defineProps({
-  meetingDetails: {
-    type: Object,
-    required: true,
-  },
-});
-
-const toggleDetails = () => {
-  showDetails.value = !showDetails.value;
-};
+defineProps<{ details: Meeting }>();
 
 function deleteMeeting(id: number) {
   userStore.changeMeeting(id, true);

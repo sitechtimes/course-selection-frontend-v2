@@ -1,5 +1,4 @@
-<template></template>
-<!-- <template>
+<template>
   <section class="flex flex-col items-center justify-center">
     <div class="w-2/3">
       <div class="text-2xl mb-4" v-if="studentSurvey">
@@ -116,17 +115,17 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from "../stores/user";
-import { useSurveyStore } from "../stores/survey";
-import BooleanComp from "../components/Survey/Boolean.vue";
-import GeneralComp from "../components/Survey/SurveyGeneral.vue";
+import DraggableComp from "../components/Survey/SurveyDraggable.vue";
 import CheckboxComp from "../components/Survey/SurveyCheckbox.vue";
 import DropDownComp from "../components/Survey/SurveyDropdown.vue";
-import DraggableComp from "../components/Survey/SurveyDraggable.vue";
-import ScrollPage from "../components/Survey/ScrollPage.vue";
+import GeneralComp from "../components/Survey/SurveyGeneral.vue";
 import { Question, GuidanceStudent } from "../types/interface";
+import ScrollPage from "../components/Survey/ScrollPage.vue";
 import { useRouter, onBeforeRouteLeave } from "vue-router";
-import { ref, watch, onMounted } from "vue";
+import BooleanComp from "../components/Survey/Boolean.vue";
+import { useSurveyStore } from "../stores/survey";
+import { useUserStore } from "../stores/user";
+import { ref, watch } from "vue";
 
 document.title = "Survey | SITHS Course Selection";
 
@@ -137,19 +136,8 @@ const studentSurvey = ref<GuidanceStudent>({} as GuidanceStudent);
 
 const studentName = ref("");
 
-onMounted(async () => {
-  try {
-    if (surveyStore.currentSurvey) {
-      studentSurvey.value = surveyStore.currentSurvey;
-      studentName.value = surveyStore.name.replace(",", ", ");
-    }
-  } catch (error) {
-    console.error("Error fetching survey data:", error);
-  }
-});
-
 surveyStore.missingAnswers = [];
-surveyStore.checkSurveyAnswers(surveyStore.currentResponse);
+surveyStore.checkAnswers();
 
 const indexAll = surveyStore.currentResponse.findIndex(
   (x) => x.id === "allChosenCourses"
@@ -202,4 +190,4 @@ watch(
   },
   { deep: true }
 );
-</script> -->
+</script>

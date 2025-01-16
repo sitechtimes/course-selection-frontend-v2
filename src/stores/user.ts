@@ -1,12 +1,7 @@
 import { defineStore } from "pinia";
 import { useSurveyStore } from "./survey";
 import { useRouter } from "vue-router";
-import {
-  Student,
-  studentMeetings,
-  GuidanceStudent,
-  Stats,
-} from "../types/interface";
+import { Student, Meeting, GuidanceStudent, Stats } from "../types/interface";
 import { ref } from "vue";
 
 export const useUserStore = defineStore("userStore", () => {
@@ -23,6 +18,7 @@ export const useUserStore = defineStore("userStore", () => {
   const student = ref<Student>({} as Student);
   const studentList = ref<GuidanceStudent[]>([]);
   const viewedStudents = ref<GuidanceStudent[]>([]);
+  const meetings = ref<Meeting[]>([]);
 
   async function fetchData(url: string, method?: string, body?: any) {
     loading.value = true;
@@ -109,6 +105,20 @@ export const useUserStore = defineStore("userStore", () => {
     // studentList.value[index] = data.flag;
   }
 
+  async function getMeetings() {
+    const res = await fetchData("guidance/meetings/");
+    if (!res.ok) return await res.json();
+    const data = await res.json();
+    meetings.value = data.map((meeting: Meeting) => ({
+      ...meeting,
+      meetingDate: new Date(meeting.meetingDate),
+      name: meeting.name
+        .split(",")
+        .map((s) => s[0].toUpperCase() + s.slice(1).toLowerCase())
+        .join(", "),
+    }));
+  }
+
   async function changeMeeting(
     id: number,
     deleteMeeting: boolean,
@@ -145,10 +155,12 @@ export const useUserStore = defineStore("userStore", () => {
     loading,
     student,
     lastName,
+    meetings,
     firstName,
     isGuidance,
     fetchStats,
     changeFlag,
+    getMeetings,
     studentList,
     initComplete,
     changeMeeting,

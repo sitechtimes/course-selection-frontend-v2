@@ -40,7 +40,7 @@ export const useSurveyStore = defineStore("survey", () => {
 
   async function getSurvey(id: number = 0) {
     const res = await fetchData(
-      id === 0 ? "student/survey/" : `student/survey/${id}`
+      id === 0 ? "student/survey/" : `guidance/survey/${id}`
     );
     if (!res.ok) return (open.value = false);
     const data: SurveyData = await res.json();
@@ -65,7 +65,7 @@ export const useSurveyStore = defineStore("survey", () => {
     if (!checkAnswers()) return alert("No changes detected.");
     const res = await fetchData("student/survey/", "POST", {
       answers: changes.value,
-      status: status === 0 ? status : undefined,
+      status: status || undefined,
     });
     if (!res.ok || status === 0) return;
     submit.value = true;

@@ -33,7 +33,7 @@ const router = createRouter({
         {
           path: "survey/:id",
           name: "guidanceSurvey",
-          component: () => import("../views/GuidanceSurvey.vue"),
+          component: () => import("../views/ReviewSurvey.vue"),
           beforeEnter: async (to, from, next) => {
             await useSurveyStore().getSurvey(Number(to.params.id));
             return next();
@@ -43,6 +43,11 @@ const router = createRouter({
           path: "calendar",
           name: "calendar",
           component: () => import("../views/GuidanceCalendar.vue"),
+          beforeEnter: async (to, from, next) => {
+            const userStore = useUserStore();
+            if (userStore.meetings.length === 0) await userStore.getMeetings();
+            return next();
+          },
         },
         {
           path: "statistics",
@@ -50,7 +55,7 @@ const router = createRouter({
           component: () => import("../views/GuidanceStats.vue"),
         },
         {
-          path: "PrintPage/:email",
+          path: "PrintPage/:id",
           name: "printPage",
           component: () => import("../views/PrintPage.vue"),
         },
