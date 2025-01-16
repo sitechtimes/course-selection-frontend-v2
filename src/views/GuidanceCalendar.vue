@@ -1,6 +1,6 @@
 <template>
   <div class="grid content-center justify-center flex-wrap">
-    <div class="container">
+    <div class="mt-8 mx-16">
       <div class="flex flex-row mb-8 text-4xl font-bold">
         <span
           class="arrow cursor-pointer"
@@ -19,18 +19,18 @@
         >
       </div>
       <div class="flex flex-row gap-[7rem] mb-12">
-        <div class="calendar w-full">
-          <ul class="weeks bg-primary-g">
-            <li>Sun</li>
-            <li>Mon</li>
-            <li>Tue</li>
-            <li>Wed</li>
-            <li>Thu</li>
-            <li>Fri</li>
-            <li>Sat</li>
+        <div class="w-full">
+          <ul class="text-center flex flex-wrap list-none overflow-hidden bg-primary-g">
+            <li class="text-xl grow text-center py-1 border border-neutral-500 font-extrabold">Sun</li>
+            <li class="text-xl grow text-center py-1 border border-neutral-500 font-extrabold">Mon</li>
+            <li class="text-xl grow text-center py-1 border border-neutral-500 font-extrabold">Tue</li>
+            <li class="text-xl grow text-center py-1 border border-neutral-500 font-extrabold">Wed</li>
+            <li class="text-xl grow text-center py-1 border border-neutral-500 font-extrabold">Thu</li>
+            <li class="text-xl grow text-center py-1 border border-neutral-500 font-extrabold">Fri</li>
+            <li class="text-xl grow text-center py-1 border border-neutral-500 font-extrabold">Sat</li>
           </ul>
-          <ul class="days">
-            <li class="dayCon" v-for="h in calendarData">
+          <ul class="days flex flex-wrap list-none overflow-hidden">
+            <li class="group text-base grow text-end pb-3 border border-neutral-500" v-for="h in calendarData">
               <p class="mt-2 text-end mr-2 mb-16">{{ h.todaysDate }}</p>
               <div
                 v-for="meeting in h.meetings"
@@ -38,16 +38,15 @@
                 @click="toggleDetails(meeting)"
               >
                 <p
-                  :class="`w-[100%] text-center truncate ${
-                    classColor[meeting.grade]
-                  } rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md`"
+                  class="w-full text-center truncate rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md"
+                  :class="classColor[meeting.grade]"
                 >
                   {{ meeting.name }}
                 </p>
               </div>
               <button
                 @click="toggleEvent(h)"
-                class="w-3 m-1 hidden child hover:cursor-pointer text-2xl leading-[0]"
+                class="w-3 m-1 hidden group-hover:block hover:opacity-50 cursor-pointer mb-8 transition duration-300 text-2xl leading-[0]"
               >
                 +
               </button>
@@ -177,91 +176,4 @@ const changeMonth = (next: boolean) => {
 };
 </script>
 
-<style scoped>
-.container {
-  margin: 2rem 4rem 0 4rem;
-}
-
-.calendar ul {
-  display: flex;
-  flex-wrap: wrap;
-  list-style: none;
-  overflow: hidden;
-}
-
-.calendar li {
-  width: calc(100% / 7);
-  font-size: 1.07rem;
-}
-
-.weeks {
-  text-align: center;
-}
-
-.weeks li {
-  text-align: center;
-  padding-top: 0.3rem;
-  padding-bottom: 0.3rem;
-  border: 1px solid grey;
-}
-
-.calendar .weeks li {
-  font-weight: 800;
-  font-size: 1.2rem;
-  cursor: default;
-}
-
-.calendar .days li {
-  text-align: end;
-  padding-bottom: 0.8rem;
-}
-
-.days li {
-  border: grey 1px solid;
-  font-size: 0.9rem;
-}
-
-.dayCon:hover .plusIcon {
-  visibility: visible;
-}
-
-.days li:hover + .plusIcon {
-  display: block;
-}
-
-.days li.inactive {
-  color: #aaa;
-}
-
-.days li.active {
-  color: #fff;
-}
-
-.days li.active::before {
-  background: #9b59b6;
-}
-
-.days li:not(.active):hover::before {
-  background: #f2f2f2;
-}
-
-button {
-  font-size: 1.5rem;
-  margin-bottom: 2rem;
-  transition: 0.3s;
-}
-
-button:hover {
-  opacity: 0.5;
-}
-
-svg {
-  width: 1.2rem;
-  margin-right: 10px;
-  fill: #717494;
-}
-
-input:invalid {
-  border-color: red;
-}
-</style>
+<style scoped></style>
