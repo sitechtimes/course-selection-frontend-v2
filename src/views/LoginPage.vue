@@ -19,7 +19,7 @@
         <img
           id="loginPic"
           class="h-60"
-          src=/erlenwein.png
+          src="/erlenwein.png"
           alt="SITHS' principal, Mr. Erlenwein"
         />
       </div>
