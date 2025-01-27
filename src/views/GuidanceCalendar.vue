@@ -29,7 +29,7 @@
             <li class="text-xl grow text-center py-1 border border-neutral-500 font-extrabold">Fri</li>
             <li class="text-xl grow text-center py-1 border border-neutral-500 font-extrabold">Sat</li>
           </ul>
-          <ul class="days flex flex-wrap list-none overflow-hidden">
+          <ul class="w-full grid grid-cols-7">
             <li class="group text-base grow text-end pb-3 border border-neutral-500" v-for="h in calendarData">
               <p class="mt-2 text-end mr-2 mb-16">{{ h.todaysDate }}</p>
               <div
