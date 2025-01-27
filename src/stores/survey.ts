@@ -96,7 +96,6 @@ export const useSurveyStore = defineStore("survey", () => {
         if (ans.answer === null) return true;
         if (q.status === "OPTIONAL") return false;
         if (typeof ans.answer === "object") return ans.answer.length === 0;
-        console.log(ans.answer.trim() === "");
         if (typeof ans.answer === "string") return ans.answer.trim() === "";
         return false;
       })
