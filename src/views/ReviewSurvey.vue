@@ -11,17 +11,17 @@
             v-if="question.questionType === 'BOOLEAN'"
             :question="question"
             :finalID="finalID"
-            :warn="question.id in surveyStore.missingAnswers && shouldWarn"
+            :warn="surveyStore.missingAnswers.includes(question.id) && warning"
           />
           <SurveyGeneral
             v-else-if="question.questionType === 'GENERAL'"
             :question="question"
-            :warn="question.id in surveyStore.missingAnswers && shouldWarn"
+            :warn="surveyStore.missingAnswers.includes(question.id) && warning"
           />
           <SurveyDropdown
             v-else-if="question.questionType === 'DROPDOWN'"
             :question="question"
-            :warn="question.id in surveyStore.missingAnswers && shouldWarn"
+            :warn="surveyStore.missingAnswers.includes(question.id) && warning"
           />
           <div v-else-if="question.questionType === 'FINAL'" class="my-6">
             <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl my-4">
@@ -41,7 +41,7 @@
             :question="question"
             :choices="getChoices(question)"
             :color="'D6EEFF'"
-            :warn="question.id in surveyStore.missingAnswers && shouldWarn"
+            :warn="surveyStore.missingAnswers.includes(question.id) && warning"
           />
         </div>
       </div>
@@ -101,13 +101,13 @@ const getChoices = (question: Question) =>
     (x) => x.subject === question.questionType
   );
 
-const shouldWarn = ref(false);
+const warning = ref(false);
 
 async function submit() {
   surveyStore.checkAnswers();
   if (surveyStore.missingAnswers.length > 0) {
     alert("Please answer all required questions before submitting.");
-    shouldWarn.value = true;
+    warning.value = true;
     return;
   }
   await surveyStore.saveSurvey(1);

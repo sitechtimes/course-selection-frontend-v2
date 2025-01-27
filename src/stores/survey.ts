@@ -86,19 +86,17 @@ export const useSurveyStore = defineStore("survey", () => {
           ans.answer.length !== old.answer.length ||
           ans.answer.some((item, i) => item.rank !== old.answer[i].rank)
         );
-      console.log(ans.answer, old.answer);
       if (typeof ans.answer === "string") ans.answer = ans.answer.trim();
       if (ans.answer !== old.answer) return true;
     });
     missingAnswers.value = answers.value
       .slice(0, -2)
       .filter((ans) => {
-        let question = survey.value.questions.find(
-          (q) => q.id === ans.question
-        );
+        let q = survey.value.questions.find((q) => q.id === ans.question);
         if (ans.answer === null) return true;
-        if (question.status === "OPTIONAL") return false;
+        if (q.status === "OPTIONAL") return false;
         if (typeof ans.answer === "object") return ans.answer.length === 0;
+        console.log(ans.answer.trim() === "");
         if (typeof ans.answer === "string") return ans.answer.trim() === "";
         return false;
       })
@@ -266,7 +264,6 @@ export const useSurveyStore1 = defineStore("survey", {
           }
         }
       );
-      console.log("Fetched and set student survey data.");
       this.loading = false;
     },
     async postSurvey(status: "INCOMPLETE" | "COMPLETE" | "FINALIZED") {
