@@ -45,6 +45,7 @@
           />
         </div>
       </div>
+      <div v-if="userStore.isGuidance"></div>
       <div class="flex justify-center my-10 flex-col items-center">
         <p
           v-if="surveyStore.missingAnswers.length === 0"
@@ -76,14 +77,16 @@ import SurveyDropdown from "../components/Survey/Dropdown.vue";
 import SurveyBoolean from "../components/Survey/Boolean.vue";
 import SurveyGeneral from "../components/Survey/General.vue";
 import ScrollPage from "../components/Survey/ScrollPage.vue";
-import { onBeforeRouteLeave } from "vue-router";
 import { useSurveyStore } from "../stores/survey";
+import { onBeforeRouteLeave } from "vue-router";
+import { useUserStore } from "../stores/user";
 import { Question } from "../types/interface";
 import { watch, ref } from "vue";
 
 document.title = "Survey | SITHS Course Selection";
 
 const surveyStore = useSurveyStore();
+const userStore = useUserStore();
 
 surveyStore.missingAnswers = [];
 surveyStore.checkAnswers();
