@@ -1,6 +1,6 @@
 <template>
   <div class="grid content-center justify-center flex-wrap">
-    <div class="mt-8 mx-16">
+    <div class="container">
       <div class="flex flex-row mb-8 text-4xl font-bold">
         <span
           class="arrow cursor-pointer"
@@ -71,15 +71,16 @@
                 @click="toggleDetails(meeting)"
               >
                 <p
-                  class="w-full text-center truncate rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md"
-                  :class="classColor[meeting.grade]"
+                  :class="`w-[100%] text-center truncate ${
+                    classColor[meeting.grade]
+                  } rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md`"
                 >
                   {{ meeting.name }}
                 </p>
               </div>
               <button
                 @click="toggleEvent(h)"
-                class="w-3 m-1 hidden group-hover:block hover:opacity-50 cursor-pointer mb-8 transition duration-300 text-2xl leading-[0]"
+                class="w-3 m-1 hidden child hover:cursor-pointer text-2xl leading-[0]"
               >
                 +
               </button>

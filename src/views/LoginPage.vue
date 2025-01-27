@@ -5,7 +5,7 @@
       class="w-11/12 max-w-[32rem] max-h-[40rem] h-full border-primary-s border-[10px] rounded-xl flex justify-center items-center lg:max-w-[60rem] flex-col"
     >
       <p>Loading...</p>
-      <img id="loginpic" class="h-60" src="/seagull.gif" alt="fillerpic" />
+      <img id="loginpic" class="h-60" src="/seagull.gif" alt="Seagull" />
     </div>
     <div
       v-else
@@ -19,15 +19,15 @@
         <img
           id="loginPic"
           class="h-60"
-          src="https://pbs.twimg.com/profile_images/1478882427695210498/pSgQxw9V_400x400.jpg"
-          alt="filler img"
+          src="/erlenwein.png"
+          alt="SITHS' principal, Mr. Erlenwein"
         />
       </div>
       <div
         id="right"
         class="w-full h-full flex flex-col justify-center items-center space-y-6 lg:w-1/2"
       >
-        <BaseLogin></BaseLogin>
+        <BaseLogin/>
       </div>
     </div>
   </div>
