@@ -19,6 +19,7 @@ export const useUserStore = defineStore("userStore", () => {
   const studentList = ref<GuidanceStudent[]>([]);
   const viewedStudents = ref<GuidanceStudent[]>([]);
   const meetings = ref<Meeting[]>([]);
+  const meetingsFetched = ref(false);
 
   async function fetchData(url: string, method?: string, body?: any) {
     loading.value = true;
@@ -117,6 +118,7 @@ export const useUserStore = defineStore("userStore", () => {
         .map((s) => s[0].toUpperCase() + s.slice(1).toLowerCase())
         .join(", "),
     }));
+    meetingsFetched.value = true;
   }
 
   async function changeMeeting(
@@ -165,6 +167,7 @@ export const useUserStore = defineStore("userStore", () => {
     initComplete,
     changeMeeting,
     viewedStudents,
+    meetingsFetched,
     $reset,
   };
 });

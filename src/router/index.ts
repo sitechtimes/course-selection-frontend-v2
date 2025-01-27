@@ -45,7 +45,7 @@ const router = createRouter({
           component: () => import("../views/GuidanceCalendar.vue"),
           beforeEnter: async (to, from, next) => {
             const userStore = useUserStore();
-            if (userStore.meetings.length === 0) await userStore.getMeetings();
+            if (!userStore.meetingsFetched) await userStore.getMeetings();
             return next();
           },
         },
@@ -58,6 +58,11 @@ const router = createRouter({
           path: "PrintPage/:id",
           name: "printPage",
           component: () => import("../views/PrintPage.vue"),
+          beforeEnter: async (to, from, next) => {
+            const userStore = useUserStore();
+            if (!userStore.meetingsFetched) await userStore.getMeetings();
+            return next();
+          },
         },
       ],
     },
