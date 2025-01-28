@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import PrinterIcon from "../icons/PrinterIcon.vue";
+import PrinterIcon from "../components/icons/PrinterIcon.vue";
 import { useUserStore } from "../stores/user";
 import { Meeting } from "../types/interface";
 import { useRoute } from "vue-router";
