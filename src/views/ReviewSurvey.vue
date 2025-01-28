@@ -45,7 +45,19 @@
           />
         </div>
       </div>
-      <div v-if="userStore.isGuidance"></div>
+      <div
+        class="lg:w-2/3 flex justify-center mb-8 w-full"
+        v-if="userStore.isGuidance"
+      >
+        <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl my-4 mr-5">
+          Guidance Notes:
+        </p>
+        <input
+          class="py-2 px-3 w-full md:w-3/5 text-base md:text-lg xl:text-2xl rounded-md border border-solid focus:outline-none focus:ring-0 disabled:bg-gray-100 transition-colors duration-200 ease-linear focus:border-blue-400 border-zinc-400 bg-transparent"
+          type="text"
+          v-model="surveyStore.survey.guidanceNotes"
+        />
+      </div>
       <div class="flex justify-center my-10 flex-col items-center">
         <p
           v-if="surveyStore.missingAnswers.length === 0"
@@ -58,6 +70,7 @@
         <p v-else class="mb-4 text-center text-red-500">
           Please answer all required questions before submitting.
         </p>
+
         <button
           @click="submit()"
           class="bg-[#D6EEFF] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-36 h-12 text-2xl font-bold text-[#37394F]"

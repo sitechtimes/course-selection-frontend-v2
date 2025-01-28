@@ -62,11 +62,20 @@ export const useSurveyStore = defineStore("survey", () => {
   }
 
   async function saveSurvey(status: Number) {
-    if (!checkAnswers()) return alert("No changes detected.");
-    const res = await fetchData("student/survey/", "POST", {
-      answers: changes.value,
-      status: status || undefined,
-    });
+    if (!checkAnswers() && !userStore.isGuidance)
+      return alert("No changes detected.");
+    console.log();
+    const res = await fetchData(
+      userStore.isGuidance
+        ? `guidance/survey/${router.currentRoute.value.params.id}`
+        : "student/survey/",
+      "POST",
+      {
+        answers: changes.value,
+        notes: userStore.isGuidance ? survey.value.guidanceNotes : undefined,
+        status: status || undefined,
+      }
+    );
     if (!res.ok || status === 0) return;
     submit.value = true;
     setTimeout(() => (submit.value = false), 3000);

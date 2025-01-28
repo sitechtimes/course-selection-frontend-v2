@@ -32,6 +32,7 @@ export interface Survey {
   questions: Question[];
   answers: Answer[];
   status: "Completed" | "Finalized" | "In Progress" | "Not Started";
+  guidanceNotes: string;
 }
 
 export interface Answer {
