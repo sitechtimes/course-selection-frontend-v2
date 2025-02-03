@@ -76,6 +76,7 @@ export const useSurveyStore = defineStore("survey", () => {
       }
     );
     survey.value.answers = JSON.parse(JSON.stringify(answers.value));
+    changes.value = [];
     if (!res.ok || status === 0) return;
     submit.value = true;
     setTimeout(() => (submit.value = false), 3000);
