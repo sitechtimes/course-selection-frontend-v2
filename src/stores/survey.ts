@@ -94,7 +94,7 @@ export const useSurveyStore = defineStore("survey", () => {
           ans.answer.length !== old.answer.length ||
           ans.answer.some((item, i) => item.course !== old.answer[i].course)
         );
-      if (typeof ans.answer === "string") ans.answer = ans.answer.trim();
+      // if (typeof ans.answer === "string") ans.answer = ans.answer.trim();
       if (ans.answer !== old.answer) return true;
     });
     missingAnswers.value = answers.value
