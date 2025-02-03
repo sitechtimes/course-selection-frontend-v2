@@ -60,7 +60,7 @@
           </div>
           <SurveyDraggable
             class="p-6"
-            :courses="courses"
+            :courses="draggableCourses"
             :answer="answer"
             :numbered="true"
             :color="color"
@@ -103,18 +103,17 @@ const props = defineProps<{
 const surveyStore = useSurveyStore();
 const finalAnswer = surveyStore.answers[props.finalID] as Answer;
 const courses = ref<Course[]>([]);
-const answer = ref<Answer>(
-  surveyStore.answers.find(
-    (entry) => entry.question === props.question.id
-  ) as Answer
-);
+const draggableCourses = ref<Course[]>([]);
+let answer = surveyStore.answers.find(
+  (e) => e.question === props.question.id
+) as Answer;
 const notInterested = ref(false);
 
 watch(
   () => notInterested.value,
   (isNotInterested) => {
     if (!isNotInterested) return;
-    const bads = (answer.value.answer as Rank[]).map((course) => course.course);
+    const bads = (answer.answer as Rank[]).map((course) => course.course);
     finalAnswer.answer = (finalAnswer.answer as Rank[])
       .filter(({ course }) => !bads.includes(course))
       .map((rank, index) => ({ ...rank, rank: index + 1 }));
@@ -122,7 +121,7 @@ watch(
       ({ id }) => !bads.includes(id)
     );
     courses.value = [];
-    answer.value.answer = [];
+    answer.answer = [];
   }
 );
 
@@ -148,25 +147,31 @@ function toggleInterest(interested: boolean, course: Course) {
 }
 
 function getChangedCourse(newCourses: Course[], oldCourses: Course[]) {
-  const addedCourse = newCourses.find((course) => !oldCourses.includes(course));
-  if (addedCourse) {
-    answer.value.answer = (answer.value.answer as Rank[]).filter(
-      (rank) => rank.course !== addedCourse.id
-    );
-    (answer.value.answer as Rank[]).push({
-      rank: (answer.value.answer as Rank[]).length + 1,
-      course: addedCourse.id,
-    });
-    return addedCourse;
-  }
-  return oldCourses.find((course) => !newCourses.includes(course));
+  const addedCourse = newCourses.find(
+    (course) => !oldCourses.includes(course)
+  ) as Course;
+  const removedCourse = oldCourses.find(
+    (course) => !newCourses.includes(course)
+  ) as Course;
+  answer.answer = (answer.answer as Rank[]).filter(
+    (rank) => rank.course !== (removedCourse ?? addedCourse).id
+  );
+  if (!addedCourse) return removedCourse;
+  (answer.answer as Rank[]).push({
+    rank: (answer.answer as Rank[]).length + 1,
+    course: addedCourse.id,
+  });
+  return addedCourse;
 }
 
 watch(
-  () => answer.value.answer,
+  () => answer.answer,
   () => {
-    (answer.value.answer as Rank[]).forEach((ans, index) => {
-      ans.rank = index + 1;
+    draggableCourses.value = (answer.answer as Rank[]).map(
+      (a) => courses.value.find(({ id }) => id === a.course) as Course
+    );
+    (answer.answer as Rank[]).forEach((ans, i) => {
+      ans.rank = i + 1;
     });
   },
   { deep: true }
@@ -183,11 +188,11 @@ watch(
 );
 
 onMounted(() => {
-  answer.value = surveyStore.answers.find(
+  answer = surveyStore.answers.find(
     (ans) => ans.question === props.question.id
   ) as Answer;
   courses.value = surveyStore.coursesAvailable.filter((course) =>
-    (answer.value.answer as Rank[]).some((rank) => rank.course === course.id)
+    (answer.answer as Rank[]).some((rank) => rank.course === course.id)
   );
 });
 </script>

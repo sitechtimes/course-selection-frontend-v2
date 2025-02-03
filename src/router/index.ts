@@ -6,6 +6,11 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: "/:pathMatch(.*)*",
+      name: "error",
+      component: () => import("../views/HomePage.vue"),
+    },
+    {
       path: "/",
       name: "home",
       component: () => import("../views/HomePage.vue"),
@@ -120,9 +125,9 @@ router.beforeEach(async (to) => {
   if (anonPaths.includes(to.path) && userStore.isAuth)
     return { name: `${userStore.isGuidance ? "guidance" : "student"}Dash` };
   if (to.meta.user === "guidance" && !userStore.isGuidance)
-    return { name: `studentDash` };
+    return { name: `error` };
   if (to.meta.user === "student" && userStore.isGuidance)
-    return { name: `guidanceDash` };
+    return { name: `error` };
 });
 
 export default router;

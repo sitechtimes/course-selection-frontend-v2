@@ -4,7 +4,7 @@ import { useRouter } from "vue-router";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
-export const useUserStore = defineStore("userStore", () => {
+export const useUserStore = defineStore("user", () => {
   const router = useRouter();
   const surveyStore = useSurveyStore();
   const loading = ref(false);

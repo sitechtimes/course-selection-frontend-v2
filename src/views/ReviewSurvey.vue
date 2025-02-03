@@ -29,7 +29,7 @@
               order of priority, with the first choice being your top priority.
             </p>
             <SurveyDraggable
-              :courses="surveyStore.selectedCourses"
+              :courses="finalCourses"
               :numbered="true"
               :answer="surveyStore.answers[finalID]"
               :color="'D6EEFF'"
@@ -90,10 +90,10 @@ import SurveyDropdown from "../components/Survey/Dropdown.vue";
 import SurveyBoolean from "../components/Survey/Boolean.vue";
 import SurveyGeneral from "../components/Survey/General.vue";
 import ScrollPage from "../components/Survey/ScrollPage.vue";
+import { Question, Course, Rank } from "../types/interface";
 import { useSurveyStore } from "../stores/survey";
 import { onBeforeRouteLeave } from "vue-router";
 import { useUserStore } from "../stores/user";
-import { Question } from "../types/interface";
 import { watch, ref } from "vue";
 
 document.title = "Survey | SITHS Course Selection";
@@ -118,6 +118,12 @@ const getChoices = (question: Question) =>
   );
 
 const warning = ref(false);
+const finalCourses = ref<Course[]>(
+  (surveyStore.answers[finalID].answer as Rank[]).map(
+    (a) =>
+      surveyStore.selectedCourses.find(({ id }) => id === a.course) as Course
+  )
+);
 
 async function submit() {
   surveyStore.checkAnswers();
@@ -152,5 +158,15 @@ watch(
     else window.addEventListener("beforeunload", (e) => e.preventDefault());
   },
   { deep: true }
+);
+
+watch(
+  () => [surveyStore.answers[finalID], surveyStore.selectedCourses],
+  () => {
+    finalCourses.value = (surveyStore.answers[finalID].answer as Rank[]).map(
+      (a) =>
+        surveyStore.selectedCourses.find(({ id }) => id === a.course) as Course
+    );
+  }
 );
 </script>

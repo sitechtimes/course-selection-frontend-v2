@@ -64,7 +64,6 @@ export const useSurveyStore = defineStore("survey", () => {
   async function saveSurvey(status: Number) {
     if (!checkAnswers() && !userStore.isGuidance)
       return alert("No changes detected.");
-    console.log();
     const res = await fetchData(
       userStore.isGuidance
         ? `guidance/survey/${router.currentRoute.value.params.id}`
@@ -76,12 +75,11 @@ export const useSurveyStore = defineStore("survey", () => {
         status: status || undefined,
       }
     );
+    survey.value.answers = JSON.parse(JSON.stringify(answers.value));
     if (!res.ok || status === 0) return;
     submit.value = true;
     setTimeout(() => (submit.value = false), 3000);
     userStore.student.status = await res.json();
-    survey.value.answers = JSON.parse(JSON.stringify(answers.value));
-    checkAnswers();
     if (userStore.isGuidance) return router.push("/guidance/studentlist");
     router.push("/student/dashboard");
   }
@@ -93,7 +91,7 @@ export const useSurveyStore = defineStore("survey", () => {
       if (typeof ans.answer === "object")
         return (
           ans.answer.length !== old.answer.length ||
-          ans.answer.some((item, i) => item.rank !== old.answer[i].rank)
+          ans.answer.some((item, i) => item.course !== old.answer[i].course)
         );
       if (typeof ans.answer === "string") ans.answer = ans.answer.trim();
       if (ans.answer !== old.answer) return true;
