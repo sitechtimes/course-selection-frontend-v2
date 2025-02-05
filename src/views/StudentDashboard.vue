@@ -24,7 +24,7 @@
     >
       <h1 id="name" class="text-3xl sm:text-4xl md:text-5xl font-bold">
         Welcome back,
-        <span>{{ `${userStore.firstName} ${userStore.lastName}` }}</span>
+        <span class="text-3xl sm:text-4xl md:text-5xl font-bold">{{ `${userStore.firstName} ${userStore.lastName}` }}</span>
       </h1>
       <div
         id="announcements"

@@ -13,18 +13,18 @@
       <div
         class="flex flex-row text-lg md:text-xl xl:text-2xl gap-4 items-baseline"
       >
-        <label class="flex justify-center items-center flex-wrap">
+        <label class="flex justify-center items-center flex-wrap text-lg md:text-xl xl:text-2xl">
           <input
             type="radio"
             :disabled="isDisabled"
-            class="w-5 h-5 mx-2 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
+            class="w-5 h-5 mx-2 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent "
             :name="`question_${question.question}`"
             :value="true"
             v-model="surveyStore.answers[index].answer"
           />
           Yes
         </label>
-        <label class="flex justify-center items-center flex-wrap">
+        <label class="flex justify-center items-center flex-wrap text-lg md:text-xl xl:text-2xl">
           <input
             type="radio"
             :disabled="isDisabled"
