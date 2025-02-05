@@ -52,8 +52,8 @@
 </template>
 
 <script setup lang="ts">
-import { Question, Rank, Answer, Course } from "../../types/interface";
 import exclamationMark from "../../components/icons/ExclamationMark.vue";
+import { Question, Rank, Answer, Course } from "../../types/interface";
 import { useSurveyStore } from "../../stores/survey";
 import { watch, ref } from "vue";
 
@@ -66,7 +66,7 @@ const props = defineProps<{
 }>();
 
 const surveyStore = useSurveyStore();
-const finalAnswer = surveyStore.answers[props.finalID] as Answer;
+const finalAnswer = surveyStore.answers[props.finalID] as Answer<Rank[]>;
 const index = ref(0);
 watch(
   () => props.question.question,

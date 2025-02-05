@@ -101,27 +101,48 @@ const props = defineProps<{
 }>();
 
 const surveyStore = useSurveyStore();
-const finalAnswer = surveyStore.answers[props.finalID] as Answer;
+const finalAnswer = surveyStore.answers[props.finalID] as Answer<Rank[]>;
 const courses = ref<Course[]>([]);
 const draggableCourses = ref<Course[]>([]);
 let answer = surveyStore.answers.find(
   (e) => e.question === props.question.id
-) as Answer;
+) as Answer<Rank[]>;
 const notInterested = ref(false);
+let disable = false;
+
+function init() {
+  draggableCourses.value = answer.answer.map(
+    (a) => courses.value.find(({ id }) => id === a.course) as Course
+  );
+  answer.answer.forEach((ans, i) => (ans.rank = i + 1));
+}
+
+onMounted(() => {
+  answer = surveyStore.answers.find(
+    (ans) => ans.question === props.question.id
+  ) as Answer<Rank[]>;
+  const map = answer.answer.map(({ course }) => course);
+  courses.value = surveyStore.coursesAvailable.filter(({ id }) =>
+    map.includes(id)
+  );
+  disable = true;
+  init();
+});
+
+watch(() => answer.answer, init, { deep: true });
 
 watch(
   () => notInterested.value,
   (isNotInterested) => {
     if (!isNotInterested) return;
-    const bads = (answer.answer as Rank[]).map((course) => course.course);
-    finalAnswer.answer = (finalAnswer.answer as Rank[])
+    const bads = answer.answer.map((ans) => ans.course);
+    finalAnswer.answer = finalAnswer.answer
       .filter(({ course }) => !bads.includes(course))
-      .map((rank, index) => ({ ...rank, rank: index + 1 }));
+      .map(({ course }, i) => ({ course, rank: i + 1 }));
     surveyStore.selectedCourses = surveyStore.selectedCourses.filter(
       ({ id }) => !bads.includes(id)
     );
-    courses.value = [];
-    answer.answer = [];
+    [courses.value, answer.answer] = [[], []];
   }
 );
 
@@ -129,70 +150,42 @@ function toggleInterest(interested: boolean, course: Course) {
   surveyStore.selectedCourses = surveyStore.selectedCourses.filter(
     (x) => x !== course
   );
-  finalAnswer.answer = (finalAnswer.answer as Rank[])
+  finalAnswer.answer = finalAnswer.answer
     .filter((rank) => rank.course !== course.id)
     .map((rank, index) => ({ ...rank, rank: index + 1 }));
 
   if (!interested) return;
 
-  finalAnswer.answer = (finalAnswer.answer as Rank[]).filter(
-    (x) => x.course !== course.id
-  );
-  (finalAnswer.answer as Rank[]).push({
-    rank: (finalAnswer.answer as Rank[]).length + 1,
+  finalAnswer.answer = finalAnswer.answer.filter((x) => x.course !== course.id);
+  finalAnswer.answer.push({
+    rank: finalAnswer.answer.length + 1,
     course: course.id,
   });
-  surveyStore.selectedCourses.push(course);
-  return;
+  return surveyStore.selectedCourses.push(course);
 }
 
 function getChangedCourse(newCourses: Course[], oldCourses: Course[]) {
-  const addedCourse = newCourses.find(
-    (course) => !oldCourses.includes(course)
-  ) as Course;
-  const removedCourse = oldCourses.find(
-    (course) => !newCourses.includes(course)
-  ) as Course;
-  answer.answer = (answer.answer as Rank[]).filter(
-    (rank) => rank.course !== (removedCourse ?? addedCourse).id
+  const added = newCourses.find((c) => !oldCourses.includes(c)) as Course;
+  const removed = oldCourses.find((c) => !newCourses.includes(c)) as Course;
+  answer.answer = answer.answer.filter(
+    (rank) => rank.course !== (removed ?? added).id
   );
-  if (!addedCourse) return removedCourse;
-  (answer.answer as Rank[]).push({
-    rank: (answer.answer as Rank[]).length + 1,
-    course: addedCourse.id,
+  if (!added) return removed;
+  answer.answer.push({
+    rank: answer.answer.length + 1,
+    course: added.id,
   });
-  return addedCourse;
+  return added;
 }
-
-watch(
-  () => answer.answer,
-  () => {
-    draggableCourses.value = (answer.answer as Rank[]).map(
-      (a) => courses.value.find(({ id }) => id === a.course) as Course
-    );
-    (answer.answer as Rank[]).forEach((ans, i) => {
-      ans.rank = i + 1;
-    });
-  },
-  { deep: true }
-);
 
 watch(
   () => courses.value,
   (newResponse, oldResponse) => {
+    if (disable) return (disable = false);
     const interested = newResponse.length > oldResponse.length;
     const changedCourse = getChangedCourse(newResponse, oldResponse);
     if (changedCourse) toggleInterest(interested, changedCourse);
   },
   { deep: true }
 );
-
-onMounted(() => {
-  answer = surveyStore.answers.find(
-    (ans) => ans.question === props.question.id
-  ) as Answer;
-  courses.value = surveyStore.coursesAvailable.filter((course) =>
-    (answer.answer as Rank[]).some((rank) => rank.course === course.id)
-  );
-});
 </script>

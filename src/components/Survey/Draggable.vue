@@ -25,13 +25,13 @@
 </template>
 
 <script setup lang="ts">
-import { Course, Answer } from "../../types/interface";
+import { Course, Answer, Rank } from "../../types/interface";
 import vuedraggable from "vuedraggable";
 import { ref, watch } from "vue";
 
 const props = defineProps<{
   courses: Course[];
-  answer: Answer;
+  answer: Answer<Rank[]>;
   numbered?: boolean;
   color?: string;
 }>();
@@ -44,8 +44,8 @@ watch(
 );
 
 const onDragEnd = () =>
-  (props.answer.answer = ranked.value.map((course, index) => ({
-    course: course.id,
-    rank: index + 1,
+  (props.answer.answer = ranked.value.map(({ id }, i) => ({
+    course: id,
+    rank: i + 1,
   })));
 </script>

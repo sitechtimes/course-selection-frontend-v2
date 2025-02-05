@@ -35,10 +35,10 @@ export interface Survey {
   guidanceNotes: string;
 }
 
-export interface Answer {
+export interface Answer<T = string | boolean | null | Rank[]> {
   id: number;
   question: number;
-  answer: string | boolean | null | Rank[];
+  answer: T;
 }
 
 export interface Rank {

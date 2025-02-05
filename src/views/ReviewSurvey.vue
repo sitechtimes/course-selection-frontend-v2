@@ -31,16 +31,20 @@
             <SurveyDraggable
               :courses="finalCourses"
               :numbered="true"
-              :answer="surveyStore.answers[finalID]"
-              :color="'D6EEFF'"
+              :answer="(surveyStore.answers[finalID] as Answer<Rank[]>)"
+              color="D6EEFF"
             />
           </div>
           <SurveyCheckbox
             v-else
             :finalID="finalID"
             :question="question"
-            :choices="getChoices(question)"
-            :color="'D6EEFF'"
+            :choices="
+              surveyStore.coursesAvailable.filter(
+                (x) => x.subject === question.questionType
+              )
+            "
+            color="D6EEFF"
             :warn="surveyStore.missingAnswers.includes(question.id) && warning"
           />
         </div>
@@ -84,13 +88,13 @@
 </template>
 
 <script setup lang="ts">
+import { Question, Course, Rank, Answer } from "../types/interface";
 import SurveyDraggable from "../components/Survey/Draggable.vue";
 import SurveyCheckbox from "../components/Survey/Checkbox.vue";
 import SurveyDropdown from "../components/Survey/Dropdown.vue";
 import SurveyBoolean from "../components/Survey/Boolean.vue";
 import SurveyGeneral from "../components/Survey/General.vue";
 import ScrollPage from "../components/Survey/ScrollPage.vue";
-import { Question, Course, Rank } from "../types/interface";
 import { useSurveyStore } from "../stores/survey";
 import { onBeforeRouteLeave } from "vue-router";
 import { useUserStore } from "../stores/user";
@@ -111,11 +115,6 @@ const allCoursesQuestion = surveyStore.survey.questions.find(
 const finalID = surveyStore.answers.findIndex(
   (entry) => entry.question === allCoursesQuestion.id
 ) as number;
-
-const getChoices = (question: Question) =>
-  surveyStore.coursesAvailable.filter(
-    (x) => x.subject === question.questionType
-  );
 
 const warning = ref(false);
 const finalCourses = ref<Course[]>(
