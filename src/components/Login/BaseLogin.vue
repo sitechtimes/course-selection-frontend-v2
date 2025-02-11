@@ -34,7 +34,7 @@
         >Password
       </LoginInput>
     </div>
-
+    <ResetButton></ResetButton>
     <button
       id="button"
       class="bg-zinc-300 w-32 h-12 mt-4 rounded-md text-lg font-semibold hover:bg-zinc-200"
@@ -48,6 +48,8 @@
 <script setup lang="ts">
 import BackArrow from "../icons/BackArrow.vue";
 import LoginInput from "./LoginInput.vue";
+import ResetButton from "./ResetButton.vue";
+
 import { useUserStore } from "../../stores/user";
 import { ref } from "vue";
 const userStore = useUserStore();
