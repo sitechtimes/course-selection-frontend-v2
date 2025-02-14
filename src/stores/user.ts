@@ -124,18 +124,33 @@ export const useUserStore = defineStore("user", () => {
   async function changeMeeting(
     id: number,
     deleteMeeting: boolean,
-    meetingISO?: string,
+    date?: string,
     description?: string,
     notify?: boolean
   ) {
     if (deleteMeeting) return;
-    const res = await fetchData("guidance/meeting/", "POST", {
-      meetingISO,
-      description,
-    });
+    const res = await fetchData(
+      "guidance/updateMeeting/",
+      deleteMeeting ? "DELETE" : "POST",
+      { id, date, description, notify }
+    );
     if (!res.ok) return await res.json();
     const data = await res.json();
+    console.log(data);
     // guidanceMeetings.value.push(data);
+  }
+
+  function titleCase(name: string) {
+    return name
+      .split(",")
+      .map((chunk) =>
+        chunk
+          .split(" ")
+          .map((part) => part.trim().toLowerCase())
+          .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+          .join(" ")
+      )
+      .join(", ");
   }
 
   function $reset() {
@@ -159,6 +174,7 @@ export const useUserStore = defineStore("user", () => {
     lastName,
     meetings,
     firstName,
+    titleCase,
     isGuidance,
     fetchStats,
     changeFlag,

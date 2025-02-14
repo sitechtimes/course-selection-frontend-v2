@@ -6,7 +6,7 @@
     <div class="event flex flex-col">
       <div class="top flex-row flex items-center justify-between">
         <h2 class="h2 font-bold text-[2rem] m-8 mb-4">Schedule Meeting</h2>
-        <button class="mt-5 mr-12" @click="toggleEvent">
+        <button class="mt-5 mr-12" @click="show = !show">
           <svg
             class="x fill-current text-37394f transition duration-300 mt-4 hover:opacity-80 cursor-pointer"
             xmlns="http://www.w3.org/2000/svg"
@@ -18,7 +18,7 @@
           </svg>
         </button>
       </div>
-      <form id="form" ref="form" @submit.prevent="empty()">
+      <form id="form" ref="form" @submit.prevent="submit">
         <div class="times flex flex-col lg:flex-row">
           <div class="item mb-6">
             <label
@@ -84,8 +84,7 @@
           </label>
           <datalist id="suggestions">
             <option v-for="student in studentList" :key="student.email">
-              {{ titleCaseName(student.name) }}, |
-              {{ student.email }}@nycstudents.net
+              {{ userStore.titleCase(student.name) }}, {{ student.email }}
             </option>
           </datalist>
 
@@ -148,99 +147,60 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, onMounted } from "vue";
-import { useUserStore } from "../../stores/user";
 import { GuidanceStudent } from "../../types/interface";
+import { useUserStore } from "../../stores/user";
+import { ref, onMounted } from "vue";
 
+const props = defineProps<{ todaysDate: string }>();
 const userStore = useUserStore();
 
-const date: Ref<string> = ref("");
-const time: Ref<string> = ref("");
-const description: Ref<string> = ref("");
-const selectedStudent: Ref<string> = ref("");
+const date = ref("");
+const time = ref("");
+const description = ref("");
+const selectedStudent = ref("");
 
 let id: number;
 
 const save = ref();
 const form = ref();
 
-const studentList: Ref<GuidanceStudent[]> = ref([]);
-const dateError: Ref<boolean> = ref(false);
-const timeError: Ref<boolean> = ref(false);
-const nameError: Ref<boolean> = ref(false);
-const notify: Ref<boolean> = ref(false);
-const show: Ref<boolean> = ref(true);
-
-onMounted(() => {
-  studentList.value = userStore.studentList;
-});
-
-//toggle modal
-function toggleEvent() {
-  show.value = !show.value;
-}
+const studentList = ref<GuidanceStudent[]>([]);
+const dateError = ref(false);
+const timeError = ref(false);
+const nameError = ref(false);
+const notify = ref(false);
+const show = ref(true);
 
 const dateElement = ref();
 
-const props = defineProps<{
-  todaysDate: string;
-}>();
 onMounted(() => {
+  studentList.value = userStore.studentList;
   date.value = props.todaysDate!;
   dateElement.value.type = "date";
   dateElement.value.value = props.todaysDate!;
 });
 
-//check for empty input values before submitting form
-function empty() {
-  //if the input value is an empty string, the error is true; otherwise it is false
+function submit() {
   dateError.value = !date.value;
   timeError.value = !time.value;
   nameError.value = !selectedStudent.value;
 
-  if (!dateError.value && !timeError.value && !nameError.value) {
-    // convert meeting date to an ISO string
-    const meetingDateTime: Date = new Date(date.value + "T" + time.value);
-    const meetingISO: string = meetingDateTime.toISOString();
+  if (dateError.value || timeError.value || nameError.value) return;
+  const meetingISO = new Date(date.value + "T" + time.value).toISOString();
+  id = studentList.value.find(({ email }) =>
+    selectedStudent.value.includes(email)
+  )!.id;
 
-    // locate student
-    for (const student of studentList.value) {
-      const studentEmail = student.email;
-      if (selectedStudent.value.includes(`${studentEmail}@nycstudents.net`)) {
-        id = student.id;
-      }
-    }
-
-    save.value.innerHTML = "Saved";
-    userStore.changeMeeting(
-      id,
-      false,
-      meetingISO,
-      description.value,
-      notify.value
-    );
-    form.value.reset();
-    show.value = !show.value;
-
-    // clear form input values
-    selectedStudent.value = "";
-    id = 0;
-    date.value = "";
-    time.value = "";
-  }
-}
-
-function titleCaseName(selectedStudent: string): string {
-  return selectedStudent
-    .split(",")
-    .map((chunk) =>
-      chunk
-        .split(" ")
-        .map((part) => part.trim().toLowerCase())
-        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-        .join(" ")
-    )
-    .join(", ");
+  save.value.innerHTML = "Saved";
+  userStore.changeMeeting(
+    id,
+    false,
+    meetingISO,
+    description.value,
+    notify.value
+  );
+  form.value.reset();
+  show.value = !show.value;
 }
 </script>
 

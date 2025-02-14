@@ -140,8 +140,7 @@ function applyFilters(sortBy: string, search: string) {
 
 const totalPages = computed(() => {
   const numStudents = sortedAndFiltered.value.length;
-  if (numStudents < 1) return 1;
-  else return Math.ceil(numStudents / pageCapacity);
+  return numStudents < 1 ? 1 : Math.ceil(numStudents / pageCapacity);
 });
 
 function changePage(increment: number) {

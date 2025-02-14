@@ -15,55 +15,23 @@
           id="next"
           ref="next"
           @click="changeMonth(true)"
-          >&#10095;</span
         >
+          &#10095;
+        </span>
       </div>
       <div class="flex flex-row gap-[7rem] mb-12">
-        <div class="w-full">
-          <ul
-            class="text-center flex flex-wrap list-none overflow-hidden bg-primary-g"
-          >
-            <li
-              class="text-xl grow text-center py-1 border border-neutral-500 font-extrabold"
-            >
-              Sun
-            </li>
-            <li
-              class="text-xl grow text-center py-1 border border-neutral-500 font-extrabold"
-            >
-              Mon
-            </li>
-            <li
-              class="text-xl grow text-center py-1 border border-neutral-500 font-extrabold"
-            >
-              Tue
-            </li>
-            <li
-              class="text-xl grow text-center py-1 border border-neutral-500 font-extrabold"
-            >
-              Wed
-            </li>
-            <li
-              class="text-xl grow text-center py-1 border border-neutral-500 font-extrabold"
-            >
-              Thu
-            </li>
-            <li
-              class="text-xl grow text-center py-1 border border-neutral-500 font-extrabold"
-            >
-              Fri
-            </li>
-            <li
-              class="text-xl grow text-center py-1 border border-neutral-500 font-extrabold"
-            >
-              Sat
-            </li>
+        <div class="calendar w-full">
+          <ul class="weeks bg-primary-g">
+            <li>Sun</li>
+            <li>Mon</li>
+            <li>Tue</li>
+            <li>Wed</li>
+            <li>Thu</li>
+            <li>Fri</li>
+            <li>Sat</li>
           </ul>
-          <ul class="days flex flex-wrap list-none overflow-hidden">
-            <li
-              class="group text-base grow text-end pb-3 border border-neutral-500"
-              v-for="h in calendarData"
-            >
+          <ul class="days">
+            <li class="hover:visible group" v-for="h in calendarData">
               <p class="mt-2 text-end mr-2 mb-16">{{ h.todaysDate }}</p>
               <div
                 v-for="meeting in h.meetings"
@@ -71,16 +39,16 @@
                 @click="toggleDetails(meeting)"
               >
                 <p
-                  :class="`w-[100%] text-center truncate ${
+                  :class="`w-[100%] text-center truncate rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md ${
                     classColor[meeting.grade]
-                  } rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md`"
+                  }`"
                 >
                   {{ meeting.name }}
                 </p>
               </div>
               <button
                 @click="toggleEvent(h)"
-                class="w-3 m-1 hidden child hover:cursor-pointer text-2xl leading-[0]"
+                class="w-10 h-10 m-1 opacity-0 group-hover:opacity-100 cursor-pointer text-3xl leading-[0] transition-all duration-300"
               >
                 +
               </button>
@@ -94,15 +62,14 @@
     <MeetingDetails v-if="showDetails" :meeting="selectedMeeting" />
   </div>
 </template>
-
 <script setup lang="ts">
 import UpcomingMeetings from "../components/Guidance/UpcomingMeetings.vue";
 import MeetingDetails from "../components/Guidance/MeetingDetails.vue";
 import CreateEvent from "../components/Guidance/CreateEvent.vue";
 import { ref, onMounted, watchEffect } from "vue";
-import { Meeting } from "../types/interface";
 import { useUserStore } from "../stores/user";
 import { DateInfo } from "../types/interface";
+import { Meeting } from "../types/interface";
 
 document.title = "Calendar & Events | SITHS Course Selection";
 
@@ -209,3 +176,58 @@ const changeMonth = (next: boolean) => {
   renderCalendar();
 };
 </script>
+<style scoped>
+.calendar ul {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  overflow: hidden;
+}
+
+.calendar li {
+  width: calc(100% / 7);
+  font-size: 1.07rem;
+}
+
+.weeks li {
+  text-align: center;
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
+  border: 1px solid grey;
+}
+
+.calendar .weeks li {
+  font-weight: 800;
+  font-size: 1.2rem;
+  cursor: default;
+}
+
+.calendar .days li {
+  text-align: end;
+}
+
+.days li {
+  border: grey 1px solid;
+  font-size: 0.9rem;
+}
+
+.days li:hover {
+  display: block;
+}
+
+.days li.inactive {
+  color: #aaa;
+}
+
+.days li.active {
+  color: #fff;
+}
+
+.days li.active::before {
+  background: #9b59b6;
+}
+
+.days li:not(.active):hover::before {
+  background: #f2f2f2;
+}
+</style>
