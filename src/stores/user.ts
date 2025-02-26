@@ -3,6 +3,7 @@ import { useSurveyStore } from "./survey";
 import { useRouter } from "vue-router";
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import { uid } from "chart.js/dist/helpers/helpers.core";
 
 export const useUserStore = defineStore("user", () => {
   const router = useRouter();
@@ -62,12 +63,35 @@ export const useUserStore = defineStore("user", () => {
     lastName.value = data.lastName[0] + data.lastName.slice(1).toLowerCase();
     email.value = data.email;
     isGuidance.value = data.isGuidance;
-    if (!isGuidance.value) {
+    if (isGuidance.value) await getStudents();
+    else {
       student.value = data.student;
-      if (data.student.status === "Finalized") surveyStore.open = false;
-    } else await getStudents();
+      surveyStore.open = data.student.status !== "Finalized";
+    }
     isAuth.value = true;
     router.push(`/${isGuidance.value ? "guidance" : "student"}/dashboard`);
+  }
+
+  async function resetPassword(email: string) {
+    const res = await fetchData("auth/password/reset/", "POST", { email });
+    if (!res.ok) return await res.json();
+    return { message: "Email sent" };
+  }
+
+  async function resetPasswordConfirm(
+    new_password1: string,
+    new_password2: string,
+    token: string,
+    uid: string
+  ) {
+    const res = await fetchData("auth/password/reset/confirm/", "POST", {
+      new_password1,
+      new_password2,
+      token,
+      uid,
+    });
+    if (!res.ok) return await res.json();
+    return { message: "Email sent" };
   }
 
   async function logout() {
@@ -110,6 +134,7 @@ export const useUserStore = defineStore("user", () => {
     const res = await fetchData("guidance/meetings/");
     if (!res.ok) return await res.json();
     const data = await res.json();
+
     meetings.value = data.map((meeting: Meeting) => ({
       ...meeting,
       meetingDate: new Date(meeting.meetingDate),
@@ -181,9 +206,11 @@ export const useUserStore = defineStore("user", () => {
     getMeetings,
     studentList,
     initComplete,
+    resetPassword,
     changeMeeting,
     viewedStudents,
     meetingsFetched,
+    resetPasswordConfirm,
     $reset,
   };
 });

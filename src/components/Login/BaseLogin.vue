@@ -34,7 +34,6 @@
         >Password
       </LoginInput>
     </div>
-    <ResetButton></ResetButton>
     <button
       id="button"
       class="bg-zinc-300 w-32 h-12 mt-4 rounded-md text-lg font-semibold hover:bg-zinc-200"
@@ -42,18 +41,24 @@
     >
       Login
     </button>
+    <div class="pt-4">
+      <router-link
+        to="/resetpassword"
+        class="w-full px-4 py-2 text-sm font-medium text-primary-s hover:text-secondary-s transition"
+      >
+        Reset Password
+      </router-link>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useUserStore } from "../../stores/user";
 import BackArrow from "../icons/BackArrow.vue";
 import LoginInput from "./LoginInput.vue";
-import ResetButton from "./ResetButton.vue";
-
-import { useUserStore } from "../../stores/user";
 import { ref } from "vue";
-const userStore = useUserStore();
 
+const userStore = useUserStore();
 const username = ref("");
 const password = ref("");
 </script>
