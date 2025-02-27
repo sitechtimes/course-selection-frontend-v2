@@ -86,8 +86,23 @@
       id="menu-icon"
       class="flex justify-center items-center cursor-pointer z-40 md:hidden"
     >
-      <MenuIcon @click="menuOpen = !menuOpen" v-if="!menuOpen" />
-      <CloseMenu @click="menuOpen = !menuOpen" v-else />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-7 h-7"
+        @click="menuOpen = !menuOpen"
+        v-if="!menuOpen"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+        />
+      </svg>
+      <p @click="menuOpen = !menuOpen" v-else class="text-2xl">✕</p>
     </div>
     <!-- while viewing survey -->
     <div
@@ -122,8 +137,6 @@
 <script lang="ts" setup>
 import { useSurveyStore } from "../../stores/survey";
 import { useUserStore } from "../../stores/user";
-import CloseMenu from "../icons/CloseMenu.vue";
-import MenuIcon from "../icons/MenuIcon.vue";
 import { RouterLink } from "vue-router";
 import MobileNav from "./MobileNav.vue";
 import router from "../../router";

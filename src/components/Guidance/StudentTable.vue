@@ -11,13 +11,13 @@
           <th class="p-4 flex flex-row items-center">
             <p class="p-2 font-bold">Flags</p>
             <div>
-              <img
-                src="../icons/InfoCircle.png"
-                alt="hover for more information on student flags"
+              <p
                 class="h-5"
                 @mouseover="tooltip = true"
                 @mouseout="tooltip = false"
-              />
+              >
+                ⓘ
+              </p>
               <div
                 v-show="tooltip"
                 class="absolute h-auto w-auto bg-white border-primary-g border p-2"

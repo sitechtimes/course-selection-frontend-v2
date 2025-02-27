@@ -14,12 +14,26 @@
           @filter-selected="(filter:string) => (sortBy = filter)"
         />
       </div>
-      <SearchBar
-        class="w-2/3"
-        type="text"
-        v-model="input"
-        placeholder="Search Students..."
-      />
+      <div class="w-2/3">
+        <div class="border-white flex justify-center items-center">
+          <div class="flex justify-center items-center relative w-11/12">
+            <input
+              v-model="input"
+              placeholder="Search by name or email"
+              @input="
+                $emit(
+                  'update:modelValue',
+                  ($event.target as HTMLInputElement).value
+                )
+              "
+              class="border border-zinc-300 rounded w-full h-10 p-2 text-zinc-800"
+            />
+            <p class="absolute right-3 text-zinc-400 cursor-pointer text-xl">
+              🔎︎
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
     <StudentTable
       :viewAll="viewAll"
@@ -78,7 +92,6 @@
 
 <script setup lang="ts">
 import StudentTable from "../components/Guidance/StudentTable.vue";
-import SearchBar from "../components/Guidance/SearchBar.vue";
 import Sort from "../components/Guidance/SortButton.vue";
 import { GuidanceStudent } from "../types/interface";
 import { useUserStore } from "../stores/user";

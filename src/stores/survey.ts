@@ -63,7 +63,7 @@ export const useSurveyStore = defineStore("survey", () => {
 
   async function saveSurvey(status: Number) {
     if (!checkAnswers() && !userStore.isGuidance)
-      return alert("No changes detected.");
+      return (userStore.error = "No changes detected.");
     const res = await fetchData(
       userStore.isGuidance
         ? `guidance/survey/${router.currentRoute.value.params.id}`

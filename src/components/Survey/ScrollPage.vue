@@ -3,35 +3,25 @@
     <button
       @click="scrollTop"
       v-if="ShowScrollTop"
-      :class="{
-        'pop-in': ShowScrollTop,
-        'pop-out': !ShowScrollTop,
-        'bg-[#DEE9C8]': guidance,
-        'bg-[#D6EEFF]': !guidance,
-      }"
-      class="shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-50 p-4 mb-2.5 text-center flex flex-col align-center"
+      :class="`${ShowScrollTop ? 'pop-in' : 'pop-out'} ${
+        guidance ? 'bg-[#DEE9C8]' : 'bg-[#D6EEFF]'
+      } shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-50 p-4 pt-2 pb-6 mb-2.5 text-center flex flex-col align-center`"
     >
-      <AngleUp class="h-4" />
+      <p class="h-4 text-[1.5em]">⏶</p>
     </button>
     <button
       @click="scrollBottom"
       v-if="ShowScrollBottom"
-      :class="{
-        'pop-in': ShowScrollBottom,
-        'pop-out': !ShowScrollBottom,
-        'bg-[#DEE9C8]': guidance,
-        'bg-[#D6EEFF]': !guidance,
-      }"
-      class="shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-fit p-4 mb-2.5 flex flex-col align-center"
+      :class="`${ShowScrollBottom ? 'pop-in' : 'pop-out'} ${
+        guidance ? 'bg-[#DEE9C8]' : 'bg-[#D6EEFF]'
+      } shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-fit p-4 pt-2 pb-6 mb-2.5 flex flex-col align-center`"
     >
-      <AngleDown class="h-4" />
+      <p class="h-4 text-[1.5em]">⏷</p>
     </button>
   </div>
 </template>
 
 <script lang="ts" setup>
-import AngleDown from "../icons/AngleDown.vue";
-import AngleUp from "../icons/AngleUp.vue";
 import { ref, onMounted } from "vue";
 
 defineProps<{ guidance: boolean }>();
@@ -39,13 +29,8 @@ defineProps<{ guidance: boolean }>();
 const ShowScrollTop = ref(false);
 const ShowScrollBottom = ref(true);
 
-function scrollTop() {
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-function scrollBottom() {
-  window.scrollTo(0, document.body.scrollHeight);
-}
+const scrollTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+const scrollBottom = () => window.scrollTo(0, document.body.scrollHeight);
 
 function scrolledEnough() {
   const windowHeight = window.innerHeight;
@@ -65,10 +50,7 @@ function scrolledEnough() {
     ShowScrollBottom.value = true;
   }
 }
-
-onMounted(() => {
-  window.addEventListener("scroll", scrolledEnough);
-});
+onMounted(() => window.addEventListener("scroll", scrolledEnough));
 </script>
 
 <style scoped>

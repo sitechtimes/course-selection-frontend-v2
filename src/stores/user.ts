@@ -3,13 +3,13 @@ import { useSurveyStore } from "./survey";
 import { useRouter } from "vue-router";
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { uid } from "chart.js/dist/helpers/helpers.core";
 
 export const useUserStore = defineStore("user", () => {
   const router = useRouter();
   const surveyStore = useSurveyStore();
   const loading = ref(false);
   const profileID = ref(0);
+  const error = ref("");
   const initComplete = ref(false);
   const isAuth = ref(false);
   const firstName = ref("");
@@ -56,7 +56,10 @@ export const useUserStore = defineStore("user", () => {
       username: username.toLowerCase(),
       password: password,
     });
-    if (!res.ok) return await res.json();
+    if (!res.ok)
+      return (error.value = Object.values(
+        (await res.json()) as Record<string, string[]>
+      )[0][0]);
     const data = await res.json();
     profileID.value = data.id;
     firstName.value = data.firstName[0] + data.firstName.slice(1).toLowerCase();
@@ -74,7 +77,8 @@ export const useUserStore = defineStore("user", () => {
 
   async function resetPassword(email: string) {
     const res = await fetchData("auth/password/reset/", "POST", { email });
-    if (!res.ok) return await res.json();
+    if (!res.ok) return (error.value = (await res.json())["email"][0]);
+
     return { message: "Email sent" };
   }
 
@@ -90,7 +94,11 @@ export const useUserStore = defineStore("user", () => {
       token,
       uid,
     });
-    if (!res.ok) return await res.json();
+    if (!res.ok)
+      return (error.value = Object.values(
+        (await res.json()) as Record<string, string[]>
+      )[0][0]);
+
     return { message: "Email sent" };
   }
 
@@ -191,6 +199,7 @@ export const useUserStore = defineStore("user", () => {
 
   return {
     init,
+    error,
     login,
     logout,
     isAuth,

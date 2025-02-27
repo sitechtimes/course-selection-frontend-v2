@@ -82,9 +82,8 @@ const printMeetingTicket = () => {
 
   const newWindow = window.open("", "", "width=800,height=900");
   if (!newWindow)
-    return window.alert(
-      "Failed to open window. Popup blocker might be enabled."
-    );
+    return (userStore.error =
+      "Failed to open window. Popup blocker might be enabled.");
 
   newWindow.document.write(printPage);
   newWindow.print();

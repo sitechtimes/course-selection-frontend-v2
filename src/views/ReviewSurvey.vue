@@ -127,7 +127,7 @@ const finalCourses = ref<Course[]>(
 async function submit() {
   surveyStore.checkAnswers();
   if (surveyStore.missingAnswers.length > 0) {
-    alert("Please answer all required questions before submitting.");
+    userStore.error = "Please answer all required questions before submitting.";
     warning.value = true;
     return;
   }

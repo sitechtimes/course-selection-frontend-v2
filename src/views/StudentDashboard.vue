@@ -24,13 +24,15 @@
     >
       <h1 id="name" class="text-3xl sm:text-4xl md:text-5xl font-bold">
         Welcome back,
-        <span class="text-3xl sm:text-4xl md:text-5xl font-bold">{{ `${userStore.firstName} ${userStore.lastName}` }}</span>
+        <span class="text-3xl sm:text-4xl md:text-5xl font-bold">{{
+          `${userStore.firstName} ${userStore.lastName}`
+        }}</span>
       </h1>
       <div
         id="announcements"
         class="text-lg md:text-xl text-left flex justify-center items-center ml-4 lg:ml-0 lg:justify-start"
       >
-        <BellIcon />
+        🔔
         <h2 v-if="surveyStore.open">Surveys are closing on {{ closeDate }}.</h2>
         <h2 v-else-if="userStore.student.status === 'Finalized'">
           Your guidance counselor has finalized your survey. If you wish to make
@@ -121,9 +123,8 @@
 </template>
 
 <script setup lang="ts">
-import BellIcon from "../components/icons/BellIcon.vue";
-import { useUserStore } from "../stores/user";
 import { useSurveyStore } from "../stores/survey";
+import { useUserStore } from "../stores/user";
 import { computed, ref } from "vue";
 
 document.title = "Dashboard | SITHS Course Selection";
