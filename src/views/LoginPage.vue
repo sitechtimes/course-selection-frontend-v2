@@ -41,9 +41,7 @@
           <h1 class="text-4xl mb-4 font-bold">Login</h1>
           <div class="flex flex-col w-11/12 max-w-[21rem] space-y-5 rounded-md">
             <Input
-              id="email"
               label="email"
-              name="email"
               type="email"
               required
               :value="username"
@@ -52,9 +50,7 @@
               Username
             </Input>
             <Input
-              id="password"
               label="password"
-              name="password"
               type="password"
               required
               :value="password"

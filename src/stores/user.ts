@@ -2,14 +2,14 @@ import { Student, Meeting, GuidanceStudent, Stats } from "../types/interface";
 import { useSurveyStore } from "./survey";
 import { useRouter } from "vue-router";
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 
 export const useUserStore = defineStore("user", () => {
   const router = useRouter();
   const surveyStore = useSurveyStore();
   const loading = ref(false);
   const profileID = ref(0);
-  const error = ref("");
+  const popup = reactive({ error: true, message: "" });
   const initComplete = ref(false);
   const isAuth = ref(false);
   const firstName = ref("");
@@ -35,6 +35,12 @@ export const useUserStore = defineStore("user", () => {
     return res;
   }
 
+  function setPopup(message: string, error: boolean = false) {
+    popup.message = "";
+    popup.message = message;
+    popup.error = error;
+  }
+
   async function init() {
     const res = await fetchData("init/");
     initComplete.value = true;
@@ -56,11 +62,12 @@ export const useUserStore = defineStore("user", () => {
       username: username.toLowerCase(),
       password: password,
     });
-    if (!res.ok)
-      return (error.value = Object.values(
-        (await res.json()) as Record<string, string[]>
-      )[0][0]);
-    const data = await res.json();
+    const data = (await res.json()) as Record<string, any>;
+    if (!res.ok) {
+      const error = Object.values(data)[0];
+      return setPopup(typeof error === "object" ? error[0] : error, true);
+    }
+
     profileID.value = data.id;
     firstName.value = data.firstName[0] + data.firstName.slice(1).toLowerCase();
     lastName.value = data.lastName[0] + data.lastName.slice(1).toLowerCase();
@@ -77,9 +84,9 @@ export const useUserStore = defineStore("user", () => {
 
   async function resetPassword(email: string) {
     const res = await fetchData("auth/password/reset/", "POST", { email });
-    if (!res.ok) return (error.value = (await res.json())["email"][0]);
-
-    return { message: "Email sent" };
+    popup.error = !res.ok;
+    if (!res.ok) return setPopup((await res.json())["email"][0], true);
+    setPopup("Password reset email sent.");
   }
 
   async function resetPasswordConfirm(
@@ -94,12 +101,9 @@ export const useUserStore = defineStore("user", () => {
       token,
       uid,
     });
-    if (!res.ok)
-      return (error.value = Object.values(
-        (await res.json()) as Record<string, string[]>
-      )[0][0]);
-
-    return { message: "Email sent" };
+    popup.error = !res.ok;
+    const data = (await res.json()) as Record<string, string[]>;
+    return setPopup(Object.values(data)[0][0], !res.ok);
   }
 
   async function logout() {
@@ -199,12 +203,13 @@ export const useUserStore = defineStore("user", () => {
 
   return {
     init,
-    error,
+    popup,
     login,
     logout,
     isAuth,
     loading,
     student,
+    setPopup,
     lastName,
     meetings,
     firstName,

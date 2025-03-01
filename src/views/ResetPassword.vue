@@ -9,12 +9,14 @@
       </p>
       <form class="mt-6" @submit.prevent="userStore.resetPassword(email)">
         <div class="mb-6">
-          <input
+          <Input
             type="email"
-            class="mt-1 w-full p-3 sm:p-4 md:p-5 border border-other-s rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-s"
-            placeholder="Enter your email"
-            v-model="email"
-          />
+            label="email"
+            required
+            :value="email"
+            @update="(newValue) => (email = newValue)"
+            >Enter your email...</Input
+          >
         </div>
         <button
           type="submit"
@@ -35,9 +37,11 @@
   </div>
 </template>
 <script setup lang="ts">
+import Input from "../components/Basic/Input.vue";
 import { useUserStore } from "../stores/user";
 import { ref } from "vue";
 
 const userStore = useUserStore();
 const email = ref("");
 </script>
+<style scoped></style>
