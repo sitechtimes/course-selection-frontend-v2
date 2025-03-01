@@ -8,8 +8,7 @@ const router = createRouter({
     {
       path: "/:pathMatch(.*)*",
       name: "error",
-      meta: { auth: false },
-      component: () => import("../views/HomePage.vue"),
+      component: () => import("../views/ErrorView.vue"),
     },
     {
       path: "/",
