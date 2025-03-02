@@ -3,18 +3,16 @@
     <p v-if="userStore.loading">Setting things up...</p>
     <div
       v-else
-      class="w-11/12 md:w-4/5 lg:w-3/4 flex flex-col items-center min-h-[20rem] h-5/6 overflow mt-6"
+      class="w-11/12 md:w-4/5 lg:w-3/4 flex flex-col items-center min-h-[20rem] h-5/6 overflow"
     >
-      <div class="mt-5">
-        <h1 class="text-4xl font-semibold mb-6">
-          {{
-            { 9: "Sophomore", 10: "Junior", 11: "Senior" }[
-              userStore.student.grade
-            ]
-          }}
-          Year Survey
-        </h1>
-      </div>
+      <h1 class="text-4xl font-semibold mb-6">
+        {{
+          { 9: "Sophomore", 10: "Junior", 11: "Senior" }[
+            userStore.student.grade
+          ]
+        }}
+        Year Survey
+      </h1>
       <div class="h-5/6 flex items-center">
         <GeneralComponent
           v-if="currentQuestion.questionType === 'GENERAL'"
@@ -50,7 +48,7 @@
       </div>
     </div>
     <div
-      class="h-1/6 w-11/12 md:w-4/5 lg:w-3/4 justify-between items-start px-4 bg-white z-20 flex flex-col"
+      class="w-11/12 md:w-4/5 lg:w-3/4 justify-between items-start px-4 bg-white z-20 flex flex-col"
     >
       <div class="flex flex-row justify-between w-full">
         <button
@@ -60,6 +58,9 @@
         >
           Back
         </button>
+        <p class="flex flex-row justify-center w-full text-xl font-semibold">
+          {{ currentIndex + 1 }}
+        </p>
         <button
           @click="currentIndex++"
           class="bg-[#6A9FD1] text-white w-24 h-10 rounded-md disabled:hidden"
@@ -78,9 +79,6 @@
           </button>
         </RouterLink>
       </div>
-      <p class="flex flex-row justify-center w-full text-xl font-semibold">
-        {{ currentIndex + 1 }}
-      </p>
     </div>
   </div>
 </template>

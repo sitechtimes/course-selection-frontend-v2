@@ -107,7 +107,7 @@
     <!-- while viewing survey -->
     <div
       v-if="viewingSurvey()"
-      class="flex flex-row-reverse w-full sm:w-1/4 md:1/6 justify-between text-xl md:text-xl"
+      class="flex flex-row-reverse sm:w-[10%] md:1/6 justify-between text-xl md:text-xl"
     >
       <p
         @click="redirect()"
@@ -123,7 +123,7 @@
         Submit
       </p>
       <p
-        v-if="surveyStore.status != 'Completed' && surveyStore.open"
+        v-if="surveyStore.status !== 'Completed' && surveyStore.open"
         @click="toggleSave()"
         class="text-[#37394F] cursor-pointer hover:text-gray-500"
         ref="save"

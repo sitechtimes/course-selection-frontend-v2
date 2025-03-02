@@ -72,8 +72,10 @@ export const useUserStore = defineStore("user", () => {
     }
 
     profileID.value = data.id;
-    firstName.value = data.firstName[0] + data.firstName.slice(1).toLowerCase();
-    lastName.value = data.lastName[0] + data.lastName.slice(1).toLowerCase();
+    firstName.value =
+      data.firstName[0].toUpperCase() + data.firstName.slice(1).toLowerCase();
+    lastName.value =
+      data.lastName[0].toUpperCase() + data.lastName.slice(1).toLowerCase();
     email.value = data.email;
     isGuidance.value = data.isGuidance;
     if (isGuidance.value) await getStudents();
