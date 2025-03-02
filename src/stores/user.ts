@@ -57,7 +57,10 @@ export const useUserStore = defineStore("user", () => {
     } else await getStudents();
     isAuth.value = true;
   }
+
   async function login(username: string, password: string) {
+    if (!username || !password)
+      return setPopup("Username and password cannot be empty.", true);
     const res = await fetchData("auth/login/", "POST", {
       username: username.toLowerCase(),
       password: password,
@@ -83,9 +86,9 @@ export const useUserStore = defineStore("user", () => {
   }
 
   async function resetPassword(email: string) {
+    if (!email) return setPopup("Email cannot be empty.", true);
     const res = await fetchData("auth/password/reset/", "POST", { email });
-    popup.error = !res.ok;
-    if (!res.ok) return setPopup((await res.json())["email"][0], true);
+    if (!res.ok) return setPopup((await res.json())["email"][0], !res.ok);
     setPopup("Password reset email sent.");
   }
 
@@ -95,20 +98,28 @@ export const useUserStore = defineStore("user", () => {
     token: string,
     uid: string
   ) {
+    if (new_password1 !== new_password2)
+      return setPopup("Passwords do not match.", true);
+    if (!new_password1 || !new_password2)
+      return setPopup("Password cannot be empty.", true);
+    if (!token || !uid)
+      return setPopup("Invalid reset link. Try reseting again.", true);
     const res = await fetchData("auth/password/reset/confirm/", "POST", {
       new_password1,
       new_password2,
       token,
       uid,
     });
-    popup.error = !res.ok;
-    const data = (await res.json()) as Record<string, string[]>;
-    return setPopup(Object.values(data)[0][0], !res.ok);
+    const data = Object.values(
+      (await res.json()) as Record<string, string[]>
+    )[0];
+    return setPopup(typeof data === "object" ? data[0] : data, !res.ok);
   }
 
   async function logout() {
     const res = await fetchData("auth/logout/", "POST");
     if (!res.ok) return await res.json();
+    setPopup("Successfully logged out.");
     surveyStore.$reset();
     $reset();
     router.push("/");

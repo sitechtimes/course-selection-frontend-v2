@@ -38,42 +38,61 @@
             <p class="text-xl">❮</p>
             <p class="text-base text-zinc-600 font-semibold">Back</p>
           </button>
-          <h1 class="text-4xl mb-4 font-bold">Login</h1>
+          <h1 class="text-4xl mb-4 font-bold">
+            {{
+              $route.query.reset || $route.query.token
+                ? "Reset Password"
+                : "Login"
+            }}
+          </h1>
           <div class="flex flex-col w-11/12 max-w-[21rem] space-y-5 rounded-md">
             <Input
               label="email"
-              type="email"
+              :type="route.query.token ? 'password' : 'email'"
               required
-              :value="username"
-              @update="(newValue) => (username = newValue)"
+              :value="input1"
+              @update="(newValue) => (input1 = newValue)"
+              @keyup.enter="sendRequest"
             >
-              Username
+              {{ inputOne() }}
             </Input>
             <Input
+              v-if="!$route.query.reset"
               label="password"
               type="password"
               required
-              :value="password"
-              @update="(newValue) => (password = newValue)"
-              @keyup.enter="userStore.login(username, password)"
+              :value="input2"
+              @update="(newValue) => (input2 = newValue)"
+              @keyup.enter="sendRequest"
             >
-              Password
+              {{ $route.query.token ? "Confirm Password" : "Password" }}
             </Input>
           </div>
           <button
             id="button"
-            class="bg-zinc-300 w-32 h-12 mt-4 rounded-md text-lg font-semibold hover:bg-zinc-200"
-            @click="userStore.login(username, password)"
+            class="bg-zinc-300 px-5 min-w-32 h-12 mt-4 rounded-md text-lg font-semibold hover:bg-zinc-200"
+            @click="sendRequest"
           >
-            Login
+            {{ $route.query.reset ? "Send Reset Email" : "Login" }}
           </button>
           <div class="pt-4">
-            <router-link
-              to="/resetpassword"
+            <button
+              @click="
+                $router.replace({
+                  query:
+                    route.query.reset || route.query.token
+                      ? undefined
+                      : { reset: 'true' },
+                })
+              "
               class="w-full px-4 py-2 text-sm font-medium text-primary-s hover:text-secondary-s transition"
             >
-              Reset Password
-            </router-link>
+              {{
+                $route.query.reset || $route.query.token
+                  ? "Remembered your password? Login here"
+                  : "Forgot your password? Reset Password"
+              }}
+            </button>
           </div>
         </div>
       </div>
@@ -84,13 +103,33 @@
 <script setup lang="ts">
 import Input from "../components/Basic/Input.vue";
 import { useUserStore } from "../stores/user";
+import { useRoute } from "vue-router";
 import { ref } from "vue";
 
+const route = useRoute();
 const userStore = useUserStore();
-const username = ref("");
-const password = ref("");
+const input1 = ref("");
+const input2 = ref("");
 
 document.title = "Login | SITHS Course Selection";
+
+function inputOne() {
+  if (route.query.reset) return "Email Address";
+  if (route.query.token) return "New Password";
+  return "Username";
+}
+
+function sendRequest() {
+  if (route.query.reset) userStore.resetPassword(input1.value);
+  else if (route.query.token)
+    userStore.resetPasswordConfirm(
+      input1.value,
+      input2.value,
+      route.query.token as string,
+      route.query.uid as string
+    );
+  else userStore.login(input1.value, input2.value);
+}
 </script>
 
 <style scoped>

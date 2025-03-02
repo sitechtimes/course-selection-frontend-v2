@@ -23,23 +23,6 @@ const router = createRouter({
       component: () => import("../views/LoginPage.vue"),
     },
     {
-      path: "/resetpassword",
-      name: "resetpassword",
-      meta: { auth: false },
-      children: [
-        {
-          path: "",
-          name: "resetPasswordRequest",
-          component: () => import("../views/ResetPassword.vue"),
-        },
-        {
-          path: "confirm/:uid/:token",
-          name: "resetPasswordConfirm",
-          component: () => import("../views/ResetPasswordConfirm.vue"),
-        },
-      ],
-    },
-    {
       path: "/guidance",
       name: "guidance",
       meta: { user: "guidance", auth: true },

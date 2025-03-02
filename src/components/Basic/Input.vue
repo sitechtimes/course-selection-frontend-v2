@@ -1,5 +1,5 @@
 <template>
-  <div class="relative z-0 w-full group overflow-visible text-left">
+  <div class="relative w-full group overflow-visible text-left">
     <input
       @change="(event: Event) =>  $emit('update', (event.target as HTMLInputElement).value)"
       :value="value"
@@ -11,7 +11,7 @@
     />
     <label
       :for="label"
-      class="peer-focus:font-medium absolute top-[40%] text-md px-1 text-zinc-400 duration-200 transform -translate-y-8 translate-x-1 scale-75 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-[150%] peer-focus:translate-x-1 peer-focus:z-20 peer-focus:px-1 overflow-visible"
+      class="peer-focus:font-medium absolute top-[40%] text-md px-1 text-zinc-400 duration-200 transform -translate-y-8 translate-x-1 scale-75 z-[1000] origin-[0] peer-focus:left-0 peer-focus:text-blue-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-[150%] peer-focus:translate-x-1 peer-focus:px-1 overflow-visible"
     >
       <slot></slot>
     </label>
