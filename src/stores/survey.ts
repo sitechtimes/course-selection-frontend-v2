@@ -19,7 +19,6 @@ export const useSurveyStore = defineStore("survey", () => {
   const userStore = useUserStore();
   const loaded = ref(false);
   const open = ref(true);
-  const submit = ref(false);
   const coursesTaken = ref<Course[]>([]);
   const coursesAvailable = ref<Course[]>([]);
   const survey = ref({} as Survey);
@@ -77,9 +76,11 @@ export const useSurveyStore = defineStore("survey", () => {
     );
     survey.value.answers = JSON.parse(JSON.stringify(answers.value));
     changes.value = [];
-    if (!res.ok || status === 0) return;
-    submit.value = true;
-    setTimeout(() => (submit.value = false), 3000);
+    if (!res.ok) return;
+    userStore.setPopup(
+      `Survey successfully ${status === 0 ? "saved" : "submitted"}.`
+    );
+    if (status === 0) return (open.value = false);
     userStore.student.status = await res.json();
     if (userStore.isGuidance) return router.push("/guidance/studentlist");
     router.push("/student/dashboard");
@@ -112,7 +113,6 @@ export const useSurveyStore = defineStore("survey", () => {
 
   function $reset() {
     open.value = true;
-    submit.value = false;
     loaded.value = false;
     missingAnswers.value = [];
     coursesTaken.value = [];
@@ -123,7 +123,6 @@ export const useSurveyStore = defineStore("survey", () => {
 
   return {
     open,
-    submit,
     status,
     survey,
     loaded,
