@@ -9,7 +9,7 @@ export const useUserStore = defineStore("user", () => {
   const surveyStore = useSurveyStore();
   const loading = ref(false);
   const profileID = ref(0);
-  const popup = reactive({ error: true, message: "" });
+  const popup = reactive({ error: true, message: "", update: false });
   const initComplete = ref(false);
   const isAuth = ref(false);
   const firstName = ref("");
@@ -37,8 +37,9 @@ export const useUserStore = defineStore("user", () => {
 
   function setPopup(message: string, error: boolean = false) {
     popup.message = "";
-    popup.message = message;
+    popup.update = !popup.update;
     popup.error = error;
+    popup.message = message;
   }
 
   async function init() {

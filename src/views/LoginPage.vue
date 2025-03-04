@@ -77,14 +77,7 @@
           </button>
           <div class="pt-4">
             <button
-              @click="
-                $router.replace({
-                  query:
-                    route.query.reset || route.query.token
-                      ? undefined
-                      : { reset: 'true' },
-                })
-              "
+              @click="changeRoute"
               class="w-full px-4 py-2 text-sm font-medium text-primary-s hover:text-secondary-s transition"
             >
               {{
@@ -102,11 +95,12 @@
 
 <script setup lang="ts">
 import Input from "../components/Basic/Input.vue";
+import { useRoute, useRouter } from "vue-router";
 import { useUserStore } from "../stores/user";
-import { useRoute } from "vue-router";
 import { ref } from "vue";
 
 const route = useRoute();
+const router = useRouter();
 const userStore = useUserStore();
 const input1 = ref("");
 const input2 = ref("");
@@ -117,6 +111,15 @@ function inputOne() {
   if (route.query.reset) return "Email Address";
   if (route.query.token) return "New Password";
   return "Username";
+}
+
+function changeRoute() {
+  input1.value = "";
+  input2.value = "";
+  router.replace({
+    query:
+      route.query.reset || route.query.token ? undefined : { reset: "true" },
+  });
 }
 
 function sendRequest() {

@@ -1,6 +1,7 @@
 <template>
   <div
     v-if="userStore.popup.message"
+    :key="`popup-${userStore.popup.update}`"
     class="w-[60%] min-h-12 h-1 fixed z-[9999] rounded-sm left-[20%] top-[7%]"
     :style="{ backgroundColor: getColor[0] }"
   >
@@ -23,8 +24,15 @@
 
 <script setup lang="ts">
 import { useUserStore } from "../../stores/user";
-import { computed } from "vue";
+import { computed, watch } from "vue";
 const userStore = useUserStore();
+
+watch(
+  () => userStore.popup.message,
+  () => {
+    console.log(userStore.popup.message);
+  }
+);
 
 const getColor = computed(() =>
   userStore.popup.error ? ["#F44336", "#feb2b2"] : ["#4299e1", "#90cdf4"]
