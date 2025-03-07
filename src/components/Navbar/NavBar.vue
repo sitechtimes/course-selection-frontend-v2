@@ -15,14 +15,14 @@
       v-if="userStore.isAuth && !userStore.isGuidance && !viewingSurvey()"
       class="hidden justify-center items-center space-x-12 md:flex"
     >
-      <p>
+      <!-- <p>
         <a
           href="https://siths-catalog.netlify.app/"
           target="_blank"
           rel="noopener"
           >Courses</a
         >
-      </p>
+      </p> -->
       <p
         v-if="!userStore.isGuidance"
         @click="router.push('/student/survey/')"
@@ -68,14 +68,14 @@
       v-if="!userStore.isAuth && !viewingSurvey()"
       class="hidden justify-center items-center space-x-12 md:flex"
     >
-      <p>
+      <!-- <p>
         <a
           href="https://siths-catalog.netlify.app/"
           target="_blank"
           rel="noopener"
           >Courses</a
         >
-      </p>
+      </p> -->
       <RouterLink to="/login">
         <p class="text-base hover:text-gray-500">Login</p>
       </RouterLink>
