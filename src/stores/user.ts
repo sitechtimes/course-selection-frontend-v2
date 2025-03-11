@@ -63,7 +63,7 @@ export const useUserStore = defineStore("user", () => {
     if (!username || !password)
       return setPopup("Username and password cannot be empty.", true);
     const res = await fetchData("auth/login/", "POST", {
-      username: username.toLowerCase(),
+      username: username.split("@")[0].toLowerCase(),
       password: password,
     });
     const data = (await res.json()) as Record<string, any>;
