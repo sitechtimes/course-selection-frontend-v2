@@ -10,6 +10,7 @@ import NavBar from "./components/Navbar/NavBar.vue";
 import PopUp from "./components/Basic/PopUp.vue";
 
 console.log(window.location.hostname);
-if (window.location.hostname === "localhost")  window.location.href = "https://courseselection.siths.dev";
-
+if (window.location.hostname.endsWith("netlify.app"))  {
+  window.location.href = "https://courseselection.siths.dev";
+}
 </script>
