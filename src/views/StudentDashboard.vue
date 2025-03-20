@@ -66,7 +66,7 @@
             ><button
               class="mb-2 lg:m-0 bg-primary-s w-48 h-14 rounded-md text-xl hover:bg-other-s"
             >
-              Courses
+              Course Info
             </button></a
           >
           <!-- check if survey exists, if not create new and set current -->
