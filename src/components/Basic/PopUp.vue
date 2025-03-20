@@ -24,16 +24,9 @@
 
 <script setup lang="ts">
 import { useUserStore } from "../../stores/user";
-import { computed, watch } from "vue";
+import { computed } from "vue";
+
 const userStore = useUserStore();
-
-watch(
-  () => userStore.popup.message,
-  () => {
-    console.log(userStore.popup.message);
-  }
-);
-
 const getColor = computed(() =>
   userStore.popup.error ? ["#F44336", "#feb2b2"] : ["#4299e1", "#90cdf4"]
 );

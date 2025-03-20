@@ -61,7 +61,7 @@ export const useSurveyStore = defineStore("survey", () => {
   }
 
   async function saveSurvey(status: Number) {
-    if (!checkAnswers() && !userStore.isGuidance)
+    if (!checkAnswers() && !userStore.isGuidance && status === 0)
       return userStore.setPopup("No changes detected.");
     const res = await fetchData(
       userStore.isGuidance

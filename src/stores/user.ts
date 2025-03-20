@@ -91,7 +91,7 @@ export const useUserStore = defineStore("user", () => {
   async function resetPassword(email: string) {
     if (!email) return setPopup("Email cannot be empty.", true);
     const res = await fetchData("auth/password/reset/", "POST", { email });
-    if (!res.ok) return setPopup((await res.json())["email"][0], !res.ok);
+    if (!res.ok) return setPopup((await res.json())["email"][0], true);
     setPopup("Password reset email sent.");
   }
 
@@ -113,9 +113,13 @@ export const useUserStore = defineStore("user", () => {
       token,
       uid,
     });
-    const data = Object.values(
-      (await res.json()) as Record<string, string[]>
-    )[0];
+    let data = await res.json();
+    if ("token" in data)
+      return setPopup(
+        "Password already reset, please request another email.",
+        true
+      );
+    data = Object.values(data as Record<string, string[]>)[0];
     return setPopup(typeof data === "object" ? data[0] : data, !res.ok);
   }
 
