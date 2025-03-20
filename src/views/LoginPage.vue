@@ -45,7 +45,7 @@
                 : "Login"
             }}
           </h1>
-          <div class="flex flex-col w-11/12 max-w-[21rem] space-y-5 rounded-md">
+          <div class="flex flex-col w-11/12 max-w-[21rem] space-y-5 rounded-md z-10">
             <Input
               label="email"
               :type="route.query.token ? 'password' : 'email'"
