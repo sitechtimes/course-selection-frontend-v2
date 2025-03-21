@@ -49,18 +49,19 @@
           />
         </div>
       </div>
-      <div
-        class="lg:w-2/3 flex justify-center mb-8 w-full"
-        v-if="userStore.isGuidance"
-      >
-        <p class="text-lg xl:leading-10 md:text-xl xl:text-3xl my-4 mr-5">
-          Guidance Notes:
-        </p>
-        <input
-          class="py-2 px-3 w-full md:w-3/5 text-base md:text-lg xl:text-2xl rounded-md border border-solid focus:outline-none focus:ring-0 disabled:bg-gray-100 transition-colors duration-200 ease-linear focus:border-blue-400 border-zinc-400 bg-transparent"
-          type="text"
+      <div class="mb-8 w-full block ml-12" v-if="userStore.isGuidance">
+        <button
+          @click="shownote = !shownote"
+          class="xl:leading-10 md:text-xl xl:text-2xl my-4 block border px-4 text-sm font-semibold bg-[#D6EEFF] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] h-12 text-[#37394F] transition rounded-md"
+        >
+          {{ shownote ? "Hide" : "Show" }} Guidance Note
+        </button>
+        <textarea
+          v-show="shownote"
+          placeholder="Notes for guidance counselors (optional)"
+          class="py-2 px-3 w-[90%] text-base md:text-lg xl:text-2xl rounded-md border border-solid focus:outline-none focus:ring-0 disabled:bg-gray-100 transition-colors duration-200 ease-linear focus:border-blue-400 border-zinc-400 bg-transparent block h-[10rem]"
           v-model="surveyStore.survey.guidanceNotes"
-        />
+        ></textarea>
       </div>
       <div class="flex justify-center my-10 flex-col items-center">
         <p
@@ -117,6 +118,7 @@ const finalID = surveyStore.answers.findIndex(
 ) as number;
 
 const warning = ref(false);
+const shownote = ref(false);
 const finalCourses = ref<Course[]>(
   (surveyStore.answers[finalID].answer as Rank[]).map(
     (a) =>
