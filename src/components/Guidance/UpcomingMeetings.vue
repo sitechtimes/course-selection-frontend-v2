@@ -15,7 +15,13 @@
               :key="index"
               class="ml-6 mt-2 list-disc"
             >
-              {{ meeting.meetingDate.toLocaleTimeString() }} -
+              {{
+                meeting.meetingDate.toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              }}
+              -
               {{ meeting.name }}
             </li>
           </ul>
@@ -31,25 +37,15 @@ import { Meeting } from "../../types/interface";
 import { ref, computed, onMounted } from "vue";
 
 const userStore = useUserStore();
-const meetingsData = ref<Meeting[]>([]);
 const todaysDate = new Date();
 
-async function updateStudentMeetings() {
-  meetingsData.value = userStore.meetings.sort(
-    (a: Meeting, b: Meeting) =>
-      a.meetingDate.getTime() - b.meetingDate.getTime()
-  );
-}
-
 const groupedStudentMeetings = computed(() =>
-  meetingsData.value
+  userStore.meetings
     .filter((meeting) => meeting.meetingDate > todaysDate)
-    .reduce((acc: Record<string, Meeting[]>, meeting) => {
+    .sort((a, b) => a.meetingDate.getTime() - b.meetingDate.getTime())
+    .reduce((acc, meeting) => {
       (acc[meeting.meetingDate.toDateString()] ||= []).push(meeting);
       return acc;
     }, {})
 );
-
-onMounted(() => updateStudentMeetings());
-userStore.$subscribe(() => updateStudentMeetings());
 </script>

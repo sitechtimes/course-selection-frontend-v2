@@ -1,17 +1,19 @@
 <template>
   <div class="grid content-center justify-center flex-wrap">
     <div class="container">
-      <div class="flex flex-row mb-8 text-4xl font-bold">
+      <div class="flex flex-row mb-8 text-5xl font-bold w-[70%]">
         <span
-          class="arrow cursor-pointer"
+          class="arrow cursor-pointer text-2xl"
           id="prev"
           ref="prev"
           @click="changeMonth(false)"
           >&#10094;</span
         >
-        <div class="mx-2 flex flex-row">{{ months[month] }} {{ year }}</div>
+        <div class="flex flex-row text-2xl mx-4">
+          {{ months[month] }} {{ year }}
+        </div>
         <span
-          class="arrow cursor-pointer"
+          class="arrow cursor-pointer text-2xl"
           id="next"
           ref="next"
           @click="changeMonth(true)"
@@ -31,8 +33,11 @@
             <li>Sat</li>
           </ul>
           <ul class="days">
-            <li class="hover:visible group" v-for="h in calendarData">
-              <p class="mt-2 text-end mr-2 mb-16">{{ h.todaysDate }}</p>
+            <li
+              class="hover:visible group min-h-[10rem] relative pb-7"
+              v-for="h in calendarData"
+            >
+              <p class="mt-2 text-end mr-2 mb-1">{{ h.todaysDate }}</p>
               <div
                 v-for="meeting in h.meetings"
                 :key="meeting.id"
@@ -48,7 +53,7 @@
               </div>
               <button
                 @click="toggleEvent(h)"
-                class="w-10 h-10 m-1 opacity-0 group-hover:opacity-100 cursor-pointer text-3xl leading-[0] transition-all duration-300"
+                class="h-10 opacity-0 group-hover:opacity-100 cursor-pointer text-3xl leading-[0] transition-all duration-300 absolute bottom-0 right-0 mr-2"
               >
                 +
               </button>

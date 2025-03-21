@@ -45,7 +45,9 @@
                 : "Login"
             }}
           </h1>
-          <div class="flex flex-col w-11/12 max-w-[21rem] space-y-5 rounded-md z-10">
+          <div
+            class="flex flex-col w-11/12 max-w-[21rem] space-y-5 rounded-md z-10"
+          >
             <Input
               label="email"
               :type="route.query.token ? 'password' : 'email'"
@@ -122,16 +124,17 @@ function changeRoute() {
   });
 }
 
-function sendRequest() {
+async function sendRequest() {
   if (route.query.reset) userStore.resetPassword(input1.value);
-  else if (route.query.token)
-    userStore.resetPasswordConfirm(
+  else if (route.query.token) {
+    const confirm = userStore.resetPasswordConfirm(
       input1.value,
       input2.value,
       route.query.token as string,
       route.query.uid as string
     );
-  else userStore.login(input1.value, input2.value);
+    if (await confirm) changeRoute();
+  } else userStore.login(input1.value, input2.value);
 }
 </script>
 

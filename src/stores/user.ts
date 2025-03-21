@@ -120,7 +120,8 @@ export const useUserStore = defineStore("user", () => {
         true
       );
     data = Object.values(data as Record<string, string[]>)[0];
-    return setPopup(typeof data === "object" ? data[0] : data, !res.ok);
+    setPopup(typeof data === "object" ? data[0] : data, !res.ok);
+    return res.ok;
   }
 
   async function logout() {
@@ -165,14 +166,10 @@ export const useUserStore = defineStore("user", () => {
     if (!res.ok) return await res.json();
     const data = await res.json();
 
-    meetings.value = data.map((meeting: Meeting) => ({
-      ...meeting,
-      meetingDate: new Date(meeting.meetingDate),
-      name: meeting.name
-        .split(",")
-        .map((s) => s[0].toUpperCase() + s.slice(1).toLowerCase())
-        .join(", "),
-    }));
+    meetings.value = data.map((meeting: Meeting) => {
+      meeting.meetingDate = new Date(meeting.meetingDate);
+      return meeting;
+    });
     meetingsFetched.value = true;
   }
 
@@ -183,7 +180,6 @@ export const useUserStore = defineStore("user", () => {
     description?: string,
     notify?: boolean
   ) {
-    if (deleteMeeting) return;
     const res = await fetchData(
       "guidance/updateMeeting/",
       deleteMeeting ? "DELETE" : "POST",
@@ -191,8 +187,10 @@ export const useUserStore = defineStore("user", () => {
     );
     if (!res.ok) return await res.json();
     const data = await res.json();
-    console.log(data);
-    // guidanceMeetings.value.push(data);
+    meetings.value = data.map((meeting: Meeting) => {
+      meeting.meetingDate = new Date(meeting.meetingDate);
+      return meeting;
+    });
   }
 
   function titleCase(name: string) {
