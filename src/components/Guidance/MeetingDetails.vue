@@ -119,11 +119,9 @@
 <script setup lang="ts">
 import { Meeting } from "../../types/interface";
 import DeleteModal from "./DeleteModal.vue";
-import { useRouter } from "vue-router";
 import { ref } from "vue";
 
 const show = ref(true);
-const router = useRouter();
 const showDeleteModal = ref(false);
 
 defineProps<{ meeting: Meeting }>();
@@ -132,10 +130,6 @@ const toggleDeleteModal = () => {
   showDeleteModal.value = !showDeleteModal.value;
   show.value = !show.value;
 };
-
-function pushRouter(id: number) {
-  router.push(`/guidance/PrintPage/${id}`);
-}
 </script>
 
 <style scoped>

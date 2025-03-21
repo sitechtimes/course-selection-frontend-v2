@@ -6,7 +6,7 @@
       class="h-1/3 w-1/4 bg-white rounded-sm px-10 py-2 flex justify-evenly flex-col"
     >
       <div class="flex">
-        <p><b>Student:</b> {{ titleCase(student.name) }}</p>
+        <p><b>Student:</b> {{ userStore.titleCase(student.name) }}</p>
       </div>
       <div class="w-full flex flex-col items-center">
         <p class="my-2">{{ props.add ? "Add" : "Delete" }} flag:</p>
@@ -56,16 +56,4 @@ const confirm = async () => {
   await userStore.changeFlag(props.student, selected.value, props.add);
   emit("exit");
 };
-
-const titleCase = (name: string) =>
-  name
-    .split(",")
-    .map((chunk) =>
-      chunk
-        .split(" ")
-        .map((part) => part.trim().toLowerCase())
-        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-        .join(" ")
-    )
-    .join(", ");
 </script>

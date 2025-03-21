@@ -2,13 +2,14 @@ import { Student, Meeting, GuidanceStudent, Stats } from "../types/interface";
 import { useSurveyStore } from "./survey";
 import { useRouter } from "vue-router";
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 
 export const useUserStore = defineStore("user", () => {
   const router = useRouter();
   const surveyStore = useSurveyStore();
   const loading = ref(false);
   const profileID = ref(0);
+  const popup = reactive({ error: true, message: "", update: false });
   const initComplete = ref(false);
   const isAuth = ref(false);
   const firstName = ref("");
@@ -34,6 +35,13 @@ export const useUserStore = defineStore("user", () => {
     return res;
   }
 
+  function setPopup(message: string, error: boolean = false) {
+    popup.message = "";
+    popup.update = !popup.update;
+    popup.error = error;
+    popup.message = message;
+  }
+
   async function init() {
     const res = await fetchData("init/");
     initComplete.value = true;
@@ -50,29 +58,75 @@ export const useUserStore = defineStore("user", () => {
     } else await getStudents();
     isAuth.value = true;
   }
+
   async function login(username: string, password: string) {
+    if (!username || !password)
+      return setPopup("Username and password cannot be empty.", true);
     const res = await fetchData("auth/login/", "POST", {
-      username: username.toLowerCase(),
+      username: username.split("@")[0].toLowerCase(),
       password: password,
     });
-    if (!res.ok) return await res.json();
-    const data = await res.json();
+    const data = (await res.json()) as Record<string, any>;
+    if (!res.ok) {
+      const error = Object.values(data)[0];
+      return setPopup(typeof error === "object" ? error[0] : error, true);
+    }
+
     profileID.value = data.id;
-    firstName.value = data.firstName[0] + data.firstName.slice(1).toLowerCase();
-    lastName.value = data.lastName[0] + data.lastName.slice(1).toLowerCase();
+    firstName.value =
+      data.firstName[0].toUpperCase() + data.firstName.slice(1).toLowerCase();
+    lastName.value =
+      data.lastName[0].toUpperCase() + data.lastName.slice(1).toLowerCase();
     email.value = data.email;
     isGuidance.value = data.isGuidance;
-    if (!isGuidance.value) {
+    if (isGuidance.value) await getStudents();
+    else {
       student.value = data.student;
-      if (data.student.status === "Finalized") surveyStore.open = false;
-    } else await getStudents();
+      surveyStore.open = data.student.status !== "Finalized";
+    }
     isAuth.value = true;
     router.push(`/${isGuidance.value ? "guidance" : "student"}/dashboard`);
+  }
+
+  async function resetPassword(email: string) {
+    if (!email) return setPopup("Email cannot be empty.", true);
+    const res = await fetchData("auth/password/reset/", "POST", { email });
+    if (!res.ok) return setPopup((await res.json())["email"][0], true);
+    setPopup("Password reset email sent.");
+  }
+
+  async function resetPasswordConfirm(
+    new_password1: string,
+    new_password2: string,
+    token: string,
+    uid: string
+  ) {
+    if (new_password1 !== new_password2)
+      return setPopup("Passwords do not match.", true);
+    if (!new_password1 || !new_password2)
+      return setPopup("Password cannot be empty.", true);
+    if (!token || !uid)
+      return setPopup("Invalid reset link. Try reseting again.", true);
+    const res = await fetchData("auth/password/reset/confirm/", "POST", {
+      new_password1,
+      new_password2,
+      token,
+      uid,
+    });
+    let data = await res.json();
+    if ("token" in data)
+      return setPopup(
+        "Password already reset, please request another email.",
+        true
+      );
+    data = Object.values(data as Record<string, string[]>)[0];
+    return setPopup(typeof data === "object" ? data[0] : data, !res.ok);
   }
 
   async function logout() {
     const res = await fetchData("auth/logout/", "POST");
     if (!res.ok) return await res.json();
+    setPopup("Successfully logged out.");
     surveyStore.$reset();
     $reset();
     router.push("/");
@@ -110,6 +164,7 @@ export const useUserStore = defineStore("user", () => {
     const res = await fetchData("guidance/meetings/");
     if (!res.ok) return await res.json();
     const data = await res.json();
+
     meetings.value = data.map((meeting: Meeting) => ({
       ...meeting,
       meetingDate: new Date(meeting.meetingDate),
@@ -124,18 +179,33 @@ export const useUserStore = defineStore("user", () => {
   async function changeMeeting(
     id: number,
     deleteMeeting: boolean,
-    meetingISO?: string,
+    date?: string,
     description?: string,
     notify?: boolean
   ) {
     if (deleteMeeting) return;
-    const res = await fetchData("guidance/meeting/", "POST", {
-      meetingISO,
-      description,
-    });
+    const res = await fetchData(
+      "guidance/updateMeeting/",
+      deleteMeeting ? "DELETE" : "POST",
+      { id, date, description, notify }
+    );
     if (!res.ok) return await res.json();
     const data = await res.json();
+    console.log(data);
     // guidanceMeetings.value.push(data);
+  }
+
+  function titleCase(name: string) {
+    return name
+      .split(",")
+      .map((chunk) =>
+        chunk
+          .split(" ")
+          .map((part) => part.trim().toLowerCase())
+          .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+          .join(" ")
+      )
+      .join(", ");
   }
 
   function $reset() {
@@ -151,23 +221,28 @@ export const useUserStore = defineStore("user", () => {
 
   return {
     init,
+    popup,
     login,
     logout,
     isAuth,
     loading,
     student,
+    setPopup,
     lastName,
     meetings,
     firstName,
+    titleCase,
     isGuidance,
     fetchStats,
     changeFlag,
     getMeetings,
     studentList,
     initComplete,
+    resetPassword,
     changeMeeting,
     viewedStudents,
     meetingsFetched,
+    resetPasswordConfirm,
     $reset,
   };
 });

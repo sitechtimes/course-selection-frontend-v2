@@ -9,7 +9,7 @@
         <p class="font-semibold" id="sortshow">{{ selected }}</p>
       </a>
 
-      <DownArrow class="mt-2.5" />
+      <p class="mt-1.5 text-xl">{{ isOpen ? "⏶" : "⏷" }}</p>
     </div>
     <div
       class="sub-menu absolute shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
@@ -28,7 +28,6 @@
 </template>
 
 <script setup lang="ts">
-import DownArrow from "../icons/DownArrow.vue";
 import { ref } from "vue";
 
 const selected = ref("Sort By");

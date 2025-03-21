@@ -17,9 +17,9 @@ export interface Student extends BaseStudent {
 export interface GuidanceStudent extends BaseStudent {
   id: number;
   name: string;
-  enl: boolean;
   email: string;
   status: "Completed" | "Finalized" | "In Progress" | "Not Started";
+  enl: boolean;
   transfer: boolean;
   team: boolean;
   regents: boolean;
@@ -110,11 +110,4 @@ export interface PieChartStats {
   [key: string]: {
     ranks: number[];
   };
-}
-export interface studentMeetings {
-  name: string;
-  meetingDate: Date;
-  description: string;
-  grade: string;
-  email: string;
 }

@@ -11,13 +11,13 @@
           <th class="p-4 flex flex-row items-center">
             <p class="p-2 font-bold">Flags</p>
             <div>
-              <img
-                src="../icons/InfoCircle.png"
-                alt="hover for more information on student flags"
+              <p
                 class="h-5"
                 @mouseover="tooltip = true"
                 @mouseout="tooltip = false"
-              />
+              >
+                ⓘ
+              </p>
               <div
                 v-show="tooltip"
                 class="absolute h-auto w-auto bg-white border-primary-g border p-2"
@@ -50,12 +50,10 @@
         />
         <tr>
           <td class="p-4">
-            {{ titleCase(student.name) }}
+            {{ userStore.titleCase(student.name) }}
           </td>
           <td class="p-4">{{ student.grade ?? "&nbsp;" }}</td>
-          <td class="p-4">
-            {{ student.email ? student.email + "@nycstudents.net" : "&nbsp;" }}
-          </td>
+          <td class="p-4">{{ student.email ? student.email : "&nbsp;" }}</td>
           <td class="p-4">
             <p
               :class="`${
@@ -102,6 +100,7 @@
 <script setup lang="ts">
 import { GuidanceStudent } from "../../types/interface";
 import ChangeFlag from "../Guidance/ChangeFlag.vue";
+import { useUserStore } from "../../stores/user";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 
@@ -114,6 +113,7 @@ const statuses = {
   Finalized: "text-[#311638] bg-[#D1A4DE]",
 };
 
+const userStore = useUserStore();
 const router = useRouter();
 
 const tooltip = ref(false);
@@ -125,18 +125,6 @@ const flags = [
   { flag: "team", title: "Three season athlete", color: "bg-blue-400" },
   { flag: "enl", title: "ENL", color: "bg-purple-400" },
 ];
-
-const titleCase = (name: string) =>
-  name
-    .split(",")
-    .map((chunk) =>
-      chunk
-        .split(" ")
-        .map((part) => part.trim().toLowerCase())
-        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-        .join(" ")
-    )
-    .join(", ");
 </script>
 
 <style scoped>

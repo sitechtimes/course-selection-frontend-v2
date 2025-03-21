@@ -124,14 +124,14 @@ const finalCourses = ref<Course[]>(
   )
 );
 
-async function submit() {
+function submit() {
   surveyStore.checkAnswers();
-  if (surveyStore.missingAnswers.length > 0) {
-    alert("Please answer all required questions before submitting.");
-    warning.value = true;
-    return;
-  }
-  await surveyStore.saveSurvey(1);
+  if (!surveyStore.missingAnswers.length) return surveyStore.saveSurvey(1);
+  warning.value = true;
+  userStore.setPopup(
+    "Please answer all required questions before submitting.",
+    true
+  );
 }
 
 onBeforeRouteLeave((to, from, next) => {

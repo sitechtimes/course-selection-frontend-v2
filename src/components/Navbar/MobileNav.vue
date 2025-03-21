@@ -14,14 +14,14 @@
       <RouterLink @click="$emit('e')" id="link" to="/"
         ><p class="text-4xl">Home</p></RouterLink
       >
-      <p id="link" class="text-4xl" @click="$emit('e')">
+      <!-- <p id="link" class="text-4xl" @click="$emit('e')">
         <a
           href="https://siths-catalog.netlify.app/"
           target="_blank"
           rel="noopener"
           >Courses</a
         >
-      </p>
+      </p> -->
       <RouterLink @click="$emit('e')" id="link" to="/login"
         ><p class="text-4xl">Login</p></RouterLink
       >
@@ -69,7 +69,7 @@
         target="_blank"
         rel="noopener"
       >
-        <p class="text-4xl">Courses</p>
+        <p class="text-4xl">Course Info</p>
       </a>
       <RouterLink to="/" @click="$emit('e')">
         <p

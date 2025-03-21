@@ -14,12 +14,8 @@
         Course Rankings
       </button>
     </div>
-    <div class="barChart" v-if="barChart">
-      <BarChart />
-    </div>
-    <div class="pieChart" v-if="pieChart">
-      <PieChart />
-    </div>
+    <div class="barChart" v-if="barChart"><BarChart /></div>
+    <div class="pieChart" v-if="pieChart"><PieChart /></div>
   </div>
 </template>
 

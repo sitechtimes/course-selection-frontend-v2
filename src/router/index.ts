@@ -8,22 +8,24 @@ const router = createRouter({
     {
       path: "/:pathMatch(.*)*",
       name: "error",
-      component: () => import("../views/HomePage.vue"),
+      component: () => import("../views/ErrorView.vue"),
     },
     {
       path: "/",
       name: "home",
+      meta: { auth: false },
       component: () => import("../views/HomePage.vue"),
     },
     {
       path: "/login",
       name: "login",
+      meta: { auth: false },
       component: () => import("../views/LoginPage.vue"),
     },
     {
       path: "/guidance",
       name: "guidance",
-      meta: { user: "guidance" },
+      meta: { user: "guidance", auth: true },
       children: [
         {
           path: "dashboard",
@@ -74,7 +76,7 @@ const router = createRouter({
     {
       path: "/student",
       name: "student",
-      meta: { user: "student" },
+      meta: { user: "student", auth: true },
       children: [
         {
           path: "dashboard",
@@ -118,11 +120,9 @@ const router = createRouter({
 
 router.beforeEach(async (to) => {
   const userStore = useUserStore();
-  const anonPaths = ["/", "/login"];
   if (!userStore.initComplete) await userStore.init();
-  if (!anonPaths.includes(to.path) && !userStore.isAuth)
-    return { name: "login" };
-  if (anonPaths.includes(to.path) && userStore.isAuth)
+  if (to.meta.auth && !userStore.isAuth) return { name: "login" };
+  if (!to.meta.auth && userStore.isAuth)
     return { name: `${userStore.isGuidance ? "guidance" : "student"}Dash` };
   if (to.meta.user === "guidance" && !userStore.isGuidance)
     return { name: `error` };

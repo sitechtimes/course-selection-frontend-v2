@@ -27,9 +27,7 @@ module.exports = {
         160: "40rem",
       },
       screens: { xs: "480px" },
-      boxShadow: {
-        deepinner: "inset 1px 2px 6px 1px rgb(0 0 0 / 0.1)",
-      },
+      boxShadow: { deepinner: "inset 1px 2px 6px 1px rgb(0 0 0 / 0.1)" },
     },
   },
   plugins: [require("@tailwindcss/forms")],
