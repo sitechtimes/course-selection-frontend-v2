@@ -49,17 +49,17 @@
           />
         </div>
       </div>
-      <div class="mb-8 w-full block" v-if="userStore.isGuidance">
+      <div class="mb-8 w-full block ml-12" v-if="userStore.isGuidance">
         <button
           @click="shownote = !shownote"
-          class="xl:leading-10 md:text-xl xl:text-3xl my-4 block m-auto border p-2 w-[70%] px-4 py-2 text-sm font-semibold bg-[#D6EEFF] shadow-[2px_3px_2px_rgba(0,0,0,0.25)]h-12 text-[#37394F] transition rounded-md"
+          class="xl:leading-10 md:text-xl xl:text-2xl my-4 block border px-4 text-sm font-semibold bg-[#D6EEFF] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] h-12 text-[#37394F] transition rounded-md"
         >
           {{ shownote ? "Hide" : "Show" }} Guidance Note
         </button>
         <textarea
           v-show="shownote"
           placeholder="Notes for guidance counselors (optional)"
-          class="py-2 px-3 w-[70%] text-base md:text-lg xl:text-2xl rounded-md border border-solid focus:outline-none focus:ring-0 disabled:bg-gray-100 transition-colors duration-200 ease-linear focus:border-blue-400 border-zinc-400 bg-transparent m-auto block h-[10rem]"
+          class="py-2 px-3 w-[90%] text-base md:text-lg xl:text-2xl rounded-md border border-solid focus:outline-none focus:ring-0 disabled:bg-gray-100 transition-colors duration-200 ease-linear focus:border-blue-400 border-zinc-400 bg-transparent block h-[10rem]"
           v-model="surveyStore.survey.guidanceNotes"
         ></textarea>
       </div>
