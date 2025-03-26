@@ -18,7 +18,6 @@ export const useUserStore = defineStore("user", () => {
   const isGuidance = ref(false);
   const student = ref<Student>({} as Student);
   const studentList = ref<GuidanceStudent[]>([]);
-  const viewedStudents = ref<GuidanceStudent[]>([]);
   const meetings = ref<Meeting[]>([]);
   const meetingsFetched = ref(false);
 
@@ -229,6 +228,7 @@ export const useUserStore = defineStore("user", () => {
     lastName,
     meetings,
     firstName,
+    profileID,
     titleCase,
     isGuidance,
     fetchStats,
@@ -238,7 +238,6 @@ export const useUserStore = defineStore("user", () => {
     initComplete,
     resetPassword,
     changeMeeting,
-    viewedStudents,
     meetingsFetched,
     resetPasswordConfirm,
     $reset,

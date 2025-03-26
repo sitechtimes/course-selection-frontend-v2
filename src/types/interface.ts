@@ -23,7 +23,7 @@ export interface GuidanceStudent extends BaseStudent {
   transfer: boolean;
   team: boolean;
   regents: boolean;
-  ownStudent: number[];
+  counselor: number[];
 }
 
 export interface Survey {
