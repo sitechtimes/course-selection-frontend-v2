@@ -42,6 +42,9 @@
           The due date for completion has passed. Please contact your guidance
           counselor to request changes.
         </h2>
+        <h2>
+          Please note the hours of operation: Mon-Fri 6:00AM-8:00PM EST
+        </h2>
       </div>
 
       <!-- survey status -->
