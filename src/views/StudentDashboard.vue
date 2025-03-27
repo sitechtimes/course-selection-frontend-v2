@@ -30,7 +30,7 @@
       </h1>
       <div
         id="announcements"
-        class="text-lg md:text-xl text-left flex justify-center items-center ml-4 lg:ml-0 lg:justify-start flex-col"
+        class="text-lg md:text-xl text-left flex justify-center items-center ml-4 lg:ml-0 lg:justify-start"
       >
         🔔
         <h2 v-if="surveyStore.open">Surveys are closing on {{ closeDate }}.</h2>
