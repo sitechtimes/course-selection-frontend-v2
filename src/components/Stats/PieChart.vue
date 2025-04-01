@@ -43,7 +43,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const userStore = useUserStore();
 const loaded = ref(false);
 const selectedCourse = ref("");
-const selectedYear = ref("");
+const selectedYear = ref(0);
 
 const chartData = ref<Stats[]>([]);
 const years = ref<Number[]>([]);
@@ -56,11 +56,17 @@ onMounted(async () => {
 });
 
 //if a new year is selected from the dropdown, find the index where the stats are located
-const stats = computed<PieChartStats>(
-  () =>
-    chartData.value[years.value.indexOf(Number(selectedYear.value))]?.stats ||
-    {}
-);
+const stats = computed<PieChartStats>(() => {
+  const list = [];
+  chartData.value[
+    chartData.value.findIndex((item) => item.year === selectedYear.value)
+  ].courses.forEach((item) => {
+    list.push({
+      [item.course.name]: item.ranks,
+    });
+  });
+  return list;
+});
 
 //returns each course name
 const courses = computed(() => (stats.value ? Object.keys(stats.value) : []));
