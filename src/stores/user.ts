@@ -1,33 +1,8 @@
-<<<<<<< Updated upstream
 import { Student, Meeting, GuidanceStudent, Stats } from "../types/interface";
 import { useSurveyStore } from "./survey";
 import { useRouter } from "vue-router";
 import { defineStore } from "pinia";
 import { ref, reactive } from "vue";
-
-export const useUserStore = defineStore("user", () => {
-  const router = useRouter();
-  const surveyStore = useSurveyStore();
-  const loading = ref(false);
-  const profileID = ref(0);
-  const popup = reactive({ error: true, message: "", update: false });
-  const initComplete = ref(false);
-  const isAuth = ref(false);
-  const firstName = ref("");
-  const lastName = ref("");
-  const email = ref("");
-  const isGuidance = ref(false);
-  const student = ref<Student>({} as Student);
-  const studentList = ref<GuidanceStudent[]>([]);
-  const viewedStudents = ref<GuidanceStudent[]>([]);
-  const meetings = ref<Meeting[]>([]);
-  const meetingsFetched = ref(false);
-=======
-import { Student, Meeting, GuidanceStudent, Stats } from '../types/interface';
-import { useSurveyStore } from './survey';
-import { useRouter } from 'vue-router';
-import { defineStore } from 'pinia';
-import { ref } from 'vue';
 
 export const useUserStore = defineStore('user', () => {
 	const router = useRouter();
@@ -45,7 +20,7 @@ export const useUserStore = defineStore('user', () => {
 	const viewedStudents = ref<GuidanceStudent[]>([]);
 	const meetings = ref<Meeting[]>([]);
 	const meetingsFetched = ref(false);
->>>>>>> Stashed changes
+  const popup = reactive({ error: true, message: "", update: false });
 
 	async function fetchData(url: string, method?: string, body?: any) {
 		loading.value = true;
@@ -61,7 +36,6 @@ export const useUserStore = defineStore('user', () => {
 		return res;
 	}
 
-<<<<<<< Updated upstream
   function setPopup(message: string, error: boolean = false) {
     popup.message = "";
     popup.update = !popup.update;
@@ -69,22 +43,6 @@ export const useUserStore = defineStore('user', () => {
     popup.message = message;
   }
 
-  async function init() {
-    const res = await fetchData("init/");
-    initComplete.value = true;
-    if (!res.ok || res.status === 204) return;
-    const data = await res.json();
-    profileID.value = data.id;
-    firstName.value = data.firstName[0] + data.firstName.slice(1).toLowerCase();
-    lastName.value = data.lastName[0] + data.lastName.slice(1).toLowerCase();
-    email.value = data.email;
-    isGuidance.value = data.isGuidance;
-    if (!isGuidance.value) {
-      student.value = data.student;
-      if (data.student.status === "Finalized") surveyStore.open = false;
-    } else await getStudents();
-    isAuth.value = true;
-  }
 
   async function login(username: string, password: string) {
     if (!username || !password)
@@ -158,7 +116,6 @@ export const useUserStore = defineStore('user', () => {
     $reset();
     router.push("/");
   }
-=======
 	async function init() {
 		const res = await fetchData('init/');
 		initComplete.value = true;
@@ -175,34 +132,6 @@ export const useUserStore = defineStore('user', () => {
 		} else await getStudents();
 		isAuth.value = true;
 	}
-	async function login(username: string, password: string) {
-		const res = await fetchData('auth/login/', 'POST', {
-			username: username.toLowerCase(),
-			password: password,
-		});
-		if (!res.ok) return await res.json();
-		const data = await res.json();
-		profileID.value = data.id;
-		firstName.value = data.firstName[0] + data.firstName.slice(1).toLowerCase();
-		lastName.value = data.lastName[0] + data.lastName.slice(1).toLowerCase();
-		email.value = data.email;
-		isGuidance.value = data.isGuidance;
-		if (!isGuidance.value) {
-			student.value = data.student;
-			if (data.student.status === 'Finalized') surveyStore.open = false;
-		} else await getStudents();
-		isAuth.value = true;
-		router.push(`/${isGuidance.value ? 'guidance' : 'student'}/dashboard`);
-	}
-
-	async function logout() {
-		const res = await fetchData('auth/logout/', 'POST');
-		if (!res.ok) return await res.json();
-		surveyStore.$reset();
-		$reset();
-		router.push('/');
-	}
->>>>>>> Stashed changes
 
 	async function fetchStats() {
 		const res = await fetchData('guidance/stats', 'GET');
@@ -227,23 +156,6 @@ export const useUserStore = defineStore('user', () => {
 		// const index = studentList.value.findIndex((student) => student.id === id);
 		// studentList.value[index] = data.flag;
 	}
-
-<<<<<<< Updated upstream
-  async function getMeetings() {
-    const res = await fetchData("guidance/meetings/");
-    if (!res.ok) return await res.json();
-    const data = await res.json();
-
-    meetings.value = data.map((meeting: Meeting) => ({
-      ...meeting,
-      meetingDate: new Date(meeting.meetingDate),
-      name: meeting.name
-        .split(",")
-        .map((s) => s[0].toUpperCase() + s.slice(1).toLowerCase())
-        .join(", "),
-    }));
-    meetingsFetched.value = true;
-  }
 
   async function changeMeeting(
     id: number,
@@ -277,44 +189,7 @@ export const useUserStore = defineStore('user', () => {
       .join(", ");
   }
 
-  function $reset() {
-    profileID.value = 0;
-    initComplete.value = false;
-    isAuth.value = false;
-    firstName.value = "";
-    lastName.value = "";
-    email.value = "";
-    isGuidance.value = false;
-    student.value = {} as Student;
-  }
 
-  return {
-    init,
-    popup,
-    login,
-    logout,
-    isAuth,
-    loading,
-    student,
-    setPopup,
-    lastName,
-    meetings,
-    firstName,
-    titleCase,
-    isGuidance,
-    fetchStats,
-    changeFlag,
-    getMeetings,
-    studentList,
-    initComplete,
-    resetPassword,
-    changeMeeting,
-    viewedStudents,
-    meetingsFetched,
-    resetPasswordConfirm,
-    $reset,
-  };
-=======
 	async function getMeetings() {
 		const res = await fetchData('guidance/meetings/');
 		if (!res.ok) return await res.json();
@@ -330,16 +205,6 @@ export const useUserStore = defineStore('user', () => {
 		meetingsFetched.value = true;
 	}
 
-	async function changeMeeting(id: number, deleteMeeting: boolean, meetingISO?: string, description?: string, notify?: boolean) {
-		if (deleteMeeting) return;
-		const res = await fetchData('guidance/meeting/', 'POST', {
-			meetingISO,
-			description,
-		});
-		if (!res.ok) return await res.json();
-		const data = await res.json();
-		// guidanceMeetings.value.push(data);
-	}
 
 	function $reset() {
 		profileID.value = 0;
@@ -373,5 +238,4 @@ export const useUserStore = defineStore('user', () => {
 		meetingsFetched,
 		$reset,
 	};
->>>>>>> Stashed changes
 });
