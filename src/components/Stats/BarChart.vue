@@ -56,7 +56,7 @@ import {
   CategoryScale,
   LinearScale,
 } from "chart.js";
-import { Stats, ChartData } from "../../types/interface";
+import { Stats, ChartData, CourseStat } from "../../types/interface";
 ChartJS.register(
   Title,
   Tooltip,
@@ -82,7 +82,7 @@ onMounted(async () => {
 
 //if a new year is selected from the dropdown, find the index where the stats are located
 const stats = computed(
-  () => chartData.value[years.value.indexOf(selectedYear.value)].stats || []
+  () => chartData.value.find(item => item.year === selectedYear.value)
 );
 
 const selectedSubject = ref("");
@@ -101,23 +101,31 @@ const subjects = [
 const chartOptions = ref({ responsive: true });
 
 const getChartData = computed(() => {
-  const chartData: ChartData = {} as ChartData;
+  const labels: string[] = [];
+  const data: number[] = [];
 
-  if (selectedSubject.value && selectedYear.value) {
-    const targettedCourses = Object.entries(stats).filter(
-      ([_, info]) => info.courseInfo.fields.subject === selectedSubject.value
+  if (selectedSubject.value && selectedYear.value && stats.value) {
+    const targettedCourses = stats.value.courses.filter(
+      (item: CourseStat) => item.course.subject === selectedSubject.value
     );
+    console.log(targettedCourses);
     if (targettedCourses.length > 0) {
-      for (const [courseName, info] of targettedCourses) {
-        chartData.labels.push(courseName);
-        chartData.datasets[0].data.push(info.picks);
-      }
+      targettedCourses.forEach((item: CourseStat) => {
+        labels.push(item.course.name);
+        data.push(item.picks);
+      });
     } else {
-      chartData.labels.push("No courses match this subject");
-      chartData.datasets[0].data.push(0);
+      labels.push(`No courses in ${selectedSubject.value} for ${selectedYear.value}`);
+      data.push(0);
     }
   }
+
+  const chartResult: ChartData = {
+    labels: labels,
+    datasets: [{ label: "Number of Picks", data: data }],
+  };
+
   loaded.value = true;
-  return chartData;
+  return chartResult;
 });
 </script>
