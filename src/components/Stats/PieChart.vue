@@ -37,7 +37,7 @@ import { Pie } from "vue-chartjs";
 import { ref, onMounted, computed } from "vue";
 import { useUserStore } from "../../stores/user";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { PieChartStats, Stats, ChartData } from "../../types/interface";
+import { PieChartStats, Stats, ChartData, CourseStat } from "../../types/interface";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const userStore = useUserStore();
@@ -57,16 +57,17 @@ onMounted(async () => {
 
 //if a new year is selected from the dropdown, find the index where the stats are located
 const stats = computed<PieChartStats>(() => {
-  const list = [];
-  chartData.value[
-    chartData.value.findIndex((item) => item.year === selectedYear.value)
-  ].courses.forEach((item) => {
-    list.push({
-      [item.course.name]: item.ranks,
-    });
-  });
-  return list;
+  const statsForYear = chartData.value.find(item => item.year === selectedYear.value);
+  return statsForYear ? Object.fromEntries(statsForYear.courses.map(({ course: { name }, ranks }) => [
+    name,
+    { ranks: Object.entries(ranks).reduce<number[]>((acc, [rank, value]) => {
+      acc[parseInt(rank) - 1] = value;
+      return acc;
+    }, []) }
+  ])) : {};
 });
+
+
 
 //returns each course name
 const courses = computed(() => (stats.value ? Object.keys(stats.value) : []));

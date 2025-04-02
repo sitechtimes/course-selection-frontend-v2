@@ -96,7 +96,7 @@ export interface ChartData {
   labels: string[];
   datasets: {
     data: number[];
-    backgroundColor?: string[];
+    backgroundColor: string[];
     label: string;
   }[];
 }
