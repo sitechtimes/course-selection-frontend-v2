@@ -50,7 +50,7 @@
         />
         <tr>
           <td class="p-4">
-            {{ userStore.titleCase(student.name) }}
+            {{ student.name }}
           </td>
           <td class="p-4">{{ student.grade ?? "&nbsp;" }}</td>
           <td class="p-4">{{ student.email ? student.email : "&nbsp;" }}</td>

@@ -47,6 +47,9 @@
       <RouterLink to="/guidance/studentlist">
         <p class="text-base hover:text-gray-500">Students</p>
       </RouterLink>
+      <RouterLink id="link" to="/guidance/courselist">
+        <p class="text-base hover:text-gray-5000">Courses</p>
+      </RouterLink>
       <RouterLink to="/guidance/calendar">
         <p class="text-base hover:text-gray-500">Calendar</p>
       </RouterLink>
