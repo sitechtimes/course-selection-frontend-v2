@@ -37,10 +37,20 @@ const router = createRouter({
 					name: 'courseList',
 					component: () => import('../views/CourseList.vue'),
 				},
+				// {
+				// 	path: 'surveylist',
+				// 	name: 'surveyList',
+				// 	component: () => import('../views/SurveyList.vue'),
+				// },
 				{
 					path: 'editCourse/:id',
 					name: 'editCourse',
 					component: () => import('../views/EditCourse.vue'),
+				},
+				{
+					path: 'editSurvey/:grade',
+					name: 'editSurvey',
+					component: () => import('../views/EditSurvey.vue'),
 				},
 				{
 					path: 'studentlist',

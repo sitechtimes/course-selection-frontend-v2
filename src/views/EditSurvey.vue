@@ -3,45 +3,33 @@
     <div>
       <div class="px-10 flex flex-col items-center justify-center gap-4">
         <h1 class="p-6 text-3xl">
-          {{ course.name }}
+          {{ survey.name }}
         </h1>
       </div>
       <form
         class="m-10 p-5 rounded-xl shadow-md bg-primary-g border-black border-2"
         @submit.prevent="
           () => {
-            fetchData('/editcourse/', 'PUT', JSON.stringify(alteredCourse));
+            fetchData('/editcourse/', 'PUT', JSON.stringify(alteredSurvey));
           }
         "
       >
-        <div class="flex flex-col p-3" v-for="key in courseKeys" :key="key">
+        <div class="flex flex-col p-3" v-for="key in surveyKeys" :key="key">
           <label :for="key" class="text-2xl pb-1 font-bold">{{ key }}</label>
           <input
             type="text"
-            v-model="alteredCourse[key]"
-            :placeholder="course[key]"
+            v-model="alteredSurvey[key]"
+            :placeholder="survey[key]"
             :id="key"
             class="border-2 border-black rounded-lg p-2 mb-4"
-            v-if="
-              course[key] !== true &&
-              course[key] !== false &&
-              key !== 'description'
-            "
-          />
-          <textarea
-            type="text"
-            v-model="alteredCourse[key]"
-            :placeholder="course[key]"
-            :id="key"
-            class="border-2 border-black rounded-lg p-2 mb-4 form-textarea textarea-xl"
-            v-else-if="key == 'description'"
+            v-if="survey[key] == 'grade'"
           />
           <select
             name=""
             id=""
             class="border-2 border-black rounded-lg p-2 mb-4"
             v-else
-            v-model="alteredCourse[key]"
+            v-model="alteredSurvey[key]"
           >
             <option :value="true">True</option>
             <option :value="false">False</option>
@@ -56,22 +44,22 @@
     </div>
   </Suspense>
 </template>
-   
-<script setup lang="ts">
+     
+  <script setup lang="ts">
 import { RouterLink } from "vue-router";
 import { ref, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 
-const alteredCourse = ref<Course>({} as Course);
+const alteredSurvey = ref<Survey>({} as Survey);
 const route = useRoute();
-const courseId = route.params.id;
+const surveyGrade = route.params.grade;
 
-function displayGrades(course: Course): string {
+function displayGrades(survey: Survey): string {
   const grades: string[] = [];
-  if (course.freshman) grades.push("Freshman");
-  if (course.sophomore) grades.push("Sophomore");
-  if (course.junior) grades.push("Junior");
-  if (course.senior) grades.push("Senior");
+  if (survey.freshman) grades.push("Freshman");
+  if (survey.sophomore) grades.push("Sophomore");
+  if (survey.junior) grades.push("Junior");
+  if (survey.senior) grades.push("Senior");
   return grades.join(", ");
 }
 
@@ -85,31 +73,33 @@ async function fetchData(url: string, method?: string, body?: any) {
   return await fetch(import.meta.env.VITE_URL + url, options);
 }
 
-async function getCourse() {
-  const response: Response = await fetchData("/course", "GET");
+async function getSurvey() {
+  const response: Response = await fetchData("guidance/surveys/", "GET");
   if (response.status === 200) {
     const data = await response.json();
-    return data.find((course: Course) => course.id == courseId);
+    console.log(data, surveyGrade);
+    return data.find((survey: Survey) => survey.grade == surveyGrade);
   } else {
-    throw new Error("Failed to fetch courses");
+    throw new Error("Failed to fetch surveys");
   }
 }
 
-const course = ref<Course>({} as Course);
-let courseKeys = [] as (keyof Course)[];
+const survey = ref<Survey>({} as Survey);
+let surveyKeys = [] as (keyof Survey)[];
 
 onMounted(async () => {
   try {
-    course.value = await getCourse();
-    // Initialize alteredCourse with a copy of the current course data
-    alteredCourse.value = { ...course.value };
-    courseKeys = Object.keys(course.value).filter(
+    survey.value = await getSurvey();
+    console.log(survey.value);
+    // Initialize alteredsurvey with a copy of the current survey data
+    alteredSurvey.value = { ...survey.value };
+    surveyKeys = Object.keys(survey.value).filter(
       (key) =>
         // Optionally filter out keys you don't want to edit
         key !== "id" &&
         key !== "createdAt" &&
-        typeof course.value[key] !== "object"
-    ) as (keyof Course)[];
+        typeof survey.value[key] !== "object"
+    ) as (keyof Survey)[];
   } catch (error) {
     console.error(error);
   }
