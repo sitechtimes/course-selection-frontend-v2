@@ -83,7 +83,7 @@
             Student
           </label>
           <datalist id="suggestions">
-            <option v-for="student in studentList" :key="student.email">
+            <option v-for="student in studentList" :key="student.id">
               {{ userStore.titleCase(student.name) }}, {{ student.email }}
             </option>
           </datalist>
@@ -174,7 +174,7 @@ const show = ref(true);
 const dateElement = ref();
 
 onMounted(() => {
-  studentList.value = userStore.studentList;
+  studentList.value = userStore.allStudents;
   date.value = props.todaysDate!;
   dateElement.value.type = "date";
   dateElement.value.value = props.todaysDate!;

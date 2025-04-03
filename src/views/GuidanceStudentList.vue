@@ -142,9 +142,9 @@ function applyFilters(sortBy: string, search: string) {
   startIndex.value = 0;
   const filtered = filterByCategory(
     viewAll.value
-      ? userStore.studentList
-      : userStore.studentList.filter(({ counselor }) =>
-          counselor.includes(userStore.profileID)
+      ? userStore.allStudents
+      : userStore.allStudents.filter(({ id }) =>
+          userStore.students.includes(id)
         ),
     sortBy
   );
@@ -169,7 +169,6 @@ function changePage(increment: number) {
 
 function updatePagination(page: number) {
   startIndex.value = (page - 1) * pageCapacity;
-  console.log(startIndex);
   currentPage.value = page;
   currentChunk.value = Math.ceil(page / pagesPerChunk);
 }

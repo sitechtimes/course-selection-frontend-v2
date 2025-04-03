@@ -17,7 +17,8 @@ export const useUserStore = defineStore("user", () => {
   const email = ref("");
   const isGuidance = ref(false);
   const student = ref<Student>({} as Student);
-  const studentList = ref<GuidanceStudent[]>([]);
+  const students = ref<number[]>([]); // Only the guidance counselor's students
+  const allStudents = ref<GuidanceStudent[]>([]);
   const meetings = ref<Meeting[]>([]);
   const meetingsFetched = ref(false);
 
@@ -51,10 +52,13 @@ export const useUserStore = defineStore("user", () => {
     lastName.value = data.lastName[0] + data.lastName.slice(1).toLowerCase();
     email.value = data.email;
     isGuidance.value = data.isGuidance;
-    if (!isGuidance.value) {
-      student.value = data.student;
+    if (isGuidance.value) {
+      students.value = data.profile;
+      await getStudents();
+    } else {
+      student.value = data.profile;
       if (data.student.status === "Finalized") surveyStore.open = false;
-    } else await getStudents();
+    }
     isAuth.value = true;
   }
 
@@ -143,7 +147,7 @@ export const useUserStore = defineStore("user", () => {
     const res = await fetchData("guidance/profiles/");
     if (!res.ok) return await res.json();
     const data = await res.json();
-    studentList.value = data;
+    allStudents.value = data;
   }
   async function changeFlag(
     student: GuidanceStudent,
@@ -156,8 +160,8 @@ export const useUserStore = defineStore("user", () => {
     });
     if (!res.ok) return await res.json();
     const data = await res.json();
-    // const index = studentList.value.findIndex((student) => student.id === id);
-    // studentList.value[index] = data.flag;
+    // const index = allStudents.value.findIndex((student) => student.id === id);
+    // allStudents.value[index] = data.flag;
   }
 
   async function getMeetings() {
@@ -227,6 +231,7 @@ export const useUserStore = defineStore("user", () => {
     setPopup,
     lastName,
     meetings,
+    students,
     firstName,
     profileID,
     titleCase,
@@ -234,7 +239,7 @@ export const useUserStore = defineStore("user", () => {
     fetchStats,
     changeFlag,
     getMeetings,
-    studentList,
+    allStudents,
     initComplete,
     resetPassword,
     changeMeeting,
