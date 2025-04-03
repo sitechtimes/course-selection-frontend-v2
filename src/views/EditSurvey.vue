@@ -3,14 +3,14 @@
     <div>
       <div class="px-10 flex flex-col items-center justify-center gap-4">
         <h1 class="p-6 text-3xl">
-          {{ course.name }}
+          {{ survey.name }}
         </h1>
       </div>
       <form
         class="m-10 p-5 rounded-xl shadow-md bg-primary-g border-black border-2"
         @submit.prevent="
           () => {
-            fetchData('/editcourse/', 'PUT', JSON.stringify(alteredCourse));
+            fetchData('/editcourse/', 'PUT', JSON.stringify(alteredSurvey));
           }
         "
       >
@@ -18,30 +18,18 @@
           <label :for="key" class="text-2xl pb-1 font-bold">{{ key }}</label>
           <input
             type="text"
-            v-model="alteredCourse[key]"
-            :placeholder="survey[key]"
-            :id="key"
-            class="border-2 border-black rounded-lg p-2 mb-4"
-            v-if="
-              survey[key] !== true &&
-              survey[key] !== false &&
-              key !== 'description'
-            "
-          />
-          <textarea
-            type="text"
             v-model="alteredSurvey[key]"
             :placeholder="survey[key]"
             :id="key"
-            class="border-2 border-black rounded-lg p-2 mb-4 form-textarea textarea-xl"
-            v-else-if="key == 'description'"
+            class="border-2 border-black rounded-lg p-2 mb-4"
+            v-if="survey[key] == 'grade'"
           />
           <select
             name=""
             id=""
             class="border-2 border-black rounded-lg p-2 mb-4"
             v-else
-            v-model="alteredCourse[key]"
+            v-model="alteredSurvey[key]"
           >
             <option :value="true">True</option>
             <option :value="false">False</option>
@@ -62,9 +50,9 @@ import { RouterLink } from "vue-router";
 import { ref, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 
-const alteredCourse = ref<Survey>({} as Survey);
+const alteredSurvey = ref<Survey>({} as Survey);
 const route = useRoute();
-const surveyId = route.params.id;
+const surveyGrade = route.params.grade;
 
 function displayGrades(survey: Survey): string {
   const grades: string[] = [];
@@ -85,11 +73,12 @@ async function fetchData(url: string, method?: string, body?: any) {
   return await fetch(import.meta.env.VITE_URL + url, options);
 }
 
-async function getCourse() {
-  const response: Response = await fetchData("/surveys", "GET");
+async function getSurvey() {
+  const response: Response = await fetchData("guidance/surveys/", "GET");
   if (response.status === 200) {
     const data = await response.json();
-    return data.find((survey: Survey) => survey.id == surveyId);
+    console.log(data, surveyGrade);
+    return data.find((survey: Survey) => survey.grade == surveyGrade);
   } else {
     throw new Error("Failed to fetch surveys");
   }
@@ -100,7 +89,8 @@ let surveyKeys = [] as (keyof Survey)[];
 
 onMounted(async () => {
   try {
-    survey.value = await getsurvey();
+    survey.value = await getSurvey();
+    console.log(survey.value);
     // Initialize alteredsurvey with a copy of the current survey data
     alteredSurvey.value = { ...survey.value };
     surveyKeys = Object.keys(survey.value).filter(
