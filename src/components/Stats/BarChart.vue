@@ -120,7 +120,7 @@ const getChartData = computed(() => {
     } else {
       labels.push(`No courses in ${selectedSubject.value} for ${selectedYear.value}`);
       data.push(0);
-      backgroundColors.push('rgba(54, 162, 235, 0.8)');
+      backgroundColors.push('rgba(54, 162, 235, 0.8)'); // default color 
     }
   }
 
