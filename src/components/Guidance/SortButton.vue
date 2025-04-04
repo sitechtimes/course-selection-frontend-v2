@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-
+defineProps<{ menuArray:[{}] }>();
 const selected = ref("Sort By");
 const isOpen = ref(false);
 const emit = defineEmits(["filter-selected"]);
@@ -39,21 +39,4 @@ const filter = (sortBy: string, text: string) => {
   isOpen.value = false;
   selected.value = text;
 };
-
-const menuArray = [
-  { sortBy: "az", text: "Last Name (A-Z)" },
-  { sortBy: "za", text: "Last Name (Z-A)" },
-  { sortBy: "Not Started", text: "Not Started" },
-  { sortBy: "In Progress", text: "In Progress" },
-  { sortBy: "Completed", text: "Completed" },
-  { sortBy: "Finalized", text: "Finalized" },
-  { sortBy: "9", text: "Grade 9" },
-  { sortBy: "10", text: "Grade 10" },
-  { sortBy: "11", text: "Grade 11" },
-  { sortBy: "12", text: "Grade 12" },
-  { sortBy: "transfer", text: "Transfer" },
-  { sortBy: "regents", text: "Missing Regents" },
-  { sortBy: "sports", text: "Sports Team" },
-  { sortBy: "enl", text: "ENL" },
-];
 </script>

@@ -11,6 +11,7 @@
         </div>
         <Sort
           class="mr-0"
+          :menu-array="menuArray"
           @filter-selected="(filter:string) => (sortBy = filter)"
         />
       </div>
@@ -112,7 +113,22 @@ const currentPage = ref(1);
 const pageCapacity = 10;
 const currentChunk = ref(1);
 const pagesPerChunk = 10;
-
+const menuArray = [
+  { sortBy: "az", text: "Last Name (A-Z)" },
+  { sortBy: "za", text: "Last Name (Z-A)" },
+  { sortBy: "Not Started", text: "Not Started" },
+  { sortBy: "In Progress", text: "In Progress" },
+  { sortBy: "Completed", text: "Completed" },
+  { sortBy: "Finalized", text: "Finalized" },
+  { sortBy: "9", text: "Grade 9" },
+  { sortBy: "10", text: "Grade 10" },
+  { sortBy: "11", text: "Grade 11" },
+  { sortBy: "12", text: "Grade 12" },
+  { sortBy: "transfer", text: "Transfer" },
+  { sortBy: "regents", text: "Missing Regents" },
+  { sortBy: "sports", text: "Sports Team" },
+  { sortBy: "enl", text: "ENL" },
+];
 const sortedAndFiltered = computed(() => {
   try {
     return applyFilters(sortBy.value, input.value);

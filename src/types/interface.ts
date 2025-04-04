@@ -74,6 +74,11 @@ export interface Course {
 	codes?: string[];
 }
 
+export interface SortArray {
+	sortBy: string;
+	text: string;
+}
+
 export interface Flag {
 	flag: string;
 	title: string;

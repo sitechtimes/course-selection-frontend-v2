@@ -1,4 +1,4 @@
-	import { Student, Meeting, GuidanceStudent, Stats } from "../types/interface";
+	import { Student, Meeting, GuidanceStudent, Stats,Course } from "../types/interface";
 	import { useSurveyStore } from "./survey";
 	import { useRouter } from "vue-router";
 	import { defineStore } from "pinia";
@@ -17,6 +17,7 @@
 		const isGuidance = ref(false);
 		const student = ref<Student>({} as Student);
 		const studentList = ref<GuidanceStudent[]>([]);
+		const courseList = ref<Course[]>([])
 		const viewedStudents = ref<GuidanceStudent[]>([]);
 		const meetings = ref<Meeting[]>([]);
 		const meetingsFetched = ref(false);
@@ -147,6 +148,12 @@
 			const data = await res.json();
 			studentList.value = data;
 		}
+		async function getCourses(){
+			const res = await fetchData('course/');
+			if (!res.ok) return await res.json();
+			const data = await res.json();
+			return data
+		}
 		async function changeFlag(student: GuidanceStudent, flag: string, remove: boolean = false) {
 			const res = await fetchData('guidance/flag/', 'POST', {
 				id: student.id,
@@ -238,6 +245,7 @@
 			viewedStudents,
 			meetingsFetched,
 			$reset,
-			popup
+			popup,
+			getCourses
 		};
 	});

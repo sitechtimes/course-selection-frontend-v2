@@ -1,75 +1,193 @@
 <template>
-  <Suspense>
-    <template #fallback>
-      <div
-        class="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] text-2xl font-bold"
-      >
-        Loading...
+  <div class="h-auto w-full flex flex-col justify-center items-center mb-10">
+    <div class="flex flex-row items-center justify-center w-5/6">
+      <div class="w-1/3 flex flex-row justify-evenly">
+        <Sort
+          class="mr-0"
+          :menu-array="menuArray"
+          @filter-selected="(filter:string) => (sortBy = filter)"
+        />
       </div>
-    </template>
-    <div
-      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-10"
-    >
-      <RouterLink
-        v-for="course in courses"
-        :key="course.id"
-        :to="'/guidance/editCourse/' + course.id"
-        class="bg-primary-g border-black border-2 drop-shadow-lg rounded-lg p-6 hover:drop-shadow-xl hover:bg-other-g transition-all duration-300"
-      >
-        <h2 class="text-2xl font-bold">{{ course.name }}</h2>
-        <p class="text-sm">{{ course.subject }}</p>
-        <p class="text-sm">{{ displayGrades(course) }}</p>
-        <p class="text-sm">
-          {{ course.ap == true ? "AP" : course.honors == true ? "Honors" : "" }}
-        </p>
-      </RouterLink>
+      <div class="w-2/3">
+        <div class="border-white flex justify-center items-center">
+          <div class="flex justify-center items-center relative w-11/12">
+            <input
+              v-model="input"
+              placeholder="Search by name or email"
+              @input="
+                $emit(
+                  'update:modelValue',
+                  ($event.target as HTMLInputElement).value
+                )
+              "
+              class="border border-zinc-300 rounded w-full h-10 p-2 text-zinc-800"
+            />
+            <p class="absolute right-3 text-zinc-400 cursor-pointer text-xl">
+              🔎︎
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
-  </Suspense>
+    <CourseTable
+      :courses="
+        sortedAndFiltered.slice(startIndex, startIndex + pageCapacity)
+      "
+    />
+    <div class="max-w-[80%] overflow-x-auto mt-4 flex flex-row justify-between">
+      <button
+        v-if="currentChunk > 1"
+        class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold"
+        @click="if (currentChunk > 1) currentChunk--;"
+      >
+        ❮❮
+      </button>
+      <button
+        class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold"
+        @click="changePage(-1)"
+        :disabled="currentPage === 1"
+      >
+        ❮
+      </button>
+      <button
+        v-for="n in visiblePages"
+        @click="updatePagination(n)"
+        :class="
+          currentPage === n ? 'bg-[#cdeeb4] focus:bg-[#cdeeb4]' : 'bg-[#ebebeb]'
+        "
+        class="h-8 w-8 rounded-lg hover:opacity-75 ease-in-out duration-300 font-bold mx-2"
+      >
+        {{ n }}
+      </button>
+      <button
+        class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold"
+        :disabled="currentPage === totalPages"
+        @click="changePage(1)"
+      >
+        ❯
+      </button>
+      <button
+        v-if="currentChunk < totalChunks"
+        class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold"
+        @click="if (currentChunk < totalChunks) currentChunk++;"
+      >
+        ❯❯
+      </button>
+    </div>
+    <h5 class="mt-4">
+      Page
+      <span class="font-bold m-1"> {{ currentPage }}</span>
+      of
+      <span class="font-bold m-1">{{ totalPages }}</span>
+    </h5>
+  </div>
 </template>
-  
-  <script setup lang="ts">
-import { RouterLink } from "vue-router";
-import { ref, onMounted } from "vue";
 
-function displayGrades(course: Course): string {
-  const grades: string[] = [];
+<script setup lang="ts">
+import CourseTable from "../components/Guidance/CourseTable.vue";
+import Sort from "../components/Guidance/SortButton.vue";
+import { Course } from "../types/interface";
+import { useUserStore } from "../stores/user";
+import { ref, computed, watch, onMounted } from "vue";
 
-  if (course.freshman) grades.push("Freshman");
-  if (course.sophomore) grades.push("Sophomore");
-  if (course.junior) grades.push("Junior");
-  if (course.senior) grades.push("Senior");
+document.title = "Student List | SITHS Course Selection";
 
-  return grades.join(", ");
-}
-
-async function fetchData(url: string, method?: string, body?: any) {
-  const options: RequestInit = { credentials: "include" };
-  if (method) {
-    options["method"] = method;
-    options["headers"] = { "Content-Type": "application/json" };
-    options["body"] = JSON.stringify(body);
-  }
-  return await fetch(import.meta.env.VITE_URL + url, options);
-}
-
-async function getCourses() {
-  const response: Response = await fetchData("/course", "GET");
-  if (response.status === 200) {
-    return await response.json();
-  } else {
-    throw new Error("Failed to fetch courses");
-  }
-}
-
+const userStore = useUserStore();
 const courses = ref<Course[]>([]);
+
+const viewAll = ref(false);
+const input = ref("");
+const sortBy = ref("az");
+
+const startIndex = ref(0);
+
+const currentPage = ref(1);
+const pageCapacity = 10;
+const currentChunk = ref(1);
+const pagesPerChunk = 10;
+const menuArray = [
+  { sortBy: "az", text: "Last Name (A-Z)" },
+  { sortBy: "za", text: "Last Name (Z-A)" },
+  { sortBy: "freshman", text: "Grade 9" },
+  { sortBy: "sophomore", text: "Grade 10" },
+  { sortBy: "junior", text: "Grade 11" },
+  { sortBy: "senior", text: "Grade 12" },
+];
 
 onMounted(async () => {
   try {
-    courses.value = await getCourses();
+    courses.value = await userStore.getCourses();
   } catch (error) {
     console.error(error);
   }
 });
 
-document.title = "Course List | SITHS Course Selection";
+const sortedAndFiltered = computed(() => {
+  try {
+    return applyFilters(sortBy.value, input.value);
+  } finally {
+    updatePagination(1);
+  }
+});
+
+function filterByCategory(courses: Course[], sortBy: string) {
+  if (!Array.isArray(courses)) return [];
+  if (sortBy === "az")
+    return courses.sort((a, b) => a.name.localeCompare(b.name));
+
+  if (sortBy === "za")
+    return courses.sort((a, b) => b.name.localeCompare(a.name));
+  if (["freshman", "sophomore", "junior", "senior"].includes(sortBy))
+    return courses.filter((course) => course[sortBy] == true);
+
+  return courses;
+}
+
+function applyFilters(sortBy: string, search: string) {
+  startIndex.value = 0;
+  const filtered = courses.value ? filterByCategory(courses.value, sortBy) : [];
+  if (!search.trim().length) return filtered;
+  return filtered.filter(({ name }) =>
+    (name).toLowerCase().includes(search.trim().toLowerCase())
+  );
+}
+
+const totalPages = computed(() => {
+  const numStudents = sortedAndFiltered.value.length;
+  return numStudents < 1 ? 1 : Math.ceil(numStudents / pageCapacity);
+});
+
+function changePage(increment: number) {
+  currentPage.value += increment;
+  if (increment > 0) startIndex.value += pageCapacity;
+  else if (increment < 0) startIndex.value -= pageCapacity;
+  else return;
+  updatePagination(currentPage.value);
+}
+
+function updatePagination(page: number) {
+  startIndex.value = (page - 1) * pageCapacity;
+  currentPage.value = page;
+}
+
+const totalChunks = computed(() => Math.ceil(totalPages.value / pagesPerChunk));
+
+const visiblePages = computed(() => {
+  const start = (currentChunk.value - 1) * pagesPerChunk + 1;
+  const end = Math.min(start + pagesPerChunk - 1, totalPages.value);
+  return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+});
+
+/* watch(viewAll, (newValue) => {
+  input.value = "";
+  if (newValue) userStore.viewedStudents = courses.value;
+  else userStore.viewedStudents = userStore.studentList;
+  updatePagination(1);
+});
+
+watch(sortedAndFiltered, () => {
+  userStore.viewedStudents = sortedAndFiltered.value;
+  currentChunk.value = 1;
+  updatePagination(1);
+}); */
 </script>
