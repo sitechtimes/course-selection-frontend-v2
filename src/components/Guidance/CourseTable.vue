@@ -5,6 +5,7 @@
         <tr class="bg-primary-g">
           <th class="p-4">Name</th>
           <th class="p-4">Subject</th>
+          <th class="p-4">Grades</th>
           <th class="p-4">AP</th>
           <th class="p-4 pl-10">Honors</th>
           <th class="p-4 flex flex-row items-center">Codes</th>
@@ -24,6 +25,7 @@
             {{ course.name }}
           </td>
           <td class="p-4">{{ course.subject }}</td>
+          <td class="p-4">{{ displayGrades(course) }}</td>
           <td class="p-4">{{ course.ap }}</td>
           <td class="p-4">{{ course.honors }}</td>
           <td class="p-4">{{ course.codes }}</td>
@@ -35,32 +37,19 @@
 
 <script setup lang="ts">
 import { Course } from "../../types/interface";
-import ChangeFlag from "../Guidance/ChangeFlag.vue";
-import { useUserStore } from "../../stores/user";
 import { useRouter } from "vue-router";
-import { ref } from "vue";
+import { ref, computed, onMounted } from "vue";
 
-defineProps<{ courses: Course[] }>();
-
-const statuses = {
-  "Not Started": "text-[#461616] bg-[#EA9F9F]",
-  "In Progress": "text-[#322911] bg-[#F9D477]",
-  Completed: "text-[#174616] bg-[#A8D480]",
-  Finalized: "text-[#311638] bg-[#D1A4DE]",
-};
-
-const userStore = useUserStore();
+const props = defineProps<{ courses: Course[] }>();
+function displayGrades(course: Course) {
+ const grades: string[] = [];
+ if (course.freshman) grades.push("Freshman");
+  if (course.sophomore) grades.push("Sophomore");
+  if (course.junior) grades.push("Junior");
+  if (course.senior) grades.push("Senior");
+  return grades.join(", ");
+}
 const router = useRouter();
-
-const tooltip = ref(false);
-const flagModal = ref(0);
-
-const flags = [
-  { flag: "transfer", title: "Transfer student", color: "bg-red-400" },
-  { flag: "regents", title: "Missing regents", color: "bg-green-400" },
-  { flag: "team", title: "Three season athlete", color: "bg-blue-400" },
-  { flag: "enl", title: "ENL", color: "bg-purple-400" },
-];
 </script>
 
 <style scoped>

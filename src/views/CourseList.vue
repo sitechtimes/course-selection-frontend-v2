@@ -106,12 +106,14 @@ const pageCapacity = 10;
 const currentChunk = ref(1);
 const pagesPerChunk = 10;
 const menuArray = [
-  { sortBy: "az", text: "Last Name (A-Z)" },
-  { sortBy: "za", text: "Last Name (Z-A)" },
+  { sortBy: "az", text: "Alphabetical (A-Z)" },
+  { sortBy: "za", text: "Alphabetical (Z-A)" },
   { sortBy: "freshman", text: "Grade 9" },
   { sortBy: "sophomore", text: "Grade 10" },
   { sortBy: "junior", text: "Grade 11" },
   { sortBy: "senior", text: "Grade 12" },
+  { sortBy: "ap", text: "AP" },
+  { sortBy: "honors", text: "Honors" },
 ];
 
 onMounted(async () => {
@@ -139,6 +141,9 @@ function filterByCategory(courses: Course[], sortBy: string) {
     return courses.sort((a, b) => b.name.localeCompare(a.name));
   if (["freshman", "sophomore", "junior", "senior"].includes(sortBy))
     return courses.filter((course) => course[sortBy] == true);
+    if(sortBy === "honors" || sortBy === "ap"){
+      return courses.filter((course) => course[sortBy] == true);
+    }
 
   return courses;
 }
