@@ -30,9 +30,7 @@
       </div>
     </div>
     <CourseTable
-      :courses="
-        sortedAndFiltered.slice(startIndex, startIndex + pageCapacity)
-      "
+      :courses="sortedAndFiltered.slice(startIndex, startIndex + pageCapacity)"
     />
     <div class="max-w-[80%] overflow-x-auto mt-4 flex flex-row justify-between">
       <button
@@ -90,7 +88,7 @@ import { Course } from "../types/interface";
 import { useUserStore } from "../stores/user";
 import { ref, computed, watch, onMounted } from "vue";
 
-document.title = "Student List | SITHS Course Selection";
+document.title = "Course List | SITHS Course Selection";
 
 const userStore = useUserStore();
 const courses = ref<Course[]>([]);
@@ -141,9 +139,9 @@ function filterByCategory(courses: Course[], sortBy: string) {
     return courses.sort((a, b) => b.name.localeCompare(a.name));
   if (["freshman", "sophomore", "junior", "senior"].includes(sortBy))
     return courses.filter((course) => course[sortBy] == true);
-    if(sortBy === "honors" || sortBy === "ap"){
-      return courses.filter((course) => course[sortBy] == true);
-    }
+  if (sortBy === "honors" || sortBy === "ap") {
+    return courses.filter((course) => course[sortBy] == true);
+  }
 
   return courses;
 }
@@ -153,7 +151,7 @@ function applyFilters(sortBy: string, search: string) {
   const filtered = courses.value ? filterByCategory(courses.value, sortBy) : [];
   if (!search.trim().length) return filtered;
   return filtered.filter(({ name }) =>
-    (name).toLowerCase().includes(search.trim().toLowerCase())
+    name.toLowerCase().includes(search.trim().toLowerCase())
   );
 }
 
