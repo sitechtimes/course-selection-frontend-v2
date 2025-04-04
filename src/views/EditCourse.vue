@@ -11,6 +11,7 @@
         @submit.prevent="
           () => {
             fetchData('/editcourse/', 'PUT', JSON.stringify(alteredCourse));
+            router.push(`/guidance/courselist`);
           }
         "
       >
@@ -60,9 +61,11 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
 import { ref, onMounted, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 const alteredCourse = ref<Course>({} as Course);
+const router = useRouter();
+
 const route = useRoute();
 const courseId = route.params.id;
 

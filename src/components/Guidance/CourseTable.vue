@@ -16,14 +16,17 @@
         :key="course.id"
         class="border-2 border-black"
       >
-        <tr>
-          <td class="p-4 hover:cursor-pointer" @click="router.push(`/guidance/editcourse/${course.id}`)">
+        <tr class="hover:bg-other-g transition-all">
+          <td
+            class="p-4 hover:cursor-pointer"
+            @click="router.push(`/guidance/editcourse/${course.id}`)"
+          >
             {{ course.name }}
           </td>
           <td class="p-4">{{ course.subject }}</td>
           <td class="p-4">{{ course.ap }}</td>
-          <td class="p-4"> {{ course.honors }}</td>
-          <td class="p-4"> {{ course.codes }}</td>
+          <td class="p-4">{{ course.honors }}</td>
+          <td class="p-4">{{ course.codes }}</td>
         </tr>
       </tbody>
     </table>
