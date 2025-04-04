@@ -7,7 +7,6 @@
           <th class="p-4">Subject</th>
           <th class="p-4">AP</th>
           <th class="p-4 pl-10">Honors</th>
-          <th class="p-4">Edit</th>
           <th class="p-4 flex flex-row items-center">Codes</th>
         </tr>
       </thead>
@@ -17,49 +16,14 @@
         :key="course.id"
         class="border-2 border-black"
       >
-        <ChangeFlag
-          v-if="Math.abs(flagModal) === course.id"
-          @exit="flagModal = 0"
-          :courses="course"
-          :flags="flags"
-          :add="flagModal > 0"
-        />
         <tr>
-          <td class="p-4">
+          <td class="p-4 hover:cursor-pointer" @click="router.push(`/guidance/editcourse/${course.id}`)">
             {{ course.name }}
           </td>
           <td class="p-4">{{ course.subject }}</td>
-          <td class="p-4">{{ course.honors }}</td>
-          <td class="p-4"> {{ course.ap }}</td>
-          <td
-            @click="router.push(`/guidance/editcourse/${course.id}`)"
-            class="p-4 hover:cursor-pointer"
-          >
-            Edit Course
-          </td>
+          <td class="p-4">{{ course.ap }}</td>
+          <td class="p-4"> {{ course.honors }}</td>
           <td class="p-4"> {{ course.codes }}</td>
-          <td class="p-4 flex flex-row parent">
-            <div
-              id="flagbox"
-              v-for="flag in flags"
-              :key="flag.flag"
-              v-show="course[flag.flag as keyof Course]"
-              :title="flag.title"
-              :class="flag.color + 'm-1 rounded-full h-5 w-5'"
-            ></div>
-            <button
-              @click="flagModal = course.id"
-              class="w-3 m-1 hidden child hover:cursor-pointer text-2xl leading-[0]"
-            >
-              +
-            </button>
-            <button
-              @click="flagModal = -course.id"
-              class="w-3 m-1 hidden child hover:cursor-pointer text-2xl leading-[0]"
-            >
-              -
-            </button>
-          </td>
         </tr>
       </tbody>
     </table>
