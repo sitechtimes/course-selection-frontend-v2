@@ -10,7 +10,7 @@
         class="m-10 p-5 rounded-xl shadow-md bg-primary-g border-black border-2"
         @submit.prevent="
           () => {
-            fetchData('/editcourse/', 'PUT', JSON.stringify(alteredCourse));
+            fetchData('/guidance/editcourse/', 'PUT', JSON.stringify(alteredCourse));
             router.push(`/guidance/courselist`);
           }
         "
