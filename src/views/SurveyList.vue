@@ -25,6 +25,7 @@
   <script setup lang="ts">
 import { RouterLink } from "vue-router";
 import { ref, onMounted } from "vue";
+import { Survey } from '../types/interface'
 
 async function fetchData(url: string, method?: string, body?: any) {
   const options: RequestInit = { credentials: "include" };

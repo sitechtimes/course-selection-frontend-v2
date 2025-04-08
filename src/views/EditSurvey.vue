@@ -13,7 +13,6 @@
             const isoString = new Date(`${dueDateDate}T${dueDateTime}`).toISOString();
             alteredSurvey.dueDate = isoString;
             fetchData('guidance/editsurvey/', 'PUT', JSON.stringify(alteredSurvey));
-            console.log(JSON.stringify(alteredSurvey))
             router.push(`/guidance/surveylist`);
           }
         "
@@ -58,10 +57,9 @@
 </template>
      
   <script setup lang="ts">
-import { RouterLink } from "vue-router";
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-
+import {Survey} from '../types/interface';
 const alteredSurvey = ref<Survey>({} as Survey);
 const router = useRouter();
 const route = useRoute();
@@ -83,8 +81,7 @@ async function getSurvey() {
   const response: Response = await fetchData("guidance/survey", "GET");
   if (response.status === 200) {
     const data = await response.json();
-    console.log(data, surveyGrade);
-    return data.find((survey: Survey) => survey.grade == surveyGrade);
+    return data.find((survey: Survey) => survey.grade == Number(surveyGrade));
   } else {
     throw new Error("Failed to fetch surveys");
   }
@@ -96,7 +93,6 @@ let surveyKeys = [] as (keyof Survey)[];
 onMounted(async () => {
   try {
     survey.value = await getSurvey();
-    console.log(survey.value);
     alteredSurvey.value = { ...survey.value };
     surveyKeys = Object.keys(survey.value).filter(
       (key) =>

@@ -10,8 +10,8 @@
         class="m-10 p-5 rounded-xl shadow-md bg-primary-g border-black border-2"
         @submit.prevent="
           () => {
-            fetchData('/guidance/editcourse/', 'PUT', JSON.stringify(alteredCourse));
-            router.push(`/guidance/courselist`);
+            fetchData('guidance/editcourse/', 'PUT', JSON.stringify(alteredCourse));
+            router.push(`guidance/courselist`);
           }
         "
       >
@@ -62,6 +62,7 @@
 import { RouterLink } from "vue-router";
 import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import {Course} from '../types/interface';
 
 const alteredCourse = ref<Course>({} as Course);
 const router = useRouter();
@@ -92,7 +93,7 @@ async function getCourse() {
   const response: Response = await fetchData("/course", "GET");
   if (response.status === 200) {
     const data = await response.json();
-    return data.find((course: Course) => course.id == courseId);
+    return data.find((course: Course) => course.id == Number(courseId));
   } else {
     throw new Error("Failed to fetch courses");
   }
@@ -104,11 +105,9 @@ let courseKeys = [] as (keyof Course)[];
 onMounted(async () => {
   try {
     course.value = await getCourse();
-    // Initialize alteredCourse with a copy of the current course data
     alteredCourse.value = { ...course.value };
     courseKeys = Object.keys(course.value).filter(
       (key) =>
-        // Optionally filter out keys you don't want to edit
         key !== "id" &&
         key !== "createdAt" &&
         typeof course.value[key] !== "object"

@@ -29,7 +29,8 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-defineProps<{ menuArray:[{}] }>();
+import {SortArray} from '../../types/interface';
+defineProps<{ menuArray: SortArray[] }>();
 const selected = ref("Sort By");
 const isOpen = ref(false);
 const emit = defineEmits(["filter-selected"]);
