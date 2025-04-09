@@ -5,7 +5,7 @@
         <Sort
           class="mr-0"
           :menu-array="menuArray"
-          @filter-selected="(filter:string) => (sortBy = filter)"
+          @filter-selected="(filter: string) => (sortBy = filter)"
         />
       </div>
       <div class="w-2/3">
@@ -49,6 +49,7 @@
       </button>
       <button
         v-for="n in visiblePages"
+        :key='n'
         @click="updatePagination(n)"
         :class="
           currentPage === n ? 'bg-[#cdeeb4] focus:bg-[#cdeeb4]' : 'bg-[#ebebeb]'
@@ -137,7 +138,7 @@ function filterByCategory(courses: Course[], sortBy: string) {
 
   if (sortBy === "za")
     return courses.sort((a, b) => b.name.localeCompare(a.name));
-  if (["freshman", "sophomore", "junior", "senior"].includes(sortBy))
+  if (sortBy === "freshman" || sortBy === "sophomore" || sortBy === "junior" || sortBy === "senior")
     return courses.filter((course) => course[sortBy] == true);
   if (sortBy === "honors" || sortBy === "ap") {
     return courses.filter((course) => course[sortBy] == true);

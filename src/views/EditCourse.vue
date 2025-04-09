@@ -20,7 +20,7 @@
           <input
             type="text"
             v-model="alteredCourse[key]"
-            :placeholder="course[key]"
+            :placeholder="String(course[key]) "
             :id="key"
             class="border-2 border-black rounded-lg p-2 mb-4"
             v-if="
@@ -108,9 +108,10 @@ onMounted(async () => {
     alteredCourse.value = { ...course.value };
     courseKeys = Object.keys(course.value).filter(
       (key) =>
+      course.value &&
         key !== "id" &&
         key !== "createdAt" &&
-        typeof course.value[key] !== "object"
+        typeof course.value[key as keyof Course] !== "object"
     ) as (keyof Course)[];
   } catch (error) {
     console.error(error);

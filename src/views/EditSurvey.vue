@@ -98,7 +98,7 @@ onMounted(async () => {
       (key) =>
         key !== "id" &&
         key !== "createdAt" &&
-        typeof survey.value[key] !== "object"
+        typeof survey.value[key as keyof Survey] !== "object"
     ) as (keyof Survey)[];
     const originalDate = new Date(alteredSurvey.value.dueDate);
     dueDateDate.value = originalDate.toISOString().split("T")[0]; // YYYY--MM--DD
