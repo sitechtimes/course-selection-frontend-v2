@@ -37,7 +37,7 @@ import { Pie } from "vue-chartjs";
 import { ref, onMounted, computed } from "vue";
 import { useUserStore } from "../../stores/user";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { PieChartStats, Stats, ChartData, CourseStat } from "../../types/interface";
+import { PieChartStats, Stats, ChartData } from "../../types/interface";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const userStore = useUserStore();
