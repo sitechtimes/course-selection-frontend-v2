@@ -11,7 +11,6 @@
         @submit.prevent="
           () => {
             userStore.fetchData('guidance/editcourse/', 'PUT', alteredCourse);
-            router.push(`/guidance/courselist`);
           }
         "
       >
@@ -35,11 +34,10 @@
             :placeholder="course[key]"
             :id="key"
             class="border-2 border-black rounded-lg p-2 mb-4 form-textarea textarea-xl"
-            v-else-if="key == 'description'"
+            v-else-if="key === 'description'"
           />
           <select
-            name=""
-            id=""
+            id="key"
             class="border-2 border-black rounded-lg p-2 mb-4"
             v-else
             v-model="alteredCourse[key]"
@@ -49,8 +47,11 @@
           </select>
         </div>
         <div>
-          <button class="p-5 border-2 border-black bg-white hover:bg-other-g">
-            <RouterLink to="/guidance/courselist">Submit</RouterLink>
+          <button
+            type="submit"
+            class="p-5 border-2 border-black bg-white hover:bg-other-g"
+          >
+            Submit
           </button>
         </div>
       </form>
@@ -64,33 +65,27 @@ import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { Course } from "../types/interface";
 import { useUserStore } from "../stores/user";
+
+document.title = "Course List | SITHS Course Selection";
+
 const alteredCourse = computed(() => course.value || ({} as Course));
 const router = useRouter();
 const userStore = useUserStore();
 const route = useRoute();
 const courseId = route.params.id;
 
-function displayGrades(course: Course): string {
-  const grades: string[] = [];
-  if (course.freshman) grades.push("Freshman");
-  if (course.sophomore) grades.push("Sophomore");
-  if (course.junior) grades.push("Junior");
-  if (course.senior) grades.push("Senior");
-  return grades.join(", ");
-}
-
 async function findCourse() {
   const courses = await userStore.getCourses();
   return courses.find((course: Course) => course.id === Number(courseId));
 }
 
-const course = ref<Course>({} as Course);
-let courseKeys = [] as (keyof Course)[];
+const course = ref({} as Course);
+const courseKeys = ref([] as (keyof Course)[]);
 
 onMounted(async () => {
   try {
     course.value = await findCourse();
-    courseKeys = Object.keys(course.value).filter(
+    courseKeys.value = Object.keys(course.value).filter(
       (key) =>
         course.value &&
         key !== "id" &&
@@ -101,6 +96,4 @@ onMounted(async () => {
     console.error(error);
   }
 });
-
-document.title = "Course List | SITHS Course Selection";
 </script>

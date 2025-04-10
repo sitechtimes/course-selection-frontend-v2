@@ -42,6 +42,9 @@
           The due date for completion has passed. Please contact your guidance
           counselor to request changes.
         </h2>
+        <h2 class="text-md lg:text-lg">
+          This website is available from 6AM to 8PM, Monday to Friday
+        </h2>
       </div>
 
       <!-- survey status -->

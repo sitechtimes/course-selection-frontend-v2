@@ -66,12 +66,12 @@
         ❯❯
       </button>
     </div>
-    <h5 class="mt-4">
+    <p class="mt-4">
       Page
       <span class="font-bold m-1"> {{ currentPage }}</span>
       of
       <span class="font-bold m-1">{{ totalPages }}</span>
-    </h5>
+    </p>
   </div>
 </template>
 
@@ -80,11 +80,12 @@ import CourseTable from "../components/Guidance/CourseTable.vue";
 import Sort from "../components/Guidance/SortButton.vue";
 import { Course } from "../types/interface";
 import { useUserStore } from "../stores/user";
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
+
 document.title = "Course List | SITHS Course Selection";
+
 const userStore = useUserStore();
 const courses = ref<Course[]>([]);
-const viewAll = ref(false);
 const input = defineModel({ type: String });
 const sortBy = ref<(typeof menuArray)[number]["sortBy"]>("az");
 const startIndex = ref(0);
@@ -101,7 +102,7 @@ const menuArray = [
   { sortBy: "senior", text: "Grade 12" },
   { sortBy: "ap", text: "AP" },
   { sortBy: "honors", text: "Honors" },
-];
+] as const;
 
 onMounted(async () => {
   try {
@@ -112,15 +113,11 @@ onMounted(async () => {
 });
 
 const sortedAndFiltered = computed(() => {
-  try {
-    return applyFilters(sortBy.value, input.value);
-  } finally {
-    updatePagination(1);
-  }
+  updatePagination(1);
+  return applyFilters(sortBy.value, input.value);
 });
 
 function filterByCategory(courses: Course[], sortBy: string) {
-  if (!Array.isArray(courses)) return [];
   if (sortBy === "az")
     return courses.sort((a, b) => a.name.localeCompare(b.name));
 

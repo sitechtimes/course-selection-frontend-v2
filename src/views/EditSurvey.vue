@@ -8,11 +8,10 @@
         class="m-10 p-5 rounded-xl shadow-md bg-primary-g border-black border-2"
         @submit.prevent="
           () => {
-            const isoString = new Date(
-              `${dueDateDate}T${dueDateTime}`
-            ).toISOString();
+            const isoString = `${dueDateDate}T${dueDateTime}`;
             alteredSurvey.dueDate = isoString;
             userStore.fetchData('guidance/editsurvey/', 'PUT', alteredSurvey);
+            router.push('/guidance/surveylist');
           }
         "
       >
@@ -24,9 +23,11 @@
             id="dueDate"
             class="border-2 border-black rounded-lg p-2 mb-4"
           />
+          <label for="dueTime" class="text-2xl pb-1 font-bold">Due Time</label>
           <input
             type="time"
             v-model="dueDateTime"
+            id="dueTime"
             class="border-2 border-black rounded-lg p-2 mb-4"
           />
         </div>
@@ -46,8 +47,11 @@
           />
         </div>
         <div>
-          <button class="p-5 border-2 border-black bg-white hover:bg-other-g">
-            <RouterLink to="/guidance/surveylist">Submit</RouterLink>
+          <button
+            type="submit"
+            class="p-5 border-2 border-black bg-white hover:bg-other-g"
+          >
+            Submit
           </button>
         </div>
       </form>
@@ -60,6 +64,9 @@ import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { Survey } from "../types/interface";
 import { useUserStore } from "../stores/user";
+
+document.title = "Course List | SITHS Course Selection";
+
 const alteredSurvey = computed(() => survey.value || ({} as Survey));
 const router = useRouter();
 const route = useRoute();
@@ -70,21 +77,13 @@ const userStore = useUserStore();
 
 async function findSurvey() {
   const surveys = await userStore.getSurveys();
-  return surveys.find((survey: Survey) => survey.grade == Number(surveyGrade));
+  return surveys.find((survey: Survey) => survey.grade === Number(surveyGrade));
 }
 
 const survey = ref<Survey>({} as Survey);
-let surveyKeys = [] as (keyof Survey)[];
-
 onMounted(async () => {
   try {
     survey.value = await findSurvey();
-    surveyKeys = Object.keys(survey.value).filter(
-      (key) =>
-        key !== "id" &&
-        key !== "createdAt" &&
-        typeof survey.value[key as keyof Survey] !== "object"
-    ) as (keyof Survey)[];
     const originalDate = new Date(alteredSurvey.value.dueDate);
     dueDateDate.value = originalDate.toISOString().split("T")[0]; // YYYY--MM--DD
     dueDateTime.value = originalDate.toTimeString().split(" ")[0].slice(0, 5); // HH:MM
@@ -92,6 +91,4 @@ onMounted(async () => {
     console.error(error);
   }
 });
-
-document.title = "Course List | SITHS Course Selection";
 </script>

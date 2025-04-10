@@ -12,6 +12,9 @@
         Welcome to Staten Island Technical High School's Course Selection
         Guidance platform.
       </h2>
+      <h2 class="text-md lg:text-lg">
+        This website is available from 6AM to 8PM, Monday to Friday.
+      </h2>
       <div class="flex justify-start items-center space-x-4">
         <RouterLink to="/guidance/studentlist">
           <button

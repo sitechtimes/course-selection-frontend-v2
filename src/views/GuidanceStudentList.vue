@@ -130,11 +130,8 @@ const menuArray = [
   { sortBy: "enl", text: "ENL" },
 ];
 const sortedAndFiltered = computed(() => {
-  try {
-    return applyFilters(sortBy.value, input.value);
-  } finally {
-    updatePagination(1);
-  }
+  updatePagination(1);
+  return applyFilters(sortBy.value, input.value);
 });
 
 function filterByCategory(students: GuidanceStudent[], sortBy: string) {

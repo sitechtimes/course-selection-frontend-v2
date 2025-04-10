@@ -153,11 +153,13 @@ export const useUserStore = defineStore("user", () => {
   async function getCourses() {
     const res = await fetchData("course/");
     const data = await res.json();
+    if (!res.ok) throw new Error("Failed to fetch courses");
     return data;
   }
   async function getSurveys() {
     const res = await fetchData("guidance/survey/");
     const data = await res.json();
+    if (!res.ok) throw new Error("Failed to fetch surveys");
     return data;
   }
   async function changeFlag(
