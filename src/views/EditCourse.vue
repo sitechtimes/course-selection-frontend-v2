@@ -50,7 +50,7 @@
         </div>
         <div>
           <button class="p-5 border-2 border-black bg-white hover:bg-other-g">
-            Submit
+            <RouterLink to="/guidance/courselist">Submit</RouterLink>
           </button>
         </div>
       </form>
@@ -80,8 +80,8 @@ function displayGrades(course: Course): string {
 }
 
 async function findCourse() {
-  let courses = await userStore.getCourses();
-  return courses.find((course: Course) => course.id == Number(courseId));
+  const courses = await userStore.getCourses();
+  return courses.find((course: Course) => course.id === Number(courseId));
 }
 
 const course = ref<Course>({} as Course);

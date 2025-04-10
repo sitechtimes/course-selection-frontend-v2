@@ -50,13 +50,13 @@
       <RouterLink to="/guidance/surveylist">
         <p class="text-base hover:text-gray-500">Surveys</p>
       </RouterLink>
-      <RouterLink id="link" to="/guidance/courselist">
+      <RouterLink to="/guidance/courselist">
         <p class="text-base hover:text-gray-5000">Courses</p>
       </RouterLink>
       <RouterLink to="/guidance/calendar">
         <p class="text-base hover:text-gray-500">Calendar</p>
       </RouterLink>
-      <RouterLink id="link" to="/guidance/statistics">
+      <RouterLink to="/guidance/statistics">
         <p class="text-base hover:text-gray-5000">Statistics</p>
       </RouterLink>
       <RouterLink to="/">

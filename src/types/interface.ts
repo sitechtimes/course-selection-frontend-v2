@@ -1,121 +1,129 @@
 interface BaseStudent {
-	id: number;
-	grade: number;
-	meetingDate: string | null;
-	description: string;
-	dueDate: string;
+  id: number;
+  grade: number;
+  meetingDate: string | null;
+  description: string;
+  dueDate: string;
 }
 
 export interface Student extends BaseStudent {
-	grade: number;
-	meetingDate: string | null;
-	status: 'Completed' | 'Finalized' | 'In Progress';
-	description: string;
-	dueDate: string;
+  grade: number;
+  meetingDate: string | null;
+  status: "Completed" | "Finalized" | "In Progress";
+  description: string;
+  dueDate: string;
 }
 
 export interface GuidanceStudent extends BaseStudent {
-	id: number;
-	name: string;
-	email: string;
-	status: 'Completed' | 'Finalized' | 'In Progress' | 'Not Started';
-	enl: boolean;
-	transfer: boolean;
-	team: boolean;
-	regents: boolean;
-	ownStudent: number[];
+  id: number;
+  name: string;
+  email: string;
+  status: "Completed" | "Finalized" | "In Progress" | "Not Started";
+  enl: boolean;
+  transfer: boolean;
+  team: boolean;
+  regents: boolean;
+  ownStudent: number[];
 }
 
 export interface Survey {
-	dueDate: string;
-	grade: number;
-	questions: Question[];
-	answers: Answer[];
-	status: 'Completed' | 'Finalized' | 'In Progress' | 'Not Started';
-	guidanceNotes: string;
+  dueDate: string;
+  grade: number;
+  questions: Question[];
+  answers: Answer[];
+  status: "Completed" | "Finalized" | "In Progress" | "Not Started";
+  guidanceNotes: string;
 }
 
 export interface Answer<T = string | boolean | null | Rank[]> {
-	id: number;
-	question: number;
-	answer: T;
+  id: number;
+  question: number;
+  answer: T;
 }
 
 export interface Rank {
-	course: number;
-	rank: number;
+  course: number;
+  rank: number;
 }
 
-type Subject = 'ENGLISH' | 'SS' | 'MATH' | 'SCIENCE' | 'LANG' | 'TECH' | 'ART' | 'PE';
+type Subject =
+  | "ENGLISH"
+  | "SS"
+  | "MATH"
+  | "SCIENCE"
+  | "LANG"
+  | "TECH"
+  | "ART"
+  | "PE";
 
 export interface Question {
-	id: number;
-	question: string;
-	questionType: 'BOOLEAN' | 'FINAL' | 'NOTE' | 'GENERAL' | 'DROPDOWN' | Subject;
-	status: 'OPTIONAL' | 'STANDARD' | 'CLASS';
-	classReferenced: Course | null;
-	options: string[] | null;
+  id: number;
+  question: string;
+  questionType: "BOOLEAN" | "FINAL" | "NOTE" | "GENERAL" | "DROPDOWN" | Subject;
+  status: "OPTIONAL" | "STANDARD" | "CLASS";
+  classReferenced: Course | null;
+  options: string[] | null;
 }
 
 export interface Course {
-	id: number;
-	name: string;
-	subject: Subject;
-	freshman?: boolean;
-	sophomore?: boolean;
-	junior?: boolean;
-	senior?: boolean;
-	description?: string;
-	ap?: boolean;
-	honors?: boolean;
-	mandatoryCourse?: boolean;
-	doublePeriod?: boolean;
-	prerequisites?: string[];
-	codes?: string[];
+  id: number;
+  name: string;
+  subject: Subject;
+  freshman?: boolean;
+  sophomore?: boolean;
+  junior?: boolean;
+  senior?: boolean;
+  description?: string;
+  ap?: boolean;
+  honors?: boolean;
+  mandatoryCourse?: boolean;
+  doublePeriod?: boolean;
+  prerequisites?: string[];
+  codes?: string[];
 }
 
 export interface SortArray {
-	sortBy: string;
-	text: string;
+  sortBy: string;
+  text: string;
 }
 
 export interface Flag {
-	flag: string;
-	title: string;
-	color: string;
+  flag: string;
+  title: string;
+  color: string;
 }
 
 export interface Meeting {
-	id: number;
-	name: string;
-	meetingDate: Date;
-	description: string;
-	grade: number;
-	email: string;
+  id: number;
+  name: string;
+  meetingDate: Date;
+  description: string;
+  grade: number;
+  email: string;
 }
 
 export interface DateInfo {
-	type: number;
-	todaysDate: number;
-	meetings: Meeting[];
+  type: number;
+  todaysDate: number;
+  meetings: Meeting[];
 }
 
 export interface ChartData {
-	labels: string[];
-	datasets: {
-		data: number[];
-		backgroundColor: string[];
-		label: string;
-	}[];
+  labels: string[];
+  datasets: {
+    data: number[];
+    backgroundColor: string[];
+    label: string;
+  }[];
 }
 
 export interface Stats {
-	year: number;
-	stats: string;
+  year: number;
+  stats: string;
 }
 
 export interface PieChartStats {
-	[key: string]: {
-		ranks: number[];
-	};
+  [key: string]: {
+    ranks: number[];
+  };
 }

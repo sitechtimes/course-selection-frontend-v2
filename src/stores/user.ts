@@ -147,19 +147,16 @@ export const useUserStore = defineStore("user", () => {
 
   async function getStudents() {
     const res = await fetchData("guidance/profiles/");
-    if (!res.ok) return await res.json();
     const data = await res.json();
     studentList.value = data;
   }
   async function getCourses() {
     const res = await fetchData("course/");
-    if (!res.ok) return await res.json();
     const data = await res.json();
     return data;
   }
   async function getSurveys() {
     const res = await fetchData("guidance/survey/");
-    if (!res.ok) return await res.json();
     const data = await res.json();
     return data;
   }

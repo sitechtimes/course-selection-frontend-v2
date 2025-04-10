@@ -5,7 +5,7 @@
         <Sort
           class="mr-0"
           :menu-array="menuArray"
-          @filter-selected="(filter: string) => (sortBy = filter)"
+          @filter-selected="(filter:string) => (sortBy = filter)"
         />
       </div>
       <div class="w-2/3">
@@ -14,12 +14,6 @@
             <input
               v-model="input"
               placeholder="Search by name or email"
-              @input="
-                $emit(
-                  'update:modelValue',
-                  ($event.target as HTMLInputElement).value
-                )
-              "
               class="border border-zinc-300 rounded w-full h-10 p-2 text-zinc-800"
             />
             <p class="absolute right-3 text-zinc-400 cursor-pointer text-xl">
@@ -49,7 +43,6 @@
       </button>
       <button
         v-for="n in visiblePages"
-        :key='n'
         @click="updatePagination(n)"
         :class="
           currentPage === n ? 'bg-[#cdeeb4] focus:bg-[#cdeeb4]' : 'bg-[#ebebeb]'
@@ -88,18 +81,13 @@ import Sort from "../components/Guidance/SortButton.vue";
 import { Course } from "../types/interface";
 import { useUserStore } from "../stores/user";
 import { ref, computed, watch, onMounted } from "vue";
-
 document.title = "Course List | SITHS Course Selection";
-
 const userStore = useUserStore();
 const courses = ref<Course[]>([]);
-
 const viewAll = ref(false);
-const input = ref("");
-const sortBy = ref("az");
-
+const input = defineModel({ type: String });
+const sortBy = ref<(typeof menuArray)[number]["sortBy"]>("az");
 const startIndex = ref(0);
-
 const currentPage = ref(1);
 const pageCapacity = 10;
 const currentChunk = ref(1);
@@ -138,10 +126,10 @@ function filterByCategory(courses: Course[], sortBy: string) {
 
   if (sortBy === "za")
     return courses.sort((a, b) => b.name.localeCompare(a.name));
-  if (sortBy === "freshman" || sortBy === "sophomore" || sortBy === "junior" || sortBy === "senior")
-    return courses.filter((course) => course[sortBy] == true);
+  if (["freshman", "sophomore", "junior", "senior"].includes(sortBy))
+    return courses.filter((course) => course[sortBy] === true);
   if (sortBy === "honors" || sortBy === "ap") {
-    return courses.filter((course) => course[sortBy] == true);
+    return courses.filter((course) => course[sortBy] === true);
   }
 
   return courses;
@@ -150,7 +138,7 @@ function filterByCategory(courses: Course[], sortBy: string) {
 function applyFilters(sortBy: string, search: string) {
   startIndex.value = 0;
   const filtered = courses.value ? filterByCategory(courses.value, sortBy) : [];
-  if (!search.trim().length) return filtered;
+  if (!search || !search.trim().length) return filtered;
   return filtered.filter(({ name }) =>
     name.toLowerCase().includes(search.trim().toLowerCase())
   );

@@ -13,7 +13,6 @@
             ).toISOString();
             alteredSurvey.dueDate = isoString;
             userStore.fetchData('guidance/editsurvey/', 'PUT', alteredSurvey);
-            router.push(`/guidance/surveylist`);
           }
         "
       >
@@ -48,7 +47,7 @@
         </div>
         <div>
           <button class="p-5 border-2 border-black bg-white hover:bg-other-g">
-            Submit
+            <RouterLink to="/guidance/surveylist">Submit</RouterLink>
           </button>
         </div>
       </form>
@@ -70,7 +69,7 @@ const dueDateTime = ref("");
 const userStore = useUserStore();
 
 async function findSurvey() {
-  let surveys = await userStore.getSurveys();
+  const surveys = await userStore.getSurveys();
   return surveys.find((survey: Survey) => survey.grade == Number(surveyGrade));
 }
 
