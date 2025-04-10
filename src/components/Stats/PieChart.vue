@@ -89,7 +89,7 @@ const getChartData = computed(() => {
   for (let i = 0; i < 40; i++) {
     const randomColours =
       "#" + Math.floor(Math.random() * 16777215).toString(16); //toString(16) turns it into hexadecimal
-    chartData.datasets[0].backgroundColor.push(randomColours);
+    chartData.datasets[0].backgroundColor?.push(randomColours);
   }
 
   if (selectedCourse.value) {
