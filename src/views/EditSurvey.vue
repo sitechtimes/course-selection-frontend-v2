@@ -84,9 +84,9 @@ const survey = ref<Survey>({} as Survey);
 onMounted(async () => {
   try {
     survey.value = await findSurvey();
-    const originalDate = new Date(alteredSurvey.value.dueDate);
-    dueDateDate.value = originalDate.toISOString().split("T")[0]; // YYYY--MM--DD
-    dueDateTime.value = originalDate.toTimeString().split(" ")[0].slice(0, 5); // HH:MM
+    const originalDate = alteredSurvey.value.dueDate;
+    dueDateDate.value = originalDate.split("T")[0]; // YYYY--MM--DD
+    dueDateTime.value = originalDate.split("T")[1].substring(0, 5); // HH:MM., stripped timezone
   } catch (error) {
     console.error(error);
   }
