@@ -153,8 +153,12 @@ const surveyStore = useSurveyStore();
 const menuOpen = ref(false);
 const save = ref("Save");
 
-/* const viewingSurvey = () => router.currentRoute.value.path.includes("survey"); */
-const viewingSurvey = () => false
+const viewingSurvey = () => {
+  if (!userStore.isGuidance) {
+    return router.currentRoute.value.path.includes("survey");
+  }
+  return false;
+};
 
 function redirect() {
   if (!userStore.isAuth) return router.push("/");

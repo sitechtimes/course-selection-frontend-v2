@@ -10,8 +10,8 @@
         class="m-10 p-5 rounded-xl shadow-md bg-primary-g border-black border-2"
         @submit.prevent="
           () => {
-            fetchData('guidance/editcourse/', 'PUT', JSON.stringify(alteredCourse));
-            router.push(`guidance/courselist`);
+            userStore.fetchData('guidance/editcourse/', 'PUT', alteredCourse);
+            router.push(`/guidance/courselist`);
           }
         "
       >
@@ -20,7 +20,7 @@
           <input
             type="text"
             v-model="alteredCourse[key]"
-            :placeholder="String(course[key]) "
+            :placeholder="String(course[key])"
             :id="key"
             class="border-2 border-black rounded-lg p-2 mb-4"
             v-if="
@@ -57,16 +57,16 @@
     </div>
   </Suspense>
 </template>
-   
+
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import {Course} from '../types/interface';
-
-const alteredCourse = ref<Course>({} as Course);
+import { Course } from "../types/interface";
+import { useUserStore } from "../stores/user";
+const alteredCourse = computed(() => course.value || ({} as Course));
 const router = useRouter();
-
+const userStore = useUserStore();
 const route = useRoute();
 const courseId = route.params.id;
 
@@ -79,24 +79,9 @@ function displayGrades(course: Course): string {
   return grades.join(", ");
 }
 
-async function fetchData(url: string, method?: string, body?: any) {
-  const options: RequestInit = { credentials: "include" };
-  if (method) {
-    options["method"] = method;
-    options["headers"] = { "Content-Type": "application/json" };
-    options["body"] = body;
-  }
-  return await fetch(import.meta.env.VITE_URL + url, options);
-}
-
-async function getCourse() {
-  const response: Response = await fetchData("/course", "GET");
-  if (response.status === 200) {
-    const data = await response.json();
-    return data.find((course: Course) => course.id == Number(courseId));
-  } else {
-    throw new Error("Failed to fetch courses");
-  }
+async function findCourse() {
+  let courses = await userStore.getCourses();
+  return courses.find((course: Course) => course.id == Number(courseId));
 }
 
 const course = ref<Course>({} as Course);
@@ -104,11 +89,10 @@ let courseKeys = [] as (keyof Course)[];
 
 onMounted(async () => {
   try {
-    course.value = await getCourse();
-    alteredCourse.value = { ...course.value };
+    course.value = await findCourse();
     courseKeys = Object.keys(course.value).filter(
       (key) =>
-      course.value &&
+        course.value &&
         key !== "id" &&
         key !== "createdAt" &&
         typeof course.value[key as keyof Course] !== "object"

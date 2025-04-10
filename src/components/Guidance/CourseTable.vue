@@ -42,8 +42,8 @@ import { ref, computed, onMounted } from "vue";
 
 const props = defineProps<{ courses: Course[] }>();
 function displayGrades(course: Course) {
- const grades: string[] = [];
- if (course.freshman) grades.push("Freshman");
+  const grades: string[] = [];
+  if (course.freshman) grades.push("Freshman");
   if (course.sophomore) grades.push("Sophomore");
   if (course.junior) grades.push("Junior");
   if (course.senior) grades.push("Senior");

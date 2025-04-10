@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import {SortArray} from '../../types/interface';
+import { SortArray } from "../../types/interface";
 defineProps<{ menuArray: SortArray[] }>();
 const selected = ref("Sort By");
 const isOpen = ref(false);

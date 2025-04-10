@@ -2,36 +2,36 @@
   <Suspense>
     <div>
       <div class="px-10 flex flex-col items-center justify-center gap-4">
-        <h1 class="p-6 text-3xl">
-          {{ survey.grade }}th Grade
-        </h1>
+        <h1 class="p-6 text-3xl">{{ survey.grade }}th Grade</h1>
       </div>
       <form
         class="m-10 p-5 rounded-xl shadow-md bg-primary-g border-black border-2"
         @submit.prevent="
           () => {
-            const isoString = new Date(`${dueDateDate}T${dueDateTime}`).toISOString();
+            const isoString = new Date(
+              `${dueDateDate}T${dueDateTime}`
+            ).toISOString();
             alteredSurvey.dueDate = isoString;
-            fetchData('guidance/editsurvey/', 'PUT', JSON.stringify(alteredSurvey));
+            userStore.fetchData('guidance/editsurvey/', 'PUT', alteredSurvey);
             router.push(`/guidance/surveylist`);
           }
         "
       >
-      <div class="flex flex-col p-3">
-  <label class="text-2xl pb-1 font-bold" for="dueDate">Due Date</label>
-  <input
-    type="date"
-    v-model="dueDateDate"
-    id="dueDate"
-    class="border-2 border-black rounded-lg p-2 mb-4"
-  />
-  <input
-    type="time"
-    v-model="dueDateTime"
-    class="border-2 border-black rounded-lg p-2 mb-4"
-  />
-</div>
-          <div
+        <div class="flex flex-col p-3">
+          <label class="text-2xl pb-1 font-bold" for="dueDate">Due Date</label>
+          <input
+            type="date"
+            v-model="dueDateDate"
+            id="dueDate"
+            class="border-2 border-black rounded-lg p-2 mb-4"
+          />
+          <input
+            type="time"
+            v-model="dueDateTime"
+            class="border-2 border-black rounded-lg p-2 mb-4"
+          />
+        </div>
+        <div
           class="flex flex-col p-3"
           v-for="(questionObj, index) in alteredSurvey.questions"
           :key="questionObj.id"
@@ -55,36 +55,23 @@
     </div>
   </Suspense>
 </template>
-     
-  <script setup lang="ts">
-import { ref, onMounted } from "vue";
+
+<script setup lang="ts">
+import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import {Survey} from '../types/interface';
-const alteredSurvey = ref<Survey>({} as Survey);
+import { Survey } from "../types/interface";
+import { useUserStore } from "../stores/user";
+const alteredSurvey = computed(() => survey.value || ({} as Survey));
 const router = useRouter();
 const route = useRoute();
 const surveyGrade = route.params.grade;
 const dueDateDate = ref("");
 const dueDateTime = ref("");
+const userStore = useUserStore();
 
-async function fetchData(url: string, method?: string, body?: any) {
-  const options: RequestInit = { credentials: "include" };
-  if (method) {
-    options["method"] = method;
-    options["headers"] = { "Content-Type": "application/json" };
-    options["body"] = body
-  }
-  return await fetch(import.meta.env.VITE_URL + url, options);
-}
-
-async function getSurvey() {
-  const response: Response = await fetchData("guidance/survey", "GET");
-  if (response.status === 200) {
-    const data = await response.json();
-    return data.find((survey: Survey) => survey.grade == Number(surveyGrade));
-  } else {
-    throw new Error("Failed to fetch surveys");
-  }
+async function findSurvey() {
+  let surveys = await userStore.getSurveys();
+  return surveys.find((survey: Survey) => survey.grade == Number(surveyGrade));
 }
 
 const survey = ref<Survey>({} as Survey);
@@ -92,8 +79,7 @@ let surveyKeys = [] as (keyof Survey)[];
 
 onMounted(async () => {
   try {
-    survey.value = await getSurvey();
-    alteredSurvey.value = { ...survey.value };
+    survey.value = await findSurvey();
     surveyKeys = Object.keys(survey.value).filter(
       (key) =>
         key !== "id" &&
