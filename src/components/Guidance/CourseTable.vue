@@ -51,10 +51,3 @@ function displayGrades(course: Course) {
 }
 const router = useRouter();
 </script>
-
-<style scoped>
-.parent:hover .child {
-  display: block;
-  transition: 0.3s;
-}
-</style>

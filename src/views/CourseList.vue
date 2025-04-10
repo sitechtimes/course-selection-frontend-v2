@@ -5,7 +5,7 @@
         <Sort
           class="mr-0"
           :menu-array="menuArray"
-          @filter-selected="(filter:string) => (sortBy = filter)"
+          @filter-selected="(filter) => (sortBy = filter)"
         />
       </div>
       <div class="w-2/3">
@@ -81,12 +81,12 @@ import Sort from "../components/Guidance/SortButton.vue";
 import { Course } from "../types/interface";
 import { useUserStore } from "../stores/user";
 import { ref, computed, onMounted } from "vue";
-
+import { SortArray } from "../types/interface";
 document.title = "Course List | SITHS Course Selection";
 
 const userStore = useUserStore();
 const courses = ref<Course[]>([]);
-const input = defineModel({ type: String });
+const input = defineModel<string>();
 const sortBy = ref<(typeof menuArray)[number]["sortBy"]>("az");
 const startIndex = ref(0);
 const currentPage = ref(1);
@@ -102,7 +102,7 @@ const menuArray = [
   { sortBy: "senior", text: "Grade 12" },
   { sortBy: "ap", text: "AP" },
   { sortBy: "honors", text: "Honors" },
-] as const;
+] as SortArray[];
 
 onMounted(async () => {
   try {
@@ -149,8 +149,7 @@ const totalPages = computed(() => {
 function changePage(increment: number) {
   currentPage.value += increment;
   if (increment > 0) startIndex.value += pageCapacity;
-  else if (increment < 0) startIndex.value -= pageCapacity;
-  else return;
+  startIndex.value += increment * pageCapacity;
   updatePagination(currentPage.value);
 }
 

@@ -2,7 +2,7 @@
   <Suspense>
     <template #fallback>
       <div
-        class="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] text-2xl font-bold"
+        class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl font-bold"
       >
         Loading...
       </div>

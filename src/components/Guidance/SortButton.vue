@@ -36,7 +36,7 @@ const isOpen = ref(false);
 const emit = defineEmits(["filter-selected"]);
 
 const filter = (sortBy: string, text: string) => {
-  emit("filter-selected", sortBy);
+  emit("filter-selected", sortBy as string);
   isOpen.value = false;
   selected.value = text;
 };
