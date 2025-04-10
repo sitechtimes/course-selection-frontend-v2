@@ -103,7 +103,6 @@ const chartOptions = ref({ responsive: true });
 const getChartData = computed(() => {
   const labels: string[] = [];
   const data: number[] = [];
-  const backgroundColors: string[] = [];
 
   if (selectedSubject.value && selectedYear.value && stats.value) {
     const targettedCourses = stats.value.courses.filter(
@@ -113,20 +112,16 @@ const getChartData = computed(() => {
       targettedCourses.forEach((item: CourseStat) => {
         labels.push(item.course.name);
         data.push(item.picks);
-        const randomColours =
-          "#" + Math.floor(Math.random() * 16777215).toString(16);
-        backgroundColors.push(randomColours);
       });
     } else {
       labels.push(`No courses in ${selectedSubject.value} for ${selectedYear.value}`);
       data.push(0);
-      backgroundColors.push('rgba(54, 162, 235, 0.8)'); // default color 
     }
   }
 
   const chartResult: ChartData = {
     labels: labels,
-    datasets: [{ label: "Number of Picks", data: data, backgroundColor: backgroundColors }],
+    datasets: [{ label: "Number of Picks", data: data }],
   };
 
   loaded.value = true;
