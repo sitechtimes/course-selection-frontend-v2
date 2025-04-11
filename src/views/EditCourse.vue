@@ -11,6 +11,7 @@
         @submit.prevent="
           () => {
             userStore.fetchData('guidance/editcourse/', 'PUT', alteredCourse);
+            router.push('/guidance/courselist');
           }
         "
       >
