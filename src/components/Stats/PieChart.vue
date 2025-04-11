@@ -46,7 +46,7 @@ const selectedCourse = ref("");
 const selectedYear = ref(0);
 
 const chartData = ref<Stats[]>([]);
-const years = ref<Number[]>([]);
+const years = ref<number[]>([]);
 
 onMounted(async () => {
   const statsData = await userStore.fetchStats();

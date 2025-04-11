@@ -71,7 +71,7 @@ const loaded = ref(false);
 const selectedYear = ref(0);
 
 const chartData = ref<Stats[]>([]);
-const years = ref<Number[]>([]);
+const years = ref<number[]>([]);
 
 onMounted(async () => {
   const statsData = await userStore.fetchStats();
@@ -109,7 +109,7 @@ const getChartData = computed(() => {
       (item: CourseStat) => item.course.subject === selectedSubject.value
     );
     if (targettedCourses.length > 0) {
-      targettedCourses.forEach((item: CourseStat) => {
+      targettedCourses.forEach((item) => {
         labels.push(item.course.name);
         data.push(item.picks);
       });
