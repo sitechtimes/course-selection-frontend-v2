@@ -18,11 +18,10 @@
         class="border-2 border-black"
       >
         <tr class="hover:bg-other-g transition-all">
-          <td
-            class="p-4 hover:cursor-pointer"
-            @click="router.push(`/guidance/editcourse/${course.id}`)"
-          >
-            {{ course.name }}
+          <td class="p-4 hover:cursor-pointer">
+            <RouterLink :to="`/guidance/editcourse/${course.id}`">
+              {{ course.name }}
+            </RouterLink>
           </td>
           <td class="p-4">{{ course.subject }}</td>
           <td class="p-4">{{ displayGrades(course) }}</td>
