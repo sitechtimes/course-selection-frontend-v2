@@ -106,7 +106,7 @@ const getChartData = computed(() => {
 
   if (selectedSubject.value && selectedYear.value && stats.value) {
     const targettedCourses = stats.value.courses.filter(
-      (item: CourseStat) => item.course.subject === selectedSubject.value
+      (item) => item.course.subject === selectedSubject.value
     );
     if (targettedCourses.length > 0) {
       targettedCourses.forEach((item) => {
