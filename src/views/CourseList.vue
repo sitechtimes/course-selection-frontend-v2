@@ -13,7 +13,7 @@
           <div class="flex justify-center items-center relative w-11/12">
             <input
               v-model="input"
-              placeholder="Search by name or email"
+              placeholder="Search by name"
               class="border border-zinc-300 rounded w-full h-10 p-2 text-zinc-800"
             />
             <p class="absolute right-3 text-zinc-400 cursor-pointer text-xl">
@@ -120,7 +120,6 @@ const sortedAndFiltered = computed(() => {
 function filterByCategory(courses: Course[], sortBy: string) {
   if (sortBy === "az")
     return courses.sort((a, b) => a.name.localeCompare(b.name));
-
   if (sortBy === "za")
     return courses.sort((a, b) => b.name.localeCompare(a.name));
   if (["freshman", "sophomore", "junior", "senior"].includes(sortBy))

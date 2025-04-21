@@ -8,7 +8,7 @@
           <th class="p-4">Grades</th>
           <th class="p-4">AP</th>
           <th class="p-4 pl-10">Honors</th>
-          <th class="p-4 flex flex-row items-center">Codes</th>
+          <th class="p-4 flex flex-row items-center">Code(s)</th>
         </tr>
       </thead>
 
@@ -27,7 +27,7 @@
           <td class="p-4">{{ displayGrades(course) }}</td>
           <td class="p-4">{{ course.ap }}</td>
           <td class="p-4">{{ course.honors }}</td>
-          <td class="p-4">{{ course.codes }}</td>
+          <td class="p-4"><p v-for="code in course.codes">{{ code }}</p></td>
         </tr>
       </tbody>
     </table>
