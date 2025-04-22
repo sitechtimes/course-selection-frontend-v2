@@ -113,22 +113,6 @@ const months = [
 let currentDate = new Date();
 let year = currentDate.getFullYear();
 let month = currentDate.getMonth();
-let monday = (() => {
-  const date = new Date(currentDate);
-  const diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
-  const mondayDate = new Date(date.setDate(diff));
-  mondayDate.setHours(0, 0, 0, 0);
-  return mondayDate;
-})();
-
-let friday = (() => {
-  const mondayDate = new Date(monday);
-  const fridayDate = new Date(mondayDate);
-  fridayDate.setDate(mondayDate.getDate() + 4);
-  fridayDate.setHours(23, 59, 59, 999);
-  return fridayDate;
-})();
-
 onMounted(async () => await renderCalendar());
 
 const toggleDetails = (meeting: Meeting) => {
@@ -154,9 +138,21 @@ const toggleEvent = (date: any) => {
 };
 
 async function renderCalendar() {
-  const firstDay = new Date(year, month, 1).getDay();
+  const firstDay = (() => {
+  const date = new Date(currentDate);
+  const diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
+  const mondayDate = new Date(date.setDate(diff));
+  mondayDate.setHours(0, 0, 0, 0);
+  return mondayDate;
+})();
   const lastDate = new Date(year, month + 1, 0).getDate();
-  const lastDay = new Date(year, month, lastDate).getDay();
+  const lastDay = (() => {
+  const mondayDate = new Date(firstDay);
+  const fridayDate = new Date(mondayDate);
+  fridayDate.setDate(mondayDate.getDate() + 4);
+  fridayDate.setHours(23, 59, 59, 999);
+  return fridayDate;
+})();
   const prevMonthLastDate = new Date(year, month, 0).getDate();
 
   const createDays = (count: number, offset: number, type: number) =>
@@ -176,9 +172,7 @@ async function renderCalendar() {
     }));
 
   calendarData.value = [
-    ...createDays(firstDay, prevMonthLastDate - firstDay, -1),
-    ...createDays(lastDate, 0, 0),
-    ...createDays(6 - lastDay, 0, 1),
+    ...createDays(firstDay.getDay(), lastDay.getDay() - firstDay.getDay(), ),
   ];
 }
 
