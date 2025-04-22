@@ -113,6 +113,21 @@ const months = [
 let currentDate = new Date();
 let year = currentDate.getFullYear();
 let month = currentDate.getMonth();
+let monday = (() => {
+  const date = new Date(currentDate);
+  const diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
+  const mondayDate = new Date(date.setDate(diff));
+  mondayDate.setHours(0, 0, 0, 0);
+  return mondayDate;
+})();
+
+let friday = (() => {
+  const mondayDate = new Date(monday);
+  const fridayDate = new Date(mondayDate);
+  fridayDate.setDate(mondayDate.getDate() + 4);
+  fridayDate.setHours(23, 59, 59, 999);
+  return fridayDate;
+})();
 
 onMounted(async () => await renderCalendar());
 
