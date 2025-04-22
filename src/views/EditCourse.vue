@@ -44,12 +44,13 @@
               type="checkbox"
               :id="key"
               v-model="alteredCourse[key]"
-              class="form-checkbox h-5 w-5 text-other-g border-black rounded focus:ring-other-g focus:ring-offset-0 cursor-pointer"
+              class="form-checkbox h-5 w-5 text-secondary-g border-black rounded focus:ring-other-g focus:ring-offset-0 cursor-pointer"
             />
             <label :for="key" class="ml-2 text-lg">{{
               key[0].toUpperCase() + key.slice(1)
             }}</label>
-          </div>        </div>
+          </div>
+        </div>
         <div>
           <button
             type="submit"

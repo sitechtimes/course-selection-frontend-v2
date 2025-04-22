@@ -16,7 +16,7 @@
         "
       >
         <div class="flex flex-col p-3">
-          <label class="text-2xl pb-1 font-bold" for="dueDate">Due Date</label>
+          <label for="dueDate" class="text-2xl pb-1 font-bold">Due Date</label>
           <input
             type="date"
             v-model="dueDateDate"
