@@ -36,36 +36,20 @@
             v-model="alteredCourse[key]"
             :placeholder="course[key]"
             :id="key"
-            class="border-2 border-black rounded-lg p-2 mb-4 form-textarea textarea-xl"
+            class="border-2 border-black rounded-lg p-2 mb-4 form-textarea h-48"
             v-else-if="key === 'description'"
           />
-          <div
-            v-else
-            class="border-2 border-black rounded-lg p-2 mb-4 flex items-center bg-white"
-          >
-            <label :for="'radio-true-' + key" class="mr-4 cursor-pointer">
-              <input
-                type="radio"
-                :id="'radio-true-' + key"
-                :value="true"
-                v-model="alteredCourse[key]"
-                class="mr-1 cursor-pointer"
-              />
-              True
-            </label>
-
-            <label :for="'radio-false-' + key" class="cursor-pointer">
-              <input
-                type="radio"
-                :id="'radio-false-' + key"
-                :value="false"
-                v-model="alteredCourse[key]"
-                class="mr-1 cursor-pointer"
-              />
-              False
-            </label>
-          </div>
-        </div>
+          <div v-else class="flex items-center">
+            <input
+              type="checkbox"
+              :id="key"
+              v-model="alteredCourse[key]"
+              class="form-checkbox h-5 w-5 text-other-g border-black rounded focus:ring-other-g focus:ring-offset-0 cursor-pointer"
+            />
+            <label :for="key" class="ml-2 text-lg">{{
+              key[0].toUpperCase() + key.slice(1)
+            }}</label>
+          </div>        </div>
         <div>
           <button
             type="submit"
