@@ -16,7 +16,9 @@
         "
       >
         <div class="flex flex-col p-3" v-for="key in courseKeys" :key="key">
-          <label :for="key" class="text-2xl pb-1 font-bold">{{ key }}</label>
+          <label :for="key" class="text-2xl pb-1 font-bold">{{
+            key[0].toUpperCase() + key.slice(1)
+          }}</label>
           <input
             type="text"
             v-model="alteredCourse[key]"
@@ -37,15 +39,32 @@
             class="border-2 border-black rounded-lg p-2 mb-4 form-textarea textarea-xl"
             v-else-if="key === 'description'"
           />
-          <select
-            id="key"
-            class="border-2 border-black rounded-lg p-2 mb-4"
+          <div
             v-else
-            v-model="alteredCourse[key]"
+            class="border-2 border-black rounded-lg p-2 mb-4 flex items-center bg-white"
           >
-            <option :value="true">True</option>
-            <option :value="false">False</option>
-          </select>
+            <label :for="'radio-true-' + key" class="mr-4 cursor-pointer">
+              <input
+                type="radio"
+                :id="'radio-true-' + key"
+                :value="true"
+                v-model="alteredCourse[key]"
+                class="mr-1 cursor-pointer"
+              />
+              True
+            </label>
+
+            <label :for="'radio-false-' + key" class="cursor-pointer">
+              <input
+                type="radio"
+                :id="'radio-false-' + key"
+                :value="false"
+                v-model="alteredCourse[key]"
+                class="mr-1 cursor-pointer"
+              />
+              False
+            </label>
+          </div>
         </div>
         <div>
           <button
