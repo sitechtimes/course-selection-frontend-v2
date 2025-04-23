@@ -172,7 +172,7 @@ async function renderCalendar() {
     }));
 
   calendarData.value = [
-    ...createDays(firstDay.getDay(), lastDay.getDay() - firstDay.getDay(), ),
+    ...createDays(7, firstDay.getDay(), 0),
   ];
 }
 
