@@ -49,7 +49,7 @@
         <div>
           <button
             type="submit"
-            class="p-5 border-2 border-black bg-white hover:bg-other-g"
+            class="p-5 border-2 border-black bg-white hover:bg-other-g rounded-xl shadow-md m-3"
           >
             Submit
           </button>
