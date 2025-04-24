@@ -6,7 +6,7 @@
           class="arrow cursor-pointer text-2xl"
           id="prev"
           ref="prev"
-          @click="changeMonth(false)"
+          @click="changeWeek(false)"
           >&#10094;</span
         >
         <div class="flex flex-row text-2xl mx-4">
@@ -16,7 +16,7 @@
           class="arrow cursor-pointer text-2xl"
           id="next"
           ref="next"
-          @click="changeMonth(true)"
+          @click="changeWeek(true)"
         >
           &#10095;
         </span>
@@ -37,7 +37,7 @@
               class="hover:visible group min-h-[10rem] relative pb-7"
               v-for="h in calendarData"
             >
-              <p class="mt-2 text-end mr-2 mb-1">{{ h.todaysDate }}</p>
+              <p class="mt-2 text-end mr-2 mb-1">{{ h.todaysDate.getMonth() }} / {{ h.todaysDate.getUTCDate() }}</p>
               <div
                 v-for="meeting in h.meetings"
                 :key="meeting.id"
@@ -113,6 +113,12 @@ const months = [
 let currentDate = new Date();
 let year = currentDate.getFullYear();
 let month = currentDate.getMonth();
+const firstDay = (() => {
+  const d = new Date(currentDate);
+  d.setDate(d.getDate() - (d.getDay() || 7) + 1);
+  return d.setHours(0, 0, 0, 0), d;
+})();
+
 onMounted(async () => await renderCalendar());
 
 const toggleDetails = (meeting: Meeting) => {
@@ -122,7 +128,7 @@ const toggleDetails = (meeting: Meeting) => {
 
 const toggleEvent = (date: any) => {
   let eventYear = year;
-  let eventMonth = month + date.type;
+  let eventMonth = month
 
   if (eventMonth < 0) {
     eventMonth = 11;
@@ -133,62 +139,39 @@ const toggleEvent = (date: any) => {
   }
   createEventDate.value = `${eventYear}-${(eventMonth + 1)
     .toString()
-    .padStart(2, "0")}-${date.todaysDate.toString().padStart(2, "0")}`;
+    .padStart(2, "0")}-${date.todaysDate.getUTCDate().toString().padStart(2, "0")}`;
   showEvent.value = !showEvent.value;
 };
 
 async function renderCalendar() {
-  const firstDay = (() => {
-  const date = new Date(currentDate);
-  const diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
-  const mondayDate = new Date(date.setDate(diff));
-  mondayDate.setHours(0, 0, 0, 0);
-  return mondayDate;
-})();
-  const lastDate = new Date(year, month + 1, 0).getDate();
-  const lastDay = (() => {
-  const mondayDate = new Date(firstDay);
-  const fridayDate = new Date(mondayDate);
-  fridayDate.setDate(mondayDate.getDate() + 4);
-  fridayDate.setHours(23, 59, 59, 999);
-  return fridayDate;
-})();
-  const prevMonthLastDate = new Date(year, month, 0).getDate();
-
-  const createDays = (count: number, offset: number, type: number) =>
-    Array.from({ length: count }, (_, i) => ({
-      type,
-      todaysDate: offset + i + 1,
-      meetings:
-        type === 0
-          ? userStore.meetings
-              .filter(
-                ({ meetingDate }) =>
-                  meetingDate.toDateString() ===
-                  new Date(year, month, offset + i + 1).toDateString()
-              )
-              .sort((a, b) => a.meetingDate.getTime() - b.meetingDate.getTime())
-          : [],
+  const createDays = (count: number, offset: Date) => {
+    const day = offset.getUTCDate() + 1;
+    console.log(offset)
+    return Array.from({ length: count }, (_, i) => ({
+      todaysDate: new Date(year, month + 1, day + i),
+      meetings: userStore.meetings
+        .filter(
+          ({ meetingDate }) =>
+            meetingDate.toDateString() ===
+            new Date(year, month + 1, day + i).toDateString()
+        )
+        .sort((a, b) => a.meetingDate.getTime() - b.meetingDate.getTime()),
     }));
+  };
 
-  calendarData.value = [
-    ...createDays(7, firstDay.getDay(), 0),
-  ];
+  calendarData.value = [...createDays(7, firstDay)];
 }
 
 watchEffect(async () => await renderCalendar());
 
-const changeMonth = (next: boolean) => {
-  next ? month++ : month--;
-
-  if (month < 0 || month > 11) {
-    currentDate = new Date(year, month);
-    year = currentDate.getFullYear();
-    month = currentDate.getMonth();
-  }
-
+const changeWeek = (next: boolean) => {
+  firstDay.setDate(firstDay.getDate() + (next ? 7 : -7));
+  month = firstDay.getMonth();
+  year = firstDay.getFullYear();
   renderCalendar();
 };
+
+
 </script>
 <style scoped>
 .calendar ul {

@@ -86,8 +86,7 @@ export interface Meeting {
 }
 
 export interface DateInfo {
-  type: number;
-  todaysDate: number;
+  todaysDate: Date;
   meetings: Meeting[];
 }
 
