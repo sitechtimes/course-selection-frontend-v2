@@ -19,32 +19,39 @@
           <label :for="key" class="text-2xl pb-1 font-bold">{{
             key[0].toUpperCase() + key.slice(1)
           }}</label>
-          <input
-            type="text"
-            v-model="alteredCourse[key]"
-            :placeholder="String(course[key])"
-            :id="key"
-            class="border-2 border-black rounded-lg p-2 mb-4"
+          <div
+            class="max-w-4xl"
             v-if="
               course[key] !== true &&
               course[key] !== false &&
               key !== 'description'
             "
-          />
+          >
+            <input
+              type="text"
+              v-model="alteredCourse[key]"
+              :placeholder="String(course[key])"
+              :id="key"
+              class="border-2 border-black rounded-lg p-2 mb-4 hover:shadow-xl transition"
+            />
+          </div>
           <textarea
             type="text"
             v-model="alteredCourse[key]"
             :placeholder="course[key]"
             :id="key"
-            class="border-2 border-black rounded-lg p-2 mb-4 form-textarea h-48"
+            class="border-2 border-black rounded-lg p-2 mb-4 form-textarea h-48 hover:shadow-2xl transition"
             v-else-if="key === 'description'"
           />
-          <div v-else class="flex items-center">
+          <div
+            v-else
+            class="flex items-center hover:shadow-xl w-min transition rounded-xl p-2"
+          >
             <input
               type="checkbox"
               :id="key"
               v-model="alteredCourse[key]"
-              class="form-checkbox h-5 w-5 text-secondary-g border-black rounded focus:ring-other-g focus:ring-offset-0 cursor-pointer"
+              class="form-checkbox h-5 w-5 text-secondary-g border-black rounded focus:ring-other-g focus:ring-offset-0 cursor-pointer transition"
             />
             <label :for="key" class="ml-2 text-lg">{{
               key[0].toUpperCase() + key.slice(1)
@@ -65,7 +72,6 @@
 </template>
 
 <script setup lang="ts">
-import { RouterLink } from "vue-router";
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { Course } from "../types/interface";

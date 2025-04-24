@@ -2,10 +2,10 @@
   <Suspense>
     <div>
       <div class="px-10 flex flex-col items-center justify-center gap-4">
-        <h1 class="p-6 text-3xl">{{ survey.grade }}th Grade</h1>
+        <h1 class="p-6 text-3xl">{{ survey.grade }}th Grade Survey</h1>
       </div>
       <form
-        class="m-10 p-5 rounded-xl shadow-md bg-primary-g border-black border-2"
+        class="m-5 p-5 rounded-xl shadow-md bg-primary-g border-black border-2"
         @submit.prevent="
           () => {
             const isoString = `${dueDateDate}T${dueDateTime}`;

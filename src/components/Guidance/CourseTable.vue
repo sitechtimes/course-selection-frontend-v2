@@ -20,14 +20,17 @@
         <tr class="hover:bg-other-g transition-all">
           <td class="p-4 hover:cursor-pointer">
             <RouterLink :to="`/guidance/editcourse/${course.id}`">
-              {{ course.name }}
+              ✎
             </RouterLink>
+            {{ course.name }}
           </td>
           <td class="p-4">{{ course.subject }}</td>
           <td class="p-4">{{ displayGrades(course) }}</td>
-          <td class="p-4">{{ course.ap ? '✔' : '✖' }}</td>
-          <td class="p-4">{{ course.honors ? '✔' : '✖' }}</td>
-          <td class="p-4"><p v-for="code in course.codes">{{ code }}</p></td>
+          <td class="p-4">{{ course.ap ? "✔" : "✖" }}</td>
+          <td class="p-4">{{ course.honors ? "✔" : "✖" }}</td>
+          <td class="p-4">
+            <p v-for="code in course.codes" :key="code">{{ code }}</p>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -47,8 +50,8 @@ function displayGrades(course: Course): string {
     course.junior ? "11" : null,
     course.senior ? "12" : null,
   ]
-  .filter(Boolean)
-  .join(", ");
+    .filter(Boolean)
+    .join(", ");
 }
 
 const router = useRouter();
