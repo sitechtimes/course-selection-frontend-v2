@@ -10,7 +10,7 @@
           >&#10094;</span
         >
         <div class="flex flex-row text-2xl mx-4">
-          {{ months[month] }} {{ year }}
+          {{ months[displayedMonth] }} {{ displayedYear }}
         </div>
         <span
           class="arrow cursor-pointer text-2xl"
@@ -24,20 +24,21 @@
       <div class="flex flex-row gap-[7rem] mb-12">
         <div class="calendar w-full">
           <ul class="weeks bg-primary-g">
-            <li>Sun</li>
             <li>Mon</li>
             <li>Tue</li>
             <li>Wed</li>
             <li>Thu</li>
             <li>Fri</li>
-            <li>Sat</li>
           </ul>
           <ul class="days">
             <li
               class="hover:visible group min-h-[10rem] relative pb-7"
               v-for="h in calendarData"
             >
-              <p class="mt-2 text-end mr-2 mb-1">{{ h.todaysDate.getMonth() }} / {{ h.todaysDate.getUTCDate() }}</p>
+              <p class="mt-2 text-end mr-2 mb-1">
+                {{ h.todaysDate.getUTCMonth() + 1 }} /
+                {{ h.todaysDate.getUTCDate() }}
+              </p>
               <div
                 v-for="meeting in h.meetings"
                 :key="meeting.id"
@@ -67,11 +68,12 @@
     <MeetingDetails v-if="showDetails" :meeting="selectedMeeting" />
   </div>
 </template>
+
 <script setup lang="ts">
 import UpcomingMeetings from "../components/Guidance/UpcomingMeetings.vue";
 import MeetingDetails from "../components/Guidance/MeetingDetails.vue";
 import CreateEvent from "../components/Guidance/CreateEvent.vue";
-import { ref, onMounted, watchEffect } from "vue";
+import { ref, onMounted, watchEffect, computed } from "vue";
 import { useUserStore } from "../stores/user";
 import { DateInfo } from "../types/interface";
 import { Meeting } from "../types/interface";
@@ -111,67 +113,75 @@ const months = [
 ];
 
 let currentDate = new Date();
-let year = currentDate.getFullYear();
-let month = currentDate.getMonth();
-const firstDay = (() => {
-  const d = new Date(currentDate);
-  d.setDate(d.getDate() - (d.getDay() || 7) + 1);
-  return d.setHours(0, 0, 0, 0), d;
-})();
 
-onMounted(async () => await renderCalendar());
+const initialStartOfWeekLocal = new Date(currentDate);
+initialStartOfWeekLocal.setDate(
+  currentDate.getDate() - ((currentDate.getDay() + 6) % 7)
+);
+initialStartOfWeekLocal.setHours(0, 0, 0, 0);
+
+let firstDay = ref(
+  new Date(
+    Date.UTC(
+      initialStartOfWeekLocal.getFullYear(),
+      initialStartOfWeekLocal.getMonth(),
+      initialStartOfWeekLocal.getDate()
+    )
+  )
+);
+
+const displayedMonth = computed(() => firstDay.value.getUTCMonth());
+const displayedYear = computed(() => firstDay.value.getUTCFullYear());
+
+onMounted(() => renderCalendar());
 
 const toggleDetails = (meeting: Meeting) => {
   selectedMeeting.value = meeting;
   showDetails.value = !showDetails.value;
 };
 
-const toggleEvent = (date: any) => {
-  let eventYear = year;
-  let eventMonth = month
-
-  if (eventMonth < 0) {
-    eventMonth = 11;
-    eventYear--;
-  } else if (eventMonth > 11) {
-    eventMonth = 0;
-    eventYear++;
-  }
-  createEventDate.value = `${eventYear}-${(eventMonth + 1)
+const toggleEvent = (dateInfo: DateInfo) => {
+  const eventDate = dateInfo.todaysDate;
+  createEventDate.value = `${eventDate.getUTCFullYear()}-${(
+    eventDate.getUTCMonth() + 1
+  )
     .toString()
-    .padStart(2, "0")}-${date.todaysDate.getUTCDate().toString().padStart(2, "0")}`;
+    .padStart(2, "0")}-${eventDate.getUTCDate().toString().padStart(2, "0")}`;
   showEvent.value = !showEvent.value;
 };
 
-async function renderCalendar() {
-  const createDays = (count: number, offset: Date) => {
-    const day = offset.getUTCDate() + 1;
-    console.log(offset)
-    return Array.from({ length: count }, (_, i) => ({
-      todaysDate: new Date(year, month + 1, day + i),
+const renderCalendar = () => {
+  const days = [];
+  const startOffsetDateUtc = firstDay.value;
+
+  for (let i = 0; i < 5; i++) {
+    const todaysDate = new Date(startOffsetDateUtc);
+    todaysDate.setUTCDate(startOffsetDateUtc.getUTCDate() + i);
+
+    days.push({
+      todaysDate: todaysDate,
       meetings: userStore.meetings
-        .filter(
-          ({ meetingDate }) =>
-            meetingDate.toDateString() ===
-            new Date(year, month + 1, day + i).toDateString()
-        )
+        .filter(({ meetingDate }) => {
+          return (
+            meetingDate.getUTCFullYear() === todaysDate.getUTCFullYear() &&
+            meetingDate.getUTCMonth() === todaysDate.getUTCMonth() &&
+            meetingDate.getUTCDate() === todaysDate.getUTCDate()
+          );
+        })
         .sort((a, b) => a.meetingDate.getTime() - b.meetingDate.getTime()),
-    }));
-  };
-
-  calendarData.value = [...createDays(7, firstDay)];
-}
-
-watchEffect(async () => await renderCalendar());
-
-const changeWeek = (next: boolean) => {
-  firstDay.setDate(firstDay.getDate() + (next ? 7 : -7));
-  month = firstDay.getMonth();
-  year = firstDay.getFullYear();
-  renderCalendar();
+    });
+  }
+  calendarData.value = days;
 };
 
+watchEffect(() => {
+  renderCalendar();
+});
 
+const changeWeek = (next: boolean) => {
+  firstDay.value = new Date((firstDay.value).setUTCDate(firstDay.value.getUTCDate() + (next ? 7 : -7)));
+  ;
+};
 </script>
 <style scoped>
 .calendar ul {
@@ -182,7 +192,7 @@ const changeWeek = (next: boolean) => {
 }
 
 .calendar li {
-  width: calc(100% / 7);
+  width: calc(100% / 5);
   font-size: 1.07rem;
 }
 
