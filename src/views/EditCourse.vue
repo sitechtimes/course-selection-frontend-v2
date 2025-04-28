@@ -6,67 +6,74 @@
           {{ course.name }}
         </h1>
       </div>
-      <form
-        class="m-10 p-5 rounded-xl shadow-md bg-primary-g border-black border-2"
-        @submit.prevent="
-          () => {
-            userStore.fetchData('guidance/editcourse/', 'PUT', alteredCourse);
-            router.push('/guidance/courselist');
-          }
-        "
-      >
-        <div class="flex flex-col p-3" v-for="key in courseKeys" :key="key">
-          <label :for="key" class="text-2xl pb-1 font-bold">{{
-            key[0].toUpperCase() + key.slice(1)
-          }}</label>
+      <div class="flex justify-center">
+        <form
+          class="w-1/2 m-10 p-5 rounded-xl shadow-md bg-primary-g border-black border-2"
+          @submit.prevent="
+            () => {
+              userStore.fetchData('guidance/editcourse/', 'PUT', alteredCourse);
+              router.push('/guidance/courselist');
+            }
+          "
+        >
           <div
-            class="max-w-4xl"
-            v-if="
-              course[key] !== true &&
-              course[key] !== false &&
-              key !== 'description'
-            "
+            class="flex flex-col items-center"
+            v-for="key in courseKeys"
+            :key="key"
           >
-            <input
+            <label :for="key" class="text-2xl pb-1 font-bold"
+              >{{ key[0].toUpperCase() + key.slice(1) }}
+            </label>
+            <div
+              class="max-w-4xl"
+              v-if="
+                course[key] !== true &&
+                course[key] !== false &&
+                key !== 'description'
+              "
+            >
+              <input
+                type="text"
+                v-model="alteredCourse[key]"
+                :placeholder="String(course[key])"
+                :id="key"
+                class="border-2 border-black rounded-lg p-2 mb-4 hover:shadow-xl transition w-full"
+              />
+            </div>
+            <textarea
               type="text"
+              rows="10"
               v-model="alteredCourse[key]"
-              :placeholder="String(course[key])"
+              :placeholder="course[key]"
               :id="key"
-              class="border-2 border-black rounded-lg p-2 mb-4 hover:shadow-xl transition"
+              class="border-2 border-black rounded-lg p-2 mb-4 form-textarea h-48 hover:shadow-2xl transition w-full"
+              v-else-if="key === 'description'"
             />
+            <div
+              v-else
+              class="flex items-center hover:shadow-xl w-min transition rounded-xl p-2 pl-3"
+            >
+              <input
+                type="checkbox"
+                :id="key"
+                v-model="alteredCourse[key]"
+                class="form-checkbox h-5 w-5 text-secondary-g border-black rounded focus:ring-other-g focus:ring-offset-0 cursor-pointer transition"
+              />
+              <label :for="key" class="ml-2 text-lg">{{
+                key[0].toUpperCase() + key.slice(1)
+              }}</label>
+            </div>
           </div>
-          <textarea
-            type="text"
-            v-model="alteredCourse[key]"
-            :placeholder="course[key]"
-            :id="key"
-            class="border-2 border-black rounded-lg p-2 mb-4 form-textarea h-48 hover:shadow-2xl transition"
-            v-else-if="key === 'description'"
-          />
-          <div
-            v-else
-            class="flex items-center hover:shadow-xl w-min transition rounded-xl p-2"
-          >
-            <input
-              type="checkbox"
-              :id="key"
-              v-model="alteredCourse[key]"
-              class="form-checkbox h-5 w-5 text-secondary-g border-black rounded focus:ring-other-g focus:ring-offset-0 cursor-pointer transition"
-            />
-            <label :for="key" class="ml-2 text-lg">{{
-              key[0].toUpperCase() + key.slice(1)
-            }}</label>
+          <div>
+            <button
+              type="submit"
+              class="p-5 border-2 border-black bg-white hover:bg-other-g rounded-xl shadow-md mt-2"
+            >
+              Submit
+            </button>
           </div>
-        </div>
-        <div>
-          <button
-            type="submit"
-            class="p-5 border-2 border-black bg-white hover:bg-other-g"
-          >
-            Submit
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   </Suspense>
 </template>

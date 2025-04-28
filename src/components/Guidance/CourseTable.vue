@@ -17,7 +17,7 @@
         :key="course.id"
         class="border-2 border-black"
       >
-        <tr class="hover:bg-other-g transition-all">
+        <tr class="hover:bg-[#ebebeb] transition-all">
           <td class="p-4 hover:cursor-pointer">
             <RouterLink :to="`/guidance/editcourse/${course.id}`">
               ✎
