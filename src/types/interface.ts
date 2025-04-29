@@ -80,7 +80,7 @@ export interface Meeting {
   id: number;
   name: string;
   date: Date;
-  description: string;
+  memo: string;
   grade: number;
   email: string;
 }

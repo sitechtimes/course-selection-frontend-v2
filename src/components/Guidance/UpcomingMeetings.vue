@@ -16,7 +16,7 @@
               class="ml-6 mt-2 list-disc"
             >
               {{
-                meeting.meetingDate.toLocaleTimeString([], {
+                meeting.date.toLocaleTimeString([], {
                   hour: "2-digit",
                   minute: "2-digit",
                 })
@@ -41,11 +41,12 @@ const todaysDate = new Date();
 
 const groupedStudentMeetings = computed(() =>
   userStore.meetings
-    .filter((meeting) => meeting.meetingDate > todaysDate)
-    .sort((a, b) => a.meetingDate.getTime() - b.meetingDate.getTime())
+    .filter((meeting) => meeting.date > todaysDate)
+    .sort((a, b) => a.date.getTime() - b.date.getTime())
     .reduce((acc, meeting) => {
-      (acc[meeting.meetingDate.toDateString()] ||= []).push(meeting);
+      (acc[meeting.date.toISOString()] ||= []).push(meeting);
       return acc;
     }, {})
 );
+console.log(groupedStudentMeetings)
 </script>

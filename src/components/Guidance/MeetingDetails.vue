@@ -48,7 +48,7 @@
               </svg>
               Date
             </h3>
-            <p class="ml-4 p-4">{{ meeting.meetingDate }}</p>
+            <p class="ml-4 p-4">{{ meeting.date }}</p>
           </div>
           <div class="pl-16">
             <h3
@@ -63,7 +63,7 @@
               Time
             </h3>
             <p class="ml-4 p-4">
-              {{ meeting.meetingDate.toLocaleTimeString() }}
+              {{ meeting.date.toLocaleTimeString() }}
             </p>
           </div>
         </div>
@@ -79,7 +79,7 @@
           </svg>
           Memo
         </h3>
-        <p class="ml-4 p-4">{{ meeting.description }}</p>
+        <p class="ml-4 p-4">{{ meeting.memo }}</p>
         <div></div>
         <div class="w-[60%] ml-4 mb-8 flex flex-row items-center">
           <div
