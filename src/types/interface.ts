@@ -79,7 +79,7 @@ export interface Flag {
 export interface Meeting {
   id: number;
   name: string;
-  meetingDate: Date;
+  date: Date;
   description: string;
   grade: number;
   email: string;

@@ -170,7 +170,7 @@ export const useUserStore = defineStore("user", () => {
     const data = await res.json();
 
     meetings.value = data.map((meeting: Meeting) => {
-      meeting.meetingDate = new Date(meeting.meetingDate);
+      meeting.date = new Date(meeting.date);
       return meeting;
     });
     meetingsFetched.value = true;
@@ -191,7 +191,7 @@ export const useUserStore = defineStore("user", () => {
     if (!res.ok) return await res.json();
     const data = await res.json();
     meetings.value = data.map((meeting: Meeting) => {
-      meeting.meetingDate = new Date(meeting.meetingDate);
+      meeting.date = new Date(meeting.date);
       return meeting;
     });
   }

@@ -152,23 +152,30 @@ const toggleEvent = (dateInfo: DateInfo) => {
 
 const renderCalendar = () => {
   const days = [];
-  const startOffsetDateUtc = firstDay.value;
+  const startOffsetDateUtc = firstDay.value; 
 
   for (let i = 0; i < 5; i++) {
     const todaysDate = new Date(startOffsetDateUtc);
     todaysDate.setUTCDate(startOffsetDateUtc.getUTCDate() + i);
+    todaysDate.setUTCHours(0, 0, 0, 0); 
 
     days.push({
-      todaysDate: todaysDate,
+      todaysDate: new Date(todaysDate),
       meetings: userStore.meetings
-        .filter(({ meetingDate }) => {
+        .filter((meeting) => { 
+          const meetingDate = new Date(meeting.date);
+          meetingDate.setUTCHours(0, 0, 0, 0);
           return (
             meetingDate.getUTCFullYear() === todaysDate.getUTCFullYear() &&
             meetingDate.getUTCMonth() === todaysDate.getUTCMonth() &&
             meetingDate.getUTCDate() === todaysDate.getUTCDate()
           );
         })
-        .sort((a, b) => a.meetingDate.getTime() - b.meetingDate.getTime()),
+        .sort((a, b) => {
+             const dateA = new Date(a.date);
+             const dateB = new Date(b.date);
+             return dateA.getTime() - dateB.getTime();
+        }),
     });
   }
   calendarData.value = days;
