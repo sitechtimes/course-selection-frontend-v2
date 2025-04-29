@@ -37,21 +37,21 @@
                 v-model="alteredCourse[key]"
                 :placeholder="String(course[key])"
                 :id="key"
-                class="border-2 border-black rounded-lg p-2 mb-4 hover:shadow-xl transition w-full"
+                class="border-2 border-black rounded-lg p-2 mb-4 w-full hover:shadow-xl transition"
               />
             </div>
             <textarea
               type="text"
-              rows="10"
+              rows="12"
               v-model="alteredCourse[key]"
               :placeholder="course[key]"
               :id="key"
-              class="border-2 border-black rounded-lg p-2 mb-4 form-textarea h-48 hover:shadow-2xl transition w-full"
+              class="border-2 border-black rounded-lg p-2 m-2 w-full hover:shadow-xl transition"
               v-else-if="key === 'description'"
             />
             <div
-              v-else
               class="flex items-center hover:shadow-xl w-min transition rounded-xl p-2 pl-3"
+              v-else
             >
               <input
                 type="checkbox"
@@ -67,7 +67,7 @@
           <div>
             <button
               type="submit"
-              class="p-5 border-2 border-black bg-white hover:bg-other-g rounded-xl shadow-md mt-2"
+              class="p-5 border-2 border-black bg-white hover:bg-other-g ransition rounded-xl shadow-md mt-2"
             >
               Submit
             </button>

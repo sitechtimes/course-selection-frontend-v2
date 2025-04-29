@@ -2,7 +2,9 @@
   <Suspense>
     <div>
       <div class="px-10 flex flex-col items-center justify-center gap-4">
-        <h1 class="p-6 text-3xl">{{ survey.grade }}th Grade Survey</h1>
+        <h1 class="p-6 text-3xl">
+          Editing the {{ survey.grade }}th Grade Survey
+        </h1>
       </div>
       <div class="justify-center flex">
         <form
@@ -49,7 +51,7 @@
             </label>
             <textarea
               type="text"
-              rows="2"
+              rows="5"
               v-model="alteredSurvey.questions[index].question"
               :id="`question-${index}`"
               class="border-2 border-black rounded-lg p-2 m-2 w-full hover:shadow-xl transition"

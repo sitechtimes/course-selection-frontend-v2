@@ -17,7 +17,7 @@
         :key="course.id"
         class="border-2 border-black"
       >
-        <tr class="hover:bg-[#ebebeb] transition-all">
+        <tr class="hover:bg-tertiary-g transition-all">
           <td class="p-4 hover:cursor-pointer">
             <RouterLink :to="`/guidance/editcourse/${course.id}`">
               ✎
@@ -39,8 +39,6 @@
 
 <script setup lang="ts">
 import { Course } from "../../types/interface";
-import { useRouter } from "vue-router";
-import { ref, computed, onMounted } from "vue";
 
 const props = defineProps<{ courses: Course[] }>();
 function displayGrades(course: Course): string {
@@ -53,6 +51,4 @@ function displayGrades(course: Course): string {
     .filter(Boolean)
     .join(", ");
 }
-
-const router = useRouter();
 </script>
