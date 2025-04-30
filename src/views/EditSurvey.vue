@@ -60,7 +60,7 @@
           <div>
             <button
               type="submit"
-              class="p-5 border-2 border-black bg-white hover:bg-other-g rounded-xl shadow-md hover:shadow-xl transition mt-2"
+              class="p-5 border-2 border-black bg-white hover:bg-tertiary-g transition rounded-xl shadow-md mt-5 w-full"
             >
               Submit
             </button>
