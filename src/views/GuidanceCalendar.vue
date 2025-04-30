@@ -1,7 +1,7 @@
 <template>
   <div class="grid content-center justify-center flex-wrap">
     <div class="container">
-      <div class="flex flex-row mb-8 text-5xl font-bold w-[90%]">
+      <div class="flex flex-row mb-5 text-5xl font-bold w-[90%]">
         <span
           class="arrow cursor-pointer text-2xl"
           id="prev"
@@ -21,6 +21,13 @@
           &#10095;
         </span>
       </div>
+      <button
+           @click="toggleWeekSelector"
+           class="ml-8 mb-5 text-sm px-3 py-1.5 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50"
+           title="Select Week"
+        >
+          Select Week
+      </button>
       <div class="flex flex-row gap-[7rem] mb-12">
         <div class="calendar w-full">
           <ul class="weeks bg-primary-g">
@@ -67,12 +74,19 @@
     </div>
     <CreateEvent v-if="showEvent" :todaysDate="createEventDate" />
     <MeetingDetails v-if="showDetails" :meeting="selectedMeeting" />
+    <WeekSelector
+        v-if="showWeekSelector"
+        :current-first-day="firstDay"
+        @week-selected="handleWeekSelected"
+        @close="toggleWeekSelector"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import UpcomingMeetings from "../components/Guidance/UpcomingMeetings.vue";
 import MeetingDetails from "../components/Guidance/MeetingDetails.vue";
+import WeekSelector from "../components/Guidance/WeekSelector.vue";
 import CreateEvent from "../components/Guidance/CreateEvent.vue";
 import { ref, onMounted, watchEffect, computed } from "vue";
 import { useUserStore } from "../stores/user";
@@ -85,8 +99,9 @@ const calendarData = ref<DateInfo[]>([]);
 
 const selectedMeeting = ref<Meeting>({} as Meeting);
 
-const showEvent = ref(false);
+const showWeekSelector = ref(false);
 const showDetails = ref(false);
+const showEvent = ref(false);
 const createEventDate = ref("");
 
 const userStore = useUserStore();
@@ -113,7 +128,7 @@ const months = [
   "December",
 ];
 
-let currentDate = new Date();
+const currentDate = new Date();
 
 const initialStartOfWeekLocal = new Date(currentDate);
 initialStartOfWeekLocal.setDate(
@@ -121,7 +136,7 @@ initialStartOfWeekLocal.setDate(
 );
 initialStartOfWeekLocal.setHours(0, 0, 0, 0);
 
-let firstDay = ref(
+const firstDay = ref(
   new Date(
     Date.UTC(
       initialStartOfWeekLocal.getFullYear(),
@@ -135,6 +150,10 @@ const displayedMonth = computed(() => firstDay.value.getUTCMonth());
 const displayedYear = computed(() => firstDay.value.getUTCFullYear());
 
 onMounted(() => renderCalendar());
+
+const toggleWeekSelector = () => {
+    showWeekSelector.value = !showWeekSelector.value;
+};
 
 const toggleDetails = (meeting: Meeting) => {
   selectedMeeting.value = meeting;
@@ -197,9 +216,19 @@ watchEffect(() => {
   renderCalendar();
 });
 
+const handleWeekSelected = (selectedStartOfWeekUtc: Date) => {
+    if (selectedStartOfWeekUtc instanceof Date && !isNaN(selectedStartOfWeekUtc.getTime())) {
+        firstDay.value = selectedStartOfWeekUtc; 
+    } else {
+        console.error("Invalid date received from WeekSelector:", selectedStartOfWeekUtc);
+    }
+    showWeekSelector.value = false;
+};
+
 const changeWeek = (next: boolean) => {
-  firstDay.value = new Date((firstDay.value).setUTCDate(firstDay.value.getUTCDate() + (next ? 7 : -7)));
-  ;
+  const newFirstDay = new Date(firstDay.value);
+  newFirstDay.setUTCDate(newFirstDay.getUTCDate() + (next ? 7 : -7));
+  firstDay.value = newFirstDay;
 };
 </script>
 <style scoped>
