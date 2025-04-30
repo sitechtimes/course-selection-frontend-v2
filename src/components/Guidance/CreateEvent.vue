@@ -186,7 +186,12 @@ function submit() {
   nameError.value = !selectedStudent.value;
 
   if (dateError.value || timeError.value || nameError.value) return;
-  const meetingISO = new Date(date.value + "T" + time.value).toISOString();
+  const meetingDateLocal = new Date(date.value);
+  const [hours, minutes] = time.value.split(':').map(Number);
+  meetingDateLocal.setHours(hours, minutes, 0, 0);
+  const meetingISO = meetingDateLocal.toISOString();
+
+  console.log("Generated ISO String:", meetingISO);   
   id = studentList.value.find(({ email }) =>
     selectedStudent.value.includes(email)
   )!.id;

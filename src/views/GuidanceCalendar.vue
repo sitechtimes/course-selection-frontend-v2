@@ -45,12 +45,12 @@
                 @click="toggleDetails(meeting)"
               >
                 <p
-                  :class="`w-[100%] text-center truncate rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md ${
+                  :class="`w-[100%] text-center rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md ${
                     classColor[meeting.grade]
                   }`"
                 >
                 {{ meeting.student.firstName }}
-                {{ meeting.student.lastName }} | {{ formatDisplayTime(meeting.date) }}
+                {{ meeting.student.lastName }}  {{ formatDisplayTime(meeting.date) }}
                 </p>
               </div>
               <button
