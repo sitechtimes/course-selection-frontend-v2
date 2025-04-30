@@ -1,7 +1,7 @@
 <template>
   <div class="grid content-center justify-center flex-wrap">
     <div class="container">
-      <div class="flex flex-row mb-8 text-5xl font-bold w-[70%]">
+      <div class="flex flex-row mb-8 text-5xl font-bold w-[90%]">
         <span
           class="arrow cursor-pointer text-2xl"
           id="prev"
@@ -49,7 +49,8 @@
                     classColor[meeting.grade]
                   }`"
                 >
-                  {{ formatDisplayTime(meeting.date) }}
+                {{ meeting.student.firstName }}
+                {{ meeting.student.lastName }} | {{ formatDisplayTime(meeting.date) }}
                 </p>
               </div>
               <button

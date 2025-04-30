@@ -8,7 +8,7 @@
     <div class="p-4">
       <div class="overflow-y-auto max-h-100">
         <div v-for="(meetings, date) in groupedStudentMeetings" :key="date">
-          <h2 class="font-bold text-lg">{{ date }}</h2>
+          <h2 class="font-bold text-lg">{{ String(date).split("T")[0] }}</h2>
           <ul class="my-2">
             <li
               v-for="(meeting, index) in meetings"
@@ -21,8 +21,8 @@
                   minute: "2-digit",
                 })
               }}
-              -
-              {{ meeting.name }}
+              - Meeting with {{ meeting.student.firstName }}
+              {{ meeting.student.lastName }}
             </li>
           </ul>
         </div>
@@ -43,10 +43,9 @@ const groupedStudentMeetings = computed(() =>
   userStore.meetings
     .filter((meeting) => meeting.date > todaysDate)
     .sort((a, b) => a.date.getTime() - b.date.getTime())
-    .reduce((acc, meeting) => {
+    .reduce((acc: { [key: string]: Meeting[] }, meeting) => {
       (acc[meeting.date.toISOString()] ||= []).push(meeting);
       return acc;
-    }, {})
+    }, {} as { [key: string]: Meeting[] })
 );
-console.log(groupedStudentMeetings)
 </script>
