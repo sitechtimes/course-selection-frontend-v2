@@ -53,8 +53,9 @@
               type="text"
               rows="5"
               v-model="alteredSurvey.questions[index].question"
+              :placeholder="survey.questions[index].question"
               :id="`question-${index}`"
-              class="border-2 border-black rounded-lg p-2 m-2 w-full hover:shadow-xl transition"
+              class="border-2 border-black rounded-lg p-2 m-2 w-full hover:shadow-xl transition placeholder-gray-500 placeholder-opacity-35"
             />
           </div>
           <div>
@@ -79,7 +80,6 @@ import { useUserStore } from "../stores/user";
 
 document.title = "Course List | SITHS Course Selection";
 
-const alteredSurvey = computed(() => survey.value || ({} as Survey));
 const router = useRouter();
 const route = useRoute();
 const surveyGrade = route.params.grade;
@@ -93,9 +93,11 @@ async function findSurvey() {
 }
 
 const survey = ref<Survey>({} as Survey);
+const alteredSurvey = ref<Survey>({} as Survey);
 onMounted(async () => {
   try {
     survey.value = await findSurvey();
+    alteredSurvey.value = await findSurvey();
     const originalDate = alteredSurvey.value.dueDate;
     dueDateDate.value = originalDate.split("T")[0]; // YYYY--MM--DD
     dueDateTime.value = originalDate.split("T")[1].substring(0, 5); // HH:MM., stripped timezone

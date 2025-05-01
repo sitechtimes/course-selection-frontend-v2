@@ -41,14 +41,18 @@
 import { Course } from "../../types/interface";
 
 const props = defineProps<{ courses: Course[] }>();
-function displayGrades(course: Course): string {
-  return [
-    course.freshman ? "9" : null,
-    course.sophomore ? "10" : null,
-    course.junior ? "11" : null,
-    course.senior ? "12" : null,
-  ]
-    .filter(Boolean)
-    .join(", ");
+function displayGrades(course: Course) {
+  if (course.freshman || course.sophomore || course.junior || course.senior) {
+    return [
+      course.freshman ? "9" : null,
+      course.sophomore ? "10" : null,
+      course.junior ? "11" : null,
+      course.senior ? "12" : null,
+    ]
+      .filter(Boolean)
+      .join(", ");
+  } else {
+    return "n/a";
+  }
 }
 </script>

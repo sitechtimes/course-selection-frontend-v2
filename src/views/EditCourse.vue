@@ -37,7 +37,7 @@
                 v-model="alteredCourse[key]"
                 :placeholder="String(course[key])"
                 :id="key"
-                class="border-2 border-black rounded-lg p-2 mb-4 w-full hover:shadow-xl transition"
+                class="border-2 border-black rounded-lg p-2 mb-4 w-full hover:shadow-xl transition placeholder-gray-500 placeholder-opacity-35"
               />
             </div>
             <textarea
@@ -47,12 +47,12 @@
               v-model="alteredCourse[key]"
               :placeholder="course[key]"
               :id="key"
-              class="border-2 border-black rounded-lg p-2 m-2 w-full hover:shadow-xl transition"
+              class="border-2 border-black rounded-lg p-2 m-2 w-full hover:shadow-xl transition placeholder-gray-500 placeholder-opacity-35"
               v-else-if="key === 'description'"
             />
           </div>
           <fieldset
-            class="overflow-auto border-solid border-black rounded-xl border-2 p-2 mt-3"
+            class="flex flex-row flex-wrap overflow-auto border-solid border-black rounded-xl border-2 p-2 mt-3"
           >
             <legend class="text-2xl font-bold text-center">
               Course Options
@@ -60,15 +60,15 @@
             <div
               v-for="bool in courseBools"
               :key="bool"
-              class="flex flex-row items-center hover:shadow-xl transition rounded-xl p-2 pl-3 pb-2"
+              class="items-center rounded-xl p-2 pl-3 pb-2 w-1/2"
             >
               <input
                 type="checkbox"
                 :id="bool"
                 v-model="alteredCourse[bool]"
-                class="text-secondary-g border-black rounded focus:ring-other-g focus:ring-offset-0 cursor-pointer transition"
+                class="text-secondary-g border-black rounded focus:ring-other-g focus:ring-offset-0 cursor-pointer mb-2"
               />
-              <label :for="bool" class="ml-2 text-2xl">{{
+              <label :for="bool" class="ml-2 text-2xl transition">{{
                 bool[0].toUpperCase() + bool.slice(1)
               }}</label>
             </div>
