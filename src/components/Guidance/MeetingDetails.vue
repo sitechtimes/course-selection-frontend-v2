@@ -34,7 +34,8 @@
           </svg>
           Student
         </h3>
-        <p class="ml-4 p-4">{{ meeting.name }}</p>
+        <p class="ml-4 p-4">{{ meeting.student.firstName }}
+          {{ meeting.student.lastName }}</p>
         <div class="flex flex-row items-end">
           <div>
             <h3
@@ -48,7 +49,7 @@
               </svg>
               Date
             </h3>
-            <p class="ml-4 p-4">{{ meeting.date }}</p>
+            <p class="ml-4 p-4">{{ meeting.date.toLocaleDateString() }}</p>
           </div>
           <div class="pl-16">
             <h3
