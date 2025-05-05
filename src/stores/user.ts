@@ -162,6 +162,12 @@ export const useUserStore = defineStore("user", () => {
     if (!res.ok) throw new Error("Failed to fetch surveys");
     return data;
   }
+  async function getQuestions() {
+    const res = await fetchData("guidance/surveyquestions/");
+    const data = await res.json();
+    if (!res.ok) throw new Error("Failed to fetch surveys");
+    return data;
+  }
   async function changeFlag(
     student: GuidanceStudent,
     flag: string,
@@ -259,5 +265,6 @@ export const useUserStore = defineStore("user", () => {
     getCourses,
     getSurveys,
     fetchData,
+    getQuestions,
   };
 });
