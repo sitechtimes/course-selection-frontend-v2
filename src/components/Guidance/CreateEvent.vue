@@ -64,6 +64,7 @@
               v-model="time"
               placeholder="Time"
             />
+            <p class="ml-6 mt-1">Period: {{ period }}</p>
             <p v-if="timeError" class="error text-red-600 ml-6 mt-1">
               Field empty/invalid
             </p>
@@ -149,7 +150,7 @@
 <script setup lang="ts">
 import { GuidanceStudent } from "../../types/interface";
 import { useUserStore } from "../../stores/user";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 
 const props = defineProps<{ todaysDate: string }>();
 const userStore = useUserStore();
@@ -170,14 +171,47 @@ const timeError = ref(false);
 const nameError = ref(false);
 const notify = ref(false);
 const show = ref(true);
-
 const dateElement = ref();
+
+const periodsMap = [
+  { startTime: "08:00", endTime: "08:41", period: 1 },
+  { startTime: "08:42", endTime: "09:26", period: 2 },
+  { startTime: "09:27", endTime: "10:17", period: 3 },
+  { startTime: "10:18", endTime: "11:02", period: 4 },
+  { startTime: "11:03", endTime: "11:47", period: 5 },
+  { startTime: "11:48", endTime: "12:32", period: 6 },
+  { startTime: "12:33", endTime: "13:17", period: 7 },
+  { startTime: "13:18", endTime: "14:02", period: 8 },
+  { startTime: "14:03", endTime: "14:47", period: 9 },
+];
 
 onMounted(() => {
   studentList.value = userStore.allStudents;
   date.value = props.todaysDate!;
   dateElement.value.type = "date";
   dateElement.value.value = props.todaysDate!;
+});
+
+const period = computed(() => {
+  const currentTime = time.value;
+
+  const [checkHours, checkMinutes] = currentTime.split(":").map(Number);
+  const checkTotalMinutes = checkHours * 60 + checkMinutes;
+  for (const period of periodsMap) {
+    const [startHours, startMinutes] = period.startTime.split(":").map(Number);
+    const [endHours, endMinutes] = period.endTime.split(":").map(Number);
+
+    const startTotalMinutes = startHours * 60 + startMinutes;
+    const endTotalMinutes = endHours * 60 + endMinutes;
+
+    if (
+      checkTotalMinutes >= startTotalMinutes &&
+      checkTotalMinutes <= endTotalMinutes
+    ) {
+      return period.period;
+    }
+  }
+  return "N/A";
 });
 
 function submit() {
@@ -187,11 +221,11 @@ function submit() {
 
   if (dateError.value || timeError.value || nameError.value) return;
   const meetingDateLocal = new Date(date.value);
-  const [hours, minutes] = time.value.split(':').map(Number);
+  const [hours, minutes] = time.value.split(":").map(Number);
   meetingDateLocal.setHours(hours, minutes, 0, 0);
   const meetingISO = meetingDateLocal.toISOString();
 
-  console.log("Generated ISO String:", meetingISO);   
+  console.log("Generated ISO String:", meetingISO);
   id = studentList.value.find(({ email }) =>
     selectedStudent.value.includes(email)
   )!.id;
@@ -201,12 +235,14 @@ function submit() {
     id,
     false,
     meetingISO,
+    period.value,
     description.value,
     notify.value
   );
   form.value.reset();
   show.value = !show.value;
 }
+
 </script>
 
 <style scoped>
