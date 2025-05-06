@@ -43,6 +43,7 @@
       </button>
       <button
         v-for="n in visiblePages"
+        :key="n"
         @click="updatePagination(n)"
         :class="
           currentPage === n ? 'bg-[#cdeeb4] focus:bg-[#cdeeb4]' : 'bg-[#ebebeb]'

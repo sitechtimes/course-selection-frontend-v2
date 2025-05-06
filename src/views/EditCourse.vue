@@ -41,7 +41,6 @@
               />
             </div>
             <textarea
-              @click="console.log(course)"
               type="text"
               rows="12"
               v-model="alteredCourse[key]"
@@ -93,8 +92,6 @@ import { useRoute, useRouter } from "vue-router";
 import { Course } from "../types/interface";
 import { useUserStore } from "../stores/user";
 
-document.title = "Course List | SITHS Course Selection";
-
 const router = useRouter();
 const userStore = useUserStore();
 const route = useRoute();
@@ -114,6 +111,7 @@ onMounted(async () => {
   try {
     course.value = await findCourse();
     alteredCourse.value = await findCourse();
+    document.title = `Editing ${course.value.name} | SITHS Course Selection`;
     courseKeys.value = Object.keys(course.value).filter(
       (key) =>
         course.value &&

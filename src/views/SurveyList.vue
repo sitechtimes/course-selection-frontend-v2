@@ -117,10 +117,11 @@ const userStore = useUserStore();
 const menuArray = [
   { sortBy: "az", text: "Alphabetical (A-Z)" },
   { sortBy: "za", text: "Alphabetical (Z-A)" },
+  { sortBy: "id", text: "Numerical" },
 ] as SortArray[];
 const surveys = ref<Survey[]>([]);
 const questions = ref<Question[]>([]);
-const sortBy = ref<(typeof menuArray)[number]["sortBy"]>("az");
+const sortBy = ref<(typeof menuArray)[number]["sortBy"]>("id");
 
 onMounted(async () => {
   try {
@@ -141,6 +142,7 @@ function filterByCategory(questions: Question[], sortBy: string) {
     return questions.sort((a, b) => a.question.localeCompare(b.question));
   if (sortBy === "za")
     return questions.sort((a, b) => b.question.localeCompare(a.question));
+  if (sortBy === "id") return questions.sort((a, b) => a.id - b.id);
   return questions;
 }
 function applyFilters(sortBy: string, search: string) {

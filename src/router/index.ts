@@ -53,6 +53,11 @@ const router = createRouter({
           component: () => import("../views/EditSurvey.vue"),
         },
         {
+          path: "editQuestion/:id",
+          name: "editQuestion",
+          component: () => import("../views/EditQuestion.vue"),
+        },
+        {
           path: "studentlist",
           name: "guidanceStudentlist",
           component: () => import("../views/GuidanceStudentList.vue"),
