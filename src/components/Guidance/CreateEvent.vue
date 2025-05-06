@@ -150,7 +150,7 @@
 <script setup lang="ts">
 import { GuidanceStudent } from "../../types/interface";
 import { useUserStore } from "../../stores/user";
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, onMounted, computed } from "vue";
 
 const props = defineProps<{ todaysDate: string }>();
 const userStore = useUserStore();
@@ -235,7 +235,6 @@ function submit() {
     id,
     false,
     meetingISO,
-    period.value,
     description.value,
     notify.value
   );

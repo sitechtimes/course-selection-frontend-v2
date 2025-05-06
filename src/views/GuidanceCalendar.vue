@@ -22,11 +22,11 @@
         </span>
       </div>
       <button
-           @click="toggleWeekSelector"
-           class="ml-8 mb-5 text-sm px-3 py-1.5 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50"
-           title="Select Week"
-        >
-          Select Week
+        @click="toggleWeekSelector"
+        class="ml-8 mb-5 text-sm px-3 py-1.5 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50"
+        title="Select Week"
+      >
+        Select Week
       </button>
       <div class="flex flex-row gap-[7rem] mb-12">
         <div class="calendar w-full">
@@ -56,8 +56,10 @@
                     classColor[meeting.grade]
                   }`"
                 >
-                {{ meeting.student.firstName }}
-                {{ meeting.student.lastName }}  {{ formatDisplayTime(meeting.date) }}
+                  {{ meeting.student.firstName }}
+                  {{ meeting.student.lastName }}
+                  {{ formatDisplayTime(meeting.date) }} Period
+                  {{ period(meeting.date) }}
                 </p>
               </div>
               <button
@@ -75,10 +77,10 @@
     <CreateEvent v-if="showEvent" :todaysDate="createEventDate" />
     <MeetingDetails v-if="showDetails" :meeting="selectedMeeting" />
     <WeekSelector
-        v-if="showWeekSelector"
-        :current-first-day="firstDay"
-        @week-selected="handleWeekSelected"
-        @close="toggleWeekSelector"
+      v-if="showWeekSelector"
+      :current-first-day="firstDay"
+      @week-selected="handleWeekSelected"
+      @close="toggleWeekSelector"
     />
   </div>
 </template>
@@ -128,6 +130,18 @@ const months = [
   "December",
 ];
 
+const periodsMap = [
+  { startTime: "08:00", endTime: "08:41", period: 1 },
+  { startTime: "08:42", endTime: "09:26", period: 2 },
+  { startTime: "09:27", endTime: "10:17", period: 3 },
+  { startTime: "10:18", endTime: "11:02", period: 4 },
+  { startTime: "11:03", endTime: "11:47", period: 5 },
+  { startTime: "11:48", endTime: "12:32", period: 6 },
+  { startTime: "12:33", endTime: "13:17", period: 7 },
+  { startTime: "13:18", endTime: "14:02", period: 8 },
+  { startTime: "14:03", endTime: "14:47", period: 9 },
+];
+
 const currentDate = new Date();
 
 const initialStartOfWeekLocal = new Date(currentDate);
@@ -152,7 +166,7 @@ const displayedYear = computed(() => firstDay.value.getUTCFullYear());
 onMounted(() => renderCalendar());
 
 const toggleWeekSelector = () => {
-    showWeekSelector.value = !showWeekSelector.value;
+  showWeekSelector.value = !showWeekSelector.value;
 };
 
 const toggleDetails = (meeting: Meeting) => {
@@ -172,17 +186,17 @@ const toggleEvent = (dateInfo: DateInfo) => {
 
 const renderCalendar = () => {
   const days = [];
-  const startOffsetDateUtc = firstDay.value; 
+  const startOffsetDateUtc = firstDay.value;
 
   for (let i = 0; i < 5; i++) {
     const todaysDate = new Date(startOffsetDateUtc);
     todaysDate.setUTCDate(startOffsetDateUtc.getUTCDate() + i);
-    todaysDate.setUTCHours(0, 0, 0, 0); 
+    todaysDate.setUTCHours(0, 0, 0, 0);
 
     days.push({
       todaysDate: new Date(todaysDate),
       meetings: userStore.meetings
-        .filter((meeting) => { 
+        .filter((meeting) => {
           const meetingDate = new Date(meeting.date);
           meetingDate.setUTCHours(0, 0, 0, 0);
           return (
@@ -192,9 +206,9 @@ const renderCalendar = () => {
           );
         })
         .sort((a, b) => {
-             const dateA = new Date(a.date);
-             const dateB = new Date(b.date);
-             return dateA.getTime() - dateB.getTime();
+          const dateA = new Date(a.date);
+          const dateB = new Date(b.date);
+          return dateA.getTime() - dateB.getTime();
         }),
     });
   }
@@ -205,10 +219,10 @@ const formatDisplayTime = (isoString: Date) => {
   const date = new Date(isoString);
   let hours = date.getHours();
   const minutes = date.getMinutes();
-  const ampm = hours >= 12 ? 'PM' : 'AM';
+  const ampm = hours >= 12 ? "PM" : "AM";
   hours = hours % 12;
   hours = hours ? hours : 12;
-  const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+  const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
   return `${hours}:${formattedMinutes} ${ampm}`;
 };
 
@@ -216,13 +230,40 @@ watchEffect(() => {
   renderCalendar();
 });
 
-const handleWeekSelected = (selectedStartOfWeekUtc: Date) => {
-    if (selectedStartOfWeekUtc instanceof Date && !isNaN(selectedStartOfWeekUtc.getTime())) {
-        firstDay.value = selectedStartOfWeekUtc; 
-    } else {
-        console.error("Invalid date received from WeekSelector:", selectedStartOfWeekUtc);
+const period = (time: Date) => {
+  const currentTime = `${String(new Date().getHours()).padStart(2, '0')}:${String(new Date().getMinutes()).padStart(2, '0')}`;
+  const [checkHours, checkMinutes] = currentTime.split(":").map(Number);
+  const checkTotalMinutes = checkHours * 60 + checkMinutes;
+  for (const period of periodsMap) {
+    const [startHours, startMinutes] = period.startTime.split(":").map(Number);
+    const [endHours, endMinutes] = period.endTime.split(":").map(Number);
+
+    const startTotalMinutes = startHours * 60 + startMinutes;
+    const endTotalMinutes = endHours * 60 + endMinutes;
+
+    if (
+      checkTotalMinutes >= startTotalMinutes &&
+      checkTotalMinutes <= endTotalMinutes
+    ) {
+      return period.period;
     }
-    showWeekSelector.value = false;
+  }
+  return "N/A";
+};
+
+const handleWeekSelected = (selectedStartOfWeekUtc: Date) => {
+  if (
+    selectedStartOfWeekUtc instanceof Date &&
+    !isNaN(selectedStartOfWeekUtc.getTime())
+  ) {
+    firstDay.value = selectedStartOfWeekUtc;
+  } else {
+    console.error(
+      "Invalid date received from WeekSelector:",
+      selectedStartOfWeekUtc
+    );
+  }
+  showWeekSelector.value = false;
 };
 
 const changeWeek = (next: boolean) => {
