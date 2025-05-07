@@ -1,6 +1,6 @@
 <template>
   <div class="grid content-center justify-center flex-wrap">
-    <div class="container">
+    <div class="container w-screen">
       <div class="flex flex-row mb-5 text-5xl font-bold w-[90%]">
         <span
           class="arrow cursor-pointer text-2xl"
@@ -28,8 +28,8 @@
       >
         Select Week
       </button>
-      <div class="flex flex-row gap-[7rem] mb-12">
-        <div class="calendar w-full">
+      <div class="flex flex-col lg:flex-row gap-4 lg:gap-8 mb-12">
+        <div class="calendar w-full lg:w-2/3 xl:w-3/4">
           <ul class="weeks bg-primary-g">
             <li>Mon</li>
             <li>Tue</li>
@@ -70,7 +70,7 @@
               </button>
             </li>
           </ul>
-        </div>
+        </div class="w-full mt-8 lg:mt-0">
         <UpcomingMeetings />
       </div>
     </div>
@@ -97,14 +97,12 @@ import { Meeting } from "../types/interface";
 
 document.title = "Calendar & Events | SITHS Course Selection";
 
-const calendarData = ref<DateInfo[]>([]);
-
 const selectedMeeting = ref<Meeting>({} as Meeting);
-
+const calendarData = ref<DateInfo[]>([]);
 const showWeekSelector = ref(false);
+const createEventDate = ref("");
 const showDetails = ref(false);
 const showEvent = ref(false);
-const createEventDate = ref("");
 
 const userStore = useUserStore();
 
@@ -231,13 +229,10 @@ watchEffect(() => {
 });
 
 const period = (time: Date) => {
-  const currentTime = `${String(new Date().getHours()).padStart(2, '0')}:${String(new Date().getMinutes()).padStart(2, '0')}`;
-  const [checkHours, checkMinutes] = currentTime.split(":").map(Number);
-  const checkTotalMinutes = checkHours * 60 + checkMinutes;
+  const checkTotalMinutes = time.getHours() * 60 + time.getMinutes();
   for (const period of periodsMap) {
     const [startHours, startMinutes] = period.startTime.split(":").map(Number);
     const [endHours, endMinutes] = period.endTime.split(":").map(Number);
-
     const startTotalMinutes = startHours * 60 + startMinutes;
     const endTotalMinutes = endHours * 60 + endMinutes;
 
@@ -272,7 +267,46 @@ const changeWeek = (next: boolean) => {
   firstDay.value = newFirstDay;
 };
 </script>
+
+
 <style scoped>
+@media (max-width: 767px) {
+  .calendar .weeks,
+  .calendar .days {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+
+  .calendar .weeks li,
+  .calendar .days li {
+    min-width: 90px;
+  }
+}
+
+@media (min-width: 768px) {
+  .calendar li {
+    width: calc(100% / 5);
+    flex: 1 1 0%;
+    min-width: 0;
+    font-size: 1.07rem;
+  }
+
+  .weeks li {
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+    font-weight: 800;
+    font-size: 1.2rem;
+  }
+
+  .calendar .days li {
+    min-height: 10rem;
+  }
+
+  .days li {
+    font-size: 0.9rem;
+  }
+}
+
 .calendar ul {
   display: flex;
   flex-wrap: wrap;
@@ -285,14 +319,11 @@ const changeWeek = (next: boolean) => {
   font-size: 1.07rem;
 }
 
-.weeks li {
+.calendar .weeks li {
   text-align: center;
   padding-top: 0.3rem;
   padding-bottom: 0.3rem;
   border: 1px solid grey;
-}
-
-.calendar .weeks li {
   font-weight: 800;
   font-size: 1.2rem;
   cursor: default;
@@ -300,30 +331,7 @@ const changeWeek = (next: boolean) => {
 
 .calendar .days li {
   text-align: end;
-}
-
-.days li {
-  border: grey 1px solid;
+  border: 1px solid grey;
   font-size: 0.9rem;
-}
-
-.days li:hover {
-  display: block;
-}
-
-.days li.inactive {
-  color: #aaa;
-}
-
-.days li.active {
-  color: #fff;
-}
-
-.days li.active::before {
-  background: #9b59b6;
-}
-
-.days li:not(.active):hover::before {
-  background: #f2f2f2;
 }
 </style>

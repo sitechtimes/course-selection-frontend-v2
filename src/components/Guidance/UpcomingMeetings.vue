@@ -1,5 +1,5 @@
 <template>
-  <div class="w-[25vw] border border-gray-500 rounded-md">
+  <div class="flex-1 basis-0 min-w-0 border border-gray-500 rounded-md">
     <div class="border-b border-gray-500">
       <h1 class="py-2 px-4 text-center font-extrabold text-2xl">
         Upcoming Meetings
