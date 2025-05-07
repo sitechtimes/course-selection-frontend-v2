@@ -2,9 +2,7 @@
   <Suspense>
     <div>
       <div class="px-10 flex flex-col items-center justify-center gap-4">
-        <h1 class="p-6 text-3xl">
-          {{ question.question }}
-        </h1>
+        <h1 class="p-6 text-3xl">Question {{ question.id }}</h1>
       </div>
       <div class="flex justify-center">
         <form
@@ -12,7 +10,7 @@
           @submit.prevent="
             () => {
               userStore.fetchData(
-                'guidance/editquestion/',
+                'guidance/surveyquestions/',
                 'PUT',
                 alteredQuestion
               );
@@ -37,13 +35,30 @@
               "
             >
               <select
+                v-if="key !== 'classReferenced'"
                 type="text"
-                v-model="alteredQuestion[key]"
-                :placeholder="String(question[key])"
                 :id="key"
+                v-model="alteredQuestion[key]"
                 class="border-2 border-black rounded-lg p-2 mb-4 w-full hover:shadow-xl transition placeholder-gray-500 placeholder-opacity-35"
               >
-                <option>Hi</option>
+                <option v-for="option in potentialOptions[key]" :key="option">
+                  {{ option }}
+                </option>
+              </select>
+              <select
+                v-if="key === 'classReferenced'"
+                type="text"
+                :id="key"
+                v-model="alteredQuestion['classReferenced']['name']"
+                @click="
+                  console.log(alteredQuestion),
+                    console.log(alteredQuestion['classReferenced'])
+                "
+                class="border-2 border-black rounded-lg p-2 mb-4 w-full hover:shadow-xl transition placeholder-gray-500 placeholder-opacity-35"
+              >
+                <option v-for="option in potentialOptions[key]" :key="option">
+                  {{ option }}
+                </option>
               </select>
             </div>
             <textarea
@@ -74,9 +89,8 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { Question } from "../types/interface";
+import { Question, Course } from "../types/interface";
 import { useUserStore } from "../stores/user";
-
 const router = useRouter();
 const userStore = useUserStore();
 const route = useRoute();
@@ -90,22 +104,49 @@ async function findQuestion() {
 }
 
 const question = ref({} as Question);
+const courses = ref({} as Course);
 const questionKeys = ref([] as (keyof Question)[]);
 const alteredQuestion = ref({} as Question);
+const potentialOptions = ref({
+  questionType: [
+    "BOOLEAN",
+    "FINAL",
+    "NOTE",
+    "GENERAL",
+    "DROPDOWN",
+    "ENGLISH",
+    "SS",
+    "MATH",
+    "SCIENCE",
+    "LANG",
+    "TECH",
+    "ART",
+    "PE",
+  ] as Question["questionType"][],
+  status: ["OPTIONAL", "STANDARD", "CLASS"] as Question["status"][],
+});
 
 onMounted(async () => {
   try {
+    courses.value = await userStore.getCourses();
+    console.log(courses.value);
+    potentialOptions.value = {
+      ...potentialOptions.value,
+      classReferenced: courses.value.map(
+        (course) => course.name
+      ) as Course["name"][],
+    };
+    console.log(potentialOptions.value);
     question.value = await findQuestion();
     alteredQuestion.value = await findQuestion();
-    console.log(question.value);
     questionKeys.value = Object.keys(question.value).filter(
       (key) =>
         question.value &&
         key !== "id" &&
         key !== "createdAt" &&
         typeof question.value[key as keyof Question] !== "boolean" &&
-        typeof question.value[key as keyof Question] !== "object"
-    ) as (keyof Course)[];
+        key !== "options"
+    ) as (keyof Question)[];
   } catch (error) {
     console.error(error);
   }

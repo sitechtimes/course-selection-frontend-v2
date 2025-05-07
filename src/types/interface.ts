@@ -56,12 +56,13 @@ type Subject =
   | "ART"
   | "PE";
 
+type classReferenced = Pick<Course, "id" | "name" | "subject">;
 export interface Question {
   id: number;
   question: string;
   questionType: "BOOLEAN" | "FINAL" | "NOTE" | "GENERAL" | "DROPDOWN" | Subject;
   status: "OPTIONAL" | "STANDARD" | "CLASS";
-  classReferenced: Course | null;
+  classReferenced: classReferenced | null;
   options: string[] | null;
 }
 
