@@ -36,7 +36,6 @@
             >
               <select
                 v-if="key !== 'classReferenced'"
-                type="text"
                 :id="key"
                 v-model="alteredQuestion[key]"
                 class="border-2 border-black rounded-lg p-2 mb-4 w-full hover:shadow-xl transition placeholder-gray-500 placeholder-opacity-35"
@@ -46,13 +45,27 @@
                 </option>
               </select>
               <select
+                @change.prevent="
+                  () => {
+                    let classToRefer = courses.find(
+                      (course) => course.name === selectedClass
+                    );
+                    alteredQuestion['classReferenced'] = classToRefer
+                      ? {
+                          id: classToRefer.id,
+                          name: classToRefer.name,
+                          subject: classToRefer.subject,
+                        }
+                      : null;
+                  }
+                "
                 v-if="key === 'classReferenced'"
-                type="text"
                 :id="key"
-                v-model="alteredQuestion['classReferenced']['name']"
-                @click="
-                  console.log(alteredQuestion),
-                    console.log(alteredQuestion['classReferenced'])
+                v-model="selectedClass"
+                :placeholder="
+                  alteredQuestion['classReferenced']
+                    ? alteredQuestion['classReferenced']['name']
+                    : 'n/a'
                 "
                 class="border-2 border-black rounded-lg p-2 mb-4 w-full hover:shadow-xl transition placeholder-gray-500 placeholder-opacity-35"
               >
@@ -95,6 +108,7 @@ const router = useRouter();
 const userStore = useUserStore();
 const route = useRoute();
 const questionId = route.params.id;
+const selectedClass = ref("" as Course["name"]);
 
 async function findQuestion() {
   const questions = await userStore.getQuestions();
@@ -129,14 +143,12 @@ const potentialOptions = ref({
 onMounted(async () => {
   try {
     courses.value = await userStore.getCourses();
-    console.log(courses.value);
     potentialOptions.value = {
       ...potentialOptions.value,
       classReferenced: courses.value.map(
         (course) => course.name
       ) as Course["name"][],
     };
-    console.log(potentialOptions.value);
     question.value = await findQuestion();
     alteredQuestion.value = await findQuestion();
     questionKeys.value = Object.keys(question.value).filter(
