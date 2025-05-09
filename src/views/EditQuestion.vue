@@ -40,37 +40,27 @@
                 v-model="alteredQuestion[key]"
                 class="border-2 border-black rounded-lg p-2 mb-4 w-full hover:shadow-xl transition placeholder-gray-500 placeholder-opacity-35"
               >
-                <option v-for="option in potentialOptions[key]" :key="option">
+                <option
+                  v-for="option in potentialOptions[key]"
+                  :key="option"
+                  :value="option"
+                >
                   {{ option }}
                 </option>
               </select>
               <select
-                @change.prevent="
-                  () => {
-                    let classToRefer = courses.find(
-                      (course) => course.name === selectedClass
-                    );
-                    alteredQuestion['classReferenced'] = classToRefer
-                      ? {
-                          id: classToRefer.id,
-                          name: classToRefer.name,
-                          subject: classToRefer.subject,
-                        }
-                      : null;
-                  }
-                "
-                v-if="key === 'classReferenced'"
+                v-if="key === 'classReferenced' && courses"
+                @click="console.log(alteredQuestion)"
                 :id="key"
-                v-model="selectedClass"
-                :placeholder="
-                  alteredQuestion['classReferenced']
-                    ? alteredQuestion['classReferenced']['name']
-                    : 'n/a'
-                "
+                v-model="alteredQuestion.classReferenced"
                 class="border-2 border-black rounded-lg p-2 mb-4 w-full hover:shadow-xl transition placeholder-gray-500 placeholder-opacity-35"
               >
-                <option v-for="option in potentialOptions[key]" :key="option">
-                  {{ option }}
+                <option
+                  v-for="course in courses"
+                  :key="course.id"
+                  :value="course.id"
+                >
+                  {{ course.name }}
                 </option>
               </select>
             </div>
@@ -108,7 +98,6 @@ const router = useRouter();
 const userStore = useUserStore();
 const route = useRoute();
 const questionId = route.params.id;
-const selectedClass = ref("" as Course["name"]);
 
 async function findQuestion() {
   const questions = await userStore.getQuestions();
@@ -123,10 +112,9 @@ const questionKeys = ref([] as (keyof Question)[]);
 const alteredQuestion = ref({} as Question);
 const potentialOptions = ref({
   questionType: [
-    "BOOLEAN",
     "FINAL",
-    "NOTE",
     "GENERAL",
+    "BOOLEAN",
     "DROPDOWN",
     "ENGLISH",
     "SS",
@@ -143,12 +131,6 @@ const potentialOptions = ref({
 onMounted(async () => {
   try {
     courses.value = await userStore.getCourses();
-    potentialOptions.value = {
-      ...potentialOptions.value,
-      classReferenced: courses.value.map(
-        (course) => course.name
-      ) as Course["name"][],
-    };
     question.value = await findQuestion();
     alteredQuestion.value = await findQuestion();
     questionKeys.value = Object.keys(question.value).filter(
