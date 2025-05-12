@@ -84,6 +84,7 @@ export interface Meeting {
   grade: number;
   email: string;
   student: string;
+  period: number;
 }
 
 export interface DateInfo {

@@ -58,7 +58,7 @@
                 >
                   {{ meeting.student }}
                   {{ formatDisplayTime(meeting.date) }} Period
-                  {{ period(meeting.date) }}
+                  {{ meeting.period }}
                 </p>
               </div>
               <button

@@ -180,13 +180,14 @@ export const useUserStore = defineStore("user", () => {
     id: number,
     deleteMeeting: boolean,
     date?: string,
+    period?: number,
     description?: string,
     notify?: boolean
   ) {
     const res = await fetchData(
       "guidance/updateMeeting/",
       deleteMeeting ? "DELETE" : "POST",
-      { id, date, description, notify }
+      { id, date, period, description, notify }
     );
     if (!res.ok) return await res.json();
     const data = await res.json();

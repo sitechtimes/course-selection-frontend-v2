@@ -64,7 +64,7 @@
               v-model="time"
               placeholder="Time"
             />
-            <p class="ml-6 mt-1">Period: {{ period }}</p>
+            <p class="ml-6 mt-1" v-if="period">Period: {{ period }}</p>
             <p v-if="timeError" class="error text-red-600 ml-6 mt-1">
               Field empty/invalid
             </p>
@@ -211,7 +211,6 @@ const period = computed(() => {
       return period.period;
     }
   }
-  return "N/A";
 });
 
 function submit() {
@@ -234,6 +233,7 @@ function submit() {
     id,
     false,
     meetingISO,
+    period.value,
     description.value,
     notify.value
   );
