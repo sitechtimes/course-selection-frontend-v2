@@ -57,8 +57,8 @@
                   }`"
                 >
                   {{ meeting.student }}
-                  {{ formatDisplayTime(meeting.date) }} Period
-                  {{ meeting.period }}
+                  {{ formatDisplayTime(meeting.date) }} <span v-if="meeting.period">Period
+                  {{ meeting.period }}</span>
                 </p>
               </div>
               <button
