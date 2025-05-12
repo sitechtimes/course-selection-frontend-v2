@@ -56,8 +56,7 @@
                     classColor[meeting.grade]
                   }`"
                 >
-                  {{ meeting.student.firstName }}
-                  {{ meeting.student.lastName }}
+                  {{ meeting.student }}
                   {{ formatDisplayTime(meeting.date) }} Period
                   {{ period(meeting.date) }}
                 </p>

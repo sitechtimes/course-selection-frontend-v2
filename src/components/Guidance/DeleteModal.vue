@@ -8,7 +8,7 @@
       Delete {{ details.name }}'s meeting on
       {{ details.date.toLocaleDateString() }}
     </p>
-    <p class="mb-6">{{ details.student.firstName }} {{ details.student.lastName }} will be notified of this change</p>
+    <p class="mb-6">{{ details.student }} will be notified of this change</p>
     <div class="flex flex-row items-center justify-end">
       <button
         @click="showDetails = !showDetails"

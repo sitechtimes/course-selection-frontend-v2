@@ -83,7 +83,7 @@ export interface Meeting {
   memo: string;
   grade: number;
   email: string;
-  student: { firstName: string; lastName: string };
+  student: string;
 }
 
 export interface DateInfo {

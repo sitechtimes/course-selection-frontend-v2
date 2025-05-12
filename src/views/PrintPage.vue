@@ -8,8 +8,7 @@
         <div class="p-4">
           <div class="overflow-y-auto max-h-100">
             <ul class="my-4" v-if="meeting">
-              <p>Dear {{ meeting.student.firstName }}
-                {{ meeting.student.lastName }},</p>
+              <p>Dear {{ meeting.student }},</p>
               <br />
               <p>
                 Your guidance counselor has scheduled a meeting with you for

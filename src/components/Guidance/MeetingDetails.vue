@@ -34,8 +34,7 @@
           </svg>
           Student
         </h3>
-        <p class="ml-4 p-4">{{ meeting.student.firstName }}
-          {{ meeting.student.lastName }}</p>
+        <p class="ml-4 p-4">{{ meeting.student }}</p>
         <div class="flex flex-row items-end">
           <div>
             <h3
