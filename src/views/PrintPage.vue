@@ -17,7 +17,7 @@
                 them during the specified time.
               </p>
               <br />
-              <p>
+              <p v-if="meeting.memo">
                 Your guidance counselor has made the following notes:
                 <br />
                 {{ meeting.memo }}
