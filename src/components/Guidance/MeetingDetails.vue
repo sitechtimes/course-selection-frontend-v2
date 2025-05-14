@@ -83,17 +83,16 @@
         <div></div>
         <div class="w-[60%] ml-4 mb-8 flex flex-row items-center">
           <div
-            class="item xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit"
+            class="item ml-3 submit xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit"
           >
-            <button>
-              <RouterLink
-                :to="`/guidance/PrintPage/${meeting.id}`"
-                type="submit"
-                class="font-bold text-[1.2rem] px-4 py-2 rounded-xl w-fit h-fit"
-                id="save"
-                ref="save"
-                >Print</RouterLink
-              >
+            <button
+              type="submit"
+              @click="toggleDeleteModal"
+              class="font-bold text-[1.2rem] bg-primary-g px-4 py-2 rounded-xl w-fit h-fit"
+              id="save"
+              ref="save"
+            >
+              Edit
             </button>
           </div>
           <div
@@ -107,6 +106,20 @@
               ref="save"
             >
               Delete
+            </button>
+          </div>
+          <div
+            class="item xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit"
+          >
+            <button>
+              <RouterLink
+                :to="`/guidance/PrintPage/${meeting.id}`"
+                type="submit"
+                class="font-bold text-[1.2rem] px-4 py-2 rounded-xl w-fit h-fit"
+                id="save"
+                ref="save"
+                >Print</RouterLink
+              >
             </button>
           </div>
         </div>

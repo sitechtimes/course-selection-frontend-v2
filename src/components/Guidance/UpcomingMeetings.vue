@@ -21,7 +21,7 @@
                   minute: "2-digit",
                 })
               }}
-              - Meeting with {{ meeting.student }}
+              - {{ meeting.student }}
             </li>
           </ul>
         </div>

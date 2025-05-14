@@ -1,16 +1,20 @@
 <template>
   <div class="grid content-center justify-center flex-wrap">
     <div class="container w-screen">
-      <div class="flex flex-row mb-5 text-5xl font-bold w-[90%]">
+      <div class="flex flex-row mb-5 text-5xl font-bold w-[90%] items-center">
         <span
           class="arrow cursor-pointer text-2xl"
           id="prev"
           ref="prev"
           @click="changeWeek(false)"
-          >&#10094;</span
+          >&#x276E;</span
         >
-        <div class="flex flex-row text-2xl mx-4">
-          {{ months[displayedMonth] }} {{ displayedYear }}
+        <div
+          class="flex flex-row text-2xl mx-4 cursor-pointer hover:opacity-80"
+          @click="toggleWeekSelector"
+          title="Select Week"
+        >
+          {{ displayedWeekRange }}
         </div>
         <span
           class="arrow cursor-pointer text-2xl"
@@ -18,18 +22,11 @@
           ref="next"
           @click="changeWeek(true)"
         >
-          &#10095;
+          &#x276F;
         </span>
       </div>
-      <button
-        @click="toggleWeekSelector"
-        class="ml-8 mb-5 text-sm px-3 py-1.5 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50"
-        title="Select Week"
-      >
-        Select Week
-      </button>
       <div class="flex flex-col lg:flex-row gap-4 lg:gap-8 mb-12">
-        <div class="calendar w-full lg:w-2/3 xl:w-3/4">
+        <div class="calendar w-full lg:w-3/4">
           <ul class="weeks bg-primary-g">
             <li>Mon</li>
             <li>Tue</li>
@@ -79,8 +76,8 @@
             </li>
           </ul>
         </div>
-        <div class="w-full mt-8 lg:mt-0">
-           <UpcomingMeetings />
+        <div class="w-full lg:w-1/4 mt-8 lg:mt-0 hidden lg:block">
+            <UpcomingMeetings />
         </div>
       </div>
     </div>
@@ -107,7 +104,7 @@ import { Meeting } from "../types/interface";
 interface PeriodGroup {
   period: number | string;
   meetings: Meeting[];
-  isOpen: boolean; 
+  isOpen: boolean;
 }
 
 interface DateInfoWithPeriods {
@@ -168,8 +165,31 @@ const firstDay = ref(
   )
 );
 
+// This computed property is kept in case it's used elsewhere or for future reference,
+// though it's not directly used by the new week range display.
 const displayedMonth = computed(() => firstDay.value.getUTCMonth());
 const displayedYear = computed(() => firstDay.value.getUTCFullYear());
+
+// New computed property for displaying the week range
+const displayedWeekRange = computed(() => {
+  const start = firstDay.value;
+  const end = new Date(start);
+  end.setUTCDate(start.getUTCDate() + 4); // Calendar shows 5 days (Mon-Fri)
+
+  const startMonthStr = months[start.getUTCMonth()];
+  const startDateNum = start.getUTCDate();
+  const endMonthStr = months[end.getUTCMonth()];
+  const endDateNum = end.getUTCDate();
+  const year = start.getUTCFullYear();
+
+  if (start.getUTCMonth() === end.getUTCMonth()) {
+    // e.g., "May 12 - 16, 2025"
+    return `${startMonthStr} ${startDateNum} - ${endDateNum}, ${year}`;
+  } else {
+    // e.g., "April 28 - May 2, 2025"
+    return `${startMonthStr} ${startDateNum} - ${endMonthStr} ${endDateNum}, ${year}`;
+  }
+});
 
 onMounted(() => renderCalendar());
 
@@ -212,7 +232,7 @@ const period = (time: Date): number | string => {
 
 const renderCalendar = () => {
   const days: DateInfoWithPeriods[] = [];
-  const startOffsetDateUtc = firstDay.value;
+  const startOffsetDateUtc = new Date(firstDay.value); // Create a copy to avoid modifying firstDay.value directly
 
   for (let i = 0; i < 5; i++) {
     const todaysDate = new Date(startOffsetDateUtc);
@@ -265,7 +285,7 @@ const renderCalendar = () => {
         isOpen: false,
       });
     }
-    
+
     const finalPeriodGroups = periodGroups.filter(pg => pg.meetings.length > 0 || pg.period !== "N/A");
 
 
@@ -277,7 +297,7 @@ const renderCalendar = () => {
           meetings: meetingsInPeriod.sort((a,b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
           isOpen: false,
         }))
-        .sort((a, b) => { 
+        .sort((a, b) => {
           if (a.period === "N/A") return 1;
           if (b.period === "N/A") return -1;
           return (a.period as number) - (b.period as number);
@@ -296,9 +316,9 @@ const togglePeriodDropdown = (dayIndex: number, groupIndex: number) => {
 };
 
 
-const formatDisplayTime = (isoString: Date | string) => { 
+const formatDisplayTime = (isoString: Date | string) => {
   const date = new Date(isoString);
-  let hours = date.getHours(); 
+  let hours = date.getHours();
   const minutes = date.getMinutes();
   const ampm = hours >= 12 ? "PM" : "AM";
   hours = hours % 12;
@@ -343,7 +363,7 @@ const changeWeek = (next: boolean) => {
 
   .calendar .weeks li,
   .calendar .days li {
-    min-width: 90px; 
+    min-width: 90px;
   }
 }
 
@@ -363,7 +383,7 @@ const changeWeek = (next: boolean) => {
   }
 
   .calendar .days li {
-    min-height: 10rem; 
+    min-height: 10rem;
   }
 
   .days li {
@@ -399,8 +419,8 @@ const changeWeek = (next: boolean) => {
   border: 1px solid grey;
   font-size: 0.9rem;
   box-sizing: border-box;
-  display: flex; 
-  flex-direction: column; 
+  display: flex;
+  flex-direction: column;
   align-items: stretch;
 }
 
@@ -411,11 +431,11 @@ const changeWeek = (next: boolean) => {
   cursor: pointer;
   border-radius: 4px;
   font-weight: bold;
-  text-align: left; 
+  text-align: left;
 }
 
 .period-header:hover {
-  background-color: #e0e0e0; 
+  background-color: #e0e0e0;
 }
 
 .meeting-item {
