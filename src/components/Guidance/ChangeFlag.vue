@@ -19,7 +19,7 @@
       <div class="flex flex-row w-full justify-between">
         <button @click="$emit('exit')">Cancel</button>
         <button
-          @click="confirm()"
+          @click="confirm"
           class="bg-[#DEE9C8] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] px-4 py-2 text-[#37394F]"
         >
           Confirm

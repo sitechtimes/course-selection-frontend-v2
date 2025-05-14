@@ -45,7 +45,9 @@
                 : "Login"
             }}
           </h1>
-          <div class="flex flex-col w-11/12 max-w-[21rem] space-y-5 rounded-md z-10">
+          <div
+            class="flex flex-col w-11/12 max-w-[21rem] space-y-5 rounded-md z-10"
+          >
             <Input
               label="email"
               :type="route.query.token ? 'password' : 'email'"
@@ -73,7 +75,7 @@
             class="bg-zinc-300 px-5 min-w-32 h-12 mt-4 rounded-md text-lg font-semibold hover:bg-zinc-200"
             @click="sendRequest"
           >
-            {{ $route.query.reset ? "Send Reset Email" : "Login" }}
+            {{ buttonText }}
           </button>
           <div class="pt-4">
             <button
@@ -97,7 +99,7 @@
 import Input from "../components/Basic/Input.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useUserStore } from "../stores/user";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -112,6 +114,12 @@ function inputOne() {
   if (route.query.token) return "New Password";
   return "Username";
 }
+
+const buttonText = computed(() => {
+  if (route.query.reset) return "Send Reset Email";
+  if (route.query.token) return "Confirm Password";
+  return "Login";
+});
 
 function changeRoute() {
   input1.value = "";
