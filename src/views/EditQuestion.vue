@@ -50,7 +50,6 @@
               </select>
               <select
                 v-if="key === 'classReferenced' && courses"
-                @click="console.log(alteredQuestion)"
                 :id="key"
                 v-model="alteredQuestion.classReferenced"
                 class="border-2 border-black rounded-lg p-2 mb-4 w-full hover:shadow-xl transition placeholder-gray-500 placeholder-opacity-35"
@@ -58,7 +57,7 @@
                 <option
                   v-for="course in courses"
                   :key="course.id"
-                  :value="course.id"
+                  :value="course.name"
                 >
                   {{ course.name }}
                 </option>
