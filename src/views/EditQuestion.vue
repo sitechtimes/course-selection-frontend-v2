@@ -57,7 +57,7 @@
                 <option
                   v-for="course in courses"
                   :key="course.id"
-                  :value="course.name"
+                  :value="course.id"
                 >
                   {{ course.name }}
                 </option>
