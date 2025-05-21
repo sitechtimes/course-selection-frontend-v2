@@ -8,13 +8,14 @@
       </div>
     </template>
     <div
-      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-10 items-center"
+      class="inline-grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 px-10 m-10 items-center w-full justify-center"
     >
       <RouterLink
         v-for="survey in surveys"
+        @click="console.log(surveys)"
         :key="survey.grade"
         :to="'/guidance/editsurvey/' + survey.grade"
-        class="bg-primary-g border-black border-2 drop-shadow-lg rounded-lg p-6 hover:drop-shadow-xl hover:bg-other-g transition-all duration-300"
+        class="bg-primary-g border-black border-2 drop-shadow-lg rounded-lg p-6 hover:drop-shadow-xl hover:bg-other-g transition-all duration-300 justify-center"
       >
         <h1 class="text-2xl font-bold">{{ survey.grade }}th Grade</h1>
       </RouterLink>
@@ -157,8 +158,8 @@ function applyFilters(sortBy: string, search: string) {
 }
 
 const totalPages = computed(() => {
-  const numStudents = sortedAndFiltered.value.length;
-  return numStudents < 1 ? 1 : Math.ceil(numStudents / pageCapacity);
+  const numQuestions = sortedAndFiltered.value.length;
+  return numQuestions < 1 ? 1 : Math.ceil(numQuestions / pageCapacity);
 });
 
 function changePage(increment: number) {

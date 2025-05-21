@@ -142,8 +142,8 @@ function applyFilters(sortBy: string, search: string) {
 }
 
 const totalPages = computed(() => {
-  const numStudents = sortedAndFiltered.value.length;
-  return numStudents < 1 ? 1 : Math.ceil(numStudents / pageCapacity);
+  const numCourses = sortedAndFiltered.value.length;
+  return numCourses < 1 ? 1 : Math.ceil(numCourses / pageCapacity);
 });
 
 function changePage(increment: number) {
