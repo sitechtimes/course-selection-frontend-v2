@@ -55,6 +55,14 @@
                 class="border-2 border-black rounded-lg p-2 mb-4 w-full hover:shadow-xl transition placeholder-gray-500 placeholder-opacity-35"
               >
                 <option
+                  v-if="alteredQuestion.classReferenced"
+                  :value="alteredQuestion.classReferenced"
+                  disabled
+                >
+                  {{ alteredQuestion.classReferenced.name }}
+                </option>
+                <option :value="null">n/a</option>
+                <option
                   v-for="course in courses"
                   :key="course.id"
                   :value="course.id"
@@ -97,7 +105,6 @@ const router = useRouter();
 const userStore = useUserStore();
 const route = useRoute();
 const questionId = route.params.id;
-
 async function findQuestion() {
   const questions = await userStore.getQuestions();
   return questions.find(
