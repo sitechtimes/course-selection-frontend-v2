@@ -7,9 +7,7 @@
         Loading...
       </div>
     </template>
-    <div
-      class="inline-grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 px-10 m-10 items-center w-full justify-center"
-    >
+    <div class="flex gap-4 p-10 m-10 justify-center">
       <RouterLink
         v-for="survey in surveys"
         @click="console.log(surveys)"

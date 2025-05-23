@@ -38,26 +38,51 @@
               class="border-2 border-black rounded-lg p-2 mb-4 hover:shadow-xl transition"
             />
           </div>
-          <div
-            class="flex flex-col items-center"
-            v-for="(questionObj, index) in alteredSurvey.questions"
-            :key="questionObj.id"
-          >
-            <label
-              :for="`question-${index}`"
-              class="text-2xl pb-1 pt-1 font-bold mt-2"
+          <div class="flex flex-col items-center">
+            <label class="text-2xl pb-1 font-bold">Available Questions </label>
+            <select
+              multiple
+              :size="Number(availableQuestions.length / 2)"
+              class="w-full h-max border-2 border-black rounded-lg p-2 mb-4 hover:shadow-xl transition"
             >
-              Question {{ index + 1 }}
-            </label>
-            <textarea
-              type="text"
-              rows="5"
-              v-model="alteredSurvey.questions[index].question"
-              :placeholder="survey.questions[index].question"
-              :id="`question-${index}`"
-              class="border-2 border-black rounded-lg p-2 m-2 w-full hover:shadow-xl transition placeholder-gray-500 placeholder-opacity-35"
-            />
+              <option
+                v-for="question in availableQuestions"
+                :key="question.id"
+                @dblclick="
+                  () => {
+                    surveyQuestions.push(question);
+                    availableQuestions = availableQuestions.filter(
+                      (q) => q.id !== question.id
+                    );
+                  }
+                "
+              >
+                {{ question.question }}
+              </option>
+            </select>
+            <label class="text-2xl pb-1 font-bold">Questions in Survey </label>
+            <select
+              multiple
+              :size="Number(surveyQuestions.length / 2)"
+              class="w-full border-2 border-black rounded-lg p-2 mb-4 hover:shadow-xl transition"
+            >
+              <option
+                v-for="question in surveyQuestions"
+                :key="question.id"
+                @dblclick="
+                  () => {
+                    availableQuestions.push(question);
+                    surveyQuestions = surveyQuestions.filter(
+                      (q) => q.id !== question.id
+                    );
+                  }
+                "
+              >
+                {{ question.question }}
+              </option>
+            </select>
           </div>
+
           <div>
             <button
               type="submit"
@@ -75,7 +100,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { Survey } from "../types/interface";
+import { Question, Survey } from "../types/interface";
 import { useUserStore } from "../stores/user";
 
 document.title = "Course List | SITHS Course Selection";
@@ -91,13 +116,19 @@ async function findSurvey() {
   const surveys = await userStore.getSurveys();
   return surveys.find((survey: Survey) => survey.grade === Number(surveyGrade));
 }
-
+const availableQuestions = ref([] as Question[]);
+const surveyQuestions = ref([] as Question[]);
 const survey = ref<Survey>({} as Survey);
 const alteredSurvey = ref<Survey>({} as Survey);
 onMounted(async () => {
   try {
     survey.value = await findSurvey();
     alteredSurvey.value = await findSurvey();
+    availableQuestions.value = await userStore.getQuestions();
+    surveyQuestions.value = alteredSurvey.value.questions;
+    availableQuestions.value.filter((question) => {
+      !surveyQuestions.value.includes(question);
+    });
     const originalDate = alteredSurvey.value.dueDate;
     dueDateDate.value = originalDate.split("T")[0]; // YYYY--MM--DD
     dueDateTime.value = originalDate.split("T")[1].substring(0, 5); // HH:MM., stripped timezone
