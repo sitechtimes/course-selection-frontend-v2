@@ -63,7 +63,7 @@
             <label class="text-2xl pb-1 font-bold">Questions in Survey </label>
             <select
               multiple
-              :size="Number(surveyQuestions.length / 2)"
+              :size="Number(availableQuestions.length / 2)"
               class="w-full border-2 border-black rounded-lg p-2 mb-4 hover:shadow-xl transition"
             >
               <option
@@ -126,9 +126,9 @@ onMounted(async () => {
     alteredSurvey.value = await findSurvey();
     availableQuestions.value = await userStore.getQuestions();
     surveyQuestions.value = alteredSurvey.value.questions;
-    availableQuestions.value.filter((question) => {
-      !surveyQuestions.value.includes(question);
-    });
+    availableQuestions.value = availableQuestions.value.filter(
+      (question) => !surveyQuestions.value.some((q) => q.id === question.id)
+    );
     const originalDate = alteredSurvey.value.dueDate;
     dueDateDate.value = originalDate.split("T")[0]; // YYYY--MM--DD
     dueDateTime.value = originalDate.split("T")[1].substring(0, 5); // HH:MM., stripped timezone

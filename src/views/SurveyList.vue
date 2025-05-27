@@ -10,7 +10,6 @@
     <div class="flex gap-4 p-10 m-10 justify-center">
       <RouterLink
         v-for="survey in surveys"
-        @click="console.log(surveys)"
         :key="survey.grade"
         :to="'/guidance/editsurvey/' + survey.grade"
         class="bg-primary-g border-black border-2 drop-shadow-lg rounded-lg p-6 hover:drop-shadow-xl hover:bg-other-g transition-all duration-300 justify-center"
