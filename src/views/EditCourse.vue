@@ -8,7 +8,7 @@
       </div>
       <div class="flex justify-center">
         <form
-          class="w-1/2 m-10 p-5 rounded-xl shadow-md bg-primary-g border-black border-2"
+          class="w-1/2 m-10 p-5 sm:m-0 sm:w-3/4 rounded-xl shadow-md bg-primary-g border-black border-2"
           @submit.prevent="
             () => {
               userStore.fetchData('guidance/editcourse/', 'PUT', alteredCourse);
@@ -67,7 +67,7 @@
                 v-model="alteredCourse[bool]"
                 class="text-secondary-g border-black rounded focus:ring-other-g focus:ring-offset-0 cursor-pointer mb-2"
               />
-              <label :for="bool" class="ml-2 text-2xl transition">{{
+              <label :for="bool" class="ml-2 text-2xl transition sm:text-lg">{{
                 bool[0].toUpperCase() + bool.slice(1)
               }}</label>
             </div>

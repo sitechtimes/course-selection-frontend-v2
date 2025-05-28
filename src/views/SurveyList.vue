@@ -7,7 +7,7 @@
         Loading...
       </div>
     </template>
-    <div class="flex gap-4 p-10 m-10 justify-center">
+    <div class="flex gap-4 p-10 m-10 justify-center flex-wrap">
       <RouterLink
         v-for="survey in surveys"
         :key="survey.grade"
@@ -18,7 +18,9 @@
       </RouterLink>
     </div>
   </Suspense>
-  <div class="h-auto w-full flex flex-col justify-center items-center mb-10">
+  <div
+    class="h-auto w-full flex flex-col justify-center items-center mb-10 sm:items-left"
+  >
     <div class="flex flex-row items-center justify-center w-5/6">
       <div class="w-1/3 flex flex-row justify-evenly">
         <Sort

@@ -38,7 +38,7 @@
                 v-if="key !== 'classReferenced'"
                 :id="key"
                 v-model="alteredQuestion[key]"
-                class="border-2 border-black rounded-lg p-2 mb-4 w-full hover:shadow-xl transition placeholder-gray-500 placeholder-opacity-35"
+                class="border-2 border-black rounded-lg p-3 pr-8 text-left mb-4 w-full hover:shadow-xl transition placeholder-gray-500 placeholder-opacity-35"
               >
                 <option
                   v-for="option in potentialOptions[key]"

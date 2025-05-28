@@ -1,14 +1,16 @@
 <template>
   <Suspense>
     <div>
-      <div class="px-10 flex flex-col items-center justify-center gap-4">
+      <div
+        class="px-10 flex flex-col items-center justify-center gap-4 md:w-full"
+      >
         <h1 class="p-6 text-3xl">
           Editing the {{ survey.grade }}th Grade Survey
         </h1>
       </div>
       <div class="justify-center flex">
         <form
-          class="m-10 p-8 w-1/2 rounded-xl shadow-md bg-primary-g border-black border-2"
+          class="m-10 p-8 sm:m-5 w-1/2 rounded-xl shadow-md bg-primary-g border-black border-2"
           @submit.prevent="
             () => {
               const isoString = `${dueDateDate}T${dueDateTime}`;
