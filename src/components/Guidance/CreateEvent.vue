@@ -152,7 +152,7 @@ import { GuidanceStudent } from "../../types/interface";
 import { useUserStore } from "../../stores/user";
 import { ref, onMounted, computed } from "vue";
 
-const props = defineProps<{ todaysDate: string }>();
+const props = defineProps<{ id: number, todaysDate: string }>();
 const userStore = useUserStore();
 
 const date = ref("");
@@ -160,7 +160,7 @@ const time = ref("");
 const description = ref("");
 const selectedStudent = ref("");
 
-let id: number;
+let student_id: number;
 
 const save = ref();
 const form = ref();
@@ -224,14 +224,15 @@ function submit() {
   const [hours, minutes] = time.value.split(":").map(Number);
   meetingDateLocal.setHours(hours, minutes, 0, 0);
   const meetingISO = meetingDateLocal.toISOString();
-  id = studentList.value.find(({ email }) =>
+  student_id = studentList.value.find(({ email }) =>
     selectedStudent.value.includes(email)
   )!.id;
 
   save.value.innerHTML = "Saved";
   userStore.changeMeeting(
-    id,
+    props.id, 
     false,
+    student_id,
     meetingISO,
     period.value,
     description.value,

@@ -165,16 +165,10 @@ const firstDay = ref(
   )
 );
 
-// This computed property is kept in case it's used elsewhere or for future reference,
-// though it's not directly used by the new week range display.
-const displayedMonth = computed(() => firstDay.value.getUTCMonth());
-const displayedYear = computed(() => firstDay.value.getUTCFullYear());
-
-// New computed property for displaying the week range
 const displayedWeekRange = computed(() => {
   const start = firstDay.value;
   const end = new Date(start);
-  end.setUTCDate(start.getUTCDate() + 4); // Calendar shows 5 days (Mon-Fri)
+  end.setUTCDate(start.getUTCDate() + 4);
 
   const startMonthStr = months[start.getUTCMonth()];
   const startDateNum = start.getUTCDate();
@@ -183,10 +177,8 @@ const displayedWeekRange = computed(() => {
   const year = start.getUTCFullYear();
 
   if (start.getUTCMonth() === end.getUTCMonth()) {
-    // e.g., "May 12 - 16, 2025"
     return `${startMonthStr} ${startDateNum} - ${endDateNum}, ${year}`;
   } else {
-    // e.g., "April 28 - May 2, 2025"
     return `${startMonthStr} ${startDateNum} - ${endMonthStr} ${endDateNum}, ${year}`;
   }
 });

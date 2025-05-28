@@ -177,8 +177,9 @@ export const useUserStore = defineStore("user", () => {
   }
 
   async function changeMeeting(
-    student_id: number,
+    meeting_id: number,
     deleteMeeting: boolean,
+    student_id?: number,
     date?: string,
     period?: number,
     description?: string,
@@ -187,7 +188,7 @@ export const useUserStore = defineStore("user", () => {
     const res = await fetchData(
       "guidance/meetings/",
       deleteMeeting ? "DELETE" : "PUT",
-      { student_id, date, period, description, notify }
+      { meeting_id, student_id, date, period, description, notify }
     );
     if (!res.ok) return await res.json();
     const data = await res.json();
