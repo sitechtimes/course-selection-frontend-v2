@@ -22,7 +22,11 @@
                 v-show="tooltip"
                 class="absolute h-auto w-auto bg-white border-primary-g border p-2"
               >
-                <div v-for="flag in flags" class="flex flex-row">
+                <div
+                  v-for="flag in flags"
+                  class="flex flex-row"
+                  :key="flag.flag"
+                >
                   <div
                     class="m-1 rounded-full h-5 w-5"
                     :class="flag.color"

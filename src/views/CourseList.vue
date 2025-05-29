@@ -124,7 +124,7 @@ function filterByCategory(courses: Course[], sortBy: string) {
   if (sortBy === "za")
     return courses.sort((a, b) => b.name.localeCompare(a.name));
   if (["freshman", "sophomore", "junior", "senior"].includes(sortBy))
-    return courses.filter((course) => course[sortBy] === true);
+    return courses.filter((course) => course[sortBy as keyof Course] === true);
   if (sortBy === "honors" || sortBy === "ap") {
     return courses.filter((course) => course[sortBy] === true);
   }
