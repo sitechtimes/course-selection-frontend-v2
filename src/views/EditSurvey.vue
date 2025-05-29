@@ -15,6 +15,7 @@
             () => {
               const isoString = `${dueDateDate}T${dueDateTime}`;
               alteredSurvey.dueDate = isoString;
+              alteredSurvey.questions = surveyQuestions;
               userStore.fetchData('guidance/editsurvey/', 'PUT', alteredSurvey);
               router.push('/guidance/surveylist');
             }

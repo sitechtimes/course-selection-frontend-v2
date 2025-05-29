@@ -1,11 +1,11 @@
 <template>
   <div class="w-44">
     <div
-      class="h-10 w-full flex flex-row bg-primary-g justify-evenly cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
+      class="h-15 overflow w-max flex flex-row bg-primary-g justify-evenly cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
       id="sort"
       @click="isOpen = !isOpen"
     >
-      <a class="mt-2.5 ml-4 flex">
+      <a class="m-2.5 ml-4 flex">
         <p class="font-semibold" id="sortshow">{{ selected }}</p>
       </a>
 

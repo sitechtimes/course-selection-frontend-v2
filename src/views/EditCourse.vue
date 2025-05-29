@@ -65,7 +65,7 @@
                 type="checkbox"
                 :id="bool"
                 v-model="alteredCourse[bool]"
-                class="text-secondary-g border-black rounded focus:ring-other-g focus:ring-offset-0 cursor-pointer mb-2"
+                class="text-secondary-g border-black rounded focus:ring-other-g focus:ring-offset-0 cursor-pointer mb-1"
               />
               <label :for="bool" class="ml-2 text-2xl transition sm:text-lg">{{
                 bool[0].toUpperCase() + bool.slice(1)
