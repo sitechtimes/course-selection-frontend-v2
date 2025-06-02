@@ -22,9 +22,9 @@ export const useUserStore = defineStore("user", () => {
   const email = ref("");
   const isGuidance = ref(false);
   const student = ref<Student>({} as Student);
-  const studentList = ref<GuidanceStudent[]>([]);
   const courseList = ref<Course[]>([]);
-  const viewedStudents = ref<GuidanceStudent[]>([]);
+  const students = ref<number[]>([]); // Only the guidance counselor's students
+  const allStudents = ref<GuidanceStudent[]>([]);
   const meetings = ref<Meeting[]>([]);
   const meetingsFetched = ref(false);
   const popup = reactive({ error: true, message: "", update: false });
@@ -110,7 +110,8 @@ export const useUserStore = defineStore("user", () => {
         true
       );
     data = Object.values(data as Record<string, string[]>)[0];
-    return setPopup(typeof data === "object" ? data[0] : data, !res.ok);
+    setPopup(typeof data === "object" ? data[0] : data, !res.ok);
+    return res.ok;
   }
 
   async function logout() {
@@ -148,7 +149,7 @@ export const useUserStore = defineStore("user", () => {
   async function getStudents() {
     const res = await fetchData("guidance/profiles/");
     const data = await res.json();
-    studentList.value = data;
+    allStudents.value = data;
   }
   async function getCourses() {
     const res = await fetchData("course/");
@@ -179,22 +180,18 @@ export const useUserStore = defineStore("user", () => {
     });
     if (!res.ok) return await res.json();
     const data = await res.json();
-    // const index = studentList.value.findIndex((student) => student.id === id);
-    // studentList.value[index] = data.flag;
+    // const index = allStudents.value.findIndex((student) => student.id === id);
+    // allStudents.value[index] = data.flag;
   }
   async function getMeetings() {
     const res = await fetchData("guidance/meetings/");
     if (!res.ok) return await res.json();
     const data = await res.json();
 
-    meetings.value = data.map((meeting: Meeting) => ({
-      ...meeting,
-      meetingDate: new Date(meeting.meetingDate),
-      name: meeting.name
-        .split(",")
-        .map((s) => s[0].toUpperCase() + s.slice(1).toLowerCase())
-        .join(", "),
-    }));
+    meetings.value = data.map((meeting: Meeting) => {
+      meeting.meetingDate = new Date(meeting.meetingDate);
+      return meeting;
+    });
     meetingsFetched.value = true;
   }
 
@@ -205,7 +202,6 @@ export const useUserStore = defineStore("user", () => {
     description?: string,
     notify?: boolean
   ) {
-    if (deleteMeeting) return;
     const res = await fetchData(
       "guidance/updateMeeting/",
       deleteMeeting ? "DELETE" : "POST",
@@ -213,8 +209,10 @@ export const useUserStore = defineStore("user", () => {
     );
     if (!res.ok) return await res.json();
     const data = await res.json();
-    console.log(data);
-    // guidanceMeetings.value.push(data);
+    meetings.value = data.map((meeting: Meeting) => {
+      meeting.meetingDate = new Date(meeting.meetingDate);
+      return meeting;
+    });
   }
 
   function titleCase(name: string) {
@@ -250,15 +248,17 @@ export const useUserStore = defineStore("user", () => {
     student,
     lastName,
     meetings,
+    students,
     firstName,
+    profileID,
+    titleCase,
     isGuidance,
     fetchStats,
     changeFlag,
     getMeetings,
-    studentList,
+    allStudents,
     initComplete,
     changeMeeting,
-    viewedStudents,
     meetingsFetched,
     $reset,
     popup,
