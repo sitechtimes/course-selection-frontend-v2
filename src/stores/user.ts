@@ -177,8 +177,8 @@ export const useUserStore = defineStore("user", () => {
   }
 
   async function changeMeeting(
-    meeting_id: number,
     deleteMeeting: boolean,
+    meeting_id?: number,
     student_id?: number,
     date?: string,
     period?: number,

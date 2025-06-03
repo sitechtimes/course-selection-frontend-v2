@@ -148,11 +148,11 @@
 </template>
 
 <script setup lang="ts">
-import { GuidanceStudent } from "../../types/interface";
+import { GuidanceStudent, Meeting } from "../../types/interface";
 import { useUserStore } from "../../stores/user";
 import { ref, onMounted, computed } from "vue";
 
-const props = defineProps<{ id: number, todaysDate: string }>();
+const props = defineProps<{ meeting?: Meeting; todaysDate?: string }>();
 const userStore = useUserStore();
 
 const date = ref("");
@@ -187,7 +187,14 @@ const periodsMap = [
 
 onMounted(() => {
   studentList.value = userStore.allStudents;
-  date.value = props.todaysDate!;
+  if (props.todaysDate) {
+    date.value = props.todaysDate!;
+  } else if (props.meeting) {
+    const eventDate = props.meeting.date;
+    date.value = `${eventDate.getUTCFullYear()}-${(eventDate.getUTCMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${eventDate.getUTCDate().toString().padStart(2, "0")}`;
+  }
   dateElement.value.type = "date";
   dateElement.value.value = props.todaysDate!;
 });
@@ -219,8 +226,12 @@ function submit() {
   nameError.value = !selectedStudent.value;
 
   if (dateError.value || timeError.value || nameError.value) return;
-  const [year, month, day] = date.value.split('-')
-  const meetingDateLocal = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+  const [year, month, day] = date.value.split("-");
+  const meetingDateLocal = new Date(
+    parseInt(year),
+    parseInt(month) - 1,
+    parseInt(day)
+  );
   const [hours, minutes] = time.value.split(":").map(Number);
   meetingDateLocal.setHours(hours, minutes, 0, 0);
   const meetingISO = meetingDateLocal.toISOString();
@@ -230,8 +241,8 @@ function submit() {
 
   save.value.innerHTML = "Saved";
   userStore.changeMeeting(
-    props.id, 
     false,
+    meeting_id,
     student_id,
     meetingISO,
     period.value,
@@ -241,7 +252,6 @@ function submit() {
   form.value.reset();
   show.value = !show.value;
 }
-
 </script>
 
 <style scoped>

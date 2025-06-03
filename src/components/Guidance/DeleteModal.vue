@@ -37,7 +37,7 @@ const showDetails = ref(true);
 defineProps<{ details: Meeting }>();
 
 function deleteMeeting(id: number) {
-  userStore.changeMeeting(id, true);
+  userStore.changeMeeting(true, id);
   showDetails.value = !showDetails.value;
 }
 </script>

@@ -87,7 +87,7 @@
           >
             <button
               type="submit"
-              @click="toggleDeleteModal"
+              @click="toggleEditModal"
               class="font-bold text-[1.2rem] bg-primary-g px-4 py-2 rounded-xl w-fit h-fit"
               id="save"
               ref="save"
@@ -126,16 +126,19 @@
       </div>
     </div>
     <DeleteModal v-show="showDeleteModal" :details="meeting" />
+    <CreateEvent v-show="showEditModal" :id="meeting.id" />
   </body>
 </template>
 
 <script setup lang="ts">
 import { Meeting } from "../../types/interface";
+import CreateEvent from "./CreateEvent.vue";
 import DeleteModal from "./DeleteModal.vue";
 import { ref } from "vue";
 
 const show = ref(true);
 const showDeleteModal = ref(false);
+const showEditModal = ref(false)
 
 defineProps<{ meeting: Meeting }>();
 
@@ -143,6 +146,11 @@ const toggleDeleteModal = () => {
   showDeleteModal.value = !showDeleteModal.value;
   show.value = !show.value;
 };
+
+const toggleEditModal = () => {
+  showEditModal.value = !showEditModal.value
+  show.value = !show.value;
+}
 </script>
 
 <style scoped>
