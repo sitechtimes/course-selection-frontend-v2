@@ -63,7 +63,13 @@
               Time
             </h3>
             <p class="ml-4 p-4">
-              {{ meeting.date.toLocaleTimeString() }}
+              {{
+                meeting.date.toLocaleTimeString([], {
+                  hour: "numeric",
+                  minute: "2-digit",
+                  hour12: true,
+                })
+              }}
             </p>
           </div>
         </div>
@@ -101,7 +107,7 @@
             <button
               type="submit"
               @click="toggleDeleteModal"
-              class="font-bold text-[1.2rem] bg-[#f28e8e] px-4 py-2 rounded-xl w-fit h-fit"
+              class="font-bold text-[1.2rem] bg-[#f28e8e] ml-3 px-4 py-2 rounded-xl w-fit h-fit"
               id="save"
               ref="save"
             >
@@ -115,7 +121,7 @@
               <RouterLink
                 :to="`/guidance/PrintPage/${meeting.id}`"
                 type="submit"
-                class="font-bold text-[1.2rem] px-4 py-2 rounded-xl w-fit h-fit"
+                class="font-bold text-[1.2rem] ml-1 px-4 py-2 rounded-xl w-fit h-fit"
                 id="save"
                 ref="save"
                 >Print</RouterLink
@@ -138,7 +144,7 @@ import { ref } from "vue";
 
 const show = ref(true);
 const showDeleteModal = ref(false);
-const showEditModal = ref(false)
+const showEditModal = ref(false);
 
 defineProps<{ meeting: Meeting }>();
 
@@ -148,9 +154,9 @@ const toggleDeleteModal = () => {
 };
 
 const toggleEditModal = () => {
-  showEditModal.value = !showEditModal.value
+  showEditModal.value = !showEditModal.value;
   show.value = !show.value;
-}
+};
 </script>
 
 <style scoped>

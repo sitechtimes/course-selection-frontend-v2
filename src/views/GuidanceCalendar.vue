@@ -28,11 +28,13 @@
       <div class="flex flex-col lg:flex-row gap-4 lg:gap-8 mb-12">
         <div class="calendar w-full lg:w-3/4">
           <ul class="weeks bg-primary-g">
+            <li>Sun</li>
             <li>Mon</li>
             <li>Tue</li>
             <li>Wed</li>
             <li>Thu</li>
             <li>Fri</li>
+            <li>Sat</li>
           </ul>
           <ul class="days">
             <li
@@ -44,11 +46,20 @@
                 {{ day.todaysDate.getUTCMonth() + 1 }} /
                 {{ day.todaysDate.getUTCDate() }}
               </p>
-              <div v-for="(group, groupIndex) in day.periodGroups" :key="group.period" class="w-full">
+              <div
+                v-for="(group, groupIndex) in day.periodGroups"
+                :key="group.period"
+                class="w-full"
+              >
                 <div v-if="group.meetings.length > 0">
-                  <p @click="togglePeriodDropdown(dayIndex, groupIndex)" class="cursor-pointer text-center font-semibold p-1 bg-gray-200 hover:bg-gray-300 mb-1">
+                  <p
+                    @click="togglePeriodDropdown(dayIndex, groupIndex)"
+                    class="cursor-pointer text-center font-semibold p-1 bg-gray-200 hover:bg-gray-300 mb-1"
+                  >
                     Period {{ group.period }} ({{ group.meetings.length }})
-                    <span v-if="group.isOpen">&#9207;</span> <span v-else>&#9205;</span> </p>
+                    <span v-if="group.isOpen">&#9207;</span>
+                    <span v-else>&#9205;</span>
+                  </p>
                   <div v-if="group.isOpen">
                     <div
                       v-for="meeting in group.meetings"
@@ -77,7 +88,7 @@
           </ul>
         </div>
         <div class="w-full lg:w-1/4 mt-8 lg:mt-0 hidden lg:block">
-            <UpcomingMeetings />
+          <UpcomingMeetings />
         </div>
       </div>
     </div>
@@ -112,7 +123,6 @@ interface DateInfoWithPeriods {
   periodGroups: PeriodGroup[];
 }
 
-
 document.title = "Calendar & Events | SITHS Course Selection";
 
 const selectedMeeting = ref<Meeting>({} as Meeting);
@@ -132,8 +142,18 @@ const classColor: Record<number, string> = {
 };
 
 const months = [
-  "January", "February", "March", "April", "May", "June", "July",
-  "August", "September", "October", "November", "December",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 const periodsMap = [
@@ -150,9 +170,7 @@ const periodsMap = [
 
 const currentDate = new Date();
 const initialStartOfWeekLocal = new Date(currentDate);
-initialStartOfWeekLocal.setDate(
-  currentDate.getDate() - ((currentDate.getDay() + 6) % 7)
-);
+initialStartOfWeekLocal.setDate(currentDate.getDate() - currentDate.getDay());
 initialStartOfWeekLocal.setHours(0, 0, 0, 0);
 
 const firstDay = ref(
@@ -168,7 +186,7 @@ const firstDay = ref(
 const displayedWeekRange = computed(() => {
   const start = firstDay.value;
   const end = new Date(start);
-  end.setUTCDate(start.getUTCDate() + 4);
+  end.setUTCDate(start.getUTCDate() + 6);
 
   const startMonthStr = months[start.getUTCMonth()];
   const startDateNum = start.getUTCDate();
@@ -226,7 +244,7 @@ const renderCalendar = () => {
   const days: DateInfoWithPeriods[] = [];
   const startOffsetDateUtc = new Date(firstDay.value); // Create a copy to avoid modifying firstDay.value directly
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 7; i++) {
     const todaysDate = new Date(startOffsetDateUtc);
     todaysDate.setUTCDate(startOffsetDateUtc.getUTCDate() + i);
     todaysDate.setUTCHours(0, 0, 0, 0);
@@ -244,7 +262,7 @@ const renderCalendar = () => {
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
     const groupedByPeriod: Record<string, Meeting[]> = {};
-    dayMeetings.forEach(meeting => {
+    dayMeetings.forEach((meeting) => {
       const meetingDateObj = new Date(meeting.date);
       const p = period(meetingDateObj);
       if (!groupedByPeriod[p]) {
@@ -255,50 +273,60 @@ const renderCalendar = () => {
 
     const periodGroups: PeriodGroup[] = [];
     for (const pMap of periodsMap) {
-        const pNum = pMap.period;
-        if (groupedByPeriod[pNum]) {
-            periodGroups.push({
-                period: pNum,
-                meetings: groupedByPeriod[pNum].sort((a,b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
-                isOpen: false,
-            });
-        } else {
-             periodGroups.push({
-                period: pNum,
-                meetings: [],
-                isOpen: false,
-            });
-        }
+      const pNum = pMap.period;
+      if (groupedByPeriod[pNum]) {
+        periodGroups.push({
+          period: pNum,
+          meetings: groupedByPeriod[pNum].sort(
+            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+          ),
+          isOpen: false,
+        });
+      } else {
+        periodGroups.push({
+          period: pNum,
+          meetings: [],
+          isOpen: false,
+        });
+      }
     }
     if (groupedByPeriod["N/A"]) {
       periodGroups.push({
         period: "N/A",
-        meetings: groupedByPeriod["N/A"].sort((a,b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
+        meetings: groupedByPeriod["N/A"].sort(
+          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+        ),
         isOpen: false,
       });
     }
 
-    const finalPeriodGroups = periodGroups.filter(pg => pg.meetings.length > 0 || pg.period !== "N/A");
-
+    const finalPeriodGroups = periodGroups.filter(
+      (pg) => pg.meetings.length > 0 || pg.period !== "N/A"
+    );
 
     days.push({
       todaysDate: new Date(todaysDate),
-      periodGroups: finalPeriodGroups.length > 0 ? finalPeriodGroups : Object.entries(groupedByPeriod)
-        .map(([p, meetingsInPeriod]) => ({
-          period: isNaN(Number(p)) ? p : Number(p),
-          meetings: meetingsInPeriod.sort((a,b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
-          isOpen: false,
-        }))
-        .sort((a, b) => {
-          if (a.period === "N/A") return 1;
-          if (b.period === "N/A") return -1;
-          return (a.period as number) - (b.period as number);
-        }),
+      periodGroups:
+        finalPeriodGroups.length > 0
+          ? finalPeriodGroups
+          : Object.entries(groupedByPeriod)
+              .map(([p, meetingsInPeriod]) => ({
+                period: isNaN(Number(p)) ? p : Number(p),
+                meetings: meetingsInPeriod.sort(
+                  (a, b) =>
+                    new Date(a.date).getTime() - new Date(b.date).getTime()
+                ),
+                isOpen: false,
+              }))
+              .sort((a, b) => {
+                if (a.period === "N/A") return 1;
+                if (b.period === "N/A") return -1;
+                return (a.period as number) - (b.period as number);
+              }),
     });
   }
   calendarData.value = days;
 };
-
 
 const togglePeriodDropdown = (dayIndex: number, groupIndex: number) => {
   const group = calendarData.value[dayIndex]?.periodGroups[groupIndex];
@@ -306,7 +334,6 @@ const togglePeriodDropdown = (dayIndex: number, groupIndex: number) => {
     group.isOpen = !group.isOpen;
   }
 };
-
 
 const formatDisplayTime = (isoString: Date | string) => {
   const date = new Date(isoString);

@@ -182,13 +182,20 @@ export const useUserStore = defineStore("user", () => {
     student_id?: number,
     date?: string,
     period?: number,
-    description?: string,
+    memo?: string,
     notify?: boolean
   ) {
     const res = await fetchData(
       "guidance/meetings/",
       deleteMeeting ? "DELETE" : "PUT",
-      { meeting_id, student_id, date, period, description, notify }
+      {
+        meeting_id,
+        student_id,
+        date: date ? convertTimeISO(date) : undefined,
+        period,
+        memo,
+        notify,
+      }
     );
     if (!res.ok) return await res.json();
     const data = await res.json();
@@ -209,6 +216,13 @@ export const useUserStore = defineStore("user", () => {
           .join(" ")
       )
       .join(", ");
+  }
+  function convertTimeISO(naiveISOString: string) {
+    const localDate = new Date(naiveISOString);
+    const offsetMinutes = localDate.getTimezoneOffset();
+    const utcMillis = localDate.getTime() - offsetMinutes * 60 * 1000;
+    const utcDate = new Date(utcMillis);
+    return utcDate.toISOString();
   }
 
   function $reset() {

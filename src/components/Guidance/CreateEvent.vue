@@ -189,13 +189,13 @@ const periodsMap = [
 onMounted(() => {
   studentList.value = userStore.allStudents;
   dateElement.value.type = "date";
-  console.log(props)
+  console.log(props);
   if (props.todaysDate) {
     date.value = props.todaysDate!;
     dateElement.value.value = props.todaysDate!;
   } else if (props.meeting) {
     const m = props.meeting;
-    const student = userStore.allStudents.find(s => s.id === m.studentId)
+    const student = userStore.allStudents.find((s) => s.id === m.studentId);
     const eventDate = m.date;
     date.value = `${eventDate.getUTCFullYear()}-${(eventDate.getUTCMonth() + 1)
       .toString()
@@ -205,8 +205,12 @@ onMounted(() => {
       .getMinutes()
       .toString()
       .padStart(2, "0")}`;
-    selectedStudent.value = `${userStore.titleCase(student.name)}, ${student.email}`;
-    meeting_id = m.id
+    if (student) {
+      selectedStudent.value = `${userStore.titleCase(student.name)}, ${
+        student.email
+      }`;
+    }
+    meeting_id = m.id;
   }
 });
 
@@ -253,7 +257,7 @@ function submit() {
   save.value.innerHTML = "Saved";
   userStore.changeMeeting(
     false,
-    meeting_id,
+    (meeting_id = meeting_id),
     student_id,
     meetingISO,
     period.value,
@@ -265,21 +269,22 @@ function submit() {
 }
 watch(
   () => props.meeting,
-  (newMeeting: Meeting) => {
-    if (newMeeting) {
-      const eventDate = newMeeting.date;
-      date.value = `${eventDate.getUTCFullYear()}-${(eventDate.getUTCMonth() + 1)
-        .toString()
-        .padStart(2, "0")}-${eventDate.getUTCDate().toString().padStart(2, "0")}`;
-      time.value = `${eventDate.getHours().toString().padStart(2, "0")}:${eventDate
-        .getMinutes()
-        .toString()
-        .padStart(2, "0")}`;
-      description.value = newMeeting.memo;
-    }
+  (newMeeting: Meeting | undefined) => {
+    if (!newMeeting) return;
+
+    const eventDate = newMeeting.date;
+    date.value = `${eventDate.getUTCFullYear()}-${(eventDate.getUTCMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${eventDate.getUTCDate().toString().padStart(2, "0")}`;
+    time.value = `${eventDate.getHours().toString().padStart(2, "0")}:${eventDate
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}`;
+    description.value = newMeeting.memo;
   },
   { immediate: true }
 );
+
 </script>
 
 <style scoped>
