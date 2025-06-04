@@ -84,10 +84,11 @@ export interface Meeting {
   grade: number;
   email: string;
   student: string;
+  studentId: number;
   period: number;
 }
 
-export interface DateInfo {
+export interface DateInfo { 
   todaysDate: Date;
   meetings: Meeting[];
 }

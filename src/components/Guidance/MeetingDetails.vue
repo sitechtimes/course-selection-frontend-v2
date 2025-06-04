@@ -126,7 +126,7 @@
       </div>
     </div>
     <DeleteModal v-show="showDeleteModal" :details="meeting" />
-    <CreateEvent v-show="showEditModal" :id="meeting.id" />
+    <CreateEvent v-show="showEditModal" :meeting="meeting" />
   </body>
 </template>
 
