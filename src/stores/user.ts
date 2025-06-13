@@ -191,7 +191,7 @@ export const useUserStore = defineStore("user", () => {
       {
         meeting_id,
         student_id,
-        date: date ? convertTimeISO(date) : undefined,
+        date: date,
         period,
         memo,
         notify,
@@ -217,13 +217,7 @@ export const useUserStore = defineStore("user", () => {
       )
       .join(", ");
   }
-  function convertTimeISO(naiveISOString: string) {
-    const localDate = new Date(naiveISOString);
-    const offsetMinutes = localDate.getTimezoneOffset();
-    const utcMillis = localDate.getTime() - offsetMinutes * 60 * 1000;
-    const utcDate = new Date(utcMillis);
-    return utcDate.toISOString();
-  }
+
 
   function $reset() {
     profileID.value = 0;

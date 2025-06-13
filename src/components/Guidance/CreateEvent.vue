@@ -150,7 +150,7 @@
 <script setup lang="ts">
 import { GuidanceStudent, Meeting } from "../../types/interface";
 import { useUserStore } from "../../stores/user";
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, onMounted, computed } from "vue"; 
 
 const props = defineProps<{ meeting?: Meeting; todaysDate?: string }>();
 const userStore = useUserStore();
@@ -239,7 +239,6 @@ function submit() {
   dateError.value = !date.value;
   timeError.value = !time.value;
   nameError.value = !selectedStudent.value;
-
   if (dateError.value || timeError.value || nameError.value) return;
   const [year, month, day] = date.value.split("-");
   const meetingDateLocal = new Date(
@@ -247,8 +246,8 @@ function submit() {
     parseInt(month) - 1,
     parseInt(day)
   );
-  const [hours, minutes] = time.value.split(":").map(Number);
-  meetingDateLocal.setHours(hours, minutes, 0, 0);
+  const [h, m] = time.value.split(":").map(Number);
+  meetingDateLocal.setHours(h, m, 0, 0);
   const meetingISO = meetingDateLocal.toISOString();
   student_id = studentList.value.find(({ email }) =>
     selectedStudent.value.includes(email)
@@ -267,23 +266,6 @@ function submit() {
   form.value.reset();
   show.value = !show.value;
 }
-watch(
-  () => props.meeting,
-  (newMeeting: Meeting | undefined) => {
-    if (!newMeeting) return;
-
-    const eventDate = newMeeting.date;
-    date.value = `${eventDate.getUTCFullYear()}-${(eventDate.getUTCMonth() + 1)
-      .toString()
-      .padStart(2, "0")}-${eventDate.getUTCDate().toString().padStart(2, "0")}`;
-    time.value = `${eventDate.getHours().toString().padStart(2, "0")}:${eventDate
-      .getMinutes()
-      .toString()
-      .padStart(2, "0")}`;
-    description.value = newMeeting.memo;
-  },
-  { immediate: true }
-);
 
 </script>
 
