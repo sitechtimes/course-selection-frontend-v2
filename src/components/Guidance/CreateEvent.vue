@@ -150,7 +150,7 @@
 <script setup lang="ts">
 import { GuidanceStudent, Meeting } from "../../types/interface";
 import { useUserStore } from "../../stores/user";
-import { ref, onMounted, computed } from "vue"; 
+import { ref, onMounted, computed } from "vue";
 
 const props = defineProps<{ meeting?: Meeting; todaysDate?: string }>();
 const userStore = useUserStore();
@@ -196,15 +196,20 @@ onMounted(() => {
   } else if (props.meeting) {
     const m = props.meeting;
     const student = userStore.allStudents.find((s) => s.id === m.studentId);
-    const eventDate = m.date;
-    date.value = `${eventDate.getUTCFullYear()}-${(eventDate.getUTCMonth() + 1)
+
+    const eventDate = new Date(m.date);
+
+    date.value = `${eventDate.getFullYear()}-${(eventDate.getMonth() + 1)
       .toString()
-      .padStart(2, "0")}-${eventDate.getUTCDate().toString().padStart(2, "0")}`;
+      .padStart(2, "0")}-${eventDate.getDate().toString().padStart(2, "0")}`;
+
     description.value = m.memo;
-    time.value = `${m.date.getHours().toString().padStart(2, "0")}:${m.date
-      .getMinutes()
+
+    time.value = `${eventDate
+      .getHours()
       .toString()
-      .padStart(2, "0")}`;
+      .padStart(2, "0")}:${eventDate.getMinutes().toString().padStart(2, "0")}`;
+
     if (student) {
       selectedStudent.value = `${userStore.titleCase(student.name)}, ${
         student.email
@@ -240,15 +245,16 @@ function submit() {
   timeError.value = !time.value;
   nameError.value = !selectedStudent.value;
   if (dateError.value || timeError.value || nameError.value) return;
-  const [year, month, day] = date.value.split("-");
-  const meetingDateLocal = new Date(
-    parseInt(year),
-    parseInt(month) - 1,
-    parseInt(day)
-  );
+
+  const [year, month, day] = date.value.split("-").map(Number);
   const [h, m] = time.value.split(":").map(Number);
-  meetingDateLocal.setHours(h, m, 0, 0);
-  const meetingISO = meetingDateLocal.toISOString();
+  const naiveDateStr = `${year}-${String(month).padStart(2, "0")}-${String(
+    day
+  ).padStart(2, "0")}T${String(h).padStart(2, "0")}:${String(m).padStart(
+    2,
+    "0"
+  )}:00`;
+
   student_id = studentList.value.find(({ email }) =>
     selectedStudent.value.includes(email)
   )!.id;
@@ -258,7 +264,7 @@ function submit() {
     false,
     (meeting_id = meeting_id),
     student_id,
-    meetingISO,
+    naiveDateStr,
     period.value,
     description.value,
     notify.value
@@ -266,7 +272,6 @@ function submit() {
   form.value.reset();
   show.value = !show.value;
 }
-
 </script>
 
 <style scoped>

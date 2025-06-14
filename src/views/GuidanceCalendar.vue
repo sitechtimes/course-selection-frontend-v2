@@ -10,11 +10,26 @@
           >&#x276E;</span
         >
         <div
-          class="flex flex-row text-2xl mx-4 cursor-pointer hover:opacity-80"
+          class="flex flex-row items-center text-2xl mx-4 cursor-pointer hover:opacity-80"
           @click="toggleWeekSelector"
           title="Select Week"
         >
-          {{ displayedWeekRange }}
+          <span class="text-2xl">{{ displayedWeekRange }}</span>
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-7 w-7 ml-2 text-gray-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+            />
+          </svg>
         </div>
         <span
           class="arrow cursor-pointer text-2xl"
@@ -43,8 +58,8 @@
               :key="day.todaysDate.toISOString()"
             >
               <p class="mt-2 text-end mr-2 mb-1">
-                {{ day.todaysDate.getUTCMonth() + 1 }} /
-                {{ day.todaysDate.getUTCDate() }}
+                {{ day.todaysDate.getMonth() + 1 }} /
+                {{ day.todaysDate.getDate() }}
               </p>
               <div
                 v-for="(group, groupIndex) in day.periodGroups"
@@ -173,28 +188,20 @@ const initialStartOfWeekLocal = new Date(currentDate);
 initialStartOfWeekLocal.setDate(currentDate.getDate() - currentDate.getDay());
 initialStartOfWeekLocal.setHours(0, 0, 0, 0);
 
-const firstDay = ref(
-  new Date(
-    Date.UTC(
-      initialStartOfWeekLocal.getFullYear(),
-      initialStartOfWeekLocal.getMonth(),
-      initialStartOfWeekLocal.getDate()
-    )
-  )
-);
+const firstDay = ref(initialStartOfWeekLocal);
 
 const displayedWeekRange = computed(() => {
   const start = firstDay.value;
   const end = new Date(start);
-  end.setUTCDate(start.getUTCDate() + 6);
+  end.setDate(start.getDate() + 6);
 
-  const startMonthStr = months[start.getUTCMonth()];
-  const startDateNum = start.getUTCDate();
-  const endMonthStr = months[end.getUTCMonth()];
-  const endDateNum = end.getUTCDate();
-  const year = start.getUTCFullYear();
+  const startMonthStr = months[start.getMonth()];
+  const startDateNum = start.getDate();
+  const endMonthStr = months[end.getMonth()];
+  const endDateNum = end.getDate();
+  const year = start.getFullYear();
 
-  if (start.getUTCMonth() === end.getUTCMonth()) {
+  if (start.getMonth() === end.getMonth()) {
     return `${startMonthStr} ${startDateNum} - ${endDateNum}, ${year}`;
   } else {
     return `${startMonthStr} ${startDateNum} - ${endMonthStr} ${endDateNum}, ${year}`;
@@ -214,11 +221,11 @@ const toggleDetails = (meeting: Meeting) => {
 
 const toggleEvent = (dateInfo: DateInfoWithPeriods) => {
   const eventDate = dateInfo.todaysDate;
-  createEventDate.value = `${eventDate.getUTCFullYear()}-${(
-    eventDate.getUTCMonth() + 1
+  createEventDate.value = `${eventDate.getFullYear()}-${(
+    eventDate.getMonth() + 1
   )
     .toString()
-    .padStart(2, "0")}-${eventDate.getUTCDate().toString().padStart(2, "0")}`;
+    .padStart(2, "0")}-${eventDate.getDate().toString().padStart(2, "0")}`;
   showEvent.value = !showEvent.value;
 };
 
@@ -242,21 +249,20 @@ const period = (time: Date): number | string => {
 
 const renderCalendar = () => {
   const days: DateInfoWithPeriods[] = [];
-  const startOffsetDateUtc = new Date(firstDay.value); // Create a copy to avoid modifying firstDay.value directly
+  const startOffsetDate = new Date(firstDay.value); // Create a copy to avoid modifying firstDay.value directly
 
   for (let i = 0; i < 7; i++) {
-    const todaysDate = new Date(startOffsetDateUtc);
-    todaysDate.setUTCDate(startOffsetDateUtc.getUTCDate() + i);
-    todaysDate.setUTCHours(0, 0, 0, 0);
+    const todaysDate = new Date(startOffsetDate);
+    todaysDate.setDate(startOffsetDate.getDate() + i);
+    todaysDate.setHours(0, 0, 0, 0);
 
     const dayMeetings = userStore.meetings
       .filter((meeting) => {
         const meetingDate = new Date(meeting.date);
-        meetingDate.setUTCHours(0, 0, 0, 0);
         return (
-          meetingDate.getUTCFullYear() === todaysDate.getUTCFullYear() &&
-          meetingDate.getUTCMonth() === todaysDate.getUTCMonth() &&
-          meetingDate.getUTCDate() === todaysDate.getUTCDate()
+          meetingDate.getFullYear() === todaysDate.getFullYear() &&
+          meetingDate.getMonth() === todaysDate.getMonth() &&
+          meetingDate.getDate() === todaysDate.getDate()
         );
       })
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
@@ -350,16 +356,16 @@ watchEffect(() => {
   renderCalendar();
 });
 
-const handleWeekSelected = (selectedStartOfWeekUtc: Date) => {
+const handleWeekSelected = (selectedStartOfWeek: Date) => {
   if (
-    selectedStartOfWeekUtc instanceof Date &&
-    !isNaN(selectedStartOfWeekUtc.getTime())
+    selectedStartOfWeek instanceof Date &&
+    !isNaN(selectedStartOfWeek.getTime())
   ) {
-    firstDay.value = selectedStartOfWeekUtc;
+    firstDay.value = selectedStartOfWeek;
   } else {
     console.error(
       "Invalid date received from WeekSelector:",
-      selectedStartOfWeekUtc
+      selectedStartOfWeek
     );
   }
   showWeekSelector.value = false;
@@ -367,7 +373,7 @@ const handleWeekSelected = (selectedStartOfWeekUtc: Date) => {
 
 const changeWeek = (next: boolean) => {
   const newFirstDay = new Date(firstDay.value);
-  newFirstDay.setUTCDate(newFirstDay.getUTCDate() + (next ? 7 : -7));
+  newFirstDay.setDate(newFirstDay.getDate() + (next ? 7 : -7));
   firstDay.value = newFirstDay;
 };
 </script>
