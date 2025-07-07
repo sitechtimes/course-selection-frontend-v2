@@ -57,15 +57,22 @@ onMounted(async () => {
 
 //if a new year is selected from the dropdown, find the index where the stats are located
 const stats = computed<PieChartStats>(() => {
-  const statsForYear = chartData.value.find(item => item.year === selectedYear.value);
-  return statsForYear ? Object.fromEntries(statsForYear.courses.map(({ course: { name }, ranks }) => [
-    name,
-    { ranks: Object.entries(ranks).reduce<number[]>((acc, [rank, value]) => {
-      acc[parseInt(rank) - 1] = value;
-      return acc;
-    }, []) }
-  ])) : {};
+  const yearlyData = chartData.value.find(item => item.year === selectedYear.value);
+  if (!yearlyData) return {};
+  const courseStats = yearlyData.courses.map(courseEntry => {
+    const courseName = courseEntry.course.name;
+    const ranksArray = Object.entries(courseEntry.ranks).reduce<number[]>((arr, [rankStr, count]) => {
+      const index = parseInt(rankStr, 10) - 1;
+      arr[index] = count;
+      return arr;
+    }, []);
+
+    return [courseName, { ranks: ranksArray }] as const;
+  });
+
+  return Object.fromEntries(courseStats);
 });
+
 
 
 
