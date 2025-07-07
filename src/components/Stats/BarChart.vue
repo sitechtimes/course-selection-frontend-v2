@@ -105,11 +105,11 @@ const getChartData = computed(() => {
   const data: number[] = [];
 
   if (selectedSubject.value && selectedYear.value && stats.value) {
-    const targettedCourses = stats.value.courses.filter(
+    const targetedCourses = stats.value.courses.filter(
       (item) => item.course.subject === selectedSubject.value
     );
-    if (targettedCourses.length > 0) {
-      targettedCourses.forEach((item) => {
+    if (targetedCourses.length > 0) {
+      targetedCourses.forEach((item) => {
         labels.push(item.course.name);
         data.push(item.picks);
       });
