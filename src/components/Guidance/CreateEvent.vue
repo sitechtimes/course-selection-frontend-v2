@@ -160,8 +160,8 @@ const time = ref("");
 const description = ref("");
 const selectedStudent = ref("");
 
-let student_id: number;
-let meeting_id: number;
+let studentId: number;
+let meetingId: number;
 
 const save = ref();
 const form = ref();
@@ -189,7 +189,6 @@ const periodsMap = [
 onMounted(() => {
   studentList.value = userStore.allStudents;
   dateElement.value.type = "date";
-  console.log(props);
   if (props.todaysDate) {
     date.value = props.todaysDate!;
     dateElement.value.value = props.todaysDate!;
@@ -215,7 +214,7 @@ onMounted(() => {
         student.email
       }`;
     }
-    meeting_id = m.id;
+    meetingId = m.id;
   }
 });
 
@@ -255,15 +254,15 @@ function submit() {
     "0"
   )}:00`;
 
-  student_id = studentList.value.find(({ email }) =>
+  studentId = studentList.value.find(({ email }) =>
     selectedStudent.value.includes(email)
   )!.id;
 
   save.value.innerHTML = "Saved";
   userStore.changeMeeting(
     false,
-    (meeting_id = meeting_id),
-    student_id,
+    meetingId,
+    studentId,
     naiveDateStr,
     period.value,
     description.value,

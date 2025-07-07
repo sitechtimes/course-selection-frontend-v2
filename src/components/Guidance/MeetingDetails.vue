@@ -117,16 +117,14 @@
           <div
             class="item xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit"
           >
-            <button>
-              <RouterLink
-                :to="`/guidance/PrintPage/${meeting.id}`"
-                type="submit"
-                class="font-bold text-[1.2rem] ml-1 px-4 py-2 rounded-xl w-fit h-fit"
-                id="save"
-                ref="save"
-                >Print</RouterLink
-              >
-            </button>
+            <RouterLink
+              :to="`/guidance/PrintPage/${meeting.id}`"
+              type="submit"
+              class="font-bold text-[1.2rem] ml-1 px-4 py-2 rounded-xl w-fit h-fit"
+              id="save"
+              ref="save"
+              >Print</RouterLink
+            >
           </div>
         </div>
       </div>
