@@ -245,14 +245,7 @@ function submit() {
   nameError.value = !selectedStudent.value;
   if (dateError.value || timeError.value || nameError.value) return;
 
-  const [year, month, day] = date.value.split("-").map(Number);
-  const [h, m] = time.value.split(":").map(Number);
-  const naiveDateStr = `${year}-${String(month).padStart(2, "0")}-${String(
-    day
-  ).padStart(2, "0")}T${String(h).padStart(2, "0")}:${String(m).padStart(
-    2,
-    "0"
-  )}:00`;
+  const naiveDateStr = `${date.value}T${time.value}:00`;
 
   studentId = studentList.value.find(({ email }) =>
     selectedStudent.value.includes(email)

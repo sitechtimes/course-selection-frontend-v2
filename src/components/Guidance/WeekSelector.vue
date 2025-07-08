@@ -54,14 +54,12 @@ const emit = defineEmits(["week-selected", "close"]);
 const selectedDate = ref("");
 
 onMounted(() => {
-  if (props.currentFirstDay) {
-    const year = props.currentFirstDay.getFullYear();
-    const month = (props.currentFirstDay.getMonth() + 1)
-      .toString()
-      .padStart(2, "0");
-    const day = props.currentFirstDay.getDate().toString().padStart(2, "0");
-    selectedDate.value = `${year}-${month}-${day}`;
-  }
+  const year = props.currentFirstDay.getFullYear();
+  const month = (props.currentFirstDay.getMonth() + 1)
+    .toString()
+    .padStart(2, "0");
+  const day = props.currentFirstDay.getDate().toString().padStart(2, "0");
+  selectedDate.value = `${year}-${month}-${day}`;
 });
 
 const goToWeek = () => {
