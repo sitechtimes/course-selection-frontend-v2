@@ -38,6 +38,17 @@ import { ref, computed, onMounted } from "vue";
 const userStore = useUserStore();
 const todaysDate = new Date();
 
+/**
+ * A computed property that returns upcoming student meetings grouped by date.
+ *
+ * - Filters meetings to include only those with a date later than `todaysDate`.
+ * - Sorts the meetings in ascending order by their date.
+ * - Groups the meetings by day, using the ISO date string (YYYY-MM-DD) as the key.
+ *
+ * @returns {ComputedRef<{ [date: string]: Meeting[] }>} 
+ * An object where each key is a date (formatted as 'YYYY-MM-DD'), and the value is
+ * an array of meetings scheduled for that day.
+ */
 const groupedStudentMeetings = computed(() =>
   userStore.meetings
     .filter((meeting) => meeting.date > todaysDate)
