@@ -95,14 +95,20 @@ export interface ChartData {
   labels: string[];
   datasets: {
     data: number[];
-    backgroundColor: string[];
+    backgroundColor?: string[];
     label: string;
   }[];
 }
 
+export interface CourseStat {
+  course: Course;
+  picks: number;
+  ranks: { [key: number]: number }
+}
+
 export interface Stats {
   year: number;
-  stats: string;
+  courses: CourseStat[];
 }
 
 export interface PieChartStats {
