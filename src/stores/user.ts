@@ -170,28 +170,37 @@ export const useUserStore = defineStore("user", () => {
     const data = await res.json();
 
     meetings.value = data.map((meeting: Meeting) => {
-      meeting.meetingDate = new Date(meeting.meetingDate);
+      meeting.date = new Date(meeting.date);
       return meeting;
     });
     meetingsFetched.value = true;
   }
 
   async function changeMeeting(
-    id: number,
     deleteMeeting: boolean,
+    meeting_id?: number,
+    student_id?: number,
     date?: string,
-    description?: string,
+    period?: number,
+    memo?: string,
     notify?: boolean
   ) {
     const res = await fetchData(
-      "guidance/updateMeeting/",
-      deleteMeeting ? "DELETE" : "POST",
-      { id, date, description, notify }
+      "guidance/meetings/",
+      deleteMeeting ? "DELETE" : "PUT",
+      {
+        meeting_id,
+        student_id,
+        date: date,
+        period,
+        memo,
+        notify,
+      }
     );
     if (!res.ok) return await res.json();
     const data = await res.json();
     meetings.value = data.map((meeting: Meeting) => {
-      meeting.meetingDate = new Date(meeting.meetingDate);
+      meeting.date = new Date(meeting.date);
       return meeting;
     });
   }
@@ -208,6 +217,7 @@ export const useUserStore = defineStore("user", () => {
       )
       .join(", ");
   }
+
 
   function $reset() {
     profileID.value = 0;

@@ -79,15 +79,17 @@ export interface Flag {
 export interface Meeting {
   id: number;
   name: string;
-  meetingDate: Date;
-  description: string;
+  date: Date;
+  memo: string;
   grade: number;
   email: string;
+  student: string;
+  studentId: number;
+  period: number;
 }
 
-export interface DateInfo {
-  type: number;
-  todaysDate: number;
+export interface DateInfo { 
+  todaysDate: Date;
   meetings: Meeting[];
 }
 
