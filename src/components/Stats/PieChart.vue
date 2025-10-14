@@ -43,10 +43,10 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const userStore = useUserStore();
 const loaded = ref(false);
 const selectedCourse = ref("");
-const selectedYear = ref("");
+const selectedYear = ref(0);
 
 const chartData = ref<Stats[]>([]);
-const years = ref<Number[]>([]);
+const years = ref<number[]>([]);
 
 onMounted(async () => {
   const statsData = await userStore.fetchStats();
@@ -56,11 +56,25 @@ onMounted(async () => {
 });
 
 //if a new year is selected from the dropdown, find the index where the stats are located
-const stats = computed<PieChartStats>(
-  () =>
-    chartData.value[years.value.indexOf(Number(selectedYear.value))]?.stats ||
-    {}
-);
+const stats = computed<PieChartStats>(() => {
+  const yearlyData = chartData.value.find(item => item.year === selectedYear.value);
+  if (!yearlyData) return {};
+  const courseStats = yearlyData.courses.map(courseEntry => {
+    const courseName = courseEntry.course.name;
+    const ranksArray = Object.entries(courseEntry.ranks).reduce<number[]>((arr, [rankStr, count]) => {
+      const index = parseInt(rankStr, 10) - 1;
+      arr[index] = count;
+      return arr;
+    }, []);
+
+    return [courseName, { ranks: ranksArray }] as const;
+  });
+
+  return Object.fromEntries(courseStats);
+});
+
+
+
 
 //returns each course name
 const courses = computed(() => (stats.value ? Object.keys(stats.value) : []));
@@ -82,7 +96,7 @@ const getChartData = computed(() => {
   for (let i = 0; i < 40; i++) {
     const randomColours =
       "#" + Math.floor(Math.random() * 16777215).toString(16); //toString(16) turns it into hexadecimal
-    chartData.datasets[0].backgroundColor.push(randomColours);
+    chartData.datasets[0].backgroundColor?.push(randomColours);
   }
 
   if (selectedCourse.value) {
