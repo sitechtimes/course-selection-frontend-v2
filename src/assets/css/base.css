@@ -1,6 +1,32 @@
 @import url("https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
 @import "tailwindcss";
 
+@plugin "@tailwindcss/forms";
+
+@theme {
+  --breakpoint-xs: 480px;
+  --breakpoint-sm: 600px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 976px;
+  --breakpoint-xl: 1440px;
+
+  --color-primary-s: #A3C2DF;
+  --color-secondary-s: #334867;
+  --color-tertiary-s: #E9F0FA;
+  --color-other-s: #c1d6eb;
+  --color-primary-g: #C5D4A4;
+  --color-secondary-g: #49623C;
+  --color-tertiary-g: #EDFBE2;
+  --color-other-g: #99B76F;
+
+  --spacing-112: 28rem;
+  --spacing-128: 32rem;
+  --spacing-144: 36rem;
+  --spacing-160: 40rem;
+
+  --shadow-deepinner: inset 1px 2px 6px 1px rgb(0 0 0 / 0.1);
+}
+
 :root {
   /* fonts */
   --font-main: "Kumbh Sans", sans-serif;
@@ -18,39 +44,11 @@
   -webkit-text-size-adjust: 100%;
 }
 
-*,
-html,
 body {
-  margin: 0;
-  padding: 0;
-  font-size: 16px;
-  box-sizing: border-box;
-  overflow-x: hidden;
-}
-
-body {
-  color: var(--text-color);
-  background-color: var(--bg-color);
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-p,
-a,
-li,
-div,
-button,
-label,
-input,
-textarea {
   font-family: var(--font-main);
-  font-weight: var(--weight);
-  line-height: 1.25;
-  text-decoration: none;
-  overflow: visible;
+  font-size: 16px;     
+  color: var(--color-secondary-s); 
+  line-height: 1.4; 
 }
 
 *:focus {
