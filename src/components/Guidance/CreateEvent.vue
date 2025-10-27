@@ -64,6 +64,7 @@
               v-model="time"
               placeholder="Time"
             />
+            <p class="ml-6 mt-1" v-if="period">Period: {{ period }}</p>
             <p v-if="timeError" class="error text-red-600 ml-6 mt-1">
               Field empty/invalid
             </p>
@@ -83,7 +84,7 @@
             Student
           </label>
           <datalist id="suggestions">
-            <option v-for="student in studentList" :key="student.email">
+            <option v-for="student in studentList" :key="student.id">
               {{ userStore.titleCase(student.name) }}, {{ student.email }}
             </option>
           </datalist>
@@ -147,11 +148,11 @@
 </template>
 
 <script setup lang="ts">
-import { GuidanceStudent } from "../../types/interface";
+import { GuidanceStudent, Meeting } from "../../types/interface";
 import { useUserStore } from "../../stores/user";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 
-const props = defineProps<{ todaysDate: string }>();
+const props = defineProps<{ meeting?: Meeting; todaysDate?: string }>();
 const userStore = useUserStore();
 
 const date = ref("");
@@ -159,7 +160,8 @@ const time = ref("");
 const description = ref("");
 const selectedStudent = ref("");
 
-let id: number;
+let studentId: number;
+let meetingId: number;
 
 const save = ref();
 const form = ref();
@@ -170,32 +172,92 @@ const timeError = ref(false);
 const nameError = ref(false);
 const notify = ref(false);
 const show = ref(true);
-
 const dateElement = ref();
 
+const periodsMap = [
+  { startTime: "08:00", endTime: "08:41", period: 1 },
+  { startTime: "08:42", endTime: "09:26", period: 2 },
+  { startTime: "09:27", endTime: "10:17", period: 3 },
+  { startTime: "10:18", endTime: "11:02", period: 4 },
+  { startTime: "11:03", endTime: "11:47", period: 5 },
+  { startTime: "11:48", endTime: "12:32", period: 6 },
+  { startTime: "12:33", endTime: "13:17", period: 7 },
+  { startTime: "13:18", endTime: "14:02", period: 8 },
+  { startTime: "14:03", endTime: "14:47", period: 9 },
+];
+
 onMounted(() => {
-  studentList.value = userStore.studentList;
-  date.value = props.todaysDate!;
+  studentList.value = userStore.allStudents;
   dateElement.value.type = "date";
-  dateElement.value.value = props.todaysDate!;
+  if (props.todaysDate) {
+    date.value = props.todaysDate!;
+    dateElement.value.value = props.todaysDate!;
+  } else if (props.meeting) {
+    const m = props.meeting;
+    const student = userStore.allStudents.find((s) => s.id === m.studentId);
+
+    const eventDate = new Date(m.date);
+
+    date.value = `${eventDate.getFullYear()}-${(eventDate.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${eventDate.getDate().toString().padStart(2, "0")}`;
+
+    description.value = m.memo;
+
+    time.value = `${eventDate
+      .getHours()
+      .toString()
+      .padStart(2, "0")}:${eventDate.getMinutes().toString().padStart(2, "0")}`;
+
+    if (student) {
+      selectedStudent.value = `${userStore.titleCase(student.name)}, ${
+        student.email
+      }`;
+    }
+    meetingId = m.id;
+  }
+});
+
+const period = computed(() => {
+  const currentTime = time.value;
+
+  const [checkHours, checkMinutes] = currentTime.split(":").map(Number);
+  const checkTotalMinutes = checkHours * 60 + checkMinutes;
+  for (const period of periodsMap) {
+    const [startHours, startMinutes] = period.startTime.split(":").map(Number);
+    const [endHours, endMinutes] = period.endTime.split(":").map(Number);
+
+    const startTotalMinutes = startHours * 60 + startMinutes;
+    const endTotalMinutes = endHours * 60 + endMinutes;
+
+    if (
+      checkTotalMinutes >= startTotalMinutes &&
+      checkTotalMinutes <= endTotalMinutes
+    ) {
+      return period.period;
+    }
+  }
 });
 
 function submit() {
   dateError.value = !date.value;
   timeError.value = !time.value;
   nameError.value = !selectedStudent.value;
-
   if (dateError.value || timeError.value || nameError.value) return;
-  const meetingISO = new Date(date.value + "T" + time.value).toISOString();
-  id = studentList.value.find(({ email }) =>
+
+  const naiveDateStr = `${date.value}T${time.value}:00`;
+
+  studentId = studentList.value.find(({ email }) =>
     selectedStudent.value.includes(email)
   )!.id;
 
   save.value.innerHTML = "Saved";
   userStore.changeMeeting(
-    id,
     false,
-    meetingISO,
+    meetingId,
+    studentId,
+    naiveDateStr,
+    period.value,
     description.value,
     notify.value
   );

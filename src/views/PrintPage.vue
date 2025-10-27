@@ -8,19 +8,19 @@
         <div class="p-4">
           <div class="overflow-y-auto max-h-100">
             <ul class="my-4" v-if="meeting">
-              <p>Dear {{ meeting.name }},</p>
+              <p>Dear {{ meeting.student }},</p>
               <br />
               <p>
                 Your guidance counselor has scheduled a meeting with you for
-                {{ meeting.meetingDate.toLocaleTimeString() }} on
-                {{ meeting.meetingDate.toLocaleDateString() }}. Please meet with
+                {{ meeting.date.toLocaleTimeString() }} on
+                {{ meeting.date.toLocaleDateString() }}. Please meet with
                 them during the specified time.
               </p>
               <br />
-              <p>
+              <p v-if="meeting.memo">
                 Your guidance counselor has made the following notes:
                 <br />
-                {{ meeting.description }}
+                {{ meeting.memo }}
               </p>
             </ul>
           </div>

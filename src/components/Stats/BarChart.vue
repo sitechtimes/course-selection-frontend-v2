@@ -56,7 +56,7 @@ import {
   CategoryScale,
   LinearScale,
 } from "chart.js";
-import { Stats, ChartData } from "../../types/interface";
+import { Stats, ChartData, CourseStat } from "../../types/interface";
 ChartJS.register(
   Title,
   Tooltip,
@@ -71,7 +71,7 @@ const loaded = ref(false);
 const selectedYear = ref(0);
 
 const chartData = ref<Stats[]>([]);
-const years = ref<Number[]>([]);
+const years = ref<number[]>([]);
 
 onMounted(async () => {
   const statsData = await userStore.fetchStats();
@@ -82,7 +82,7 @@ onMounted(async () => {
 
 //if a new year is selected from the dropdown, find the index where the stats are located
 const stats = computed(
-  () => chartData.value[years.value.indexOf(selectedYear.value)].stats || []
+  () => chartData.value.find(item => item.year === selectedYear.value)
 );
 
 const selectedSubject = ref("");
@@ -101,23 +101,30 @@ const subjects = [
 const chartOptions = ref({ responsive: true });
 
 const getChartData = computed(() => {
-  const chartData: ChartData = {} as ChartData;
+  const labels: string[] = [];
+  const data: number[] = [];
 
-  if (selectedSubject.value && selectedYear.value) {
-    const targettedCourses = Object.entries(stats).filter(
-      ([_, info]) => info.courseInfo.fields.subject === selectedSubject.value
+  if (selectedSubject.value && selectedYear.value && stats.value) {
+    const targetedCourses = stats.value.courses.filter(
+      (item) => item.course.subject === selectedSubject.value
     );
-    if (targettedCourses.length > 0) {
-      for (const [courseName, info] of targettedCourses) {
-        chartData.labels.push(courseName);
-        chartData.datasets[0].data.push(info.picks);
-      }
+    if (targetedCourses.length > 0) {
+      targetedCourses.forEach((item) => {
+        labels.push(item.course.name);
+        data.push(item.picks);
+      });
     } else {
-      chartData.labels.push("No courses match this subject");
-      chartData.datasets[0].data.push(0);
+      labels.push(`No courses in ${selectedSubject.value} for ${selectedYear.value}`);
+      data.push(0);
     }
   }
+
+  const chartResult: ChartData = {
+    labels: labels,
+    datasets: [{ label: "Number of Picks", data: data }],
+  };
+
   loaded.value = true;
-  return chartData;
+  return chartResult;
 });
 </script>

@@ -17,8 +17,8 @@ export const useUserStore = defineStore("user", () => {
   const email = ref("");
   const isGuidance = ref(false);
   const student = ref<Student>({} as Student);
-  const studentList = ref<GuidanceStudent[]>([]);
-  const viewedStudents = ref<GuidanceStudent[]>([]);
+  const students = ref<number[]>([]); // Only the guidance counselor's students
+  const allStudents = ref<GuidanceStudent[]>([]);
   const meetings = ref<Meeting[]>([]);
   const meetingsFetched = ref(false);
 
@@ -52,10 +52,13 @@ export const useUserStore = defineStore("user", () => {
     lastName.value = data.lastName[0] + data.lastName.slice(1).toLowerCase();
     email.value = data.email;
     isGuidance.value = data.isGuidance;
-    if (!isGuidance.value) {
-      student.value = data.student;
+    if (isGuidance.value) {
+      students.value = data.profile;
+      await getStudents();
+    } else {
+      student.value = data.profile;
       if (data.student.status === "Finalized") surveyStore.open = false;
-    } else await getStudents();
+    }
     isAuth.value = true;
   }
 
@@ -71,18 +74,17 @@ export const useUserStore = defineStore("user", () => {
       const error = Object.values(data)[0];
       return setPopup(typeof error === "object" ? error[0] : error, true);
     }
-
     profileID.value = data.id;
     firstName.value =
-      data.firstName[0].toUpperCase() + data.firstName.slice(1).toLowerCase();
+      data.user.firstName[0].toUpperCase() + data.user.firstName.slice(1).toLowerCase();
     lastName.value =
-      data.lastName[0].toUpperCase() + data.lastName.slice(1).toLowerCase();
-    email.value = data.email;
-    isGuidance.value = data.isGuidance;
+      data.user.lastName[0].toUpperCase() + data.user.lastName.slice(1).toLowerCase();
+    email.value = data.user.email;
+    isGuidance.value = data.user.isGuidance;
     if (isGuidance.value) await getStudents();
     else {
-      student.value = data.student;
-      surveyStore.open = data.student.status !== "Finalized";
+      student.value = data.user.profile;
+      surveyStore.open = data.user.profile.status !== "Finalized";
     }
     isAuth.value = true;
     router.push(`/${isGuidance.value ? "guidance" : "student"}/dashboard`);
@@ -120,7 +122,8 @@ export const useUserStore = defineStore("user", () => {
         true
       );
     data = Object.values(data as Record<string, string[]>)[0];
-    return setPopup(typeof data === "object" ? data[0] : data, !res.ok);
+    setPopup(typeof data === "object" ? data[0] : data, !res.ok);
+    return res.ok;
   }
 
   async function logout() {
@@ -143,7 +146,7 @@ export const useUserStore = defineStore("user", () => {
     const res = await fetchData("guidance/profiles/");
     if (!res.ok) return await res.json();
     const data = await res.json();
-    studentList.value = data;
+    allStudents.value = data;
   }
   async function changeFlag(
     student: GuidanceStudent,
@@ -156,8 +159,8 @@ export const useUserStore = defineStore("user", () => {
     });
     if (!res.ok) return await res.json();
     const data = await res.json();
-    // const index = studentList.value.findIndex((student) => student.id === id);
-    // studentList.value[index] = data.flag;
+    // const index = allStudents.value.findIndex((student) => student.id === id);
+    // allStudents.value[index] = data.flag;
   }
 
   async function getMeetings() {
@@ -165,34 +168,40 @@ export const useUserStore = defineStore("user", () => {
     if (!res.ok) return await res.json();
     const data = await res.json();
 
-    meetings.value = data.map((meeting: Meeting) => ({
-      ...meeting,
-      meetingDate: new Date(meeting.meetingDate),
-      name: meeting.name
-        .split(",")
-        .map((s) => s[0].toUpperCase() + s.slice(1).toLowerCase())
-        .join(", "),
-    }));
+    meetings.value = data.map((meeting: Meeting) => {
+      meeting.date = new Date(meeting.date);
+      return meeting;
+    });
     meetingsFetched.value = true;
   }
 
   async function changeMeeting(
-    id: number,
     deleteMeeting: boolean,
+    meeting_id?: number,
+    student_id?: number,
     date?: string,
-    description?: string,
+    period?: number,
+    memo?: string,
     notify?: boolean
   ) {
-    if (deleteMeeting) return;
     const res = await fetchData(
-      "guidance/updateMeeting/",
-      deleteMeeting ? "DELETE" : "POST",
-      { id, date, description, notify }
+      "guidance/meetings/",
+      deleteMeeting ? "DELETE" : "PUT",
+      {
+        meeting_id,
+        student_id,
+        date: date,
+        period,
+        memo,
+        notify,
+      }
     );
     if (!res.ok) return await res.json();
     const data = await res.json();
-    console.log(data);
-    // guidanceMeetings.value.push(data);
+    meetings.value = data.map((meeting: Meeting) => {
+      meeting.date = new Date(meeting.date);
+      return meeting;
+    });
   }
 
   function titleCase(name: string) {
@@ -207,6 +216,7 @@ export const useUserStore = defineStore("user", () => {
       )
       .join(", ");
   }
+
 
   function $reset() {
     profileID.value = 0;
@@ -230,17 +240,18 @@ export const useUserStore = defineStore("user", () => {
     setPopup,
     lastName,
     meetings,
+    students,
     firstName,
+    profileID,
     titleCase,
     isGuidance,
     fetchStats,
     changeFlag,
     getMeetings,
-    studentList,
+    allStudents,
     initComplete,
     resetPassword,
     changeMeeting,
-    viewedStudents,
     meetingsFetched,
     resetPasswordConfirm,
     $reset,

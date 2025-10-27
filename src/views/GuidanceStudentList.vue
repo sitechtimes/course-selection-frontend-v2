@@ -100,7 +100,6 @@ import { ref, computed, watch } from "vue";
 document.title = "Student List | SITHS Course Selection";
 
 const userStore = useUserStore();
-const allStudents = ref<GuidanceStudent[]>([]);
 
 const viewAll = ref(false);
 const input = ref("");
@@ -142,7 +141,11 @@ function filterByCategory(students: GuidanceStudent[], sortBy: string) {
 function applyFilters(sortBy: string, search: string) {
   startIndex.value = 0;
   const filtered = filterByCategory(
-    viewAll.value ? userStore.studentList : allStudents.value,
+    viewAll.value
+      ? userStore.allStudents
+      : userStore.allStudents.filter(({ id }) =>
+          userStore.students.includes(id)
+        ),
     sortBy
   );
   if (!search.trim().length) return filtered;
@@ -167,6 +170,7 @@ function changePage(increment: number) {
 function updatePagination(page: number) {
   startIndex.value = (page - 1) * pageCapacity;
   currentPage.value = page;
+  currentChunk.value = Math.ceil(page / pagesPerChunk);
 }
 
 const totalChunks = computed(() => Math.ceil(totalPages.value / pagesPerChunk));
@@ -177,16 +181,10 @@ const visiblePages = computed(() => {
   return Array.from({ length: end - start + 1 }, (_, i) => start + i);
 });
 
-watch(viewAll, (newValue) => {
+watch(viewAll, () => {
   input.value = "";
-  if (newValue) userStore.viewedStudents = allStudents.value;
-  else userStore.viewedStudents = userStore.studentList;
   updatePagination(1);
 });
 
-watch(sortedAndFiltered, () => {
-  userStore.viewedStudents = sortedAndFiltered.value;
-  currentChunk.value = 1;
-  updatePagination(1);
-});
+watch(sortedAndFiltered, () => updatePagination(1));
 </script>

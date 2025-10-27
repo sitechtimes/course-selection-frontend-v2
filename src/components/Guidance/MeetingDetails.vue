@@ -34,7 +34,7 @@
           </svg>
           Student
         </h3>
-        <p class="ml-4 p-4">{{ meeting.name }}</p>
+        <p class="ml-4 p-4">{{ meeting.student }}</p>
         <div class="flex flex-row items-end">
           <div>
             <h3
@@ -48,7 +48,7 @@
               </svg>
               Date
             </h3>
-            <p class="ml-4 p-4">{{ meeting.meetingDate }}</p>
+            <p class="ml-4 p-4">{{ meeting.date.toLocaleDateString() }}</p>
           </div>
           <div class="pl-16">
             <h3
@@ -63,7 +63,13 @@
               Time
             </h3>
             <p class="ml-4 p-4">
-              {{ meeting.meetingDate.toLocaleTimeString() }}
+              {{
+                meeting.date.toLocaleTimeString([], {
+                  hour: "numeric",
+                  minute: "2-digit",
+                  hour12: true,
+                })
+              }}
             </p>
           </div>
         </div>
@@ -79,21 +85,20 @@
           </svg>
           Memo
         </h3>
-        <p class="ml-4 p-4">{{ meeting.description }}</p>
+        <p class="ml-4 p-4">{{ meeting.memo }}</p>
         <div></div>
         <div class="w-[60%] ml-4 mb-8 flex flex-row items-center">
           <div
-            class="item xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit"
+            class="item ml-3 submit xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit"
           >
-            <button>
-              <RouterLink
-                :to="`/guidance/PrintPage/${meeting.id}`"
-                type="submit"
-                class="font-bold text-[1.2rem] px-4 py-2 rounded-xl w-fit h-fit"
-                id="save"
-                ref="save"
-                >Print</RouterLink
-              >
+            <button
+              type="submit"
+              @click="toggleEditModal"
+              class="font-bold text-[1.2rem] bg-primary-g px-4 py-2 rounded-xl w-fit h-fit"
+              id="save"
+              ref="save"
+            >
+              Edit
             </button>
           </div>
           <div
@@ -102,32 +107,52 @@
             <button
               type="submit"
               @click="toggleDeleteModal"
-              class="font-bold text-[1.2rem] bg-[#f28e8e] px-4 py-2 rounded-xl w-fit h-fit"
+              class="font-bold text-[1.2rem] bg-[#f28e8e] ml-3 px-4 py-2 rounded-xl w-fit h-fit"
               id="save"
               ref="save"
             >
               Delete
             </button>
           </div>
+          <div
+            class="item xl:text-2xl transition duration-300 hover:opacity-50 cursor-pointer w-fit"
+          >
+            <RouterLink
+              :to="`/guidance/PrintPage/${meeting.id}`"
+              type="submit"
+              class="font-bold text-[1.2rem] ml-1 px-4 py-2 rounded-xl w-fit h-fit"
+              id="save"
+              ref="save"
+              >Print</RouterLink
+            >
+          </div>
         </div>
       </div>
     </div>
     <DeleteModal v-show="showDeleteModal" :details="meeting" />
+    <CreateEvent v-show="showEditModal" :meeting="meeting" />
   </body>
 </template>
 
 <script setup lang="ts">
 import { Meeting } from "../../types/interface";
+import CreateEvent from "./CreateEvent.vue";
 import DeleteModal from "./DeleteModal.vue";
 import { ref } from "vue";
 
 const show = ref(true);
 const showDeleteModal = ref(false);
+const showEditModal = ref(false);
 
 defineProps<{ meeting: Meeting }>();
 
 const toggleDeleteModal = () => {
   showDeleteModal.value = !showDeleteModal.value;
+  show.value = !show.value;
+};
+
+const toggleEditModal = () => {
+  showEditModal.value = !showEditModal.value;
   show.value = !show.value;
 };
 </script>

@@ -5,10 +5,10 @@
   >
     <h2 class="h2 font-bold text-[1.5rem] mb-2 text-left">Are you sure?</h2>
     <p class="my-4">
-      Delete {{ details.name }}'s meeting on
-      {{ details.meetingDate }}
+      Delete {{ details.student }}'s meeting on
+      {{ details.date.toLocaleDateString() }}
     </p>
-    <p class="mb-6">{{ details.name }} will be notified of this change</p>
+    <p class="mb-6">{{ details.student }} will be notified of this change</p>
     <div class="flex flex-row items-center justify-end">
       <button
         @click="showDetails = !showDetails"
@@ -37,7 +37,7 @@ const showDetails = ref(true);
 defineProps<{ details: Meeting }>();
 
 function deleteMeeting(id: number) {
-  userStore.changeMeeting(id, true);
+  userStore.changeMeeting(true, id);
   showDetails.value = !showDetails.value;
 }
 </script>

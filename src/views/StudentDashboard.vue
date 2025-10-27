@@ -32,8 +32,10 @@
         id="announcements"
         class="text-lg md:text-xl text-left flex justify-center items-center ml-4 lg:ml-0 lg:justify-start"
       >
-        🔔
-        <h2 v-if="surveyStore.open">Surveys are closing on {{ closeDate }}.</h2>
+        <img src="/bell.svg" alt="Bell Emoji" height="24" width="24" />
+        <h2 v-if="surveyStore.open" class="pl-2">
+          Surveys are closing on {{ closeDate }}.
+        </h2>
         <h2 v-else-if="userStore.student.status === 'Finalized'">
           Your guidance counselor has finalized your survey. If you wish to make
           changes, please contact them.
