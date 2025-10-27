@@ -53,11 +53,11 @@ export const useUserStore = defineStore("user", () => {
     email.value = data.email;
     isGuidance.value = data.isGuidance;
     if (isGuidance.value) {
-      students.value = data.profile;
+      students.value = data.user.profile;
       await getStudents();
     } else {
       student.value = data.profile;
-      if (data.student.status === "Finalized") surveyStore.open = false;
+      if (data.profile.status === "Finalized") surveyStore.open = false;
     }
     isAuth.value = true;
   }
