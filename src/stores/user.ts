@@ -74,18 +74,17 @@ export const useUserStore = defineStore("user", () => {
       const error = Object.values(data)[0];
       return setPopup(typeof error === "object" ? error[0] : error, true);
     }
-
     profileID.value = data.id;
     firstName.value =
-      data.firstName[0].toUpperCase() + data.firstName.slice(1).toLowerCase();
+      data.user.firstName[0].toUpperCase() + data.user.firstName.slice(1).toLowerCase();
     lastName.value =
-      data.lastName[0].toUpperCase() + data.lastName.slice(1).toLowerCase();
-    email.value = data.email;
-    isGuidance.value = data.isGuidance;
+      data.user.lastName[0].toUpperCase() + data.user.lastName.slice(1).toLowerCase();
+    email.value = data.user.email;
+    isGuidance.value = data.user.isGuidance;
     if (isGuidance.value) await getStudents();
     else {
-      student.value = data.student;
-      surveyStore.open = data.student.status !== "Finalized";
+      student.value = data.user.profile;
+      surveyStore.open = data.user.profile.status !== "Finalized";
     }
     isAuth.value = true;
     router.push(`/${isGuidance.value ? "guidance" : "student"}/dashboard`);
