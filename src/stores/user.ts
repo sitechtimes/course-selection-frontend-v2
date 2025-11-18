@@ -61,11 +61,14 @@ export const useUserStore = defineStore("user", () => {
       const error = Object.values(data)[0];
       return setPopup(typeof error === "object" ? error[0] : error, true);
     }
+    console.log(data);
     profileID.value = data.id;
     firstName.value =
-      data.user.firstName[0].toUpperCase() + data.user.firstName.slice(1).toLowerCase();
+      data.user.firstName[0].toUpperCase() +
+      data.user.firstName.slice(1).toLowerCase();
     lastName.value =
-      data.user.lastName[0].toUpperCase() + data.user.lastName.slice(1).toLowerCase();
+      data.user.lastName[0].toUpperCase() +
+      data.user.lastName.slice(1).toLowerCase();
     email.value = data.user.email;
     isGuidance.value = data.user.isGuidance;
     if (isGuidance.value) await getStudents();
@@ -235,7 +238,6 @@ export const useUserStore = defineStore("user", () => {
       )
       .join(", ");
   }
-
 
   function $reset() {
     profileID.value = 0;
