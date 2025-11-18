@@ -1,28 +1,47 @@
 <template>
   <div class="grid content-center justify-center flex-wrap">
-    <div class="container">
-      <div class="flex flex-row mb-8 text-5xl font-bold w-[70%]">
+    <div class="container w-screen">
+      <div class="flex flex-row mb-5 text-5xl font-bold w-[90%] items-center">
         <span
           class="arrow cursor-pointer text-2xl"
           id="prev"
           ref="prev"
-          @click="changeMonth(false)"
-          >&#10094;</span
+          @click="changeWeek(false)"
+          >&#x276E;</span
         >
-        <div class="flex flex-row text-2xl mx-4">
-          {{ months[month] }} {{ year }}
+        <div
+          class="flex flex-row items-center text-2xl mx-4 cursor-pointer hover:opacity-80"
+          @click="toggleWeekSelector"
+          title="Select Week"
+        >
+          <span class="text-2xl">{{ displayedWeekRange }}</span>
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-7 w-7 ml-2 text-gray-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+            />
+          </svg>
         </div>
         <span
           class="arrow cursor-pointer text-2xl"
           id="next"
           ref="next"
-          @click="changeMonth(true)"
+          @click="changeWeek(true)"
         >
-          &#10095;
+          &#x276F;
         </span>
       </div>
-      <div class="flex flex-row gap-[7rem] mb-12">
-        <div class="calendar w-full">
+      <div class="flex flex-col lg:flex-row gap-4 lg:gap-8 mb-12">
+        <div class="calendar w-full lg:w-3/4">
           <ul class="weeks bg-primary-g">
             <li>Sun</li>
             <li>Mon</li>
@@ -35,24 +54,47 @@
           <ul class="days">
             <li
               class="hover:visible group min-h-[10rem] relative pb-7"
-              v-for="h in calendarData"
+              v-for="(day, dayIndex) in calendarData"
+              :key="day.todaysDate.toISOString()"
             >
-              <p class="mt-2 text-end mr-2 mb-1">{{ h.todaysDate }}</p>
+              <p class="mt-2 text-end mr-2 mb-1">
+                {{ day.todaysDate.getMonth() + 1 }} /
+                {{ day.todaysDate.getDate() }}
+              </p>
               <div
-                v-for="meeting in h.meetings"
-                :key="meeting.id"
-                @click="toggleDetails(meeting)"
+                v-for="(group, groupIndex) in day.periodGroups"
+                :key="group.period"
+                class="w-full"
               >
-                <p
-                  :class="`w-[100%] text-center truncate rounded-md p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md ${
-                    classColor[meeting.grade]
-                  }`"
-                >
-                  {{ meeting.name }}
-                </p>
+                <div v-if="group.meetings.length > 0">
+                  <p
+                    @click="togglePeriodDropdown(dayIndex, groupIndex)"
+                    class="cursor-pointer text-center font-semibold p-1 bg-gray-200 hover:bg-gray-300 mb-1"
+                  >
+                    Period {{ group.period }} ({{ group.meetings.length }})
+                    <span v-if="group.isOpen">&#9207;</span>
+                    <span v-else>&#9205;</span>
+                  </p>
+                  <div v-if="group.isOpen">
+                    <div
+                      v-for="meeting in group.meetings"
+                      :key="meeting.id"
+                      @click="toggleDetails(meeting)"
+                    >
+                      <p
+                        :class="`w-full text-center p-1.5 mb-1 font-bold transition duration-500 hover:opacity-80 cursor-pointer hover:shadow-md ${
+                          classColor[meeting.grade]
+                        }`"
+                      >
+                        {{ meeting.student }}
+                        {{ formatDisplayTime(meeting.date) }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
               <button
-                @click="toggleEvent(h)"
+                @click="toggleEvent(day)"
                 class="h-10 opacity-0 group-hover:opacity-100 cursor-pointer text-3xl leading-[0] transition-all duration-300 absolute bottom-0 right-0 mr-2"
               >
                 +
@@ -60,31 +102,50 @@
             </li>
           </ul>
         </div>
-        <UpcomingMeetings />
+        <div class="w-full lg:w-1/4 mt-8 lg:mt-0 hidden lg:block">
+          <UpcomingMeetings />
+        </div>
       </div>
     </div>
     <CreateEvent v-if="showEvent" :todaysDate="createEventDate" />
     <MeetingDetails v-if="showDetails" :meeting="selectedMeeting" />
+    <WeekSelector
+      v-if="showWeekSelector"
+      :current-first-day="firstDay"
+      @week-selected="handleWeekSelected"
+      @close="toggleWeekSelector"
+    />
   </div>
 </template>
+
 <script setup lang="ts">
 import UpcomingMeetings from "../components/Guidance/UpcomingMeetings.vue";
 import MeetingDetails from "../components/Guidance/MeetingDetails.vue";
+import WeekSelector from "../components/Guidance/WeekSelector.vue";
 import CreateEvent from "../components/Guidance/CreateEvent.vue";
-import { ref, onMounted, watchEffect } from "vue";
+import { ref, onMounted, watchEffect, computed } from "vue";
 import { useUserStore } from "../stores/user";
-import { DateInfo } from "../types/interface";
 import { Meeting } from "../types/interface";
+
+interface PeriodGroup {
+  period: number | string;
+  meetings: Meeting[];
+  isOpen: boolean;
+}
+
+interface DateInfoWithPeriods {
+  todaysDate: Date;
+  periodGroups: PeriodGroup[];
+}
 
 document.title = "Calendar & Events | SITHS Course Selection";
 
-const calendarData = ref<DateInfo[]>([]);
-
 const selectedMeeting = ref<Meeting>({} as Meeting);
-
-const showEvent = ref(false);
-const showDetails = ref(false);
+const calendarData = ref<DateInfoWithPeriods[]>([]);
+const showWeekSelector = ref(false);
 const createEventDate = ref("");
+const showDetails = ref(false);
+const showEvent = ref(false);
 
 const userStore = useUserStore();
 
@@ -110,129 +171,300 @@ const months = [
   "December",
 ];
 
-let currentDate = new Date();
-let year = currentDate.getFullYear();
-let month = currentDate.getMonth();
+const periodsMap = [
+  { startTime: "08:00", endTime: "08:41", period: 1 },
+  { startTime: "08:42", endTime: "09:26", period: 2 },
+  { startTime: "09:27", endTime: "10:17", period: 3 },
+  { startTime: "10:18", endTime: "11:02", period: 4 },
+  { startTime: "11:03", endTime: "11:47", period: 5 },
+  { startTime: "11:48", endTime: "12:32", period: 6 },
+  { startTime: "12:33", endTime: "13:17", period: 7 },
+  { startTime: "13:18", endTime: "14:02", period: 8 },
+  { startTime: "14:03", endTime: "14:47", period: 9 },
+];
 
-onMounted(async () => await renderCalendar());
+const currentDate = new Date();
+const initialStartOfWeekLocal = new Date(currentDate);
+initialStartOfWeekLocal.setDate(currentDate.getDate() - currentDate.getDay());
+initialStartOfWeekLocal.setHours(0, 0, 0, 0);
+
+const firstDay = ref(initialStartOfWeekLocal);
+
+const displayedWeekRange = computed(() => {
+  const start = firstDay.value;
+  const end = new Date(start);
+  end.setDate(start.getDate() + 6);
+
+  const startMonthStr = months[start.getMonth()];
+  const startDateNum = start.getDate();
+  const endMonthStr = months[end.getMonth()];
+  const endDateNum = end.getDate();
+  const year = start.getFullYear();
+
+  if (start.getMonth() === end.getMonth()) {
+    return `${startMonthStr} ${startDateNum} - ${endDateNum}, ${year}`;
+  } else {
+    return `${startMonthStr} ${startDateNum} - ${endMonthStr} ${endDateNum}, ${year}`;
+  }
+});
+
+onMounted(() => renderCalendar());
+
+const toggleWeekSelector = () => {
+  showWeekSelector.value = !showWeekSelector.value;
+};
 
 const toggleDetails = (meeting: Meeting) => {
   selectedMeeting.value = meeting;
   showDetails.value = !showDetails.value;
 };
 
-const toggleEvent = (date: any) => {
-  let eventYear = year;
-  let eventMonth = month + date.type;
-
-  if (eventMonth < 0) {
-    eventMonth = 11;
-    eventYear--;
-  } else if (eventMonth > 11) {
-    eventMonth = 0;
-    eventYear++;
-  }
-  createEventDate.value = `${eventYear}-${(eventMonth + 1)
+const toggleEvent = (dateInfo: DateInfoWithPeriods) => {
+  const eventDate = dateInfo.todaysDate;
+  createEventDate.value = `${eventDate.getFullYear()}-${(
+    eventDate.getMonth() + 1
+  )
     .toString()
-    .padStart(2, "0")}-${date.todaysDate.toString().padStart(2, "0")}`;
+    .padStart(2, "0")}-${eventDate.getDate().toString().padStart(2, "0")}`;
   showEvent.value = !showEvent.value;
 };
 
-async function renderCalendar() {
-  const firstDay = new Date(year, month, 1).getDay();
-  const lastDate = new Date(year, month + 1, 0).getDate();
-  const lastDay = new Date(year, month, lastDate).getDay();
-  const prevMonthLastDate = new Date(year, month, 0).getDate();
+const period = (time: Date): number | string => {
+  const checkTotalMinutes = time.getHours() * 60 + time.getMinutes();
+  for (const p of periodsMap) {
+    const [startHours, startMinutes] = p.startTime.split(":").map(Number);
+    const [endHours, endMinutes] = p.endTime.split(":").map(Number);
+    const startTotalMinutes = startHours * 60 + startMinutes;
+    const endTotalMinutes = endHours * 60 + endMinutes;
 
-  const createDays = (count: number, offset: number, type: number) =>
-    Array.from({ length: count }, (_, i) => ({
-      type,
-      todaysDate: offset + i + 1,
-      meetings:
-        type === 0
-          ? userStore.meetings
-              .filter(
-                ({ meetingDate }) =>
-                  meetingDate.toDateString() ===
-                  new Date(year, month, offset + i + 1).toDateString()
-              )
-              .sort((a, b) => a.meetingDate.getTime() - b.meetingDate.getTime())
-          : [],
-    }));
-
-  calendarData.value = [
-    ...createDays(firstDay, prevMonthLastDate - firstDay, -1),
-    ...createDays(lastDate, 0, 0),
-    ...createDays(6 - lastDay, 0, 1),
-  ];
-}
-
-watchEffect(async () => await renderCalendar());
-
-const changeMonth = (next: boolean) => {
-  next ? month++ : month--;
-
-  if (month < 0 || month > 11) {
-    currentDate = new Date(year, month);
-    year = currentDate.getFullYear();
-    month = currentDate.getMonth();
+    if (
+      checkTotalMinutes >= startTotalMinutes &&
+      checkTotalMinutes <= endTotalMinutes
+    ) {
+      return p.period;
+    }
   }
+  return "N/A";
+};
 
+const renderCalendar = () => {
+  const days: DateInfoWithPeriods[] = [];
+  const startOffsetDate = new Date(firstDay.value); // Create a copy to avoid modifying firstDay.value directly
+
+  for (let i = 0; i < 7; i++) {
+    const todaysDate = new Date(startOffsetDate);
+    todaysDate.setDate(startOffsetDate.getDate() + i);
+    todaysDate.setHours(0, 0, 0, 0);
+
+    const dayMeetings = userStore.meetings
+      .filter((meeting) => {
+        const meetingDate = new Date(meeting.date);
+        return (
+          meetingDate.getFullYear() === todaysDate.getFullYear() &&
+          meetingDate.getMonth() === todaysDate.getMonth() &&
+          meetingDate.getDate() === todaysDate.getDate()
+        );
+      })
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+    const groupedByPeriod: Record<string, Meeting[]> = {};
+    dayMeetings.forEach((meeting) => {
+      const meetingDateObj = new Date(meeting.date);
+      const p = period(meetingDateObj);
+      if (!groupedByPeriod[p]) {
+        groupedByPeriod[p] = [];
+      }
+      groupedByPeriod[p].push(meeting);
+    });
+
+    const periodGroups: PeriodGroup[] = [];
+    for (const pMap of periodsMap) {
+      const pNum = pMap.period;
+      if (groupedByPeriod[pNum]) {
+        periodGroups.push({
+          period: pNum,
+          meetings: groupedByPeriod[pNum].sort(
+            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+          ),
+          isOpen: false,
+        });
+      } else {
+        periodGroups.push({
+          period: pNum,
+          meetings: [],
+          isOpen: false,
+        });
+      }
+    }
+    if (groupedByPeriod["N/A"]) {
+      periodGroups.push({
+        period: "N/A",
+        meetings: groupedByPeriod["N/A"].sort(
+          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+        ),
+        isOpen: false,
+      });
+    }
+
+    const finalPeriodGroups = periodGroups.filter(
+      (pg) => pg.meetings.length > 0 || pg.period !== "N/A"
+    );
+
+    days.push({
+      todaysDate: new Date(todaysDate),
+      periodGroups:
+        finalPeriodGroups.length > 0
+          ? finalPeriodGroups
+          : Object.entries(groupedByPeriod)
+              .map(([p, meetingsInPeriod]) => ({
+                period: isNaN(Number(p)) ? p : Number(p),
+                meetings: meetingsInPeriod.sort(
+                  (a, b) =>
+                    new Date(a.date).getTime() - new Date(b.date).getTime()
+                ),
+                isOpen: false,
+              }))
+              .sort((a, b) => {
+                if (a.period === "N/A") return 1;
+                if (b.period === "N/A") return -1;
+                return (a.period as number) - (b.period as number);
+              }),
+    });
+  }
+  calendarData.value = days;
+};
+
+const togglePeriodDropdown = (dayIndex: number, groupIndex: number) => {
+  const group = calendarData.value[dayIndex]?.periodGroups[groupIndex];
+  if (group) {
+    group.isOpen = !group.isOpen;
+  }
+};
+
+const formatDisplayTime = (isoString: Date | string) => {
+  const date = new Date(isoString);
+  let hours = date.getHours();
+  const minutes = date.getMinutes();
+  const ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
+  return `${hours}:${formattedMinutes} ${ampm}`;
+};
+
+watchEffect(() => {
   renderCalendar();
+});
+
+const handleWeekSelected = (selectedStartOfWeek: Date) => {
+  if (
+    selectedStartOfWeek instanceof Date &&
+    !isNaN(selectedStartOfWeek.getTime())
+  ) {
+    firstDay.value = selectedStartOfWeek;
+  } else {
+    console.error(
+      "Invalid date received from WeekSelector:",
+      selectedStartOfWeek
+    );
+  }
+  showWeekSelector.value = false;
+};
+
+const changeWeek = (next: boolean) => {
+  const newFirstDay = new Date(firstDay.value);
+  newFirstDay.setDate(newFirstDay.getDate() + (next ? 7 : -7));
+  firstDay.value = newFirstDay;
 };
 </script>
+
 <style scoped>
+@media (max-width: 767px) {
+  .calendar .weeks,
+  .calendar .days {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+
+  .calendar .weeks li,
+  .calendar .days li {
+    min-width: 90px;
+  }
+}
+
+@media (min-width: 768px) {
+  .calendar li {
+    width: calc(100% / 5);
+    flex: 1 1 0%;
+    min-width: 0;
+    font-size: 1.07rem;
+  }
+
+  .weeks li {
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+    font-weight: 800;
+    font-size: 1.2rem;
+  }
+
+  .calendar .days li {
+    min-height: 10rem;
+  }
+
+  .days li {
+    font-size: 0.9rem;
+  }
+}
+
 .calendar ul {
   display: flex;
   flex-wrap: wrap;
   list-style: none;
   overflow: hidden;
+  padding: 0;
+  margin: 0;
 }
 
 .calendar li {
-  width: calc(100% / 7);
   font-size: 1.07rem;
 }
 
-.weeks li {
+.calendar .weeks li {
   text-align: center;
   padding-top: 0.3rem;
   padding-bottom: 0.3rem;
   border: 1px solid grey;
-}
-
-.calendar .weeks li {
   font-weight: 800;
   font-size: 1.2rem;
   cursor: default;
+  box-sizing: border-box;
 }
 
 .calendar .days li {
-  text-align: end;
-}
-
-.days li {
-  border: grey 1px solid;
+  border: 1px solid grey;
   font-size: 0.9rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
-.days li:hover {
-  display: block;
+.period-header {
+  background-color: #f0f0f0;
+  padding: 0.25rem 0.5rem;
+  margin-bottom: 0.25rem;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: bold;
+  text-align: left;
 }
 
-.days li.inactive {
-  color: #aaa;
+.period-header:hover {
+  background-color: #e0e0e0;
 }
 
-.days li.active {
-  color: #fff;
-}
-
-.days li.active::before {
-  background: #9b59b6;
-}
-
-.days li:not(.active):hover::before {
-  background: #f2f2f2;
+.meeting-item {
+  padding: 0.25rem;
+  margin-left: 0.5rem;
 }
 </style>

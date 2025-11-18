@@ -61,18 +61,17 @@ export const useUserStore = defineStore("user", () => {
       const error = Object.values(data)[0];
       return setPopup(typeof error === "object" ? error[0] : error, true);
     }
-
     profileID.value = data.id;
     firstName.value =
-      data.firstName[0].toUpperCase() + data.firstName.slice(1).toLowerCase();
+      data.user.firstName[0].toUpperCase() + data.user.firstName.slice(1).toLowerCase();
     lastName.value =
-      data.lastName[0].toUpperCase() + data.lastName.slice(1).toLowerCase();
-    email.value = data.email;
-    isGuidance.value = data.isGuidance;
+      data.user.lastName[0].toUpperCase() + data.user.lastName.slice(1).toLowerCase();
+    email.value = data.user.email;
+    isGuidance.value = data.user.isGuidance;
     if (isGuidance.value) await getStudents();
     else {
-      student.value = data.student;
-      surveyStore.open = data.student.status !== "Finalized";
+      student.value = data.user.profile;
+      surveyStore.open = data.user.profile.status !== "Finalized";
     }
     isAuth.value = true;
     router.push(`/${isGuidance.value ? "guidance" : "student"}/dashboard`);
@@ -189,28 +188,37 @@ export const useUserStore = defineStore("user", () => {
     const data = await res.json();
 
     meetings.value = data.map((meeting: Meeting) => {
-      meeting.meetingDate = new Date(meeting.meetingDate);
+      meeting.date = new Date(meeting.date);
       return meeting;
     });
     meetingsFetched.value = true;
   }
 
   async function changeMeeting(
-    id: number,
     deleteMeeting: boolean,
+    meeting_id?: number,
+    student_id?: number,
     date?: string,
-    description?: string,
+    period?: number,
+    memo?: string,
     notify?: boolean
   ) {
     const res = await fetchData(
-      "guidance/updateMeeting/",
-      deleteMeeting ? "DELETE" : "POST",
-      { id, date, description, notify }
+      "guidance/meetings/",
+      deleteMeeting ? "DELETE" : "PUT",
+      {
+        meeting_id,
+        student_id,
+        date: date,
+        period,
+        memo,
+        notify,
+      }
     );
     if (!res.ok) return await res.json();
     const data = await res.json();
     meetings.value = data.map((meeting: Meeting) => {
-      meeting.meetingDate = new Date(meeting.meetingDate);
+      meeting.date = new Date(meeting.date);
       return meeting;
     });
   }
@@ -227,6 +235,7 @@ export const useUserStore = defineStore("user", () => {
       )
       .join(", ");
   }
+
 
   function $reset() {
     profileID.value = 0;

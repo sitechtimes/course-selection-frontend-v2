@@ -1,5 +1,5 @@
 <template>
-  <div class="w-[25vw] border border-gray-500 rounded-md">
+  <div class="flex-1 basis-0 min-w-0 border border-gray-500 rounded-md">
     <div class="border-b border-gray-500">
       <h1 class="py-2 px-4 text-center font-extrabold text-2xl">
         Upcoming Meetings
@@ -16,13 +16,12 @@
               class="ml-6 mt-2 list-disc"
             >
               {{
-                meeting.meetingDate.toLocaleTimeString([], {
+                meeting.date.toLocaleTimeString([], {
                   hour: "2-digit",
                   minute: "2-digit",
                 })
               }}
-              -
-              {{ meeting.name }}
+              - {{ meeting.student }}
             </li>
           </ul>
         </div>
@@ -39,13 +38,24 @@ import { ref, computed, onMounted } from "vue";
 const userStore = useUserStore();
 const todaysDate = new Date();
 
+/**
+ * A computed property that returns upcoming student meetings grouped by date.
+ *
+ * - Filters meetings to include only those with a date later than `todaysDate`.
+ * - Sorts the meetings in ascending order by their date.
+ * - Groups the meetings by day, using the ISO date string (YYYY-MM-DD) as the key.
+ *
+ * @returns {ComputedRef<{ [date: string]: Meeting[] }>} 
+ * An object where each key is a date (formatted as 'YYYY-MM-DD'), and the value is
+ * an array of meetings scheduled for that day.
+ */
 const groupedStudentMeetings = computed(() =>
   userStore.meetings
-    .filter((meeting) => meeting.meetingDate > todaysDate)
-    .sort((a, b) => a.meetingDate.getTime() - b.meetingDate.getTime())
-    .reduce((acc, meeting) => {
-      (acc[meeting.meetingDate.toDateString()] ||= []).push(meeting);
+    .filter((meeting) => meeting.date > todaysDate)
+    .sort((a, b) => a.date.getTime() - b.date.getTime())
+    .reduce((acc: { [key: string]: Meeting[] }, meeting) => {
+      (acc[meeting.date.toISOString().split("T")[0]] ||= []).push(meeting);
       return acc;
-    }, {})
+    }, {} as { [key: string]: Meeting[] })
 );
 </script>
