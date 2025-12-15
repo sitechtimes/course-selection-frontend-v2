@@ -4,10 +4,9 @@
       v-if="ranked.length > 0"
       class="flex flex-col mt-2 text-center text-base md:text-lg xl:text-xl"
     >
-      <vuedraggable v-model="ranked" item-key="rank" @end="onDragEnd">
+      <draggable v-model="ranked" item-key="id" @end="onDragEnd">
         <template #item="{ element, index }">
           <div
-            v-if="element"
             class="h-12 mx-2 mb-2.5 xl:h-16 w-full placeholder flex items-center justify-center p-2 rounded-lg shadow-lg text-[#37394F] cursor-grab active:cursor-grabbing font-semibold course"
             :class="`bg-[#${color}]`"
             :course-rank="index"
@@ -19,14 +18,14 @@
             </div>
           </div>
         </template>
-      </vuedraggable>
+      </draggable>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { Course, Answer, Rank } from "../../types/interface";
-import vuedraggable from "vuedraggable";
+import draggable from "vuedraggable";
 import { ref, watch } from "vue";
 
 const props = defineProps<{
@@ -36,11 +35,12 @@ const props = defineProps<{
   color?: string;
 }>();
 
-const ranked = ref<Course[]>(props.courses);
+const ranked = ref<Course[]>([]);
 
 watch(
   () => props.courses,
-  (newCourses) => (ranked.value = newCourses)
+  (newCourses) => (ranked.value = [...newCourses]),
+  { immediate: true }
 );
 
 const onDragEnd = () =>
