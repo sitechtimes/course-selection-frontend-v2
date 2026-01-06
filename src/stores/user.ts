@@ -53,7 +53,7 @@ export const useUserStore = defineStore("user", () => {
     email.value = data.email;
     isGuidance.value = data.isGuidance;
     if (isGuidance.value) {
-      students.value = data.user.profile;
+      students.value = data.profile;
       await getStudents();
     } else {
       student.value = data.profile;
