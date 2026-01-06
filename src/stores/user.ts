@@ -4,6 +4,7 @@ import {
   GuidanceStudent,
   Stats,
   Course,
+  Question,
 } from "../types/interface";
 import { useSurveyStore } from "./survey";
 import { useRouter } from "vue-router";
@@ -175,6 +176,12 @@ export const useUserStore = defineStore("user", () => {
     if (!res.ok) throw new Error("Failed to fetch surveys");
     return data;
   }
+  async function createQuestion(question: Question) {
+    const res = await fetchData("guidance/surveyquestions/", "POST", question);
+    const data = await res.json();
+    if (!res.ok) throw new Error("Failed to create question");
+    return data;
+  }
   async function changeFlag(
     student: GuidanceStudent,
     flag: string,
@@ -281,5 +288,6 @@ export const useUserStore = defineStore("user", () => {
     getSurveys,
     fetchData,
     getQuestions,
+    createQuestion,
   };
 });

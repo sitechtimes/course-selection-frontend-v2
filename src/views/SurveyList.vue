@@ -29,6 +29,9 @@
           @filter-selected="(filter) => (sortBy = filter)"
         />
       </div>
+      <button>
+        <RouterLink to="/guidance/createquestion"> + </RouterLink>
+      </button>
       <div class="w-2/3">
         <div class="border-white flex justify-center items-center">
           <div class="flex justify-center items-center relative w-11/12">

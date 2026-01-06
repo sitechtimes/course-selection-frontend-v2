@@ -58,6 +58,11 @@ const router = createRouter({
           component: () => import("../views/EditQuestion.vue"),
         },
         {
+          path: "createQuestion",
+          name: "createQuestion",
+          component: () => import("../views/CreateQuestion.vue"),
+        },
+        {
           path: "studentlist",
           name: "guidanceStudentlist",
           component: () => import("../views/GuidanceStudentList.vue"),
