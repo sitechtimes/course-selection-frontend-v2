@@ -11,26 +11,12 @@
           <th class="p-4 flex flex-row items-center">
             <p class="p-2 font-bold">Flags</p>
             <div>
-              <p
-                class="h-5"
-                @mouseover="tooltip = true"
-                @mouseout="tooltip = false"
-              >
+              <p class="h-5" @mouseover="tooltip = true" @mouseout="tooltip = false">
                 ⓘ
               </p>
-              <div
-                v-show="tooltip"
-                class="absolute h-auto w-auto bg-white border-primary-g border p-2"
-              >
-                <div
-                  v-for="flag in flags"
-                  class="flex flex-row"
-                  :key="flag.flag"
-                >
-                  <div
-                    class="m-1 rounded-full h-5 w-5"
-                    :class="flag.color"
-                  ></div>
+              <div v-show="tooltip" class="absolute h-auto w-auto bg-white border-primary-g border p-2">
+                <div v-for="flag in flags" class="flex flex-row" :key="flag.flag">
+                  <div class="m-1 rounded-full h-5 w-5" :class="flag.color"></div>
                   <p class="m-1">= {{ flag.title }}</p>
                 </div>
               </div>
@@ -39,19 +25,9 @@
         </tr>
       </thead>
 
-      <tbody
-        v-for="student in newStudents"
-        :key="student.id"
-        class="border-2 border-black"
-      >
-        <ChangeFlag
-          v-if="Math.abs(flagModal) === student.id"
-          @exit="flagModal = 0"
-          :student="student"
-          :viewAll="viewAll"
-          :flags="flags"
-          :add="flagModal > 0"
-        />
+      <tbody v-for="student in newStudents" :key="student.id" class="border-2 border-black">
+        <ChangeFlag v-if="Math.abs(flagModal) === student.id" @exit="flagModal = 0" :student="student"
+          :viewAll="viewAll" :flags="flags" :add="flagModal > 0" />
         <tr>
           <td class="p-4">
             {{ student.name }}
@@ -59,39 +35,27 @@
           <td class="p-4">{{ student.grade ?? "&nbsp;" }}</td>
           <td class="p-4">{{ student.email ? student.email : "&nbsp;" }}</td>
           <td class="p-4">
-            <p
-              :class="`${
-                statuses[student.status]
-              } w-[8rem] font-semibold text-center p-1 rounded-2xl`"
-            >
+            <p :class="`${statuses[student.status]
+              } w-[8rem] font-semibold text-center p-1 rounded-2xl`">
               {{ student.status }}
             </p>
           </td>
-          <td
-            @click="router.push(`/guidance/survey/${student.id}`)"
-            class="p-4 hover:cursor-pointer"
-          >
+          <td @click="goToSurvey(student)" class="p-4" :class="student.status === 'Not Started'
+            ? 'text-gray-400'
+            : 'hover:cursor-pointer text-gray-600'">
             View Survey
           </td>
+
           <td class="p-4 flex flex-row parent">
-            <div
-              id="flagbox"
-              v-for="flag in flags"
-              :key="flag.flag"
-              v-show="student[flag.flag as keyof GuidanceStudent]"
-              :title="flag.title"
-              :class="flag.color + 'm-1 rounded-full h-5 w-5'"
-            ></div>
-            <button
-              @click="flagModal = student.id"
-              class="w-3 m-1 hidden child hover:cursor-pointer text-2xl leading-[0]"
-            >
+            <div id="flagbox" v-for="flag in flags" :key="flag.flag"
+              v-show="student[flag.flag as keyof GuidanceStudent]" :title="flag.title"
+              :class="flag.color + 'm-1 rounded-full h-5 w-5'"></div>
+            <button @click="flagModal = student.id"
+              class="w-3 m-1 hidden child hover:cursor-pointer text-2xl leading-[0]">
               +
             </button>
-            <button
-              @click="flagModal = -student.id"
-              class="w-3 m-1 hidden child hover:cursor-pointer text-2xl leading-[0]"
-            >
+            <button @click="flagModal = -student.id"
+              class="w-3 m-1 hidden child hover:cursor-pointer text-2xl leading-[0]">
               -
             </button>
           </td>
@@ -129,6 +93,11 @@ const flags = [
   { flag: "team", title: "Three season athlete", color: "bg-blue-400" },
   { flag: "enl", title: "ENL", color: "bg-purple-400" },
 ];
+
+const goToSurvey = (student: GuidanceStudent) => {
+  if (student.status === "Not Started") return;
+  router.push(`/guidance/survey/${student.id}`);
+};
 </script>
 
 <style scoped>
