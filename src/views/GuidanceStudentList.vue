@@ -100,12 +100,32 @@ const sortedAndFiltered = computed(() => {
   return applyFilters(sortBy.value, input.value);
 });
 
+function getLastName(name: string) {
+  return name.trim().split(/\s+/).slice(-1)[0].toLowerCase();
+}
+
+function getFirstName(name: string) {
+  return name.trim().split(/\s+/).slice(0, -1).join(" ").toLowerCase();
+}
+
 function filterByCategory(students: GuidanceStudent[], sortBy: string) {
   if (sortBy === "az")
-    return students.sort((a, b) => a.name.localeCompare(b.name));
+    return [...students].sort((a, b) => {
+      const lastCompare =
+        getLastName(a.name).localeCompare(getLastName(b.name));
+      return lastCompare !== 0
+        ? lastCompare
+        : getFirstName(a.name).localeCompare(getFirstName(b.name));
+    });
 
   if (sortBy === "za")
-    return students.sort((a, b) => b.name.localeCompare(a.name));
+    return [...students].sort((a, b) => {
+      const lastCompare =
+        getLastName(b.name).localeCompare(getLastName(a.name));
+      return lastCompare !== 0
+        ? lastCompare
+        : getFirstName(b.name).localeCompare(getFirstName(a.name));
+    });
 
   if (["Not Started", "In Progress", "Completed", "Finalized"].includes(sortBy))
     return students.filter((student) => student.status === sortBy);
@@ -115,6 +135,7 @@ function filterByCategory(students: GuidanceStudent[], sortBy: string) {
 
   if (["transfer", "regents", "sports", "enl"].includes(sortBy))
     return students.filter((s) => s[sortBy as keyof GuidanceStudent]);
+
   return students;
 }
 
