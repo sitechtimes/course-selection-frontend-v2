@@ -17,11 +17,12 @@
       <div class="w-1/3 flex flex-row justify-evenly">
         <Sort class="mr-0" :menu-array="menuArray" @filter-selected="(filter) => (sortBy = filter)" />
       </div>
-      <RouterLink to="/guidance/createquestion" class="h-10 px-4 flex items-center justify-center
-         bg-primary-g border border-black rounded-lg
+      <RouterLink to="/guidance/createquestion" class="h-15 w-max px-4 flex items-center justify-evenly
+         bg-primary-g cursor-pointer
          shadow-[4px_3px_3px_rgba(0,0,0,0.25)]
-         hover:bg-other-g hover:shadow-lg
-         transition-all duration-300 font-bold whitespace-nowrap">
+         hover:bg-tertiary-g
+         transition-all duration-200
+         font-semibold whitespace-nowrap">
         Create New Question ＋
       </RouterLink>
 
@@ -37,8 +38,7 @@
         </div>
       </div>
     </div>
-    <QuestionsTable :questions="sortedAndFiltered.slice(startIndex, startIndex + pageCapacity)
-      " />
+    <QuestionsTable :questions="sortedAndFiltered.slice(startIndex, startIndex + pageCapacity)" />
     <div class="max-w-[80%] overflow-x-auto mt-4 flex flex-row justify-between">
       <button v-if="currentChunk > 1" class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold"
         @click="if (currentChunk > 1) currentChunk--;">
@@ -105,7 +105,7 @@ onMounted(async () => {
 
 const sortedAndFiltered = computed(() => {
   updatePagination(1);
-  return applyFilters(sortBy.value, input.value);
+  return applyFilters(sortBy.value, input.value ?? "");
 });
 
 function filterByCategory(questions: Question[], sortBy: string) {
