@@ -182,6 +182,12 @@ export const useUserStore = defineStore("user", () => {
     if (!res.ok) throw new Error("Failed to create question");
     return data;
   }
+  async function deleteQuestion(id: number) {
+    const res = await fetchData("guidance/surveyquestions/", "DELETE", id);
+    const data = await res.json();
+    if (!res.ok) throw new Error("Failed to delete question");
+    return data;
+  }
   async function changeFlag(
     student: GuidanceStudent,
     flag: string,
@@ -289,5 +295,6 @@ export const useUserStore = defineStore("user", () => {
     fetchData,
     getQuestions,
     createQuestion,
+    deleteQuestion,
   };
 });
