@@ -41,9 +41,9 @@
                 class="min-h-[300px] rounded-xl p-4 bg-gray-50 border border-gray-300">
                 <template #item="{ element }">
                   <div class="p-4 mb-3 rounded-md bg-white text-gray-800
-                           shadow-sm cursor-move
-                           hover:bg-gray-100 hover:shadow
-                           transition-all duration-150">
+                 shadow-sm cursor-move
+                 hover:bg-gray-100 hover:shadow
+                 transition-all duration-150">
                     <p class="text-sm leading-relaxed">
                       {{ element.question }}
                     </p>
@@ -62,12 +62,12 @@
               </h3>
 
               <draggable v-model="surveyQuestions" group="questions" item-key="id"
-                class="min-h-[300px] rounded-xl p-4 bg-emerald-50 border border-emerald-300">
+                class="min-h-[300px] rounded-xl p-4 bg-gray-50 border border-gray-300">
                 <template #item="{ element }">
-                  <div class="p-4 mb-3 rounded-md bg-emerald-100 text-emerald-900
-                           shadow-sm cursor-move
-                           hover:bg-emerald-200 hover:shadow
-                           transition-all duration-150">
+                  <div class="p-4 mb-3 rounded-md bg-white text-gray-800
+                 shadow-sm cursor-move
+                 hover:bg-gray-100 hover:shadow
+                 transition-all duration-150">
                     <p class="text-sm leading-relaxed font-medium">
                       {{ element.question }}
                     </p>
@@ -80,10 +80,11 @@
               </p>
             </div>
           </div>
+
         </section>
 
         <button type="submit" class="mt-12 p-5 w-full rounded-xl shadow-md border border-gray-300
-                 bg-white hover:bg-emerald-100 transition font-semibold">
+                 bg-white hover:bg-gray-100 transition font-semibold">
           Save Survey
         </button>
       </form>

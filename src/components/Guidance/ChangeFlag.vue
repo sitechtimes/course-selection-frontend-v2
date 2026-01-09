@@ -1,10 +1,6 @@
 <template>
-  <div
-    class="fixed top-0 left-0 z-100 w-full h-full bg-black/40 flex justify-center items-center"
-  >
-    <div
-      class="h-1/3 w-1/4 bg-white rounded-sm px-10 py-2 flex justify-evenly flex-col"
-    >
+  <div class="fixed top-0 left-0 z-100 w-full h-full bg-black/40 flex justify-center items-center">
+    <div class="h-1/3 w-1/4 bg-white rounded-sm px-10 py-2 flex justify-evenly flex-col">
       <div class="flex">
         <p><b>Student:</b> {{ userStore.titleCase(student.name) }}</p>
       </div>
@@ -18,10 +14,7 @@
       </div>
       <div class="flex flex-row w-full justify-between">
         <button @click="$emit('exit')">Cancel</button>
-        <button
-          @click="confirm()"
-          class="bg-[#DEE9C8] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] px-4 py-2 text-[#37394F]"
-        >
+        <button @click="confirm()" class="bg-[#DEE9C8] shadow-[2px_3px_2px_rgba(0,0,0,0.25)] px-4 py-2 text-[#37394F]">
           Confirm
         </button>
       </div>
