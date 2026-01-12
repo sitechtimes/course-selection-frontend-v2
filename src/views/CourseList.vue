@@ -115,7 +115,7 @@ onMounted(async () => {
 
 const sortedAndFiltered = computed(() => {
   updatePagination(1);
-  return applyFilters(sortBy.value, input.value);
+  return applyFilters(sortBy.value, input.value ?? "");
 });
 
 function filterByCategory(courses: Course[], sortBy: string) {
