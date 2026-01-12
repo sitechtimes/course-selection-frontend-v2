@@ -1,32 +1,37 @@
 <template>
   <div class="h-auto w-full flex flex-col justify-center items-center mb-10">
-    <div class="flex flex-row items-center justify-center w-5/6">
-      <div class="w-1/3 flex flex-row justify-evenly">
-        <div @click="viewAll = !viewAll"
-          class="h-10 px-4 w-60 mx-10 flex flex-row bg-primary-g text-black justify-evenly font-semibold items-center cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]">
+
+    <div class="w-5/6 max-w-8xl mx-auto mb-6 flex flex-wrap items-center gap-4">
+
+      <div class="flex items-center gap-4 flex-shrink-0">
+
+        <div @click="viewAll = !viewAll" class="flex items-center gap-2 px-4 h-10 rounded-lg
+                 bg-primary-g text-gray-900 font-semibold
+                 cursor-pointer shadow-sm
+                 hover:bg-tertiary-g transition">
           <label class="cursor-pointer">View all students</label>
-          <input class="ml-2" type="checkbox" v-model="viewAll" />
+          <input type="checkbox" v-model="viewAll" class="w-4 h-4" />
         </div>
-        <Sort class="mr-0" :menu-array="menuArray" @filter-selected="(filter: string) => (sortBy = filter)" />
+
+        <Sort :menu-array="menuArray" @filter-selected="(filter: string) => (sortBy = filter)" class="min-w-[180px]" />
+
       </div>
-      <div class="w-2/3">
-        <div class="border-white flex justify-center items-center">
-          <div class="flex justify-center items-center relative w-11/12">
-            <input v-model="input" placeholder="Search by name or email" @input="
-              $emit(
-                'update:modelValue',
-                ($event.target as HTMLInputElement).value
-              )
-              " class="border border-zinc-300 rounded w-full h-10 p-2 text-zinc-800" />
-            <p class="absolute right-3 text-zinc-400 cursor-pointer text-xl">
-              🔎︎
-            </p>
-          </div>
-        </div>
+
+      <div class="relative flex-1">
+        <input v-model="input" placeholder="Search by name or email"
+          @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)" class="w-full h-10 pl-10 pr-3 rounded-lg
+         border border-gray-300 text-gray-700
+         focus:outline-none focus:ring-2 focus:ring-primary-g" />
+
+        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+          🔎︎
+        </span>
       </div>
+
     </div>
-    <StudentTable :viewAll="viewAll" :new-students="sortedAndFiltered.slice(startIndex, startIndex + pageCapacity)
-      " />
+
+    <StudentTable :viewAll="viewAll" :new-students="sortedAndFiltered.slice(startIndex, startIndex + pageCapacity)" />
+
     <div class="max-w-[80%] overflow-x-auto mt-4 flex flex-row justify-between">
       <button v-if="currentChunk > 1" class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold"
         @click="if (currentChunk > 1) currentChunk--;">
@@ -36,8 +41,9 @@
         :disabled="currentPage === 1">
         ❮
       </button>
-      <button v-for="n in visiblePages" @click="updatePagination(n)" :class="currentPage === n ? 'bg-[#cdeeb4] focus:bg-[#cdeeb4]' : 'bg-[#ebebeb]'
-        " class="h-8 w-8 rounded-lg hover:opacity-75 ease-in-out duration-300 font-bold mx-2">
+      <button v-for="n in visiblePages" :key="n" @click="updatePagination(n)"
+        :class="currentPage === n ? 'bg-[#cdeeb4] focus:bg-[#cdeeb4]' : 'bg-[#ebebeb]'"
+        class="h-8 w-8 rounded-lg hover:opacity-75 ease-in-out duration-300 font-bold mx-2">
         {{ n }}
       </button>
       <button class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold" :disabled="currentPage === totalPages"
@@ -49,12 +55,14 @@
         ❯❯
       </button>
     </div>
+
     <h5 class="mt-4">
       Page
-      <span class="font-bold m-1"> {{ currentPage }}</span>
+      <span class="font-bold m-1">{{ currentPage }}</span>
       of
       <span class="font-bold m-1">{{ totalPages }}</span>
     </h5>
+
   </div>
 </template>
 

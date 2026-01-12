@@ -5,68 +5,82 @@
         Loading...
       </div>
     </template>
+
     <div class="flex gap-4 p-10 m-10 justify-center flex-wrap">
-      <RouterLink v-for="survey in surveys" :key="survey.grade" :to="'/guidance/editsurvey/' + survey.grade"
-        class="bg-primary-g border-black border-2 drop-shadow-lg rounded-lg p-6 hover:drop-shadow-xl hover:bg-other-g transition-all duration-300 justify-center">
-        <h1 class="text-2xl font-bold">{{ survey.grade }}th Grade</h1>
+      <RouterLink v-for="survey in surveys" :key="survey.grade" :to="'/guidance/editsurvey/' + survey.grade" class="bg-primary-g text-gray-900
+               border border-gray-300 rounded-xl p-6 shadow-sm
+               hover:bg-tertiary-g transition">
+        <h1 class="text-2xl font-bold">
+          {{ survey.grade }}th Grade
+        </h1>
       </RouterLink>
     </div>
   </Suspense>
-  <div class="h-auto w-full flex flex-col justify-center items-center mb-10 sm:items-left">
-    <div class="flex flex-row items-center justify-center w-5/6">
-      <div class="w-1/3 flex flex-row justify-evenly">
-        <Sort class="mr-0" :menu-array="menuArray" @filter-selected="(filter) => (sortBy = filter)" />
-      </div>
-      <RouterLink to="/guidance/createquestion" class="h-15 w-max px-4 flex items-center justify-evenly
-         bg-primary-g cursor-pointer
-         shadow-[4px_3px_3px_rgba(0,0,0,0.25)]
-         hover:bg-tertiary-g
-         transition-all duration-200
-         font-semibold whitespace-nowrap">
-        Create New Question ＋
-      </RouterLink>
 
-      <div class="w-2/3">
-        <div class="border-white flex justify-center items-center">
-          <div class="flex justify-center items-center relative w-11/12">
-            <input v-model="input" placeholder="Search by name"
-              class="border border-zinc-300 rounded w-full h-10 p-2 text-zinc-800" />
-            <p class="absolute right-3 text-zinc-400 cursor-pointer text-xl">
-              🔎︎
-            </p>
-          </div>
-        </div>
+  <div class="w-full flex flex-col items-center mb-10">
+
+    <div class="w-5/6 max-w-8xl mx-auto mb-6 flex flex-wrap items-center gap-4">
+
+      <div class="flex items-center gap-4 flex-shrink-0">
+        <Sort :menu-array="menuArray" @filter-selected="(filter) => (sortBy = filter)" class="min-w-[180px]" />
+
+        <RouterLink to="/guidance/createquestion" class="inline-flex items-center gap-2 px-4 h-10 rounded-lg
+             bg-primary-g text-gray-900 font-semibold
+             border border-gray-300
+             hover:bg-tertiary-g transition">
+          + New Question
+        </RouterLink>
       </div>
+
+      <div class="relative flex-1">
+        <input v-model="input" placeholder="Search questions..." class="w-full h-10 pl-10 pr-3 rounded-lg
+             border border-gray-300 text-gray-700
+             focus:outline-none focus:ring-2 focus:ring-primary-g" />
+        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+          🔎︎
+        </span>
+      </div>
+
     </div>
+
     <QuestionsTable :questions="sortedAndFiltered.slice(startIndex, startIndex + pageCapacity)" />
+
     <div class="max-w-[80%] overflow-x-auto mt-4 flex flex-row justify-between">
       <button v-if="currentChunk > 1" class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold"
         @click="if (currentChunk > 1) currentChunk--;">
         ❮❮
       </button>
+
       <button class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold" @click="changePage(-1)"
         :disabled="currentPage === 1">
         ❮
       </button>
-      <button v-for="n in visiblePages" :key="n" @click="updatePagination(n)" :class="currentPage === n ? 'bg-[#cdeeb4] focus:bg-[#cdeeb4]' : 'bg-[#ebebeb]'
-        " class="h-8 w-8 rounded-lg hover:opacity-75 ease-in-out duration-300 font-bold mx-2">
+
+      <button v-for="n in visiblePages" :key="n" @click="updatePagination(n)" :class="currentPage === n
+        ? 'bg-[#cdeeb4] focus:bg-[#cdeeb4]'
+        : 'bg-[#ebebeb]'" class="h-8 w-8 rounded-lg hover:opacity-75
+               ease-in-out duration-300 font-bold mx-2">
         {{ n }}
       </button>
+
       <button class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold" :disabled="currentPage === totalPages"
         @click="changePage(1)">
         ❯
       </button>
+
       <button v-if="currentChunk < totalChunks" class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold"
         @click="if (currentChunk < totalChunks) currentChunk++;">
         ❯❯
       </button>
     </div>
+
     <p class="mt-4">
       Page
-      <span class="font-bold m-1"> {{ currentPage }}</span>
+      <span class="font-bold m-1">{{ currentPage }}</span>
       of
       <span class="font-bold m-1">{{ totalPages }}</span>
     </p>
+
   </div>
 </template>
 

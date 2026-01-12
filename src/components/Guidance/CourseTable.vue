@@ -1,39 +1,45 @@
 <template>
-  <div class="flex flex-col mt-6 justify-center items-center w-5/6" id="table">
-    <table class="w-full border-2 border-black table-auto text-left">
-      <thead class="fill-primary-g border-2 border-black">
-        <tr class="bg-primary-g">
-          <th class="p-4">Name</th>
-          <th class="p-4">Subject</th>
-          <th class="p-4">Grades</th>
-          <th class="p-4">AP</th>
-          <th class="p-4">Honors</th>
-          <th class="p-4 flex flex-row items-center">Code(s)</th>
-        </tr>
-      </thead>
+  <div class="flex flex-col mt-6 justify-center items-center w-5/6 max-w-8xl mx-auto" id="table">
+    <div class="w-full overflow-x-auto rounded-xl border border-gray-300 bg-white shadow-sm">
+      <table class="w-full table-auto text-left border-collapse">
+        <thead class="bg-primary-g border-b border-gray-300">
+          <tr>
+            <th class="p-4 font-semibold"></th>
+            <th class="p-4 font-semibold">Name</th>
+            <th class="p-4 font-semibold">Subject</th>
+            <th class="p-4 font-semibold">Grades</th>
+            <th class="p-4 font-semibold">AP</th>
+            <th class="p-4 font-semibold">Honors</th>
+            <th class="p-4 font-semibold">Code(s)</th>
+          </tr>
+        </thead>
 
-      <tbody
-        v-for="course in courses"
-        :key="course.id"
-        class="border-2 border-black"
-      >
-        <tr class="hover:bg-tertiary-g transition-all">
-          <td class="p-4 hover:cursor-pointer">
-            <RouterLink :to="`/guidance/editcourse/${course.id}`">
-              ✎
-            </RouterLink>
-            {{ course.name }}
-          </td>
-          <td class="p-4">{{ course.subject }}</td>
-          <td class="p-4">{{ displayGrades(course) }}</td>
-          <td class="p-4">{{ course.ap ? "✔" : "✖" }}</td>
-          <td class="p-4">{{ course.honors ? "✔" : "✖" }}</td>
-          <td class="p-4">
-            <p v-for="code in course.codes" :key="code">{{ code }}</p>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+        <tbody v-for="course in courses" :key="course.id" class="border-b border-gray-200">
+          <tr class="hover:bg-gray-50 transition">
+            <td class="p-4 cursor-pointer text-gray-500 hover:text-red-600">
+              <RouterLink :to="`/guidance/editcourse/${course.id}`">✎</RouterLink>
+            </td>
+
+            <td class="p-4 text-gray-800">{{ course.name }}</td>
+            <td class="p-4 text-gray-700">{{ course.subject }}</td>
+            <td class="p-4 text-gray-700">{{ displayGrades(course) }}</td>
+            <td class="p-4">
+              <span :class="course.ap ? 'text-green-600 font-semibold' : 'text-gray-400 font-semibold'">
+                {{ course.ap ? "✔" : "✖" }}
+              </span>
+            </td>
+            <td class="p-4">
+              <span :class="course.honors ? 'text-green-600 font-semibold' : 'text-gray-400 font-semibold'">
+                {{ course.honors ? "✔" : "✖" }}
+              </span>
+            </td>
+            <td class="p-4 text-gray-700">
+              <p v-for="code in course.codes" :key="code">{{ code }}</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
