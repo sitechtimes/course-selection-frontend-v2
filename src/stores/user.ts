@@ -298,5 +298,6 @@ export const useUserStore = defineStore("user", () => {
     deleteQuestion,
     resetPassword,
     resetPasswordConfirm,
+    setPopup,
   };
 });
