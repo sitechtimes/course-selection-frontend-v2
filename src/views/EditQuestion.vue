@@ -113,7 +113,7 @@ async function findQuestion() {
 }
 
 const question = ref({} as Question);
-const courses = ref({} as Course);
+const courses = ref([] as Course[]);
 const questionKeys = ref([] as (keyof Question)[]);
 const alteredQuestion = ref({} as Question);
 const potentialOptions = ref({

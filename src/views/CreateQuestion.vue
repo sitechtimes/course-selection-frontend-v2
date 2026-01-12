@@ -84,7 +84,7 @@ import { useUserStore } from "../stores/user";
 const router = useRouter();
 const userStore = useUserStore();
 const route = useRoute();
-const courses = ref({} as Course);
+const courses = ref([] as Course[]);
 const newQuestion = ref({} as Question);
 const potentialOptions = ref({
   questionType: [

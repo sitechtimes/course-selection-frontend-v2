@@ -4,7 +4,7 @@
         <p class="text-xl my-2">The route you have requested does not exist.</p>
         <routerLink to="/" class="bg-primary-s w-40 h-12 rounded-md text-xl font-semibold hover:bg-other-s justify-center items-center flex">
             Back to home
-        </routerLink>   
+        </routerLink>
     </div>
 </template>
 
