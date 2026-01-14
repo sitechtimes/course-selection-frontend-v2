@@ -193,8 +193,9 @@ export const useUserStore = defineStore("user", () => {
     flag: string,
     remove: boolean = false
   ) {
-    const res = await fetchData("guidance/flag/", "POST", {
+    const res = await fetchData("guidance/updateFlag/", "POST", {
       id: student.id,
+      flag: flag, 
       remove,
     });
     if (!res.ok) return await res.json();

@@ -46,7 +46,7 @@ const flags = computed(() =>
 );
 
 const confirm = async () => {
-  await userStore.changeFlag(props.student, selected.value, props.add);
+  await userStore.changeFlag(props.student, selected.value, !props.add);
   emit("exit");
 };
 </script>
