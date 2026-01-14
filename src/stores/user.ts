@@ -193,14 +193,15 @@ export const useUserStore = defineStore("user", () => {
     flag: string,
     remove: boolean = false
   ) {
-    const res = await fetchData("guidance/flag/", "POST", {
+    const res = await fetchData("guidance/updateFlag/", "POST", {
       id: student.id,
       remove,
     });
-    if (!res.ok) return await res.json();
     const data = await res.json();
-    // const index = allStudents.value.findIndex((student) => student.id === id);
-    // allStudents.value[index] = data.flag;
+    if (!res.ok) return data;
+    const index = allStudents.value.findIndex((s) => s.id === student.id);
+    allStudents.value[index] = data.flag;
+    return data;
   }
   async function getMeetings() {
     const res = await fetchData("guidance/meetings/");

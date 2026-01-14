@@ -59,11 +59,11 @@
                 <div v-for="flag in flags" :key="flag.flag" v-show="student[flag.flag as keyof GuidanceStudent]"
                   :title="flag.title" class="h-4 w-4 rounded-full" :class="flag.color" />
                 <button @click="flagModal = student.id"
-                  class="ml-1 text-lg text-gray-500 hover:text-gray-800 opacity-0 hover:opacity-100 transition">
+                  class="ml-1 text-lg text-gray-500 hover:text-gray-800 transition">
                   +
                 </button>
                 <button @click="flagModal = -student.id"
-                  class="ml-1 text-lg text-gray-500 hover:text-gray-800 opacity-0 hover:opacity-100 transition">
+                  class="ml-1 text-lg text-gray-500 hover:text-gray-800 transition">
                   −
                 </button>
               </div>
