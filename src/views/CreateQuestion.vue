@@ -1,73 +1,79 @@
 <template>
   <Suspense>
-    <div>
-      <div class="px-10 flex flex-col items-center justify-center gap-4">
-        <h1 class="p-6 text-3xl">New Question</h1>
-      </div>
-      <div class="flex justify-center">
-        <form
-          class="w-1/2 m-10 p-5 rounded-xl shadow-md bg-primary-g border-black border-2"
-          @submit.prevent="
-            () => {
-              userStore.createQuestion(newQuestion);
-              router.push('/guidance/surveylist');
-            }
-          "
-        >
-          <div class="flex flex-col items-center">
-            <div class="max-w-4xl">
-              <input
-                type="text"
-                v-model="newQuestion.question"
-                placeholder="Question Text"
-                id="text"
-                class="border-2 border-black rounded-lg p-2 mb-4 w-full hover:shadow-xl transition placeholder-gray-500 placeholder-opacity-35"
-              />
+    <div class="mt-6 flex justify-center">
+      <div class="w-5/6 max-w-4xl">
+        <div class="mb-6 text-center">
+          <h1 class="text-3xl font-semibold text-gray-800">
+            New Question
+          </h1>
+          <p class="text-gray-500 mt-1">
+            Add a question to the survey
+          </p>
+        </div>
 
-              <select
-                class="border-2 border-black rounded-lg p-3 pr-8 text-left mb-4 w-full hover:shadow-xl transition placeholder-gray-500 placeholder-opacity-35"
-                v-model="newQuestion.status"
-              >
-                <option
-                  v-for="option in potentialOptions['status']"
-                  :value="option"
-                >
+        <form class="bg-primary-g border border-gray-300 rounded-xl shadow-sm p-8" @submit.prevent="
+          () => {
+            userStore.createQuestion(newQuestion);
+            router.push('/guidance/surveylist');
+          }
+        ">
+          <div class="grid grid-cols-1 gap-6">
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">
+                Question
+              </label>
+              <input v-model="newQuestion.question" type="text" placeholder="Enter question text" class="w-full rounded-lg border border-gray-300 p-3
+                       focus:outline-none focus:ring-2 focus:ring-primary-g
+                       focus:border-primary-g transition" />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">
+                Status
+              </label>
+              <select v-model="newQuestion.status" class="w-full rounded-lg border border-gray-300 p-3
+                       focus:outline-none focus:ring-2 focus:ring-primary-g
+                       focus:border-primary-g transition">
+                <option v-for="option in potentialOptions.status" :key="option" :value="option">
                   {{ option }}
                 </option>
               </select>
-              <select
-                class="border-2 border-black rounded-lg p-3 pr-8 text-left mb-4 w-full hover:shadow-xl transition placeholder-gray-500 placeholder-opacity-35"
-                v-model="newQuestion.questionType"
-              >
-                <option
-                  v-for="option in potentialOptions['questionType']"
-                  :value="option"
-                >
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">
+                Question Type
+              </label>
+              <select v-model="newQuestion.questionType" class="w-full rounded-lg border border-gray-300 p-3
+                       focus:outline-none focus:ring-2 focus:ring-primary-g
+                       focus:border-primary-g transition">
+                <option v-for="option in potentialOptions.questionType" :key="option" :value="option">
                   {{ option }}
                 </option>
               </select>
-              <select
-                class="border-2 border-black rounded-lg p-2 mb-4 w-full hover:shadow-xl transition placeholder-gray-500 placeholder-opacity-35"
-                v-model="newQuestion.classReferenced"
-              >
-                <option :value="null">n/a</option>
-                <option
-                  v-for="course in courses"
-                  :key="course.id"
-                  :value="course.id"
-                >
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">
+                Class (optional)
+              </label>
+              <select v-model="newQuestion.classReferenced" class="w-full rounded-lg border border-gray-300 p-3
+                       focus:outline-none focus:ring-2 focus:ring-primary-g
+                       focus:border-primary-g transition">
+                <option :value="null">Not applicable</option>
+                <option v-for="course in courses" :key="course.id" :value="course.id">
                   {{ course.name }}
                 </option>
               </select>
             </div>
           </div>
 
-          <div>
-            <button
-              type="submit"
-              class="p-5 border-2 border-black bg-white hover:bg-tertiary-g transition rounded-xl shadow-md mt-5 w-full"
-            >
-              Submit
+          <div class="mt-8 flex justify-end">
+            <button type="submit" class="px-6 py-3 rounded-lg font-semibold
+                     bg-white text-black
+                     hover:bg-tertiary-g/100 transition">
+              Create Question
             </button>
           </div>
         </form>
