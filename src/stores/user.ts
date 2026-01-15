@@ -201,7 +201,10 @@ export const useUserStore = defineStore("user", () => {
     const data = await res.json();
     if (!res.ok) return data;
     const index = allStudents.value.findIndex((s) => s.id === student.id);
-    allStudents.value[index] = data.flag;
+    allStudents.value[index] = {
+    ...allStudents.value[index],
+    ...data,
+    };
     return data;
   }
   async function getMeetings() {
