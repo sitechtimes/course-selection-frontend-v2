@@ -52,7 +52,7 @@ type Subject =
   | "SCIENCE"
   | "LANG"
   | "TECH"
-  | "ART"
+  | "ARTS"
   | "PE";
 
 type classReferenced = Pick<Course, "id" | "name" | "subject">;
@@ -105,7 +105,7 @@ export interface Meeting {
   period: number;
 }
 
-export interface DateInfo { 
+export interface DateInfo {
   todaysDate: Date;
   meetings: Meeting[];
 }
@@ -122,7 +122,7 @@ export interface ChartData {
 export interface CourseStat {
   course: Course;
   picks: number;
-  ranks: { [key: number]: number }
+  ranks: { [key: number]: number };
 }
 
 export interface Stats {

@@ -29,7 +29,8 @@
               v-if="
                 course[key] !== true &&
                 course[key] !== false &&
-                key !== 'description'
+                key !== 'description' &&
+                key !== 'subject'
               "
             >
               <input
@@ -40,6 +41,21 @@
                 class="border-2 border-black rounded-lg p-2 mb-4 w-full hover:shadow-xl transition placeholder-gray-500 placeholder-opacity-35"
               />
             </div>
+            <select
+              name="cars"
+              id="cars"
+              v-else-if="key === 'subject'"
+              v-model="alteredCourse[key]"
+              class="border-2 border-black rounded-lg p-2 mb-4 w-full hover:shadow-xl transition placeholder-gray-500 placeholder-opacity-35"
+            >
+              <option
+                v-for="subject in courseSubjects"
+                :key="subject"
+                :value="subject"
+              >
+                {{ subject }}
+              </option>
+            </select>
             <textarea
               type="text"
               rows="12"
@@ -89,7 +105,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { Course } from "../types/interface";
+import { Course, Subject } from "../types/interface";
 import { useUserStore } from "../stores/user";
 
 const router = useRouter();
@@ -107,6 +123,17 @@ const courseKeys = ref([] as (keyof Course)[]);
 const courseBools = ref([] as (keyof Course)[]);
 const alteredCourse = ref({} as Course);
 
+const courseSubjects = [
+  "ENGLISH",
+  "SS",
+  "MATH",
+  "SCIENCE",
+  "LANG",
+  "TECH",
+  "ARTS",
+  "PE",
+] as const satisfies readonly Subject[];
+
 onMounted(async () => {
   try {
     course.value = await findCourse();
@@ -118,7 +145,7 @@ onMounted(async () => {
         key !== "id" &&
         key !== "createdAt" &&
         typeof course.value[key as keyof Course] !== "boolean" &&
-        typeof course.value[key as keyof Course] !== "object"
+        typeof course.value[key as keyof Course] !== "object",
     ) as (keyof Course)[];
     courseBools.value = Object.keys(course.value).filter(
       (key) =>
@@ -126,7 +153,7 @@ onMounted(async () => {
         key !== "id" &&
         key !== "createdAt" &&
         typeof course.value[key as keyof Course] === "boolean" &&
-        typeof course.value[key as keyof Course] !== "object"
+        typeof course.value[key as keyof Course] !== "object",
     ) as (keyof Course)[];
   } catch (error) {
     console.error(error);
