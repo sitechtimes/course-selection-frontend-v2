@@ -45,7 +45,7 @@ export interface Rank {
   rank: number;
 }
 
-type Subject =
+export type Subject =
   | "ENGLISH"
   | "SS"
   | "MATH"
