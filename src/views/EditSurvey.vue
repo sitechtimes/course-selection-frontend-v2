@@ -5,7 +5,10 @@
         Editing the {{ survey.grade }}th Grade Survey
       </h1>
 
-      <form class="m-10 p-10 rounded-2xl shadow-lg bg-primary-g border border-gray-300" @submit.prevent="submitSurvey">
+      <form
+        class="m-10 p-10 rounded-2xl shadow-lg bg-primary-g border border-gray-300"
+        @submit.prevent="submitSurvey"
+      >
         <section class="mb-12">
           <h2 class="text-2xl font-semibold mb-6 text-center">
             Survey Settings
@@ -14,14 +17,20 @@
           <div class="flex flex-col items-center gap-6">
             <div>
               <label class="text-lg font-medium block mb-2">Due Date</label>
-              <input type="date" v-model="dueDateDate"
-                class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-400" />
+              <input
+                type="date"
+                v-model="dueDateDate"
+                class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+              />
             </div>
 
             <div>
               <label class="text-lg font-medium block mb-2">Due Time</label>
-              <input type="time" v-model="dueDateTime"
-                class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-400" />
+              <input
+                type="time"
+                v-model="dueDateTime"
+                class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+              />
             </div>
           </div>
         </section>
@@ -37,13 +46,17 @@
                 Available Questions
               </h3>
 
-              <draggable v-model="availableQuestions" group="questions" item-key="id"
-                class="min-h-[300px] rounded-xl p-4 bg-gray-50 border border-gray-300">
+              <draggable
+                v-model="availableQuestions"
+                group="questions"
+                item-key="id"
+                class="min-h-[300px] rounded-xl p-4 bg-gray-50 border border-gray-300"
+              >
                 <template #item="{ element }">
-                  <div class="p-4 mb-3 rounded-md bg-white text-gray-800
-                 shadow-sm cursor-move
-                 hover:bg-gray-100 hover:shadow
-                 transition-all duration-150">
+                  <div
+                    class="p-4 mb-3 rounded-md bg-white text-gray-800 shadow-sm cursor-move hover:bg-gray-100 hover:shadow transition-all duration-150"
+                    @click="switchQuestionOnCLick(element)"
+                  >
                     <p class="text-sm leading-relaxed">
                       {{ element.question }}
                     </p>
@@ -51,7 +64,10 @@
                 </template>
               </draggable>
 
-              <p v-if="availableQuestions.length === 0" class="text-sm text-gray-400 text-center italic mt-4">
+              <p
+                v-if="availableQuestions.length === 0"
+                class="text-sm text-gray-400 text-center italic mt-4"
+              >
                 No available questions
               </p>
             </div>
@@ -61,13 +77,17 @@
                 Questions in Survey
               </h3>
 
-              <draggable v-model="surveyQuestions" group="questions" item-key="id"
-                class="min-h-[300px] rounded-xl p-4 bg-gray-50 border border-gray-300">
+              <draggable
+                v-model="surveyQuestions"
+                group="questions"
+                item-key="id"
+                class="min-h-[300px] rounded-xl p-4 bg-gray-50 border border-gray-300"
+              >
                 <template #item="{ element }">
-                  <div class="p-4 mb-3 rounded-md bg-white text-gray-800
-                 shadow-sm cursor-move
-                 hover:bg-gray-100 hover:shadow
-                 transition-all duration-150">
+                  <div
+                    class="p-4 mb-3 rounded-md bg-white text-gray-800 shadow-sm cursor-move hover:bg-gray-100 hover:shadow transition-all duration-150"
+                    @click="switchQuestionOnCLick(element)"
+                  >
                     <p class="text-sm leading-relaxed font-medium">
                       {{ element.question }}
                     </p>
@@ -75,16 +95,20 @@
                 </template>
               </draggable>
 
-              <p v-if="surveyQuestions.length === 0" class="text-sm text-gray-400 text-center italic mt-4">
+              <p
+                v-if="surveyQuestions.length === 0"
+                class="text-sm text-gray-400 text-center italic mt-4"
+              >
                 Drag questions here
               </p>
             </div>
           </div>
-
         </section>
 
-        <button type="submit" class="mt-12 p-5 w-full rounded-xl shadow-md border border-gray-300
-                 bg-white hover:bg-gray-100 transition font-semibold">
+        <button
+          type="submit"
+          class="mt-12 p-5 w-full rounded-xl shadow-md border border-gray-300 bg-white hover:bg-gray-100 transition font-semibold"
+        >
           Save Survey
         </button>
       </form>
@@ -118,9 +142,24 @@ const surveyQuestions = ref<Question[]>([]);
 
 async function findSurvey(): Promise<Survey | undefined> {
   const surveys: Survey[] = await userStore.getSurveys();
-  return surveys.find(
-    (survey: Survey) => survey.grade === Number(surveyGrade)
+  return surveys.find((survey: Survey) => survey.grade === Number(surveyGrade));
+}
+
+function switchQuestionOnCLick(question: Question) {
+  const indexInAvailable = availableQuestions.value.findIndex(
+    (q: Question) => q.id === question.id,
   );
+  const indexInSurvey = surveyQuestions.value.findIndex(
+    (q: Question) => q.id === question.id,
+  );
+
+  if (indexInAvailable !== -1) {
+    surveyQuestions.value.push(question);
+    availableQuestions.value.splice(indexInAvailable, 1);
+  } else if (indexInSurvey !== -1) {
+    availableQuestions.value.push(question);
+    surveyQuestions.value.splice(indexInSurvey, 1);
+  }
 }
 
 onMounted(async () => {
@@ -133,9 +172,7 @@ onMounted(async () => {
 
   availableQuestions.value = allQuestions.filter(
     (q: Question) =>
-      !surveyQuestions.value.some(
-        (sq: Question) => sq.id === q.id
-      )
+      !surveyQuestions.value.some((sq: Question) => sq.id === q.id),
   );
 
   const originalDate = alteredSurvey.value.dueDate;
@@ -147,11 +184,7 @@ function submitSurvey(): void {
   alteredSurvey.value.dueDate = `${dueDateDate.value}T${dueDateTime.value}`;
   alteredSurvey.value.questions = surveyQuestions.value;
 
-  userStore.fetchData(
-    "guidance/editsurvey/",
-    "PUT",
-    alteredSurvey.value
-  );
+  userStore.fetchData("guidance/editsurvey/", "PUT", alteredSurvey.value);
 
   router.push("/guidance/surveylist");
 }
