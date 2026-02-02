@@ -19,7 +19,7 @@
           <input
             type="radio"
             :disabled="isDisabled"
-            class="w-5 h-5 mx-2 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
+            class="w-5 h-5 mx-2 text-blue-400 border-gray-300 focus:ring-transparent"
             :name="`question_${question.question}`"
             :value="true"
             v-model="surveyStore.answers[index].answer"
@@ -32,7 +32,7 @@
           <input
             type="radio"
             :disabled="isDisabled"
-            class="w-5 h-5 mx-2 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
+            class="w-5 h-5 mx-2 text-blue-400 border-gray-300 focus:ring-transparent"
             :name="`question_${question.question}`"
             :value="false"
             v-model="surveyStore.answers[index].answer"
@@ -76,10 +76,10 @@ watch(
   () => props.question.question,
   () => {
     index.value = surveyStore.answers.findIndex(
-      (ans) => ans.question === props.question.id
+      (ans) => ans.question === props.question.id,
     );
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 watch(
@@ -96,13 +96,13 @@ watch(
       });
     } else if (!newResponse && oldResponse) {
       surveyStore.selectedCourses = surveyStore.selectedCourses.filter(
-        (course) => course.id !== referenced.id
+        (course) => course.id !== referenced.id,
       );
       finalAnswer.answer = (finalAnswer.answer as Rank[]).filter(
-        (ans) => ans.course !== referenced.id
+        (ans) => ans.course !== referenced.id,
       );
     }
-  }
+  },
 );
 </script>
 
