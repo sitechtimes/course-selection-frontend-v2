@@ -12,7 +12,7 @@
               userStore.fetchData(
                 'guidance/surveyquestions/',
                 'PUT',
-                alteredQuestion
+                alteredQuestion,
               );
               router.push('/guidance/surveylist');
             }
@@ -48,6 +48,14 @@
                   {{ option }}
                 </option>
               </select>
+              <ul
+                v-if="alteredQuestion.questionType === 'DROPDOWN'"
+                class="space-y-1 text-sm text-gray-700"
+              >
+                <li v-for="(opt, i) in alteredQuestion.options" :key="i">
+                  • {{ opt }}
+                </li>
+              </ul>
               <select
                 v-if="key === 'classReferenced' && courses"
                 :id="key"
@@ -108,7 +116,7 @@ const questionId = route.params.id;
 async function findQuestion() {
   const questions = await userStore.getQuestions();
   return questions.find(
-    (question: Question) => question.id === Number(questionId)
+    (question: Question) => question.id === Number(questionId),
   );
 }
 
@@ -145,8 +153,9 @@ onMounted(async () => {
         key !== "id" &&
         key !== "createdAt" &&
         typeof question.value[key as keyof Question] !== "boolean" &&
-        key !== "options"
+        key !== "options",
     ) as (keyof Question)[];
+    console.log(alteredQuestion.value);
   } catch (error) {
     console.error(error);
   }
