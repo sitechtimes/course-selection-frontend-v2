@@ -9,6 +9,7 @@
           class="w-1/2 m-10 p-5 rounded-xl shadow-md bg-primary-g border-black border-2"
           @submit.prevent="
             () => {
+              alteredQuestion.options = temporaryOptions;
               userStore.fetchData(
                 'guidance/surveyquestions/',
                 'PUT',
@@ -35,7 +36,7 @@
               "
             >
               <select
-                v-if="key !== 'classReferenced'"
+                v-if="key === 'status'"
                 :id="key"
                 v-model="alteredQuestion[key]"
                 class="border-2 border-black rounded-lg p-3 pr-8 text-left mb-4 w-full hover:shadow-xl transition placeholder-gray-500 placeholder-opacity-35"
@@ -48,14 +49,55 @@
                   {{ option }}
                 </option>
               </select>
-              <ul
-                v-if="alteredQuestion.questionType === 'DROPDOWN'"
-                class="space-y-1 text-sm text-gray-700"
-              >
-                <li v-for="(opt, i) in alteredQuestion.options" :key="i">
-                  • {{ opt }}
-                </li>
-              </ul>
+              <div v-if="key === 'questionType'" class="mb-2">
+                <select
+                  :id="key"
+                  v-model="alteredQuestion[key]"
+                  class="border-2 border-black rounded-lg p-3 pr-8 text-left mb-4 w-full hover:shadow-xl transition placeholder-gray-500 placeholder-opacity-35"
+                >
+                  <option
+                    v-for="option in potentialOptions[key]"
+                    :key="option"
+                    :value="option"
+                  >
+                    {{ option }}
+                  </option>
+                </select>
+                <div class="flex items-center space-x-2 mb-2">
+                  <input
+                    type="text"
+                    v-model="newOption"
+                    placeholder="Add new option"
+                    class="border-2 border-black rounded-lg p-2 w-full"
+                  />
+                  <button
+                    type="button"
+                    @click="appendOption()"
+                    class="p-2 border-2 border-black bg-white hover:bg-tertiary-g transition rounded-lg"
+                  >
+                    Add
+                  </button>
+                </div>
+                <ul
+                  v-if="alteredQuestion.questionType === 'DROPDOWN'"
+                  class="space-y-1 text-sm text-gray-700"
+                >
+                  <li
+                    v-for="(opt, i) in temporaryOptions"
+                    class="list-disc text-xl"
+                    :key="i"
+                  >
+                    {{ opt }}
+                    <button
+                      type="button"
+                      class="text-right text-red-500 hover:text-red-700 ml-2"
+                      @click="removeOption(i)"
+                    >
+                      X
+                    </button>
+                  </li>
+                </ul>
+              </div>
               <select
                 v-if="key === 'classReferenced' && courses"
                 :id="key"
@@ -113,6 +155,7 @@ const router = useRouter();
 const userStore = useUserStore();
 const route = useRoute();
 const questionId = route.params.id;
+const newOption = ref("");
 async function findQuestion() {
   const questions = await userStore.getQuestions();
   return questions.find(
@@ -124,6 +167,7 @@ const question = ref({} as Question);
 const courses = ref([] as Course[]);
 const questionKeys = ref([] as (keyof Question)[]);
 const alteredQuestion = ref({} as Question);
+const temporaryOptions = ref([] as string[]);
 const potentialOptions = ref({
   questionType: [
     "FINAL",
@@ -141,7 +185,15 @@ const potentialOptions = ref({
   ] as Question["questionType"][],
   status: ["OPTIONAL", "STANDARD", "CLASS"] as Question["status"][],
 });
-
+function appendOption() {
+  if (newOption.value.trim() === "") return;
+  temporaryOptions.value?.push(newOption.value.trim());
+  console.log(temporaryOptions.value);
+  newOption.value = "";
+}
+function removeOption(index: number) {
+  temporaryOptions.value.splice(index, 1);
+}
 onMounted(async () => {
   try {
     courses.value = await userStore.getCourses();
@@ -155,9 +207,12 @@ onMounted(async () => {
         typeof question.value[key as keyof Question] !== "boolean" &&
         key !== "options",
     ) as (keyof Question)[];
-    console.log(alteredQuestion.value);
+    temporaryOptions.value = alteredQuestion.value.options
+      ? alteredQuestion.value.options.map((opt) => opt)
+      : [];
   } catch (error) {
     console.error(error);
   }
 });
 </script>
+``
