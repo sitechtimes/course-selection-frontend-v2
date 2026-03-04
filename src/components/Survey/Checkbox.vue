@@ -22,7 +22,7 @@
                 >
                   <input
                     type="checkbox"
-                    class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
+                    class="w-4 h-4 text-blue-400 border-gray-300 focus:ring-transparent"
                     :value="choice"
                     v-model="courses"
                     :disabled="notInterested"
@@ -36,7 +36,7 @@
               >
                 <input
                   type="checkbox"
-                  class="w-4 h-4 text-blue-400 bg-zinc-100 border-gray-300 focus:ring-transparent"
+                  class="w-4 h-4 text-blue-400 accent-black border-gray-300 focus:ring-transparent"
                   value="Not Interested"
                   v-model="notInterested"
                 />
@@ -105,25 +105,25 @@ const finalAnswer = surveyStore.answers[props.finalID] as Answer<Rank[]>;
 const courses = ref<Course[]>([]);
 const draggableCourses = ref<Course[]>([]);
 let answer = surveyStore.answers.find(
-  (e) => e.question === props.question.id
+  (e) => e.question === props.question.id,
 ) as Answer<Rank[]>;
 const notInterested = ref(false);
 let disable = false;
 
 function init() {
   draggableCourses.value = answer.answer.map(
-    (a) => courses.value.find(({ id }) => id === a.course) as Course
+    (a) => courses.value.find(({ id }) => id === a.course) as Course,
   );
   answer.answer.forEach((ans, i) => (ans.rank = i + 1));
 }
 
 onMounted(() => {
   answer = surveyStore.answers.find(
-    (ans) => ans.question === props.question.id
+    (ans) => ans.question === props.question.id,
   ) as Answer<Rank[]>;
   const map = answer.answer.map(({ course }) => course);
   courses.value = surveyStore.coursesAvailable.filter(({ id }) =>
-    map.includes(id)
+    map.includes(id),
   );
   disable = true;
   init();
@@ -140,15 +140,15 @@ watch(
       .filter(({ course }) => !bads.includes(course))
       .map(({ course }, i) => ({ course, rank: i + 1 }));
     surveyStore.selectedCourses = surveyStore.selectedCourses.filter(
-      ({ id }) => !bads.includes(id)
+      ({ id }) => !bads.includes(id),
     );
     [courses.value, answer.answer] = [[], []];
-  }
+  },
 );
 
 function toggleInterest(interested: boolean, course: Course) {
   surveyStore.selectedCourses = surveyStore.selectedCourses.filter(
-    (x) => x !== course
+    (x) => x !== course,
   );
   finalAnswer.answer = finalAnswer.answer
     .filter((rank) => rank.course !== course.id)
@@ -168,7 +168,7 @@ function getChangedCourse(newCourses: Course[], oldCourses: Course[]) {
   const added = newCourses.find((c) => !oldCourses.includes(c)) as Course;
   const removed = oldCourses.find((c) => !newCourses.includes(c)) as Course;
   answer.answer = answer.answer.filter(
-    (rank) => rank.course !== (removed ?? added).id
+    (rank) => rank.course !== (removed ?? added).id,
   );
   if (!added) return removed;
   answer.answer.push({
@@ -186,6 +186,6 @@ watch(
     const changedCourse = getChangedCourse(newResponse, oldResponse);
     if (changedCourse) toggleInterest(interested, changedCourse);
   },
-  { deep: true }
+  { deep: true },
 );
 </script>

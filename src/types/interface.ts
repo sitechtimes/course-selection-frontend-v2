@@ -45,22 +45,23 @@ export interface Rank {
   rank: number;
 }
 
-type Subject =
+export type Subject =
   | "ENGLISH"
   | "SS"
   | "MATH"
   | "SCIENCE"
   | "LANG"
   | "TECH"
-  | "ART"
+  | "ARTS"
   | "PE";
 
+type classReferenced = Pick<Course, "id" | "name" | "subject">;
 export interface Question {
   id: number;
   question: string;
   questionType: "BOOLEAN" | "FINAL" | "NOTE" | "GENERAL" | "DROPDOWN" | Subject;
   status: "OPTIONAL" | "STANDARD" | "CLASS";
-  classReferenced: Course | null;
+  classReferenced: classReferenced | null;
   options: string[] | null;
 }
 
@@ -68,6 +69,22 @@ export interface Course {
   id: number;
   name: string;
   subject: Subject;
+  freshman?: boolean;
+  sophomore?: boolean;
+  junior?: boolean;
+  senior?: boolean;
+  description?: string;
+  ap?: boolean;
+  honors?: boolean;
+  mandatoryCourse?: boolean;
+  doublePeriod?: boolean;
+  prerequisites?: string[];
+  codes?: string[];
+}
+
+export interface SortArray {
+  sortBy: string;
+  text: string;
 }
 
 export interface Flag {
@@ -88,7 +105,7 @@ export interface Meeting {
   period: number;
 }
 
-export interface DateInfo { 
+export interface DateInfo {
   todaysDate: Date;
   meetings: Meeting[];
 }
@@ -105,7 +122,7 @@ export interface ChartData {
 export interface CourseStat {
   course: Course;
   picks: number;
-  ranks: { [key: number]: number }
+  ranks: { [key: number]: number };
 }
 
 export interface Stats {

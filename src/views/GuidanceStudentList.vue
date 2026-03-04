@@ -1,92 +1,68 @@
 <template>
   <div class="h-auto w-full flex flex-col justify-center items-center mb-10">
-    <div class="flex flex-row items-center justify-center w-5/6">
-      <div class="w-1/3 flex flex-row justify-evenly">
-        <div
-          @click="viewAll = !viewAll"
-          class="h-10 px-4 w-60 mx-10 flex flex-row bg-primary-g text-black justify-evenly font-semibold items-center cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
-        >
+
+    <div class="w-5/6 max-w-8xl mx-auto mb-6 flex flex-wrap items-center gap-4">
+
+      <div class="flex items-center gap-4 flex-shrink-0">
+
+        <div @click="viewAll = !viewAll" class="flex items-center gap-2 px-4 h-10 rounded-lg
+                 bg-primary-g text-gray-900 font-semibold
+                 cursor-pointer shadow-sm
+                 hover:bg-tertiary-g transition">
           <label class="cursor-pointer">View all students</label>
-          <input class="ml-2" type="checkbox" v-model="viewAll" />
+          <input type="checkbox" v-model="viewAll" class="w-4 h-4" />
         </div>
-        <Sort
-          class="mr-0"
-          @filter-selected="(filter:string) => (sortBy = filter)"
-        />
+
+        <Sort :menu-array="menuArray" @filter-selected="(filter: string) => (sortBy = filter)" class="min-w-[180px]" />
+
       </div>
-      <div class="w-2/3">
-        <div class="border-white flex justify-center items-center">
-          <div class="flex justify-center items-center relative w-11/12">
-            <input
-              v-model="input"
-              placeholder="Search by name or email"
-              @input="
-                $emit(
-                  'update:modelValue',
-                  ($event.target as HTMLInputElement).value
-                )
-              "
-              class="border border-zinc-300 rounded w-full h-10 p-2 text-zinc-800"
-            />
-            <p class="absolute right-3 text-zinc-400 cursor-pointer text-xl">
-              🔎︎
-            </p>
-          </div>
-        </div>
+
+      <div class="relative flex-1">
+        <input v-model="input" placeholder="Search by name or email"
+          @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)" class="w-full h-10 pl-10 pr-3 rounded-lg
+         border border-gray-300 text-gray-700
+         focus:outline-none focus:ring-2 focus:ring-primary-g" />
+
+        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+          🔎︎
+        </span>
       </div>
+
     </div>
-    <StudentTable
-      :viewAll="viewAll"
-      :new-students="
-        sortedAndFiltered.slice(startIndex, startIndex + pageCapacity)
-      "
-    />
+
+    <StudentTable :viewAll="viewAll" :new-students="sortedAndFiltered.slice(startIndex, startIndex + pageCapacity)" />
+
     <div class="max-w-[80%] overflow-x-auto mt-4 flex flex-row justify-between">
-      <button
-        v-if="currentChunk > 1"
-        class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold"
-        @click="if (currentChunk > 1) currentChunk--;"
-      >
+      <button v-if="currentChunk > 1" class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold"
+        @click="if (currentChunk > 1) currentChunk--;">
         ❮❮
       </button>
-      <button
-        class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold"
-        @click="changePage(-1)"
-        :disabled="currentPage === 1"
-      >
+      <button class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold" @click="changePage(-1)"
+        :disabled="currentPage === 1">
         ❮
       </button>
-      <button
-        v-for="n in visiblePages"
-        @click="updatePagination(n)"
-        :class="
-          currentPage === n ? 'bg-[#cdeeb4] focus:bg-[#cdeeb4]' : 'bg-[#ebebeb]'
-        "
-        class="h-8 w-8 rounded-lg hover:opacity-75 ease-in-out duration-300 font-bold mx-2"
-      >
+      <button v-for="n in visiblePages" :key="n" @click="updatePagination(n)"
+        :class="currentPage === n ? 'bg-[#cdeeb4] focus:bg-[#cdeeb4]' : 'bg-[#ebebeb]'"
+        class="h-8 w-8 rounded-lg hover:opacity-75 ease-in-out duration-300 font-bold mx-2">
         {{ n }}
       </button>
-      <button
-        class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold"
-        :disabled="currentPage === totalPages"
-        @click="changePage(1)"
-      >
+      <button class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold" :disabled="currentPage === totalPages"
+        @click="changePage(1)">
         ❯
       </button>
-      <button
-        v-if="currentChunk < totalChunks"
-        class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold"
-        @click="if (currentChunk < totalChunks) currentChunk++;"
-      >
+      <button v-if="currentChunk < totalChunks" class="mx-2 bg-[#ebebeb] h-8 w-8 rounded-lg font-bold"
+        @click="if (currentChunk < totalChunks) currentChunk++;">
         ❯❯
       </button>
     </div>
+
     <h5 class="mt-4">
       Page
-      <span class="font-bold m-1"> {{ currentPage }}</span>
+      <span class="font-bold m-1">{{ currentPage }}</span>
       of
       <span class="font-bold m-1">{{ totalPages }}</span>
     </h5>
+
   </div>
 </template>
 
@@ -111,21 +87,53 @@ const currentPage = ref(1);
 const pageCapacity = 10;
 const currentChunk = ref(1);
 const pagesPerChunk = 10;
-
+const menuArray = [
+  { sortBy: "az", text: "Last Name (A-Z)" },
+  { sortBy: "za", text: "Last Name (Z-A)" },
+  { sortBy: "Not Started", text: "Not Started" },
+  { sortBy: "In Progress", text: "In Progress" },
+  { sortBy: "Completed", text: "Completed" },
+  { sortBy: "Finalized", text: "Finalized" },
+  { sortBy: "9", text: "Grade 9" },
+  { sortBy: "10", text: "Grade 10" },
+  { sortBy: "11", text: "Grade 11" },
+  { sortBy: "12", text: "Grade 12" },
+  { sortBy: "transfer", text: "Transfer" },
+  { sortBy: "regents", text: "Missing Regents" },
+  { sortBy: "sports", text: "Sports Team" },
+  { sortBy: "enl", text: "ENL" },
+];
 const sortedAndFiltered = computed(() => {
-  try {
-    return applyFilters(sortBy.value, input.value);
-  } finally {
-    updatePagination(1);
-  }
+  updatePagination(1);
+  return applyFilters(sortBy.value, input.value);
 });
+
+function getLastName(name: string) {
+  return name.trim().split(/\s+/).slice(-1)[0].toLowerCase();
+}
+
+function getFirstName(name: string) {
+  return name.trim().split(/\s+/).slice(0, -1).join(" ").toLowerCase();
+}
 
 function filterByCategory(students: GuidanceStudent[], sortBy: string) {
   if (sortBy === "az")
-    return students.sort((a, b) => a.name.localeCompare(b.name));
+    return [...students].sort((a, b) => {
+      const lastCompare =
+        getLastName(a.name).localeCompare(getLastName(b.name));
+      return lastCompare !== 0
+        ? lastCompare
+        : getFirstName(a.name).localeCompare(getFirstName(b.name));
+    });
 
   if (sortBy === "za")
-    return students.sort((a, b) => b.name.localeCompare(a.name));
+    return [...students].sort((a, b) => {
+      const lastCompare =
+        getLastName(b.name).localeCompare(getLastName(a.name));
+      return lastCompare !== 0
+        ? lastCompare
+        : getFirstName(b.name).localeCompare(getFirstName(a.name));
+    });
 
   if (["Not Started", "In Progress", "Completed", "Finalized"].includes(sortBy))
     return students.filter((student) => student.status === sortBy);
@@ -135,6 +143,7 @@ function filterByCategory(students: GuidanceStudent[], sortBy: string) {
 
   if (["transfer", "regents", "sports", "enl"].includes(sortBy))
     return students.filter((s) => s[sortBy as keyof GuidanceStudent]);
+
   return students;
 }
 
@@ -144,8 +153,8 @@ function applyFilters(sortBy: string, search: string) {
     viewAll.value
       ? userStore.allStudents
       : userStore.allStudents.filter(({ id }) =>
-          userStore.students.includes(id)
-        ),
+        userStore.students.includes(id)
+      ),
     sortBy
   );
   if (!search.trim().length) return filtered;

@@ -47,10 +47,16 @@
       <RouterLink to="/guidance/studentlist">
         <p class="text-base hover:text-gray-500">Students</p>
       </RouterLink>
+      <RouterLink to="/guidance/surveylist">
+        <p class="text-base hover:text-gray-500">Surveys</p>
+      </RouterLink>
+      <RouterLink to="/guidance/courselist">
+        <p class="text-base hover:text-gray-5000">Courses</p>
+      </RouterLink>
       <RouterLink to="/guidance/calendar">
         <p class="text-base hover:text-gray-500">Calendar</p>
       </RouterLink>
-      <RouterLink id="link" to="/guidance/statistics">
+      <RouterLink to="/guidance/statistics">
         <p class="text-base hover:text-gray-5000">Statistics</p>
       </RouterLink>
       <RouterLink to="/">
@@ -147,7 +153,12 @@ const surveyStore = useSurveyStore();
 const menuOpen = ref(false);
 const save = ref("Save");
 
-const viewingSurvey = () => router.currentRoute.value.path.includes("survey");
+const viewingSurvey = () => {
+  if (!userStore.isGuidance) {
+    return router.currentRoute.value.path.includes("survey");
+  }
+  return false;
+};
 
 function redirect() {
   if (!userStore.isAuth) return router.push("/");

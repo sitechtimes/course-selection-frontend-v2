@@ -108,7 +108,6 @@ const userStore = useUserStore();
 
 surveyStore.missingAnswers = [];
 surveyStore.checkAnswers();
-
 const allCoursesQuestion = surveyStore.survey.questions.find(
   (entry) => entry.questionType === "FINAL"
 ) as Question;
