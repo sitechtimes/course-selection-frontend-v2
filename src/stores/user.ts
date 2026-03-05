@@ -1,4 +1,11 @@
-import { Student, Meeting, GuidanceStudent, Stats } from "../types/interface";
+import {
+  Student,
+  Meeting,
+  GuidanceStudent,
+  Stats,
+  Course,
+  Question,
+} from "../types/interface";
 import { useSurveyStore } from "./survey";
 import { useRouter } from "vue-router";
 import { defineStore } from "pinia";
@@ -9,7 +16,6 @@ export const useUserStore = defineStore("user", () => {
   const surveyStore = useSurveyStore();
   const loading = ref(false);
   const profileID = ref(0);
-  const popup = reactive({ error: true, message: "", update: false });
   const initComplete = ref(false);
   const isAuth = ref(false);
   const firstName = ref("");
@@ -17,10 +23,12 @@ export const useUserStore = defineStore("user", () => {
   const email = ref("");
   const isGuidance = ref(false);
   const student = ref<Student>({} as Student);
+  const courseList = ref<Course[]>([]);
   const students = ref<number[]>([]); // Only the guidance counselor's students
   const allStudents = ref<GuidanceStudent[]>([]);
   const meetings = ref<Meeting[]>([]);
   const meetingsFetched = ref(false);
+  const popup = reactive({ error: true, message: "", update: false });
 
   async function fetchData(url: string, method?: string, body?: any) {
     loading.value = true;
@@ -74,6 +82,7 @@ export const useUserStore = defineStore("user", () => {
       const error = Object.values(data)[0];
       return setPopup(typeof error === "object" ? error[0] : error, true);
     }
+    console.log(data);
     profileID.value = data.id;
     firstName.value =
       data.user.firstName[0].toUpperCase() +
@@ -146,25 +155,58 @@ export const useUserStore = defineStore("user", () => {
 
   async function getStudents() {
     const res = await fetchData("guidance/profiles/");
-    if (!res.ok) return await res.json();
     const data = await res.json();
     allStudents.value = data;
+  }
+  async function getCourses() {
+    const res = await fetchData("course/");
+    const data = await res.json();
+    if (!res.ok) throw new Error("Failed to fetch courses");
+    return data;
+  }
+  async function getSurveys() {
+    const res = await fetchData("guidance/survey/");
+    const data = await res.json();
+    if (!res.ok) throw new Error("Failed to fetch surveys");
+    return data;
+  }
+  async function getQuestions() {
+    const res = await fetchData("guidance/surveyquestions/");
+    const data = await res.json();
+    if (!res.ok) throw new Error("Failed to fetch surveys");
+    return data;
+  }
+  async function createQuestion(question: Question) {
+    const res = await fetchData("guidance/surveyquestions/", "POST", question);
+    const data = await res.json();
+    if (!res.ok) throw new Error("Failed to create question");
+    return data;
+  }
+  async function deleteQuestion(id: number) {
+    const res = await fetchData("guidance/surveyquestions/", "DELETE", id);
+    const data = await res.json();
+    if (!res.ok) throw new Error("Failed to delete question");
+    return data;
   }
   async function changeFlag(
     student: GuidanceStudent,
     flag: string,
     remove: boolean = false
   ) {
-    const res = await fetchData("guidance/flag/", "POST", {
+    const res = await fetchData("guidance/updateFlag/", "POST", {
       id: student.id,
+      flag: flag, 
       remove,
     });
-    if (!res.ok) return await res.json();
     const data = await res.json();
-    // const index = allStudents.value.findIndex((student) => student.id === id);
-    // allStudents.value[index] = data.flag;
+    if (!res.ok) return data;
+    const index = allStudents.value.findIndex((s) => s.id === student.id);
+    allStudents.value[index] = {
+    ...allStudents.value[index],
+    ...data,
+    };
+    return data;
   }
-
   async function getMeetings() {
     const res = await fetchData("guidance/meetings/");
     if (!res.ok) return await res.json();
@@ -232,13 +274,11 @@ export const useUserStore = defineStore("user", () => {
 
   return {
     init,
-    popup,
     login,
     logout,
     isAuth,
     loading,
     student,
-    setPopup,
     lastName,
     meetings,
     students,
@@ -251,10 +291,18 @@ export const useUserStore = defineStore("user", () => {
     getMeetings,
     allStudents,
     initComplete,
-    resetPassword,
     changeMeeting,
     meetingsFetched,
-    resetPasswordConfirm,
     $reset,
+    popup,
+    getCourses,
+    getSurveys,
+    fetchData,
+    getQuestions,
+    createQuestion,
+    deleteQuestion,
+    resetPassword,
+    resetPasswordConfirm,
+    setPopup,
   };
 });

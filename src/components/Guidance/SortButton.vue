@@ -1,27 +1,28 @@
 <template>
-  <div class="w-44">
+  <div class="relative w-44">
     <div
-      class="h-10 w-full flex flex-row bg-primary-g text-black justify-evenly cursor-pointer shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
+      class="h-10 flex w-max items-center justify-between px-4 rounded-lg bg-primary-g text-gray-900 font-semibold cursor-pointer hover:bg-tertiary-g transition"
       id="sort"
       @click="isOpen = !isOpen"
     >
-      <a class="mt-2.5 ml-4 flex">
-        <p class="font-semibold" id="sortshow">{{ selected }}</p>
-      </a>
-
-      <p class="mt-1.5 text-xl">{{ isOpen ? "⏶" : "⏷" }}</p>
+      <p>{{ selected }}</p>
+      <span class="text-xl">{{ isOpen ? "⏶" : "⏷" }}</span>
     </div>
+
     <div
-      class="sub-menu absolute shadow-[4px_3px_3px_rgba(0,0,0,0.25)]"
       v-if="isOpen"
+      class="absolute mt-1 w-full rounded-lg border border-gray-300 bg-white shadow-sm z-10"
     >
       <button
         v-for="x in menuArray"
         :key="x.sortBy"
-        @click="filter(x.sortBy, x.text)"
-        class="flex justify-left h-10 w-44 p-1 border border-t-transparent border-primary-g bg-tertiary-g"
+        @click="
+          filter(x.sortBy, x.text);
+          isOpen = false;
+        "
+        class="w-full text-left px-4 py-2 hover:bg-gray-100 transition"
       >
-        <p class="ml-2">{{ x.text }}</p>
+        {{ x.text }}
       </button>
     </div>
   </div>
@@ -29,31 +30,15 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-
+import { SortArray } from "../../types/interface";
+defineProps<{ menuArray: SortArray[] }>();
 const selected = ref("Sort By");
 const isOpen = ref(false);
 const emit = defineEmits(["filter-selected"]);
 
 const filter = (sortBy: string, text: string) => {
-  emit("filter-selected", sortBy);
+  emit("filter-selected", sortBy as string);
   isOpen.value = false;
   selected.value = text;
 };
-
-const menuArray = [
-  { sortBy: "az", text: "Last Name (A-Z)" },
-  { sortBy: "za", text: "Last Name (Z-A)" },
-  { sortBy: "Not Started", text: "Not Started" },
-  { sortBy: "In Progress", text: "In Progress" },
-  { sortBy: "Completed", text: "Completed" },
-  { sortBy: "Finalized", text: "Finalized" },
-  { sortBy: "9", text: "Grade 9" },
-  { sortBy: "10", text: "Grade 10" },
-  { sortBy: "11", text: "Grade 11" },
-  { sortBy: "12", text: "Grade 12" },
-  { sortBy: "transfer", text: "Transfer" },
-  { sortBy: "regents", text: "Missing Regents" },
-  { sortBy: "sports", text: "Sports Team" },
-  { sortBy: "enl", text: "ENL" },
-];
 </script>

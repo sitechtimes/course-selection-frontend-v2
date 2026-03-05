@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits, defineProps, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 
 const props = defineProps<{
   currentFirstDay: Date;

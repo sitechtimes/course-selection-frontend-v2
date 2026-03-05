@@ -33,6 +33,36 @@ const router = createRouter({
           component: () => import("../views/GuidanceDashboard.vue"),
         },
         {
+          path: "courselist",
+          name: "courseList",
+          component: () => import("../views/CourseList.vue"),
+        },
+        {
+          path: "surveylist",
+          name: "surveyList",
+          component: () => import("../views/SurveyList.vue"),
+        },
+        {
+          path: "editCourse/:id",
+          name: "editCourse",
+          component: () => import("../views/EditCourse.vue"),
+        },
+        {
+          path: "editSurvey/:grade",
+          name: "editSurvey",
+          component: () => import("../views/EditSurvey.vue"),
+        },
+        {
+          path: "editQuestion/:id",
+          name: "editQuestion",
+          component: () => import("../views/EditQuestion.vue"),
+        },
+        {
+          path: "createQuestion",
+          name: "createQuestion",
+          component: () => import("../views/CreateQuestion.vue"),
+        },
+        {
           path: "studentlist",
           name: "guidanceStudentlist",
           component: () => import("../views/GuidanceStudentList.vue"),
