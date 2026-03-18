@@ -2,44 +2,26 @@
   <section class="lg:text-left text-center h-full w-full">
     <div class="flex flex-col lg:flex-row items-center lg:items-start w-full">
       <div class="lg:w-1/2 w-full h-full">
-        <div
-          class="flex items-center justify-center max-w-[40rem] overflow-hidden"
-        >
-          <fieldset
-            class="flex flex-col justify-start w-full h-full"
-            :aria-invalid="warn"
-            :aria-describedby="warn ? question.id + 'required' : ''"
-          >
-            <legend
-              class="text-lg xl:leading-10 md:text-xl xl:text-3xl overflow-visible text-left mb-4"
-            >
+        <div class="flex items-center justify-center max-w-[40rem] overflow-hidden">
+          <fieldset class="flex flex-col justify-start w-full h-full" :aria-invalid="warn"
+            :aria-describedby="warn ? question.id + 'required' : ''">
+            <legend class="text-lg xl:leading-10 md:text-xl xl:text-3xl overflow-visible text-left mb-4">
               {{ question.question }}
             </legend>
             <div class="flex flex-col flex-wrap justify-center items-start">
               <div v-for="choice in choices" :key="choice.name">
                 <label
-                  class="text-base sm:text-lg xl:text-xl ml-4 flex flex-wrap flex-column justify-center items-center m-2 w-max gap-2"
-                >
-                  <input
-                    type="checkbox"
-                    class="w-4 h-4 text-blue-400 border-gray-300 focus:ring-transparent"
-                    :value="choice"
-                    v-model="courses"
-                    :disabled="notInterested"
-                  />
+                  class="text-base sm:text-lg xl:text-xl ml-4 flex flex-wrap flex-column justify-center items-center m-2 w-max gap-2">
+                  <input type="checkbox" class="w-4 h-4 text-blue-400 border-gray-300 focus:ring-transparent"
+                    :value="choice" v-model="courses"
+                    :disabled="notInterested || (courses.length >= 3 && !courses.includes(choice))" />
                   {{ choice.name }}
                 </label>
               </div>
-              <label
-                v-if="props.question.status === 'OPTIONAL'"
-                class="text-base sm:text-lg xl:text-xl ml-4 flex flex-wrap flex-column justify-center items-center m-2 w-max gap-2"
-              >
-                <input
-                  type="checkbox"
-                  class="w-4 h-4 text-blue-400 accent-black border-gray-300 focus:ring-transparent"
-                  value="Not Interested"
-                  v-model="notInterested"
-                />
+              <label v-if="props.question.status === 'OPTIONAL'"
+                class="text-base sm:text-lg xl:text-xl ml-4 flex flex-wrap flex-column justify-center items-center m-2 w-max gap-2">
+                <input type="checkbox" class="w-4 h-4 text-blue-400 accent-black border-gray-300 focus:ring-transparent"
+                  value="Not Interested" v-model="notInterested" />
                 Not Interested
               </label>
             </div>
@@ -48,34 +30,17 @@
       </div>
       <div
         class="mt-4 border border-solid rounded-xl lg:w-[45%] w-[90%] lg:ml-14 lg:h-[50vh] md:mt-[1%] relative self-center lg:self-auto transition-colors duration-200 ease-linear flex flex-col justify-between"
-        :class="warn ? 'border-red-400 bg-[#FEE2E2]' : 'border-black'"
-      >
+        :class="warn ? 'border-red-400 bg-[#FEE2E2]' : 'border-black'">
         <div class="">
-          <div class="flex justify-center mt-[1%]">
-            <p
-              class="ml-6 mt-2 text-lg xl:leading-10 md:text-xl xl:text-2xl text-black"
-            >
-              Drag course(s) into order of preference:
-            </p>
-          </div>
-          <SurveyDraggable
-            class="p-6"
-            :courses="draggableCourses"
-            :answer="answer"
-            :numbered="true"
-            :color="color"
-            :final="false"
-            @save="emit('save')"
-          />
+          <p class="ml-10 mt-2 text-lg xl:leading-10 md:text-xl xl:text-2xl text-black max-w-[90%]">
+            Drag course(s) into order of preference<span v-if="choices.length > 3" class="ml-1"> (top 3)</span>:
+          </p>
+          <SurveyDraggable class="p-6" :courses="draggableCourses" :answer="answer" :numbered="true" :color="color"
+            :final="false" @save="emit('save')" />
         </div>
-        <Transition
-          enter-from-class="opacity-0"
-          enter-active-class="transition-opacity duration-200 ease-linear"
-        >
-          <div
-            class="flex items-center justify-center text-red-500 gap-2 pb-2 xl:ml-10 md:ml-8 xs:ml-4 ml-2"
-            v-if="warn"
-          >
+        <Transition enter-from-class="opacity-0" enter-active-class="transition-opacity duration-200 ease-linear">
+          <div class="flex items-center justify-center text-red-500 gap-2 pb-2 xl:ml-10 md:ml-8 xs:ml-4 ml-2"
+            v-if="warn">
             <exclamationMark />
           </div>
         </Transition>

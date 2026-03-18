@@ -1,21 +1,11 @@
 <template>
   <div class="arrows flex flex-col h-50 bottom-2 right-5 fixed">
-    <button
-      @click="scrollTop"
-      v-if="ShowScrollTop"
-      :class="`${ShowScrollTop ? 'pop-in' : 'pop-out'} ${
-        guidance ? 'bg-[#DEE9C8]' : 'bg-[#D6EEFF]'
-      } shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-50 p-4 pt-2 pb-6 mb-2.5 text-center flex flex-col align-center`"
-    >
+    <button @click="scrollTop" v-if="ShowScrollTop" :class="`${ShowScrollTop ? 'pop-in' : 'pop-out'} ${guidance ? 'bg-[#DEE9C8]' : 'bg-[#D6EEFF]'
+      } shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-fit p-4 pt-2 pb-6 mb-2.5 text-center flex flex-col align-center`">
       <p class="h-4 text-[1.5em]">⏶</p>
     </button>
-    <button
-      @click="scrollBottom"
-      v-if="ShowScrollBottom"
-      :class="`${ShowScrollBottom ? 'pop-in' : 'pop-out'} ${
-        guidance ? 'bg-[#DEE9C8]' : 'bg-[#D6EEFF]'
-      } shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-fit p-4 pt-2 pb-6 mb-2.5 flex flex-col align-center`"
-    >
+    <button @click="scrollBottom" v-if="ShowScrollBottom" :class="`${ShowScrollBottom ? 'pop-in' : 'pop-out'} ${guidance ? 'bg-[#DEE9C8]' : 'bg-[#D6EEFF]'
+      } shadow-[2px_3px_2px_rgba(0,0,0,0.25)] w-fit p-4 pt-2 pb-6 mb-2.5 flex flex-col align-center`">
       <p class="h-4 text-[1.5em]">⏷</p>
     </button>
   </div>
