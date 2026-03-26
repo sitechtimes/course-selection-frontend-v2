@@ -81,6 +81,7 @@ import ChangeFlag from "../Guidance/ChangeFlag.vue";
 import { useUserStore } from "../../stores/user";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
+import { useSurveyStore } from "../../stores/survey";
 
 defineProps<{ newStudents: GuidanceStudent[]; viewAll: boolean }>();
 
@@ -92,6 +93,7 @@ const statuses = {
 };
 
 const userStore = useUserStore();
+const surveyStore = useSurveyStore();
 const router = useRouter();
 
 const tooltip = ref(false);
@@ -99,14 +101,21 @@ const flagModal = ref(0);
 
 const flags = [
   { flag: "transfer", title: "Transfer student", color: "bg-red-400" },
+  { flag: "ib", title: "IB", color: "bg-orange-400" },
   { flag: "regents", title: "Missing regents", color: "bg-green-400" },
   { flag: "team", title: "Three season athlete", color: "bg-blue-400" },
   { flag: "enl", title: "ENL", color: "bg-purple-400" },
 ];
 
-const goToSurvey = (student: GuidanceStudent) => {
-  if (student.status === "Not Started") return;
-  router.push(`/guidance/survey/${student.id}`);
+const goToSurvey = async (student: GuidanceStudent) => {
+  try {
+    await surveyStore.getSurvey(student.id);
+
+    router.push(`/guidance/survey/${student.id}`);
+  } catch (err) {
+    await surveyStore.createSurveyForStudent(student.id);
+    router.push(`/guidance/survey/${student.id}`);
+  }
 };
 </script>
 
