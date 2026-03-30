@@ -37,11 +37,9 @@
           v-else
           :finalID="finalID"
           :question="currentQuestion"
-          :choices="
-            surveyStore.coursesAvailable.filter(
+          :choices="surveyStore.coursesAvailable.filter(
               (x) => x.subject === currentQuestion.questionType
-            )
-          "
+            )"
           :key="currentQuestion.id + '-checkbox'"
           :color="'D6EEFF'"
         />
@@ -138,4 +136,6 @@ watch(
   },
   { deep: true }
 );
+  
+
 </script>
