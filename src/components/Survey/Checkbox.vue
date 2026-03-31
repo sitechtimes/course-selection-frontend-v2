@@ -9,7 +9,7 @@
               {{ question.question }}
             </legend>
             <div class="flex flex-col flex-wrap justify-center items-start">
-              <div v-for="choice in choices" :key="choice.name">
+              <div v-for="choice in filteredCourses" :key="choice.name">
                 <label
                   class="text-base sm:text-lg xl:text-xl ml-4 flex flex-wrap flex-column justify-center items-center m-2 w-max gap-2">
                   <input type="checkbox" class="w-4 h-4 text-blue-400 border-gray-300 focus:ring-transparent"
@@ -69,6 +69,7 @@ const surveyStore = useSurveyStore();
 const finalAnswer = surveyStore.answers[props.finalID] as Answer<Rank[]>;
 const courses = ref<Course[]>([]);
 const draggableCourses = ref<Course[]>([]);
+let filteredCourses = ref<Course[]>([]);
 let answer = surveyStore.answers.find(
   (e) => e.question === props.question.id,
 ) as Answer<Rank[]>;
@@ -91,6 +92,7 @@ onMounted(() => {
     map.includes(id),
   );
   disable = true;
+  getChoices(props.question);
   init();
 });
 
@@ -141,6 +143,31 @@ function getChangedCourse(newCourses: Course[], oldCourses: Course[]) {
     course: added.id,
   });
   return added;
+}
+
+function getChoices(question: Question) {
+  let choices = surveyStore.coursesAvailable.filter(
+    (x) => x.subject === question.questionType
+  );
+  console.log(choices);
+  if (question.questionType === "SCIENCE") {
+    const index = choices.findIndex((course) => course.name === "Sci Eng Research");
+    if (index !== -1) {
+      choices.splice(index, 1);
+    }
+  };
+  if (question.questionType === "ARTS") {
+    const BandCourses = ["Concert Band", "Band", "Wind Ensemble", "Chamber Music", "Jazz Ensemble", "Freshmen Band"];
+    console.log(choices);
+    for (let i = 0; i < BandCourses.length; i++) {
+      const index = choices.findIndex((course) => course.name === BandCourses[i]);
+      if (index !== -1) {
+        choices.splice(index, 1);
+      }
+    }
+  };
+  filteredCourses.value = choices;
+  return choices;
 }
 
 watch(
