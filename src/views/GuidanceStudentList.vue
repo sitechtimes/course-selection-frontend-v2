@@ -102,6 +102,7 @@ const menuArray = [
   { sortBy: "regents", text: "Missing Regents" },
   { sortBy: "sports", text: "Sports Team" },
   { sortBy: "enl", text: "ENL" },
+  { sortBy: "ib", text: "IB" },
 ];
 const sortedAndFiltered = computed(() => {
   updatePagination(1);
@@ -141,7 +142,7 @@ function filterByCategory(students: GuidanceStudent[], sortBy: string) {
   if (["9", "10", "11", "12"].includes(sortBy))
     return students.filter((student) => student.grade === parseInt(sortBy));
 
-  if (["transfer", "regents", "sports", "enl"].includes(sortBy))
+  if (["transfer", "regents", "sports", "enl", "ib"].includes(sortBy))
     return students.filter((s) => s[sortBy as keyof GuidanceStudent]);
 
   return students;
