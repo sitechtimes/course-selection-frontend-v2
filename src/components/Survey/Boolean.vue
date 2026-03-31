@@ -86,13 +86,12 @@ watch(
   () => surveyStore.answers[index.value].answer,
   (newResponse, oldResponse) => {
     const referenced = props.question.classReferenced;
-    const id = referenced ? referenced.id : undefined;
     if (!referenced) return;
 
     if (newResponse && !oldResponse) {
       surveyStore.selectedCourses.push(referenced);
-      finalAnswer.answer.push({
-        course: referenced.id as number,
+      (finalAnswer.answer as Rank[]).push({
+        course: referenced.id,
         rank: (finalAnswer.answer as Rank[]).length + 1,
       });
     } else if (!newResponse && oldResponse) {
