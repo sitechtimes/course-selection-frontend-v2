@@ -45,7 +45,7 @@
           counselor to request changes.
         </h2>
         <h2 class="text-md lg:text-lg">
-          This website is available from 6AM to 8PM, Monday to Friday
+          This website is available from 7AM to 10PM, Monday to Friday
         </h2>
       </div>
 
@@ -63,17 +63,7 @@
         <div
           class="flex flex-col justify-start items-center mb-2 lg:flex-row lg:space-y-0 lg:space-x-4"
         >
-          <a
-            href="https://siths-catalog.netlify.app/"
-            target="_blank"
-            rel="noopener"
-            class="font-semibold"
-            ><button
-              class="mb-2 lg:m-0 bg-primary-s w-48 h-14 rounded-md text-xl hover:bg-other-s"
-            >
-              Course Info
-            </button></a
-          >
+          
           <!-- check if survey exists, if not create new and set current -->
           <RouterLink v-if="surveyStore.open" to="/student/survey">
             <button
@@ -89,6 +79,17 @@
               View Survey
             </button>
           </RouterLink>
+          <a
+            href="https://siths-catalog.netlify.app/"
+            target="_blank"
+            rel="noopener"
+            class="font-semibold"
+            ><button
+              class="mb-2 lg:m-0 bg-primary-s w-48 h-14 rounded-md text-xl hover:bg-other-s"
+            >
+              Course Info
+            </button></a
+            >
         </div>
         <p>
           For bug reports:
