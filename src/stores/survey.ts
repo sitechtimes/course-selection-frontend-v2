@@ -80,7 +80,6 @@ export const useSurveyStore = defineStore("survey", () => {
     userStore.setPopup(
       `Survey successfully ${status === 0 ? "saved" : "submitted"}.`,
     );
-    if (status === 0) return (open.value = false);
     userStore.student.status = await res.json();
     if (userStore.isGuidance) return router.push("/guidance/studentlist");
     router.push("/student/dashboard");
