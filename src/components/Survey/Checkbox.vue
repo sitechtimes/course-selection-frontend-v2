@@ -149,7 +149,6 @@ function getChoices(question: Question) {
   let choices = surveyStore.coursesAvailable.filter(
     (x) => x.subject === question.questionType
   );
-  console.log(choices);
   if (question.questionType === "SCIENCE") {
     const index = choices.findIndex((course) => course.name === "Sci Eng Research");
     if (index !== -1) {
@@ -158,7 +157,6 @@ function getChoices(question: Question) {
   };
   if (question.questionType === "ARTS") {
     const BandCourses = ["Concert Band", "Band", "Wind Ensemble", "Chamber Music", "Jazz Ensemble", "Freshmen Band"];
-    console.log(choices);
     for (let i = 0; i < BandCourses.length; i++) {
       const index = choices.findIndex((course) => course.name === BandCourses[i]);
       if (index !== -1) {
